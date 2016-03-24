@@ -35,7 +35,7 @@ export FONTCONFIG_PATH="${RUNFILES}/third_party/fontconfig"
 export XDG_DATA_HOME="${RUNFILES}"
 export XDG_CACHE_HOME="$(mktemp -d "${TMPDIR:-/tmp}/fontcache.XXXXXXXXXX")"
 
-"${RUNFILES}/third_party/phantomjs/bin/phantomjs" "$@"
+"${RUNFILES}/external/io_bazel_rules_closure/third_party/phantomjs/bin/phantomjs" "$@"
 rc="$?"
 rm -rf "${XDG_CACHE_HOME}"
 exit "${rc}"
