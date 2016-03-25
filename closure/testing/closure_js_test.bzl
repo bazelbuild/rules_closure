@@ -74,13 +74,16 @@ def _impl(ctx):
       mnemonic="JSCompile",
       progress_message="Compiling %d JavaScript files to %s" % (
           len(srcs) + len(externs), ctx.outputs.js.short_path))
-  print ctx.build_file_path
   ctx.file_action(
       executable=True,
       output=ctx.outputs.executable,
       content="\n".join([
           "#!/bin/sh",
-          "exec third_party/phantomjs/phantomjs.sh \\",
+          "PHANTOMJS_PATH=third_party/phantomjs/phantomjs.sh",
+          "if ! [ -e ${PHANTOMJS_PATH} ]; then",
+          "  PHANTOMJS_PATH=external/io_bazel_rules_closure/${PHANTOMJS_PATH}",
+          "fi",
+          "exec ${PHANTOMJS_PATH} \\",
           "  %s \\" % ctx.file._phantomjs_runner.short_path,
           "  %s" % ctx.outputs.js.short_path,
           "",

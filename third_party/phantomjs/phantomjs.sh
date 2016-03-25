@@ -26,6 +26,13 @@ if [[ "${RUNFILES}" == "" ]]; then
   fi
 fi
 
+# Detect if phantomjs is running within rules_closure or has been imported
+# into another project
+PHANTOMJS_BIN_PATH="third_party/phantomjs/bin/phantomjs"
+if ! [ -e ${RUNFILES}/${PHANTOMJS_BIN_PATH} ]; then
+	PHANTOMJS_BIN_PATH=external/io_bazel_rules_closure/${PHANTOMJS_BIN_PATH}
+fi
+
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/fontconfig/k8:${LD_LIBRARY_PATH}"
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/freetype/k8:${LD_LIBRARY_PATH}"
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/expat/k8:${LD_LIBRARY_PATH}"
@@ -35,7 +42,7 @@ export FONTCONFIG_PATH="${RUNFILES}/third_party/fontconfig"
 export XDG_DATA_HOME="${RUNFILES}"
 export XDG_CACHE_HOME="$(mktemp -d "${TMPDIR:-/tmp}/fontcache.XXXXXXXXXX")"
 
-"${RUNFILES}/third_party/phantomjs/bin/phantomjs" "$@"
+"${RUNFILES}/${PHANTOMJS_BIN_PATH}" "$@"
 rc="$?"
 rm -rf "${XDG_CACHE_HOME}"
 exit "${rc}"
