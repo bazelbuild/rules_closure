@@ -74,6 +74,7 @@ def _impl(ctx):
       mnemonic="JSCompile",
       progress_message="Compiling %d JavaScript files to %s" % (
           len(srcs) + len(externs), ctx.outputs.js.short_path))
+  print ctx.build_file_path
   ctx.file_action(
       executable=True,
       output=ctx.outputs.executable,
