@@ -67,7 +67,7 @@ def closure_repositories():
       url = "https://bazel-mirror.storage.googleapis.com/github.com/google/closure-library/archive/v20160315.zip",
       sha256 = "4327a27e040ccd36cb12dee2dc5aa6cff7bc614b09c0e45aab0a1ab9e750f542",
       strip_prefix = "closure-library-20160315",
-      build_file = "closure/library/closure_library.BUILD",
+      build_file = "@io_bazel_rules_closure//@io_bazel_rules_closure//closure/library:closure_library.BUILD",
   )
 
   native.new_http_archive(
@@ -75,7 +75,7 @@ def closure_repositories():
       url = "https://bazel-mirror.storage.googleapis.com/github.com/google/closure-linter/archive/v2.3.19.zip",
       sha256 = "ccb93b7327cd1e1520d0090c51f2f11d5174a34df24e1fa4d0114ffff28a7141",
       strip_prefix = "closure-linter-2.3.19",
-      build_file = "closure/linter/closure_linter.BUILD",
+      build_file = "@io_bazel_rules_closure//closure/linter:closure_linter.BUILD",
   )
 
   native.maven_jar(
@@ -161,7 +161,7 @@ def closure_repositories():
       url = "https://bazel-mirror.storage.googleapis.com/github.com/google/python-gflags/archive/3.0.2.zip",
       sha256 = "8700f5b8d61f843425b090287874b4ff45510d858caa109847162dd98c7856f8",
       strip_prefix = "python-gflags-3.0.2",
-      build_file = "closure/linter/python_gflags.BUILD",
+      build_file = "@io_bazel_rules_closure//closure/linter:python_gflags.BUILD",
   )
 
   native.maven_jar(
