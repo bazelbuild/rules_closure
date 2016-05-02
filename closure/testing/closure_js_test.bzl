@@ -79,7 +79,11 @@ def _impl(ctx):
       output=ctx.outputs.executable,
       content="\n".join([
           "#!/bin/sh",
-          "exec third_party/phantomjs/phantomjs.sh \\",
+          "PHANTOMJS_PATH=third_party/phantomjs/phantomjs.sh",
+          "if ! [ -e ${PHANTOMJS_PATH} ]; then",
+          "  PHANTOMJS_PATH=external/io_bazel_rules_closure/${PHANTOMJS_PATH}",
+          "fi",
+          "exec ${PHANTOMJS_PATH} \\",
           "  %s \\" % ctx.file._phantomjs_runner.short_path,
           "  %s" % ctx.outputs.js.short_path,
           "",
