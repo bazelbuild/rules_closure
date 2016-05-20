@@ -18,6 +18,7 @@
 
 load("//closure/private:defs.bzl",
      "CLOSURE_LIBRARY_BASE_ATTR",
+     "CLOSURE_LIBRARY_DEPS_ATTR",
      "JS_LANGUAGE_DEFAULT",
      "JS_DEPS_ATTR",
      "JS_FILE_TYPE",
@@ -106,6 +107,7 @@ closure_js_library = rule(
             default=Label("//java/com/google/javascript/jscomp:jschecker"),
             executable=True),
         "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
+        "_closure_library_deps": CLOSURE_LIBRARY_DEPS_ATTR,
     },
     outputs={
         "provided": "%{name}-provided.txt",

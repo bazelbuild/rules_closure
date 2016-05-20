@@ -14,12 +14,13 @@
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files(["closure/goog/base.js"])
+exports_files(["closure/goog/base.js", "closure/goog/deps.js"])
 
 filegroup(
     name = "js_files",
     srcs = [
         "closure/goog/base.js",
+        "closure/goog/deps.js",
         ":js_library_files",
         ":js_testing_files",
     ],

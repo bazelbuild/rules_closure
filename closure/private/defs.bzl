@@ -64,6 +64,11 @@ CLOSURE_LIBRARY_BASE_ATTR = attr.label(
     allow_files=True,
     single_file=True)
 
+CLOSURE_LIBRARY_DEPS_ATTR = attr.label(
+    default=Label("@closure_library//:closure/goog/deps.js"),
+    allow_files=True,
+    single_file=True)
+
 def collect_js_srcs(ctx):
   srcs = set(order="compile")
   externs = set(order="compile")
@@ -71,11 +76,13 @@ def collect_js_srcs(ctx):
   if hasattr(ctx.attr, 'css'):
     if ctx.attr.css:
       srcs += [ctx.file._closure_library_base,
+               ctx.file._closure_library_deps,
                ctx.attr.css.js_css_renaming_map]
   elif (hasattr(ctx.file, '_closure_library_base')
       and (not hasattr(ctx.attr, 'no_closure_library')
            or not ctx.attr.no_closure_library)):
-    srcs += [ctx.file._closure_library_base]
+    srcs += [ctx.file._closure_library_base,
+             ctx.file._closure_library_deps]
   for dep in ctx.attr.deps:
     srcs += dep.transitive_js_srcs
     externs += dep.transitive_js_externs

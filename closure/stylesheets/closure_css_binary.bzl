@@ -18,9 +18,7 @@
 """
 
 load("//closure/private:defs.bzl",
-     "CLOSURE_LIBRARY_BASE_ATTR",
      "CSS_DEPS_ATTR",
-     "JS_FILE_TYPE",
      "collect_transitive_css_labels")
 
 # XXX: Sourcemap functionality currently not supported because it's broken.
