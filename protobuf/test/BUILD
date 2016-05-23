@@ -1,5 +1,3 @@
-# -*- mode: python; -*-
-#
 # Copyright 2016 The Closure Rules Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("//closure/compiler:closure_js_binary.bzl", "closure_js_binary")
-load("//closure/compiler:closure_js_deps.bzl", "closure_js_deps")
+package(default_testonly = True)
+
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
-load("//closure:repositories.bzl", "closure_repositories")
-load("//closure/stylesheets:closure_css_binary.bzl", "closure_css_binary")
-load("//closure/stylesheets:closure_css_library.bzl", "closure_css_library")
 load("//closure/testing:closure_js_test.bzl", "closure_js_test")
-load("//closure/templates:closure_template_java_library.bzl", "closure_template_java_library")
-load("//closure/templates:closure_template_js_library.bzl", "closure_template_js_library")
 load("//protobuf:closure_proto_js_library.bzl", "closure_proto_js_library")
+
+closure_proto_js_library(
+    name = "example_proto",
+    srcs = ["example.proto"],
+)
+
+closure_js_library(
+    name = "example_lib",
+    srcs = ["example.js"],
+    deps = [
+        ":example_proto",
+        "//closure/library",
+    ],
+)
+
+closure_js_test(
+    name = "example_test",
+    srcs = ["example_test.js"],
+    deps = [":example_lib"],
+)

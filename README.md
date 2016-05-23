@@ -1,11 +1,11 @@
 # Closure Rules for Bazel (αlpha) [![Build Status](https://travis-ci.org/bazelbuild/rules_closure.svg?branch=master)](https://travis-ci.org/bazelbuild/rules_closure)
 
-JavaScript | Templating | Stylesheets
---- | --- | ---
-[closure_js_library](#closure_js_library) | [closure_template_js_library](#closure_template_js_library) | [closure_css_library](#closure_css_library)
-[closure_js_binary](#closure_js_binary) | [closure_template_java_library](#closure_template_java_library) | [closure_css_binary](#closure_css_binary)
-[closure_js_deps](#closure_js_deps) | [closure_template_py_library](#closure_template_py_library) |
-[closure_js_test](#closure_js_test) | |
+JavaScript | Templating | Stylesheets | Protocol Buffers
+--- | --- | --- | ---
+[closure_js_library](#closure_js_library) | [closure_template_js_library](#closure_template_js_library) | [closure_css_library](#closure_css_library) | [closure_proto_js_library](#closure_proto_js_library)
+[closure_js_binary](#closure_js_binary) | [closure_template_java_library](#closure_template_java_library) | [closure_css_binary](#closure_css_binary) |
+[closure_js_deps](#closure_js_deps) | [closure_template_py_library](#closure_template_py_library) | |
+[closure_js_test](#closure_js_test) | | |
 
 ## Overview
 
@@ -49,6 +49,9 @@ Closure Rules bundles the following tools and makes them "just work."
   unit tests in a command line environment.
 - [Bazel][bazel]: The build system Google uses to manage a repository with
   petabytes of code.
+- [Protocol Buffers][protobuf]: Google's language-neutral, platform-neutral,
+  extensible mechanism for serializing structured data. This is used instead of
+  untyped JSON.
 
 The Closure Tools were released to the public in 2009, but had previously been
 quite difficult to configure. They were originally designed to be used with
@@ -117,6 +120,7 @@ Please see the test directories within this project for concrete examples of usa
 - [//closure/library/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/library/test)
 - [//closure/templates/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/templates/test)
 - [//closure/stylesheets/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/stylesheets/test)
+- [//protobuf/test](https://github.com/bazelbuild/rules_closure/tree/master/protobuf/test)
 
 
 # Reference
@@ -748,6 +752,47 @@ The documentation on using Closure Stylesheets can be found
   `bazel run @io_bazel_rules_closure//closure/stylesheets -- --help`
 
 
+## closure\_proto\_js\_library
+
+```python
+load("@io_bazel_rules_closure//closure:defs.bzl", "closure_proto_js_library")
+closure_proto_js_library(name, srcs, add_require_for_enums, binary,
+                         import_style)
+```
+
+Defines a set of Protocol Buffer files.
+
+Documentation: [Protocol Buffers][protobuf] [JS][protobuf-js]
+[Generator Options](https://github.com/google/protobuf/blob/master/src/google/protobuf/compiler/js/js_generator.h).
+
+#### Implicit Output Targets
+
+- *name*.js: A generated protocol buffer JavaScript library.
+
+### Arguments
+
+- **name:** ([Name][name]; required) A unique name for this rule. Convention
+  states that such rules be named `foo_proto`.
+
+- **srcs:** (List of [labels][labels]; required) A list of `.proto` source
+  files that represent this library.
+
+- **add_require_for_enums:** (Boolean; optional; default is `False`) Add a
+  `goog.require()` call for each enum type used. If false, a forward
+  declaration with `goog.forwardDeclare` is produced instead.
+
+- **binary:** (Boolean; optional; default is `True`) Enable binary-format
+  support.
+
+- **import_style:** (String; optional; default is `IMPORT_CLOSURE`) Specifies
+  the type of imports that should be used. Valid values are:
+
+  - `IMPORT_CLOSURE`    // goog.require()
+  - `IMPORT_COMMONJS`   // require()
+  - `IMPORT_BROWSER`    // no import statements
+  - `IMPORT_ES6`        // import { member } from ''
+
+
 
 [ClosureCodingConvention]: https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/ClosureCodingConvention.java
 [GoogleCodingConvention]: https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/GoogleCodingConvention.java
@@ -778,4 +823,6 @@ The documentation on using Closure Stylesheets can be found
 [managing-dependencies]: https://github.com/google/closure-compiler/wiki/Managing-Dependencies
 [phantomjs-bug]: https://github.com/ariya/phantomjs/issues/14028
 [phantomjs]: http://phantomjs.org/
+[protobuf]: https://github.com/google/protobuf
+[protobuf-js]: https://github.com/google/protobuf/tree/master/js
 [verbose]: https://github.com/google/closure-library/blob/master/closure/goog/html/safehtml.js

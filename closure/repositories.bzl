@@ -197,6 +197,31 @@ def phantomjs_macosx():
       url = "https://bazel-mirror.storage.googleapis.com/bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip",
   )
 
+def protobuf_js():
+  native.new_http_archive(
+      name = "protobuf_js",
+      # TODO(hochhaus): Use protobuf-js-*.zip once it includes encoder.js.
+      # https://github.com/google/protobuf/pull/1589
+      url = "https://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/archive/v3.0.0-beta-3.zip",
+      sha256 = "dad1912814e9d9b8642036d07c086ac79faf2cc534c992911375a39924a45860",
+      strip_prefix = "protobuf-3.0.0-beta-3",
+      build_file = str(Label("//protobuf:protobuf_js.BUILD")),
+  )
+
+def protoc_linux_x86_64():
+  native.http_file(
+      name = "protoc_linux_x86_64",
+      url = "https://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/releases/download/v3.0.0-beta-3/protoc-3.0.0-beta-3-linux-x86_64.zip",
+      sha256 = "48c592c6272e2a5043de792ff00ff162fe6f9bebd60147b05888b08f8d0e434b",
+  )
+
+def protoc_macosx():
+  native.http_file(
+      name = "protoc_macosx",
+      url = "https://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/releases/download/v3.0.0-beta-3/protoc-3.0.0-beta-3-osx-x86_64.zip",
+      sha256 = "b009b2b433affcf00dbe645d0637139f9a6c1e38c2c7d4cc99c30919f5c2eaac",
+  )
+
 def soy():
   native.maven_jar(
       name = "soy",
@@ -237,6 +262,9 @@ def closure_repositories(
     omit_libpng_amd64_deb=False,
     omit_phantomjs_linux_x86_64=False,
     omit_phantomjs_macosx=False,
+    omit_protobuf_js=False,
+    omit_protoc_linux_x86_64=False,
+    omit_protoc_macosx=False,
     omit_soy=False,
     omit_soyutils_usegoog=False):
   if not omit_aopalliance:
@@ -289,6 +317,12 @@ def closure_repositories(
     phantomjs_linux_x86_64()
   if not omit_phantomjs_macosx:
     phantomjs_macosx()
+  if not omit_protobuf_js:
+    protobuf_js()
+  if not omit_protoc_linux_x86_64:
+    protoc_linux_x86_64()
+  if not omit_protoc_macosx:
+    protoc_macosx()
   if not omit_soy:
     soy()
   if not omit_soyutils_usegoog:
