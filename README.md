@@ -234,7 +234,7 @@ target. See the documentation of the `deps` attribute for further information.
   If a code is used that isn't necessary, an error is raised. Therefore the use
   of fine-grained suppression codes is maintainable.
 
-- **convention** (String; required; default is `"CLOSURE"`) Specifies the coding
+- **convention** (String; optional; default is `"CLOSURE"`) Specifies the coding
   convention which affects how the linter operates. This can be the following
   values:
 
@@ -542,20 +542,20 @@ the following:
       com.foo.bar.Debug.DEBUG = 1
       com.foo.bar.Debug.RAW = 2
 
-- **plugin_modules:** (List of [labels][labels]; default is `[]`) Passed along
-  verbatim to the SoyToJsSrcCompiler above.
-
-- **should_generate_js_doc:** (List of [labels][labels]; default is `True`)
+- **plugin_modules:** (List of [labels][labels]; optional; default is `[]`)
   Passed along verbatim to the SoyToJsSrcCompiler above.
 
-- **should_provide_require_soy_namespaces:** (List of [labels][labels]; default
-  is `True`) Passed along verbatim to the SoyToJsSrcCompiler above.
+- **should_generate_js_doc:** (Boolean; optional; default is `True`) Passed
+  along verbatim to the SoyToJsSrcCompiler above.
 
-- **should_generate_soy_msg_defs:** (List of [labels][labels]; default is
-  `False`) Passed along verbatim to the SoyToJsSrcCompiler above.
+- **should_provide_require_soy_namespaces:** (Boolean; optional; default is
+  `True`) Passed along verbatim to the SoyToJsSrcCompiler above.
 
-- **soy_msgs_are_external:** (List of [labels][labels]; default is `False`)
+- **should_generate_soy_msg_defs:** (Boolean; optional; default is `False`)
   Passed along verbatim to the SoyToJsSrcCompiler above.
+
+- **soy_msgs_are_external:** (Boolean; optional; default is `False`) Passed
+  along verbatim to the SoyToJsSrcCompiler above.
 
 
 ## closure\_template\_java\_library
@@ -647,7 +647,7 @@ the following:
 - **deps:** (List of [labels][labels]; optional) List of other
   `closure_css_library` targets on which the CSS files in `srcs` depend.
 
-- **orientation:** (String; required; default is `"LTR"`) Defines the text
+- **orientation:** (String; optional; default is `"LTR"`) Defines the text
   direction for which this CSS was designed. This value can be:
 
   - `LTR`: Outputs a sheet suitable for left to right display.
@@ -715,7 +715,7 @@ The documentation on using Closure Stylesheets can be found
   causes the compiled stylesheet to be pretty printed. If `renaming = True` then
   class names will be renamed, but still readable to humans.
 
-- **orientation:** (String; required; default is `"NOCHANGE"`) Specify this
+- **orientation:** (String; optional; default is `"NOCHANGE"`) Specify this
   option to perform automatic right to left conversion of the input. You can
   choose between:
 
