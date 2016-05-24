@@ -258,7 +258,9 @@ function run() {
       '<script>\n' +
       '  var CLOSURE_NO_DEPS = true;\n' +
       '  var CLOSURE_UNCOMPILED_DEFINES = {\n' +
-      '    "goog.ENABLE_DEBUG_LOADER": false\n' +
+      // TODO(hochhaus): Set goog.ENABLE_DEBUG_LOADER=false
+      // https://github.com/google/closure-compiler/issues/1815
+      // '    "goog.ENABLE_DEBUG_LOADER": false\n' +
       '  };\n' +
       '</script>\n' +
       '<script src="' + RUNFILES_PREFIX + js + '"></script>\n';

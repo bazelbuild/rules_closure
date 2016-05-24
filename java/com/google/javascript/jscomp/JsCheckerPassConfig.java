@@ -23,8 +23,11 @@ import com.google.javascript.jscomp.lint.CheckEmptyStatements;
 import com.google.javascript.jscomp.lint.CheckEnums;
 import com.google.javascript.jscomp.lint.CheckInterfaces;
 import com.google.javascript.jscomp.lint.CheckJSDocStyle;
+import com.google.javascript.jscomp.lint.CheckMissingSemicolon;
+import com.google.javascript.jscomp.lint.CheckPrimitiveAsObject;
 import com.google.javascript.jscomp.lint.CheckPrototypeProperties;
 import com.google.javascript.jscomp.lint.CheckRequiresAndProvidesSorted;
+import com.google.javascript.jscomp.lint.CheckUnusedLabels;
 import com.google.javascript.jscomp.lint.CheckUselessBlocks;
 
 import java.util.List;
@@ -65,9 +68,14 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                   new CheckEnums(compiler),
                   new CheckJSDocStyle(compiler),
                   new CheckJSDoc(compiler),
+                  new CheckMissingSemicolon(compiler),
+                  new CheckMissingSuper(compiler),
+                  new CheckPrimitiveAsObject(compiler),
                   new CheckRequiresAndProvidesSorted(compiler),
+                  new CheckUnusedLabels(compiler),
                   new CheckUselessBlocks(compiler),
                   new ClosureCheckModule(compiler),
+                  new Es6SuperCheck(compiler),
                   new JsCheckerFirstPass(state, compiler)));
         }
       };

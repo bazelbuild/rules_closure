@@ -14,9 +14,9 @@
 
 package(default_visibility = ["//visibility:public"])
 
-java_binary(
-    name = "compiler",
-    jvm_flags = ["-client"],
-    main_class = "com.google.javascript.jscomp.CommandLineRunner",
-    runtime_deps = ["@closure_compiler//:compiler_jar"],
+java_import(
+    name = "compiler_jar",
+    jars = [
+        "compiler.jar",
+    ],
 )

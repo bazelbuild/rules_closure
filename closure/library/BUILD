@@ -27,6 +27,8 @@ closure_js_library(
         "JSC_INVALID_SUPPRESS",
         "JSC_MISSING_JSDOC",
         "JSC_MISSING_RETURN_JSDOC",
+        "JSC_MISSING_REQUIRE_CALL_WARNING",
+        "JSC_MISSING_SEMICOLON",
         "JSC_MUST_BE_PRIVATE",
     ],
 )
@@ -37,9 +39,12 @@ closure_js_library(
     srcs = ["@closure_library//:js_testing_files"],
     language = "ECMASCRIPT5_STRICT",
     suppress = [
+        "JSC_EXTRA_REQUIRE_WARNING",
         "JSC_INVALID_SUPPRESS",
         "JSC_MISSING_JSDOC",
+        "JSC_MISSING_SEMICOLON",
         "JSC_MUST_BE_PRIVATE",
+        "JSC_PRIMITIVE_OBJECT",
     ],
     deps = [":library"],
 )

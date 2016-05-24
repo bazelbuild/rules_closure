@@ -59,10 +59,11 @@ def asm_util():
   )
 
 def closure_compiler():
-  native.maven_jar(
+  native.new_http_archive(
       name = "closure_compiler",
-      artifact = "com.google.javascript:closure-compiler:v20160315",
-      sha1 = "f5b1a03f83a014e545db60a795fcf94db14a5ba2",
+      url = "http://dl.google.com/closure-compiler/compiler-20160517.zip",
+      sha256 = "d1aea900077b94f37b964d0ff42fe39bb8b69b65f65ce95a2cc740f42cc7457f",
+      build_file = str(Label("//closure/compiler:closure_compiler.BUILD")),
   )
 
 def closure_library():
@@ -71,9 +72,9 @@ def closure_library():
   # closure_library.BUILD.
   native.new_http_archive(
       name = "closure_library",
-      url = "https://bazel-mirror.storage.googleapis.com/github.com/google/closure-library/archive/v20160315.zip",
-      sha256 = "4327a27e040ccd36cb12dee2dc5aa6cff7bc614b09c0e45aab0a1ab9e750f542",
-      strip_prefix = "closure-library-20160315",
+      url = "https://bazel-mirror.storage.googleapis.com/github.com/google/closure-library/archive/v20160517.zip",
+      sha256 = "8041f3c8f416be8da0cea36a1355a42b19ca6caf3afd2baa7a74da017a2a432a",
+      strip_prefix = "closure-library-20160517",
       build_file = str(Label("//closure/library:closure_library.BUILD")),
   )
 

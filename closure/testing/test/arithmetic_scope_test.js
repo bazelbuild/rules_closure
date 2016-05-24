@@ -18,6 +18,7 @@ import 'goog:arithmetic_module';
 import 'goog:goog.testing.testSuite';
 
 goog.scope(function() {
+var arithmetic_module = goog.module.get('arithmetic_module');
 
 goog.testing.testSuite({
   testAdd: function() {
