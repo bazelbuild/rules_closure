@@ -14,6 +14,13 @@
 
 // This is the simplest possible unit test you can write.
 
+goog.require('goog.testing.asserts');
+goog.require('goog.testing.jsunit');
+
+
+/**
+ * @export
+ */
 function testAddition_realityHasntFallenApart() {
   assertEquals(2, 1 + 1);
 }

@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @fileoverview PhantomJS headless browser container for Closure unit tests.
- *     This program runs inside PhantomJS but not inside the browser itself. It
- *     starts an HTTP server that serves runfiles. It loads the generated test
- *     runner HTML file inside an ethereal browser. Once the page is loaded,
- *     this program communicates with the page to collect log data and monitor
+ * @fileoverview PhantomJS headless browser container harness. This program
+ *     runs inside PhantomJS but not inside the browser itself. It starts an
+ *     HTTP server that serves runfiles. It loads the generated test runner
+ *     HTML file inside an ethereal browser. Once the page is loaded, this
+ *     program communicates with the page to collect log data and monitor
  *     whether or not the tests succeeded.
  */
 
@@ -57,13 +57,6 @@ var url;
  * @type {string}
  */
 var virtualPageHtml;
-
-
-/**
- * Path of JS file to load.
- * @type {string}
- */
-var js;
 
 
 /**
@@ -157,20 +150,6 @@ function send404(request, response) {
 
 
 /**
- * Extracts text from inside page.
- * @return {string}
- */
-function extractText() {
-  var element = document.getElementById('blah');
-  if (element != null) {
-    return element.innerText;
-  } else {
-    return '';
-  }
-}
-
-
-/**
  * Callback when log entries are emitted inside the browser.
  * @param {string} message
  * @param {?string} line
@@ -244,26 +223,39 @@ function onCallback(succeeded) {
 }
 
 
-/**
- * Runs a single pending test.
- */
-function run() {
-  virtualPageHtml =
-      '<!doctype html>\n' +
-      '<meta charset="utf-8">' +
-      '<body>\n' +
-      '</body>\n' +
-      // These definitions are only necessary because we're compiling in
-      // WHITESPACE_ONLY mode.
-      '<script>\n' +
+(function() {
+
+  // construct the web page
+  var body = fs.read(system.args[1]);
+  if (body.match(/^<!/)) {
+    system.stderr.writeLine('ERROR: Test html file must not have a doctype');
+    phantom.exit(1);
+  }
+  var html = ['<!doctype html>', body];
+  html.push('<script>\n' +
+      '  // goog.require does not need to fetch sources from the local\n' +
+      '  // server because everything is being loaded explicitly below\n' +
       '  var CLOSURE_NO_DEPS = true;\n' +
       '  var CLOSURE_UNCOMPILED_DEFINES = {\n' +
       // TODO(hochhaus): Set goog.ENABLE_DEBUG_LOADER=false
       // https://github.com/google/closure-compiler/issues/1815
       // '    "goog.ENABLE_DEBUG_LOADER": false\n' +
       '  };\n' +
-      '</script>\n' +
-      '<script src="' + RUNFILES_PREFIX + js + '"></script>\n';
+      '</script>\n');
+  for (var i = 2; i < system.args.length; i++) {
+    var js = system.args[i];
+    html.push('<script src="' + RUNFILES_PREFIX + js + '"></script>\n');
+  }
+  virtualPageHtml = html.join('');
+
+  // start a local webserver
+  var port = Math.floor(Math.random() * (60000 - 32768)) + 32768;
+  var server = webserver.create();
+  server.listen(port, onRequest);
+  url = 'http://localhost:' + port + VIRTUAL_PAGE;
+  system.stderr.writeLine('Listening ' + url);
+
+  // run the web page
   page.onAlert = onAlert;
   page.onCallback = onCallback;
   page.onConsoleMessage = onConsoleMessage;
@@ -273,15 +265,4 @@ function run() {
   //      https://github.com/ariya/phantomjs/issues/10652
   page.settings.resourceTimeout = 2000;
   page.open(url);
-}
-
-
-(function() {
-  js = system.args[1];
-  var port = Math.floor(Math.random() * (60000 - 32768)) + 32768;
-  var server = webserver.create();
-  server.listen(port, onRequest);
-  url = 'http://localhost:' + port + VIRTUAL_PAGE;
-  system.stderr.writeLine('Listening ' + url);
-  run();
 })();

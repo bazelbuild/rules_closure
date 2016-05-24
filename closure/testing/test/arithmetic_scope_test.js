@@ -14,15 +14,17 @@
 
 goog.setTestOnly();
 
-import 'goog:arithmetic_module';
-import 'goog:goog.testing.testSuite';
+goog.require('goog.testing.asserts');
+goog.require('goog.testing.jsunit');
+goog.require('goog.testing.testSuite');
+goog.require('io.bazel.rules.closure.arithmetic');
 
 goog.scope(function() {
-var arithmetic_module = goog.module.get('arithmetic_module');
+var add = io.bazel.rules.closure.arithmetic.add;
 
 goog.testing.testSuite({
-  testAdd: function() {
-    assertEquals(4, arithmetic_module.add(2, 2));
+  'testAdd': function() {
+    assertEquals(4, add(2, 2));
   }
 });
 

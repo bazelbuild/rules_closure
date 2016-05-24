@@ -12,11 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+goog.require('goog.testing.asserts');
+goog.require('goog.testing.jsunit');
+goog.require('goog.testing.testSuite');
 goog.require('io.bazel.rules.closure.protobuf.Example');
 
+goog.testing.testSuite({
 
-function testExample() {
-  var msg = new io.bazel.rules.closure.protobuf.Example('value');
-  msg.field();
-  assertHTMLEquals('value', msg.field());
-}
+  'testExample': function() {
+    var msg = new io.bazel.rules.closure.protobuf.Example('value');
+    msg.field();
+    assertHTMLEquals('value', msg.field());
+  }
+
+});  // goog.testing.testSuite

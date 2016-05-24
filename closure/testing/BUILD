@@ -5,22 +5,17 @@ package(
 
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 
-exports_files(["phantomjs_runner.js"])
+exports_files(["empty.html"])
 
 closure_js_library(
-    name = "phantomjs_jsunit_runner_lib",
+    name = "phantomjs_jsunit_runner",
     srcs = ["phantomjs_jsunit_runner.js"],
-    language = "ECMASCRIPT5_STRICT",
-    deps = [
-        "//closure/library",
-        "//closure/library:testing",
-    ],
+    no_closure_library = True,
 )
 
 closure_js_library(
-    name = "phantomjs_runner_lib",
-    srcs = ["phantomjs_runner.js"],
-    language = "ECMASCRIPT5_STRICT",
-    visibility = ["//visibility:private"],
-    deps = ["//closure/testing/externs:phantom_lib"],
+    name = "phantomjs_harness",
+    srcs = ["phantomjs_harness.js"],
+    no_closure_library = True,
+    deps = ["//closure/testing/externs:phantomjs"],
 )

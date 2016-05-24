@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'goog:goog.testing.asserts';
-import 'goog:goog.testing.jsunit';
-
-import { add } from 'closure/testing/test/arithmetic_es6module';
+goog.provide('io.bazel.rules.closure.arithmetic');
 
 
 /**
- * @export
+ * Adds two numbers.
+ * @param {number} a
+ * @param {number} b
+ * @return {number}
  */
-function testAdd() {
-  assertEquals(4, add(2, 2));
-}
+io.bazel.rules.closure.arithmetic.add = function(a, b) {
+  return a + b;
+};

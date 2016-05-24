@@ -1,9 +1,9 @@
 # Closure Rules for Bazel (αlpha) [![Build Status](https://travis-ci.org/bazelbuild/rules_closure.svg?branch=master)](https://travis-ci.org/bazelbuild/rules_closure)
 
-JavaScript | Templating | Stylesheets | Protocol Buffers
---- | --- | --- | ---
+JavaScript | Templating | Stylesheets | Miscellaneous
+--- | --- | --- | --- | ---
 [closure_js_library](#closure_js_library) | [closure_template_js_library](#closure_template_js_library) | [closure_css_library](#closure_css_library) | [closure_proto_js_library](#closure_proto_js_library)
-[closure_js_binary](#closure_js_binary) | [closure_template_java_library](#closure_template_java_library) | [closure_css_binary](#closure_css_binary) |
+[closure_js_binary](#closure_js_binary) | [closure_template_java_library](#closure_template_java_library) | [closure_css_binary](#closure_css_binary) | [phantomjs_test](#phantomjs_test)
 [closure_js_deps](#closure_js_deps) | [closure_template_py_library](#closure_template_py_library) | |
 [closure_js_test](#closure_js_test) | | |
 
@@ -67,7 +67,8 @@ the advantages offered by the Closure Tools.
 ### Caveat Emptor
 
 Closure Rules is production ready, but its design is not yet finalized. Breaking
-changes may be introduced. If so, they'll be documented in the release notes.
+changes will be introduced. However they will be well-documented in the release
+notes.
 
 ## Setup
 
@@ -256,8 +257,8 @@ target. See the documentation of the `deps` attribute for further information.
   Closure Library [base.js][base-js]. If this flag is used, an error will be
   raised if any `deps` do not also specify this flag.
 
-  All `closure_js_library` rules have an implicit dependency on
-  `@closure_library//:closure/goog/base.js` by default. This is a lightweight
+  All `closure_js_library` rules with nonempty `srcs` have an implicit
+  dependency on `@closure_library//:closure/goog/base.js`. This is a lightweight
   file that boostraps very important functions, e.g. `goog.provide`. Linking
   this file by default is important because:
 
@@ -390,47 +391,29 @@ compatibility:
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_test")
-closure_js_test(name, srcs, deps, language)
+closure_js_test(name, srcs, deps, css, html, language, pedantic, suppress,
+                compilation_level, entry_points, defs)
 ```
 
 Runs JavaScript unit tests inside a headless web browser.
 
-PhantomJS (QtWebKit) is used to run tests. This program does not need to be
-installed separately; it is fetched automatically by Bazel. In the future, other
-testing environments may be supported, e.g. SlimerJS, Node.js, JSDom, etc.
-
-#### Test Definitions
+This is a build macro that composes [closure_js_library](#closure_js_library),
+[closure_js_binary](#closure_js_binary), and
+[phantomjs_test](#phantomjs_test).
 
 A test is defined as any function in the global namespace that begins with
-`test`. If you don't have a global namespace, because you're either using
-modules or `goog.scope`, then you must register your test functions with
-`goog.testing.testSuite`.
+`test`, `setUp`, or `tearDown`. If you don't have a global namespace, because
+you're either using modules or `goog.scope`, then you must register your test
+functions with `goog.testing.testSuite`.
 
-Each `foo_test.js` file listed in `srcs` is tested individually. Each test file
-is loaded into a separate global namespace; therefore, they may not reference
-each other. Test helper functions must be defined in a dependent
-`closure_js_library` with `testonly = True`.
+Each test file should require `goog.testing.jsunit` and `goog.testing.asserts`
+because they run the tests and provide useful [testing functions][asserts] such
+as `assertEquals()`.
 
 Any JavaScript file related to testing is strongly recommended to contain a
 `goog.setTestOnly()` statement in the file. However this is not required,
 because some projects might not want to directly reference Closure Library
 functions.
-
-#### Assertions
-
-You do not need to require `goog.testing.jsunit` and `goog.testing.asserts`
-because they are loaded automatically by the test runner. These modules define
-useful [testing functions][asserts] such as `assertEquals()`.
-
-#### No Type Safety
-
-Don't bother using type notation in your unit tests because it won't be checked.
-Type safety is not feasible in unit tests because the mocking utilities in
-Closure Library make the type checker angry.
-
-This offers certain advantageous, such as the ability to override `const`
-definitions and access private members; however, you should test by public APIs
-whenever possible.
 
 #### No Network Access
 
@@ -444,15 +427,67 @@ path.
 
 - **name:** ([Name][name]; required) A unique name for this rule.
 
-- **srcs:** (List of [labels][labels]; required) A list of `_test.js` source
-  files that represent this library.
+- **srcs:** (List of [labels][labels]; required) List of `_test.js` source files
+  that register test functions.
 
-- **deps:** (List of [labels][labels]; optional) Direct dependency list. This
-  has the same meaning as it does in `closure_js_binary`.
+- **deps:** (List of [labels][labels]; optional) Direct dependency list passed
+  along to [closure_js_library](#closure_js_library). This list will almost
+  certainly need `"@io_bazel_rules_closure//closure/library:testing"`.
 
-- **language:** (String; optional; default is `"ECMASCRIPT5_STRICT"`) Variant of
-  JavaScript in which `srcs` are written. See the `closure_js_library`
-  documentation for more information.
+- **css:** Passed to [closure_js_binary](#closure_js_binary).
+
+- **html:** Passed to [phantomjs_test](#phantomjs_test).
+
+- **language:** Passed to [closure_js_binary](#closure_js_binary).
+
+- **compilation_level:** Passed to [closure_js_binary](#closure_js_binary).
+  Setting this to `"WHITESPACE_ONLY"` will cause tests to run significantly
+  faster (at the expense of type checking.)
+
+- **pedantic:** Passed to [closure_js_binary](#closure_js_binary).
+
+- **suppress:** Passed to [closure_js_library](#closure_js_library).
+
+- **entry_points:** Passed to [closure_js_binary](#closure_js_binary).
+
+- **defs:** Passed to [closure_js_binary](#closure_js_binary).
+
+
+## phantomjs\_test
+
+```python
+load("@io_bazel_rules_closure//closure:defs.bzl", "phantomjs_test")
+phantomjs_test(name, deps, html, harness, runner)
+```
+
+Runs PhantomJS (QtWebKit) for unit testing purposes.
+
+This is a low level rule. Please use the [closure_js_test](#closure_js_test)
+macro if possible.
+
+### Arguments
+
+- **name:** ([Name][name]; required) Unique name for this rule.
+
+- **deps:** (List of [labels][labels]; required) Labels of Skylark rules
+  exporting `transitive_js_srcs`. Each source will be inserted into the webpage
+  in its own `<script>` tag based on a depth-first preordering.
+
+- **html:** (Label; optional; default is
+  `"@io_bazel_rules_closure//closure/testing:empty.html"`) HTML file containing
+  DOM structure of virtual web page *before* `<script>` tags are automatically
+  inserted. Do not include a doctype in this file.
+
+- **harness:** (Label; required; default is
+  `"@io_bazel_rules_closure//closure/testing:phantomjs_harness"`) JS binary or
+  library exporting a single source file, to be used as the PhantomJS outer
+  script.
+
+- **runner:** (Label; optional; default is
+  `"@io_bazel_rules_closure//closure/testing:phantomjs_jsunit_runner"`) Same as
+  `deps` but guaranteed to be loaded inside the virtual web page last. This
+  should run whatever tests got loaded by `deps` and then invoke `callPhantom`
+  to report the result to the `harness`.
 
 
 ## closure\_js\_deps

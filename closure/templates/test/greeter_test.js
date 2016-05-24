@@ -12,11 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+goog.require('goog.testing.asserts');
+goog.require('goog.testing.jsunit');
+goog.require('goog.testing.testSuite');
 goog.require('io.bazel.rules.closure.Greeter');
 
+goog.testing.testSuite({
 
-function testGreet() {
-  var greeter = new io.bazel.rules.closure.Greeter('Justine');
-  greeter.greet();
-  assertHTMLEquals('<p>Hello <b>Justine</b>!', document.body.innerHTML);
-}
+  'testGreet': function() {
+    var greeter = new io.bazel.rules.closure.Greeter('Justine');
+    greeter.greet();
+    assertHTMLEquals('<p>Hello <b>Justine</b>!', document.body.innerHTML);
+  }
+
+});  // goog.testing.testSuite

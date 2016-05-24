@@ -18,6 +18,7 @@
 """
 
 CSS_FILE_TYPE = FileType([".css", ".gss"])
+HTML_FILE_TYPE = FileType([".html"])
 JS_FILE_TYPE = FileType([".js"])
 JS_LANGUAGE_DEFAULT = "ECMASCRIPT5_STRICT"
 JS_TEST_FILE_TYPE = FileType(["_test.js"])
@@ -39,19 +40,22 @@ JS_PEDANTIC_ARGS = [
 ]
 
 JS_HIDE_WARNING_ARGS = [
-    "--hide_warnings_for=.soy.js",
     "--hide_warnings_for=external/closure_library/",
     "--hide_warnings_for=external/soyutils_usegoog/",
+    "--hide_warnings_for=external/protobuf_js/",
+    "--hide_warnings_for=bazel-out/local-fastbuild/genfiles/",
 ]
 
-JS_DEPS_ATTR = attr.label_list(
-    allow_files=False,
-    providers=["js_language",
-               "js_exports",
-               "js_provided",
-               "required_css_labels",
-               "transitive_js_srcs",
-               "transitive_js_externs"])
+JS_DEPS_PROVIDERS = [
+    "js_language",
+    "js_exports",
+    "js_provided",
+    "required_css_labels",
+    "transitive_js_srcs",
+    "transitive_js_externs",
+]
+
+JS_DEPS_ATTR = attr.label_list(allow_files=False, providers=JS_DEPS_PROVIDERS)
 
 CSS_DEPS_ATTR = attr.label_list(
     allow_files=False,
@@ -72,15 +76,16 @@ CLOSURE_LIBRARY_DEPS_ATTR = attr.label(
 def collect_js_srcs(ctx):
   srcs = set(order="compile")
   externs = set(order="compile")
-  base = None
   if hasattr(ctx.attr, 'css'):
     if ctx.attr.css:
       srcs += [ctx.file._closure_library_base,
                ctx.file._closure_library_deps,
                ctx.attr.css.js_css_renaming_map]
   elif (hasattr(ctx.file, '_closure_library_base')
-      and (not hasattr(ctx.attr, 'no_closure_library')
-           or not ctx.attr.no_closure_library)):
+        and (not hasattr(ctx.attr, 'no_closure_library')
+             or not ctx.attr.no_closure_library)
+        and (not hasattr(ctx.files, 'srcs')
+             or ctx.files.srcs)):
     srcs += [ctx.file._closure_library_base,
              ctx.file._closure_library_deps]
   for dep in ctx.attr.deps:

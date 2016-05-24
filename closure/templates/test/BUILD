@@ -35,5 +35,8 @@ closure_js_library(
 closure_js_test(
     name = "greeter_test",
     srcs = ["greeter_test.js"],
-    deps = [":greeter_lib"],
+    deps = [
+        ":greeter_lib",
+        "//closure/library:testing",
+    ],
 )

@@ -13,19 +13,19 @@
 // limitations under the License.
 
 /**
- * @fileoverview PhantomJS test runner in-browser code. This file loads Closure
- *     testing libraries and then polls for test completion and then sends a
- *     message to PhantomJS letting it know it can exit.
+ * @fileoverview PhantomJS test runner in-browser code. This file polls the
+ *     Closure Library every 200ms to see if the tests have completed, and
+ *     reports the result to phantomjs_runner.js.
  */
 
-goog.require('goog.testing.asserts');
-goog.require('goog.testing.jsunit');
-
-
-(function() {
-  window.setInterval(function() {
-    if (window['G_testRunner'].isFinished()) {
-      window['callPhantom'](window['G_testRunner'].isSuccess());
-    }
-  }, 200);
-})();
+window.setInterval(function() {
+  if (!window['G_testRunner']) {
+    console.log('ERROR: G_testRunner not defined. ' +
+        'Did you remember to goog.require(\'goog.testing.jsunit\')?');
+    window['callPhantom'](false);
+    return;
+  }
+  if (window['G_testRunner'].isFinished()) {
+    window['callPhantom'](window['G_testRunner'].isSuccess());
+  }
+}, 200);

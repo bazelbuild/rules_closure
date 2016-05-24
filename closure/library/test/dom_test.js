@@ -18,32 +18,34 @@ goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.html.SafeHtml');
 goog.require('goog.testing.asserts');
+goog.require('goog.testing.jsunit');
+goog.require('goog.testing.testSuite');
 
+goog.testing.testSuite({
 
-function setUp() {
-  goog.dom.appendChild(
-      goog.global.document.body,
-      goog.dom.safeHtmlToNode(
-          goog.html.SafeHtml.create(
-              goog.dom.TagName.DIV,
-              {'id': 'hello'},
-              'Hello World!')));
-}
+  'setUp': function() {
+    goog.dom.appendChild(
+        goog.global.document.body,
+        goog.dom.safeHtmlToNode(
+            goog.html.SafeHtml.create(
+                goog.dom.TagName.DIV,
+                {'id': 'hello'},
+                'Hello World!')));
+  },
 
+  'testGetElement': function() {
+    assertNotNull(goog.dom.getElement('hello'));
+  },
 
-function testGetElement() {
-  assertNotNull(goog.dom.getElement('hello'));
-}
+  'testGetTextContent': function() {
+    assertEquals('Hello World!',
+                 goog.dom.getTextContent(
+                     goog.dom.getRequiredElement('hello')));
+  },
 
+  'testHtml': function() {
+    assertHTMLEquals('<div id="hello">Hello World!</div>',
+                     goog.dom.getRequiredElement('hello').outerHTML);
+  }
 
-function testGetTextContent() {
-  assertEquals('Hello World!',
-               goog.dom.getTextContent(
-                   goog.dom.getRequiredElement('hello')));
-}
-
-
-function testHtml() {
-  assertHTMLEquals('<div id="hello">Hello World!</div>',
-                   goog.dom.getRequiredElement('hello').outerHTML);
-}
+});  // goog.testing.testSuite

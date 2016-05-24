@@ -35,5 +35,8 @@ closure_js_library(
 closure_js_test(
     name = "example_test",
     srcs = ["example_test.js"],
-    deps = [":example_lib"],
+    deps = [
+        ":example_lib",
+        "//closure/library:testing",
+    ],
 )

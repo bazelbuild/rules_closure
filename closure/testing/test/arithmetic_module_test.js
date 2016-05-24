@@ -19,7 +19,7 @@ var arithmetic = goog.require('arithmetic_module');
 var testSuite = goog.require('goog.testing.testSuite');
 
 testSuite({
-  testAdd: function() {
+  'testAdd': function() {
     assertEquals(4, arithmetic.add(2, 2));
   }
 });
