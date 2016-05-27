@@ -31,18 +31,34 @@ def closure_template_js_library(
     should_provide_require_soy_namespaces = 1,
     should_generate_soy_msg_defs = 0,
     soy_msgs_are_external = 0,
-    soycompilerbin = str(Label("//closure/templates:SoyToJsSrcCompiler"))):
+    incremental_dom = 0,
+    soycompilerbin = str(Label("//closure/templates:SoyToJsSrcCompiler")),
+    soyidomcompilerbin = str(Label("//closure/templates:SoyToIncrementalDomSrcCompiler"))):
+  if incremental_dom:
+    compilerbin = soyidomcompilerbin
+    if not should_generate_js_doc:
+      fail('should_generate_js_doc must be 1 when using incremental_dom')
+    if not should_provide_require_soy_namespaces:
+      fail('should_provide_require_soy_namespaces must be 1 when using incremental_dom')
+    if should_generate_soy_msg_defs:
+      fail('should_generate_soy_msg_defs must be 0 when using incremental_dom')
+    if soy_msgs_are_external:
+      fail('soy_msgs_are_external must be 0 when using incremental_dom')
+  else:
+    compilerbin = soycompilerbin
+
   js_srcs = [src + ".js" for src in srcs]
-  cmd = ["$(location %s)" % soycompilerbin,
+  cmd = ["$(location %s)" % compilerbin,
          "--outputPathFormat='$(@D)/{INPUT_FILE_NAME}.js'"]
-  if soy_msgs_are_external:
-    cmd += ["--googMsgsAreExternal"]
-  if should_generate_js_doc:
-    cmd += ["--shouldGenerateJsdoc"]
-  if should_provide_require_soy_namespaces:
-    cmd += ["--shouldProvideRequireSoyNamespaces"]
-  if should_generate_soy_msg_defs:
-    cmd += "--shouldGenerateGoogMsgDefs"
+  if not incremental_dom:
+    if soy_msgs_are_external:
+      cmd += ["--googMsgsAreExternal"]
+    if should_generate_js_doc:
+      cmd += ["--shouldGenerateJsdoc"]
+    if should_provide_require_soy_namespaces:
+      cmd += ["--shouldProvideRequireSoyNamespaces"]
+    if should_generate_soy_msg_defs:
+      cmd += "--shouldGenerateGoogMsgDefs"
   if plugin_modules:
     cmd += ["--pluginModules=%s" % ",".join(plugin_modules)]
   cmd += ["$(location " + src + ")" for src in srcs]
@@ -57,15 +73,17 @@ def closure_template_js_library(
       visibility = visibility,
       message = "Generating SOY v2 JS files",
       outs = js_srcs,
-      tools = [soycompilerbin],
+      tools = [compilerbin],
       cmd = " ".join(cmd),
   )
+
+  deps = deps + [str(Label("//closure/library")),
+                 str(Label("//closure/templates:soyutils_usegoog"))]
+  if incremental_dom:
+    deps = deps + [str(Label("//closure/templates:incremental_dom"))]
 
   closure_js_library(
       name = name,
       srcs = js_srcs,
-      deps = deps + [
-          str(Label("//closure/library")),
-          str(Label("//closure/templates:soyutils_usegoog")),
-      ],
+      deps = deps,
   )

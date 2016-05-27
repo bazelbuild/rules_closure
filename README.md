@@ -52,6 +52,9 @@ Closure Rules bundles the following tools and makes them "just work."
 - [Protocol Buffers][protobuf]: Google's language-neutral, platform-neutral,
   extensible mechanism for serializing structured data. This is used instead of
   untyped JSON.
+- [Incremental DOM][incremental-dom]: Google's in-place DOM diffing library.
+  This optional backend for Closure Templates builds DOM trees and updates
+  them in-place when data changes.
 
 The Closure Tools were released to the public in 2009, but had previously been
 quite difficult to configure. They were originally designed to be used with
@@ -546,7 +549,7 @@ closure_template_js_library(name, srcs, deps, globals, plugin_modules,
                             should_generate_js_doc,
                             should_provide_require_soy_namespaces,
                             should_generate_soy_msg_defs,
-                            soy_msgs_are_external)
+                            soy_msgs_are_external, incremental_dom)
 ```
 
 Compiles Closure templates to JavaScript source files.
@@ -593,16 +596,23 @@ the following:
   Passed along verbatim to the SoyToJsSrcCompiler above.
 
 - **should_generate_js_doc:** (Boolean; optional; default is `True`) Passed
-  along verbatim to the SoyToJsSrcCompiler above.
+  along verbatim to the SoyToJsSrcCompiler above. Does not apply when using
+  Incremental DOM.
 
 - **should_provide_require_soy_namespaces:** (Boolean; optional; default is
-  `True`) Passed along verbatim to the SoyToJsSrcCompiler above.
+  `True`) Passed along verbatim to the SoyToJsSrcCompiler above. Does not apply
+  when using Incremental DOM.
 
 - **should_generate_soy_msg_defs:** (Boolean; optional; default is `False`)
-  Passed along verbatim to the SoyToJsSrcCompiler above.
+  Passed along verbatim to the SoyToJsSrcCompiler above.  Does not apply when
+  using Incremental DOM.
 
 - **soy_msgs_are_external:** (Boolean; optional; default is `False`) Passed
-  along verbatim to the SoyToJsSrcCompiler above.
+  along verbatim to the SoyToJsSrcCompiler above. Does not apply when using
+  Incremental DOM.
+
+- **incremental_dom:** (Boolean; optional; default is `False`) Generate
+  [incremental-dom][incremental-dom] compatible templates.
 
 
 ## closure\_template\_java\_library
@@ -858,6 +868,7 @@ Documentation: [Protocol Buffers][protobuf] [JS][protobuf-js]
 [dependency]: http://bazel.io/docs/build-ref.html#dependencies
 [es6]: http://es6-features.org/
 [entry-export]: https://github.com/bazelbuild/rules_closure/blob/master/closure/compiler/test/exports_and_entry_points/BUILD
+[incremental-dom]: https://github.com/google/incremental-dom/
 [java-exports]: http://bazel.io/docs/be/java.html#java_library.exports
 [jsstyle]: https://google.github.io/styleguide/javascriptguide.xml
 [jquery]: http://jquery.com/

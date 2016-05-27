@@ -63,3 +63,22 @@ java_binary(
         ":templates",
     ],
 )
+
+java_binary(
+    name = "SoyToIncrementalDomSrcCompiler",
+    jvm_flags = ["-client"],
+    main_class = "com.google.template.soy.SoyToIncrementalDomSrcCompiler",
+    runtime_deps = [
+        "@args4j//jar",
+        "@incremental_dom_soy//:compiler_jar",
+    ],
+)
+
+closure_js_library(
+    name = "incremental_dom",
+    srcs = ["//third_party/incremental_dom"],
+    language = "ECMASCRIPT6_STRICT",
+    suppress = [
+        "JSC_MISSING_JSDOC",
+    ],
+)

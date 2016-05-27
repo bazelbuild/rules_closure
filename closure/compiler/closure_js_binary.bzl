@@ -85,7 +85,7 @@ def _impl(ctx):
     args += JS_PEDANTIC_ARGS
     args += ["--use_types_for_optimization"]
   if contains_file(srcs, "external/closure_library/closure/goog/json/json.js"):
-    # TODO(ahochhaus): Make unknownDefines an error for user supplied defines.
+    # TODO(hochhaus): Make unknownDefines an error for user supplied defines.
     # https://github.com/bazelbuild/rules_closure/issues/79
     args += ["--jscomp_off=unknownDefines",
              "--define=goog.json.USE_NATIVE_JSON"]

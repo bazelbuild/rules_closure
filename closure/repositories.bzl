@@ -34,6 +34,8 @@ def closure_repositories(
     omit_guice_assistedinject=False,
     omit_guice_multibindings=False,
     omit_icu4j=False,
+    omit_incremental_dom = False,
+    omit_incremental_dom_soy = False,
     omit_jsr305=False,
     omit_jsr330_inject=False,
     omit_libexpat_amd64_deb=False,
@@ -82,6 +84,10 @@ def closure_repositories(
     guice_multibindings()
   if not omit_icu4j:
     icu4j()
+  if not omit_incremental_dom:
+    incremental_dom()
+  if not omit_incremental_dom_soy:
+    incremental_dom_soy()
   if not omit_jsr305:
     jsr305()
   if not omit_jsr330_inject:
@@ -289,6 +295,28 @@ def icu4j():
       server = "closure_maven_server",
   )
 
+def incremental_dom():
+  # To update Incremental DOM, one needs to update
+  # third_party/incremental_dom/build.sh to remain compatible with the
+  # upstream "js-closure" gulpfile.js target.
+  # https://github.com/google/incremental-dom/blob/master/gulpfile.js
+  native.http_file(
+      name = "incremental_dom",
+      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/incremental-dom/archive/0.4.0.tar.gz",
+      sha256 = "f8abce145b235e1b0f94f2d923e49c49c16c9bca462ecfcc7e787ae15d84fc74",
+  )
+
+def incremental_dom_soy():
+  native.new_http_archive(
+      name = "incremental_dom_soy",
+      # TODO(hochhaus): Use soy jar when SoyToIncrementalDomSrcCompiler is
+      # synced to github.
+      # https://github.com/google/closure-templates/issues/85
+      url = "http://bazel-mirror.storage.googleapis.com/registry.npmjs.org/closure-templates-incrementaldom/-/closure-templates-incrementaldom-0.0.3.tgz",
+      sha256 = "c72be8b1596e6ac2d2d484532803e75515d38561fded604074a287495a00bdd2",
+      build_file = str(Label("//closure/templates:incremental_dom_soy.BUILD")),
+  )
+
 def jsr305():
   native.maven_jar(
       name = "jsr305",
@@ -351,7 +379,7 @@ def protobuf_js():
   native.new_http_archive(
       name = "protobuf_js",
       # TODO(hochhaus): Use protobuf-js-*.zip once it includes encoder.js.
-      # http://github.com/google/protobuf/pull/1589
+      # https://github.com/google/protobuf/pull/1589
       url = "http://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/archive/v3.0.0-beta-3.zip",
       sha256 = "dad1912814e9d9b8642036d07c086ac79faf2cc534c992911375a39924a45860",
       strip_prefix = "protobuf-3.0.0-beta-3",

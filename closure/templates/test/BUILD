@@ -23,6 +23,12 @@ closure_template_js_library(
     srcs = ["greeter.soy"],
 )
 
+closure_template_js_library(
+    name = "greeter_idom_soy",
+    srcs = ["greeter_idom.soy"],
+    incremental_dom = 1,
+)
+
 closure_js_library(
     name = "greeter_lib",
     srcs = ["greeter.js"],
@@ -30,6 +36,17 @@ closure_js_library(
         ":greeter_soy",
         "//closure/library",
     ],
+)
+
+closure_js_library(
+    name = "greeter_idom_lib",
+    srcs = ["greeter_idom.js"],
+    deps = [
+        ":greeter_idom_soy",
+        "//closure/library",
+        "//closure/templates:incremental_dom",
+    ],
+    language = "ECMASCRIPT6_STRICT",
 )
 
 closure_js_test(
@@ -41,4 +58,14 @@ closure_js_test(
         "//closure/library",
         "//closure/library:testing",
     ],
+)
+
+closure_js_test(
+    name = "greeter_idom_test",
+    srcs = ["greeter_idom_test.js"],
+    deps = [
+        ":greeter_idom_lib",
+        "//closure/library:testing",
+    ],
+    language = "ECMASCRIPT6_STRICT",
 )

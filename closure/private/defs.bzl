@@ -43,8 +43,9 @@ JS_PEDANTIC_ARGS = [
 
 JS_HIDE_WARNING_ARGS = [
     "--hide_warnings_for=external/closure_library/",
-    "--hide_warnings_for=external/soyutils_usegoog/",
+    "--hide_warnings_for=external/incremental_dom/",
     "--hide_warnings_for=external/protobuf_js/",
+    "--hide_warnings_for=external/soyutils_usegoog/",
     "--hide_warnings_for=bazel-out/local-fastbuild/genfiles/",
 ]
 
