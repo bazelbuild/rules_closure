@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests that two files contain the same binary data."""
+"""Tests that two files contain the same data."""
 
 def _impl(ctx):
   if ctx.file.golden == ctx.file.actual:
@@ -38,7 +38,7 @@ def _impl(ctx):
           "SUM1=$(checksum %s)" % ctx.file.golden.short_path,
           "SUM2=$(checksum %s)" % ctx.file.actual.short_path,
           "if [[ ${SUM1} != ${SUM2} ]]; then",
-          "  echo FILES DO NOT HAVE EQUAL CONTENTS >&2",
+          "  echo ERROR: %s >&2" % ctx.attr.error_message,
           "  echo %s ${SUM1} >&2" % ctx.file.golden.short_path,
           "  echo %s ${SUM2} >&2" % ctx.file.actual.short_path,
           "  exit 1",
@@ -53,13 +53,13 @@ files_equal_test = rule(
         "golden": attr.label(
             mandatory = True,
             allow_files = True,
-            single_file = True,
-        ),
+            single_file = True),
         "actual": attr.label(
             mandatory = True,
             allow_files = True,
-            single_file = True,
-        ),
+            single_file = True),
+        "error_message": attr.string(
+            default="FILES DO NOT HAVE EQUAL CONTENTS"),
     },
     implementation = _impl,
     test = True)

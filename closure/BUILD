@@ -12,4 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-package(default_visibility = ["//visibility:public"])
+load("//closure/private:lines_sorted_test.bzl", "lines_sorted_test")
+
+lines_sorted_test(
+    name = "repositories_defs_sorted_test",
+    cmd = "sed '1,/MAINTAINERS/ d' $< | grep ^def >$@",
+    error_message = "The functions in repositories.bzl must be sorted",
+    file = "repositories.bzl",
+)
+
+lines_sorted_test(
+    name = "repositories_params_sorted_test",
+    cmd = "grep -e '^ *omit' $< | grep -o 'omit_[_0-9a-z]*' >$@",
+    error_message = "The parameter list in repositories.bzl must be sorted",
+    file = "repositories.bzl",
+)
+
+lines_sorted_test(
+    name = "repositories_calls_sorted_test",
+    cmd = "grep -e '^ *if not omit' $< | grep -o 'omit_[_0-9a-z]*' >$@",
+    error_message = "The param call list in repositories.bzl must be sorted",
+    file = "repositories.bzl",
+)
