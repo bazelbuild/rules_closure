@@ -15,10 +15,10 @@
 package(default_testonly = True)
 
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
+load("//closure/protobuf:closure_js_proto_library.bzl", "closure_js_proto_library")
 load("//closure/testing:closure_js_test.bzl", "closure_js_test")
-load("//protobuf:closure_proto_js_library.bzl", "closure_proto_js_library")
 
-closure_proto_js_library(
+closure_js_proto_library(
     name = "example_proto",
     srcs = ["example.proto"],
 )

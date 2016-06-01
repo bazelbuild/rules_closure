@@ -383,7 +383,7 @@ def protobuf_js():
       url = "http://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/archive/v3.0.0-beta-3.zip",
       sha256 = "dad1912814e9d9b8642036d07c086ac79faf2cc534c992911375a39924a45860",
       strip_prefix = "protobuf-3.0.0-beta-3",
-      build_file = str(Label("//protobuf:protobuf_js.BUILD")),
+      build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
   )
 
 def protoc_linux_x86_64():

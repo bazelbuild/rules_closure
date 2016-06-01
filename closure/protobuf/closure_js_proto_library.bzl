@@ -19,7 +19,7 @@
 
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 
-def closure_proto_js_library(
+def closure_js_proto_library(
     name,
     srcs,
     visibility = None,
@@ -57,6 +57,6 @@ def closure_proto_js_library(
       srcs = [ name + ".js" ],
       deps = [
           str(Label("//closure/library")),
-          str(Label("//protobuf:jspb")),
+          str(Label("//closure/protobuf:jspb")),
       ],
   )

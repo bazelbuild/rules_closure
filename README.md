@@ -2,7 +2,7 @@
 
 JavaScript | Templating | Stylesheets | Miscellaneous
 --- | --- | --- | ---
-[closure_js_library](#closure_js_library) | [closure_template_js_library](#closure_template_js_library) | [closure_css_library](#closure_css_library) | [closure_proto_js_library](#closure_proto_js_library)
+[closure_js_library](#closure_js_library) | [closure_template_js_library](#closure_template_js_library) | [closure_css_library](#closure_css_library) | [closure_js_proto_library](#closure_js_proto_library)
 [closure_js_binary](#closure_js_binary) | [closure_template_java_library](#closure_template_java_library) | [closure_css_binary](#closure_css_binary) | [phantomjs_test](#phantomjs_test)
 [closure_js_deps](#closure_js_deps) | [closure_template_py_library](#closure_template_py_library) | |
 [closure_js_test](#closure_js_test) | | |
@@ -124,7 +124,7 @@ Please see the test directories within this project for concrete examples of usa
 - [//closure/library/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/library/test)
 - [//closure/templates/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/templates/test)
 - [//closure/stylesheets/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/stylesheets/test)
-- [//protobuf/test](https://github.com/bazelbuild/rules_closure/tree/master/protobuf/test)
+- [//closure/protobuf/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/protobuf/test)
 
 
 # Reference
@@ -808,8 +808,8 @@ The documentation on using Closure Stylesheets can be found
 ## closure\_proto\_js\_library
 
 ```python
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_proto_js_library")
-closure_proto_js_library(name, srcs, add_require_for_enums, binary,
+load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_proto_library")
+closure_js_proto_library(name, srcs, add_require_for_enums, binary,
                          import_style)
 ```
 
