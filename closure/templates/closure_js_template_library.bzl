@@ -19,7 +19,7 @@
 
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 
-def closure_template_js_library(
+def closure_js_template_library(
     name,
     srcs,
     deps = [],

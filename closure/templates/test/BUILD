@@ -15,15 +15,15 @@
 package(default_testonly = True)
 
 load("//closure:defs.bzl", "closure_js_library")
-load("//closure:defs.bzl", "closure_template_js_library")
+load("//closure:defs.bzl", "closure_js_template_library")
 load("//closure:defs.bzl", "closure_js_test")
 
-closure_template_js_library(
+closure_js_template_library(
     name = "greeter_soy",
     srcs = ["greeter.soy"],
 )
 
-closure_template_js_library(
+closure_js_template_library(
     name = "greeter_idom_soy",
     srcs = ["greeter_idom.soy"],
     incremental_dom = 1,

@@ -42,7 +42,7 @@
 #     undefined templates). This parameter is passed to SoyParseInfoGenerator and
 #     it defaults to true.
 # soycompilerbin: Optional Soy to ParseInfo compiler target.
-def closure_template_java_library(
+def closure_java_template_library(
     name,
     java_package = None,
     srcs = [],
