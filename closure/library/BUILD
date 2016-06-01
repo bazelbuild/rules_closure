@@ -22,6 +22,7 @@ closure_js_library(
     srcs = ["@closure_library//:js_library_files"],
     language = "ECMASCRIPT5_STRICT",
     suppress = [
+        "CLANG_FORMAT",
         "JSC_DUPLICATE_ENUM_VALUE",
         "JSC_ILLEGAL_PROTOTYPE_MEMBER",
         "JSC_INVALID_SUPPRESS",
@@ -40,6 +41,7 @@ closure_js_library(
     srcs = ["@closure_library//:js_testing_files"],
     language = "ECMASCRIPT5_STRICT",
     suppress = [
+        "CLANG_FORMAT",
         "JSC_EXTRA_REQUIRE_WARNING",
         "JSC_INVALID_SUPPRESS",
         "JSC_MISSING_JSDOC",

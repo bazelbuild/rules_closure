@@ -58,6 +58,7 @@ closure_js_library(
     name = "soy_jssrc",
     srcs = ["//third_party/jssrc"],
     suppress = [
+        "CLANG_FORMAT",
         "JSC_OPTIONAL_PARAM_NOT_MARKED_OPTIONAL",
     ],
     deps = [
@@ -120,4 +121,8 @@ closure_js_library(
     name = "incremental_dom",
     srcs = ["//third_party/incremental_dom"],
     language = "ECMASCRIPT6_STRICT",
+    suppress = [
+        "CLANG_FORMAT",
+        "JSC_MISSING_JSDOC",
+    ],
 )

@@ -2,6 +2,14 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # BSD
 
+sh_binary(
+    name = "google_format",
+    srcs = ["google_format.sh"],
+    data = [
+        "clang-format",
+    ],
+)
+
 genrule(
     name = "clang_format_extract",
     srcs = ["@clang//file"],

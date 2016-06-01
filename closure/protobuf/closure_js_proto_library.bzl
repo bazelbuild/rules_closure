@@ -28,7 +28,10 @@ def closure_js_proto_library(
     testonly = 0,
     binary = 1,
     import_style = None,
-    protocbin = Label("//third_party/protobuf:protoc_bin")):
+    style = 1,
+    protocbin = Label("//third_party/protobuf:protoc_bin"),
+    googleformat = Label("//third_party/llvm/llvm/tools/clang:google_format"),
+    clangformat = Label("//third_party/llvm/llvm/tools/clang:clang_format_extract")):
   cmd = ["$(location %s)" % protocbin]
   js_out_options = ["library=%s,error_on_name_conflict" % name]
   if add_require_for_enums:
@@ -41,6 +44,22 @@ def closure_js_proto_library(
     js_out_options += ["import_style=%s" % import_style]
   cmd += ["--js_out=%s:$(@D)" % ",".join(js_out_options)]
   cmd += ["$(locations " + src + ")" for src in srcs]
+
+  if style:
+    style_cmd = ["$(location %s)" % googleformat,
+                 "$(location %s)" % clangformat,
+                 "$@"]
+    style_cmd += ["$(location " + src + ")" for src in srcs]
+    native.genrule(
+        name = name + "_style",
+        srcs = srcs,
+        testonly = testonly,
+        visibility = visibility,
+        message = "Checking Protocol Buffer source style",
+        outs = [ "%s-style.txt" % name ],
+        tools = [googleformat, clangformat],
+        cmd = " ".join(style_cmd),
+    )
 
   native.genrule(
       name = name + "_gen",
@@ -62,4 +81,7 @@ def closure_js_proto_library(
           str(Label("//closure/protobuf:jspb")),
       ],
       visibility = visibility,
+      suppress = [
+          "CLANG_FORMAT",
+      ],
   )

@@ -65,7 +65,12 @@ def _impl(ctx):
     for edep in direct_dep.js_exports:
       args += ["--dep=%s" % edep.js_provided.path]
       inputs.append(edep.js_provided)
-  args += ["--suppress=%s" % s for s in ctx.attr.suppress]
+  clangFormat = True
+  for suppress in ctx.attr.suppress:
+    if suppress == "CLANG_FORMAT":
+      clangFormat = False
+    else:
+      args += ["--suppress=%s" % suppress]
   if ctx.attr.internal_expect_failure:
     args += ["--expect_failure"]
   if ctx.attr.internal_expect_warnings:
@@ -74,6 +79,25 @@ def _impl(ctx):
                          "%s_worker_input" % ctx.label.name)
   ctx.file_action(output=argfile, content="\n".join(args))
   inputs.append(argfile)
+
+  files = [ctx.outputs.provided, ctx.outputs.stderr]
+  if clangFormat and len(ctx.files.srcs) > 0:
+    files.append(ctx.outputs.jsstyle)
+    style_args = [ctx.executable._clangformat.path,
+                  ctx.outputs.jsstyle.path]
+    style_inputs = [ctx.executable._clangformat]
+    for direct_src in ctx.files.srcs:
+      style_args += [direct_src.path]
+      style_inputs.append(direct_src)
+    ctx.action(
+        inputs=style_inputs,
+        outputs=[ctx.outputs.jsstyle],
+        executable=ctx.executable._googleformat,
+        arguments=style_args,
+        mnemonic="JSStyleChecker",
+        progress_message="Checking %d JS files for style in %s" % (
+            len(ctx.files.srcs) + len(ctx.files.externs), ctx.label))
+
   ctx.action(
       inputs=inputs,
       outputs=[ctx.outputs.provided, ctx.outputs.stderr],
@@ -101,6 +125,15 @@ def _determine_check_language(language):
     return "ECMASCRIPT3"
   return language
 
+def _outputs(attr):
+  outputs = {
+      "provided": "%{name}-provided.txt",
+      "stderr": "%{name}-stderr.txt",
+  }
+  if "CLANG_FORMAT" not in attr.suppress and len(attr.srcs) > 0:
+    outputs["jsstyle"] = "%{name}-jsstyle.txt"
+  return outputs
+
 closure_js_library = rule(
     implementation=_impl,
     attrs={
@@ -122,8 +155,11 @@ closure_js_library = rule(
             executable=True),
         "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
         "_closure_library_deps": CLOSURE_LIBRARY_DEPS_ATTR,
+        "_googleformat": attr.label(
+            default=Label("//third_party/llvm/llvm/tools/clang:google_format"),
+            executable=True),
+        "_clangformat": attr.label(
+            default=Label("//third_party/llvm/llvm/tools/clang:clang_format_extract"),
+            executable=True),
     },
-    outputs={
-        "provided": "%{name}-provided.txt",
-        "stderr": "%{name}-stderr.txt",
-    })
+    outputs=_outputs)

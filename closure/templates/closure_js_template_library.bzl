@@ -131,6 +131,9 @@ def closure_js_template_library(
       deps = deps,
       visibility = visibility,
       testonly = testonly,
+      suppress = [
+          "CLANG_FORMAT",
+      ],
   )
 
 
