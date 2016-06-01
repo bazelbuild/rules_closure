@@ -23,6 +23,8 @@ def closure_repositories(
     omit_asm_analysis=False,
     omit_asm_commons=False,
     omit_asm_util=False,
+    omit_clang_linux_x86_64=False,
+    omit_clang_macosx=False,
     omit_closure_compiler=False,
     omit_closure_library=False,
     omit_closure_stylesheets=False,
@@ -63,6 +65,10 @@ def closure_repositories(
     asm_commons()
   if not omit_asm_util:
     asm_util()
+  if not omit_clang_linux_x86_64:
+    clang_linux_x86_64()
+  if not omit_clang_macosx:
+    clang_macosx()
   if not omit_closure_compiler:
     closure_compiler()
   if not omit_closure_library:
@@ -200,6 +206,20 @@ def asm_util():
       artifact = "org.ow2.asm:asm-util:5.0.3",
       sha1 = "1512e5571325854b05fb1efce1db75fcced54389",
       server = "closure_maven_server",
+  )
+
+def clang_linux_x86_64():
+  native.http_file(
+      name = "clang_linux_x86_64",
+      sha256 = "3120c3055ea78bbbb6848510a2af70c68538b990cb0545bac8dad01df8ff69d7",
+      url = "http://bazel-mirror.storage.googleapis.com/llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz",
+  )
+
+def clang_macosx():
+  native.http_file(
+      name = "clang_macosx",
+      sha256 = "e5a961e04b0e1738bbb5b824886a34932dc13b0af699d1fe16519d814d7b776f",
+      url = "http://bazel-mirror.storage.googleapis.com/llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-apple-darwin.tar.xz",
   )
 
 def closure_compiler():

@@ -55,6 +55,9 @@ Closure Rules bundles the following tools and makes them "just work."
 - [Incremental DOM][incremental-dom]: Google's in-place DOM diffing library.
   This optional backend for Closure Templates builds DOM trees and updates
   them in-place when data changes.
+- [ClangFormat][clang-format]: Code formatting tool to automatically
+  format JavaScript and Protocol Buffer source code per Google's style
+  conventions.
 
 The Closure Tools were released to the public in 2009, but had previously been
 quite difficult to configure. They were originally designed to be used with
@@ -92,7 +95,7 @@ closure_repositories()
 You are not required to install the Closure Tools or PhantomJS. They will be
 fetched automatically.
 
-#### Overriding Dependency Versions
+### Overriding Dependency Versions
 
 When you call `closure_repositories()` in your `WORKSPACE` file, it causes a
 few dozen external dependencies to be added to your project, e.g. Guava, Guice,
@@ -135,7 +138,7 @@ Please see the test directories within this project for concrete examples of usa
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
 closure_js_library(name, srcs, externs, deps, language, exports, suppress,
-                   convention)
+                   convention, no_closure_library)
 ```
 
 Defines a set of JavaScript sources or externs.
@@ -857,6 +860,7 @@ Documentation: [Protocol Buffers][protobuf] [JS][protobuf-js]
 [bazel-install]: http://bazel.io/docs/install.html
 [bazel]: http://bazel.io/
 [blockers]: https://github.com/bazelbuild/rules_closure/labels/launch%20blocker
+[clang-format]: http://clang.llvm.org/docs/ClangFormat.html
 [closure-compiler]: https://developers.google.com/closure/compiler/
 [closure-library]: https://developers.google.com/closure/library/
 [closure-stylesheets]: https://github.com/google/closure-stylesheets
