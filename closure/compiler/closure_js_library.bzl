@@ -68,12 +68,16 @@ def _impl(ctx):
     args += ["--expect_failure"]
   if ctx.attr.internal_expect_warnings:
     args += ["--expect_warnings"]
+  argfile = ctx.new_file(ctx.configuration.bin_dir,
+                         "%s_worker_input" % ctx.label.name)
+  ctx.file_action(output=argfile, content="\n".join(args))
+  inputs.append(argfile)
   ctx.action(
       inputs=inputs,
       outputs=[ctx.outputs.provided, ctx.outputs.stderr],
       executable=ctx.executable._jschecker,
-      arguments=args,
-      mnemonic="JSChecker",
+      arguments=["@" + argfile.path],
+      mnemonic="JsChecker",
       progress_message="Checking %d JS files in %s" % (
           len(ctx.files.srcs) + len(ctx.files.externs), ctx.label))
   return struct(files=set(ctx.files.srcs, order="compile"),

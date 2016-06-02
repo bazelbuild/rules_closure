@@ -1,3 +1,5 @@
+load("//closure/private:java_proto_library.bzl", "java_proto_library")
+
 java_binary(
     name = "jschecker",
     srcs = [
@@ -11,13 +13,18 @@ java_binary(
         "JsCheckerSecondPass.java",
         "JsCheckerState.java",
     ],
-    jvm_flags = ["-client"],
     main_class = "com.google.javascript.jscomp.JsChecker",
     visibility = ["//visibility:public"],
     deps = [
         "@args4j//jar",
         "@guava//jar",
         "@protobuf_java//jar",
+        ":worker_protocol_proto",
         "//third_party/java/jscomp",
     ],
+)
+
+java_proto_library(
+    name = "worker_protocol_proto",
+    src = "worker_protocol.proto",
 )

@@ -21,4 +21,4 @@ before_install:
   - ./bazel-0.2.2b-installer-linux-x86_64.sh --user
 
 script:
-  - bazel --batch --host_jvm_args=-Xmx1000m --host_jvm_args=-Xms1000m test closure/... --verbose_failures --test_output=errors --test_strategy=standalone --spawn_strategy=standalone --genrule_strategy=standalone --local_resources=1000,1,1.0
+  - bazel --batch --host_jvm_args=-Xmx1000m --host_jvm_args=-Xms1000m test closure/... --strategy=Javac=worker --strategy=JsChecker=worker --worker_verbose --verbose_failures --test_output=errors --test_strategy=standalone --spawn_strategy=standalone --genrule_strategy=standalone --local_resources=1000,1,1.0

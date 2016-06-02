@@ -12,4 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-package(default_visibility = ["//closure:__subpackages__"])
+package(default_visibility = ["//visibility:public"])
+
+sh_binary(
+    name = "gensrcjar",
+    srcs = ["gensrcjar.sh"],
+)
