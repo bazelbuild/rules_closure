@@ -44,6 +44,7 @@ def closure_repositories(
     omit_libpng_amd64_deb=False,
     omit_phantomjs_linux_x86_64=False,
     omit_phantomjs_macosx=False,
+    omit_protobuf_java=False,
     omit_protobuf_js=False,
     omit_protoc_linux_x86_64=False,
     omit_protoc_macosx=False,
@@ -104,6 +105,8 @@ def closure_repositories(
     phantomjs_linux_x86_64()
   if not omit_phantomjs_macosx:
     phantomjs_macosx()
+  if not omit_protobuf_java:
+    protobuf_java()
   if not omit_protobuf_js:
     protobuf_js()
   if not omit_protoc_linux_x86_64:
@@ -200,11 +203,11 @@ def asm_util():
   )
 
 def closure_compiler():
-  native.new_http_archive(
+  native.maven_jar(
       name = "closure_compiler",
-      url = "http://dl.google.com/closure-compiler/compiler-20160517.zip",
-      sha256 = "d1aea900077b94f37b964d0ff42fe39bb8b69b65f65ce95a2cc740f42cc7457f",
-      build_file = str(Label("//closure/compiler:closure_compiler.BUILD")),
+      artifact = "com.google.javascript:closure-compiler-unshaded:v20160517",
+      sha1 = "fb28a5e173b75f9dd789410db8834adf6b5ddf77",
+      server = "closure_maven_server",
   )
 
 def closure_library():
@@ -373,6 +376,14 @@ def phantomjs_macosx():
       name = "phantomjs_macosx",
       sha256 = "538cf488219ab27e309eafc629e2bcee9976990fe90b1ec334f541779150f8c1",
       url = "http://bazel-mirror.storage.googleapis.com/bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip",
+  )
+
+def protobuf_java():
+  native.maven_jar(
+      name = "protobuf_java",
+      artifact = "com.google.protobuf:protobuf-java:3.0.0-beta-3",
+      sha1 = "ed8c2f9a63cfa770292f8173fd0172bdaa014fe3",
+      server = "closure_maven_server",
   )
 
 def protobuf_js():

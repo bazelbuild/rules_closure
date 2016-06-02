@@ -14,5 +14,10 @@ java_binary(
     jvm_flags = ["-client"],
     main_class = "com.google.javascript.jscomp.JsChecker",
     visibility = ["//visibility:public"],
-    deps = ["@closure_compiler//:compiler_jar"],
+    deps = [
+        "@args4j//jar",
+        "@guava//jar",
+        "@protobuf_java//jar",
+        "//third_party/java/jscomp",
+    ],
 )
