@@ -17,6 +17,8 @@ package(default_testonly = True)
 load("//closure:defs.bzl", "closure_js_library")
 load("//closure:defs.bzl", "closure_js_template_library")
 load("//closure:defs.bzl", "closure_js_test")
+load("//closure:defs.bzl", "closure_java_template_library")
+load("//closure/private:file_test.bzl", "file_test")
 
 closure_js_template_library(
     name = "greeter_soy",
@@ -68,4 +70,17 @@ closure_js_test(
         "//closure/library:testing",
     ],
     language = "ECMASCRIPT6_STRICT",
+)
+
+closure_java_template_library(
+    name = "greeter_soy_java",
+    srcs = ["greeter.soy"], 
+    java_package = "io.bazel.rules.closure.soy.greeter",
+)
+
+file_test(
+    name = "greeter_java_generated",
+    regexp = "class GreeterSoyInfo",
+    file = "GreeterSoyInfo.java",
+    size = "small",
 )
