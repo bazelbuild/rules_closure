@@ -73,13 +73,16 @@ public final class JsChecker {
       ImmutableSet.of(
           "checkTypes",
           "deprecated",
+          "deprecatedAnnotations",
           "extraRequire",
-          "lintChecks");
+          "lintChecks",
+          "nonStandardJsDocs");
 
   private static final ImmutableSet<String> ERRORS =
       ImmutableSet.of(
           "checkRegExp",
           "extraRequire",
+          "misplacedTypeAnnotation",
           "missingRequire",
           "strictDependencies");
 
