@@ -20,7 +20,6 @@ import static com.google.javascript.jscomp.JsCheckerHelper.normalizeClosureNames
 
 import com.google.javascript.jscomp.NodeTraversal.AbstractShallowCallback;
 import com.google.javascript.rhino.Node;
-import com.google.javascript.rhino.Token;
 
 final class JsCheckerSecondPass extends AbstractShallowCallback implements HotSwapCompilerPass {
 
@@ -49,10 +48,10 @@ final class JsCheckerSecondPass extends AbstractShallowCallback implements HotSw
   @Override
   public void visit(NodeTraversal t, Node n, Node parent) {
     switch (n.getType()) {
-      case Token.CALL:
+      case CALL:
         visitFunctionCall(t, n);
         break;
-      case Token.IMPORT:
+      case IMPORT:
         visitEs6Import(t, n);
         break;
       default:

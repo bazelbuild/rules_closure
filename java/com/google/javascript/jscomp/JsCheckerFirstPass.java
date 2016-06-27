@@ -20,7 +20,6 @@ import static com.google.javascript.jscomp.JsCheckerHelper.convertPathToModuleNa
 
 import com.google.javascript.jscomp.NodeTraversal.AbstractShallowCallback;
 import com.google.javascript.rhino.Node;
-import com.google.javascript.rhino.Token;
 
 final class JsCheckerFirstPass extends AbstractShallowCallback implements HotSwapCompilerPass {
 
@@ -57,7 +56,7 @@ final class JsCheckerFirstPass extends AbstractShallowCallback implements HotSwa
   @Override
   public final void visit(NodeTraversal t, Node n, Node parent) {
     switch (n.getType()) {
-      case Token.CALL:
+      case CALL:
         visitFunctionCall(t, n);
         break;
       default:

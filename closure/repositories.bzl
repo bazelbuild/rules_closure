@@ -225,8 +225,8 @@ def clang_macosx():
 def closure_compiler():
   native.maven_jar(
       name = "closure_compiler",
-      artifact = "com.google.javascript:closure-compiler-unshaded:v20160517",
-      sha1 = "fb28a5e173b75f9dd789410db8834adf6b5ddf77",
+      artifact = "com.google.javascript:closure-compiler-unshaded:v20160619",
+      sha1 = "a4c585a704eedb91f535e56fb92134132354aa10",
       server = "closure_maven_server",
   )
 
@@ -236,9 +236,9 @@ def closure_library():
   # closure_library.BUILD.
   native.new_http_archive(
       name = "closure_library",
-      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/closure-library/archive/v20160517.zip",
-      sha256 = "8041f3c8f416be8da0cea36a1355a42b19ca6caf3afd2baa7a74da017a2a432a",
-      strip_prefix = "closure-library-20160517",
+      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/closure-library/archive/v20160619.tar.gz",
+      sha256 = "8bd4df6468e01e7b5ad9920fd0a9977942b989fccbab24143dc43d6fe021aeec",
+      strip_prefix = "closure-library-20160619",
       build_file = str(Label("//closure/library:closure_library.BUILD")),
   )
 

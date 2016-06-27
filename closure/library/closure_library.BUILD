@@ -14,7 +14,10 @@
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files(["closure/goog/base.js", "closure/goog/deps.js"])
+exports_files([
+    "closure/goog/base.js",
+    "closure/goog/deps.js",
+])
 
 filegroup(
     name = "js_files",
@@ -176,6 +179,7 @@ filegroup(
         "closure/goog/dom/tags.js",
         "closure/goog/dom/textrange.js",
         "closure/goog/dom/textrangeiterator.js",
+        "closure/goog/dom/typedtagname.js",
         "closure/goog/dom/vendor.js",
         "closure/goog/dom/viewportsizemonitor.js",
         "closure/goog/dom/xml.js",
@@ -431,6 +435,7 @@ filegroup(
         "closure/goog/math/interpolator/linear1.js",
         "closure/goog/math/interpolator/pchip1.js",
         "closure/goog/math/interpolator/spline1.js",
+        "closure/goog/math/irect.js",
         "closure/goog/math/line.js",
         "closure/goog/math/long.js",
         "closure/goog/math/math.js",
@@ -889,6 +894,7 @@ filegroup(
         "closure/goog/testing/functionmock.js",
         "closure/goog/testing/graphics.js",
         "closure/goog/testing/i18n/asserts.js",
+        "closure/goog/testing/jstdasyncwrapper.js",
         "closure/goog/testing/jstdtestcaseadapter.js",
         "closure/goog/testing/jsunit.js",
         "closure/goog/testing/loosemock.js",
@@ -1021,7 +1027,7 @@ py_binary(
 #             "closure/goog/tweak/testhelpers.js",
 #             "closure/goog/useragent/useragenttestutil.js",
 #             "third_party/closure/goog/**/*_test.js",
-#             "third_party/closure/goog/osapi/osapi.js", # causes compiler errors
+#             "third_party/closure/goog/osapi/osapi.js",  # causes compiler errors
 #         ],
 #     ),
 #     outs = ["js_library_files_maker.txt"],
