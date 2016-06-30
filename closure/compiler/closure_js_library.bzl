@@ -78,6 +78,9 @@ def _impl(ctx):
       executable=ctx.executable._jschecker,
       arguments=["@" + argfile.path],
       mnemonic="JsChecker",
+      # This is needed to signal Blaze that the action actually supports
+      # running as a worker.
+      execution_requirements={"supports-workers": "1"},
       progress_message="Checking %d JS files in %s" % (
           len(ctx.files.srcs) + len(ctx.files.externs), ctx.label))
   return struct(files=set(ctx.files.srcs, order="compile"),
