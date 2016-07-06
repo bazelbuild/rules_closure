@@ -102,6 +102,8 @@ def _impl(ctx):
              "--define=goog.json.USE_NATIVE_JSON"]
   if ctx.attr.output_wrapper:
     args += ["--output_wrapper=%s" % ctx.attr.output_wrapper]
+    if ctx.attr.output_wrapper == "(function(){%output%}).call(this);":
+      args += ["--assume_function_wrapper"]
   if ctx.outputs.property_renaming_report:
     report = ctx.outputs.property_renaming_report
     files += [report]
