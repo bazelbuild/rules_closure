@@ -57,7 +57,9 @@ def _impl(ctx):
       content=" \\\n  ".join(args))
   return struct(
       files=set([ctx.outputs.executable]),
-      runfiles=ctx.runfiles(transitive_files=runfiles, collect_data=True))
+      runfiles=ctx.runfiles(transitive_files=runfiles,
+                            collect_data=True,
+                            collect_default=True))
 
 def _runpath(f):
   if f.path.startswith('bazel-out/'):
@@ -92,6 +94,7 @@ phantomjs_test = rule(
             allow_files=False,
             providers=JS_DEPS_PROVIDERS,
             default=Label("//closure/testing:phantomjs_jsunit_runner")),
+        "data": attr.label_list(cfg=DATA_CFG, allow_files=True),
         "_phantomjs": attr.label(
             default=Label("//third_party/phantomjs"),
             allow_files=True),

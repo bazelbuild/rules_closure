@@ -22,6 +22,7 @@ load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 def closure_js_proto_library(
     name,
     srcs,
+    data = None,
     visibility = None,
     add_require_for_enums = 0,
     testonly = 0,
@@ -45,18 +46,20 @@ def closure_js_proto_library(
       name = name + "_gen",
       srcs = srcs,
       testonly = testonly,
-      visibility = visibility,
+      visibility = ["//visibility:private"],
       message = "Generating JavaScript Protocol Buffer file",
-      outs = [ name + ".js" ],
+      outs = [name + ".js"],
       tools = [protocbin],
       cmd = " ".join(cmd),
   )
 
   closure_js_library(
       name = name,
-      srcs = [ name + ".js" ],
+      srcs = [name + ".js"],
+      data = data,
       deps = [
           str(Label("//closure/library")),
           str(Label("//closure/protobuf:jspb")),
       ],
+      visibility = visibility,
   )

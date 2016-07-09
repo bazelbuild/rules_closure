@@ -76,9 +76,10 @@ CLOSURE_LIBRARY_DEPS_ATTR = attr.label(
     allow_files=True,
     single_file=True)
 
-def collect_js_srcs(ctx):
+def collect_transitive_js_srcs(ctx):
   srcs = set(order="compile")
   externs = set(order="compile")
+  data = set(order="compile")
   if hasattr(ctx.attr, 'css'):
     if ctx.attr.css:
       srcs += [ctx.file._closure_library_base,
@@ -94,14 +95,12 @@ def collect_js_srcs(ctx):
   for dep in ctx.attr.deps:
     srcs += dep.transitive_js_srcs
     externs += dep.transitive_js_externs
+    data += dep.transitive_data
     for edep in dep.js_exports:
       srcs += edep.transitive_js_srcs
       externs += edep.transitive_js_externs
-  if hasattr(ctx.files, 'srcs'):
-    srcs += JS_FILE_TYPE.filter(ctx.files.srcs)
-  if hasattr(ctx.files, 'externs'):
-    externs += JS_FILE_TYPE.filter(ctx.files.externs)
-  return srcs, externs
+      data += edep.transitive_data
+  return srcs, externs, data
 
 def collect_transitive_css_labels(ctx):
   result = set(order="compile")

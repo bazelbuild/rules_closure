@@ -37,6 +37,7 @@ goog.provide('hyperion');
  * Be poet's or fanatic's will be known
  * When this warm scribe my hand is in the grave.
  */
-function hyperion() {
+hyperion = function() {
+  external_library.doodle();
   console.log('The Fall of Hyperion - A Dream by John Keats');
-}
+};

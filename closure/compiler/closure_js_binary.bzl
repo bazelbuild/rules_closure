@@ -23,8 +23,8 @@ load("//closure/private:defs.bzl",
      "JS_LANGUAGE_DEFAULT",
      "JS_PEDANTIC_ARGS",
      "JS_HIDE_WARNING_ARGS",
-     "collect_js_srcs",
      "collect_required_css_labels",
+     "collect_transitive_js_srcs",
      "determine_js_language",
      "difference",
      "is_using_closure_library",
@@ -39,7 +39,7 @@ _STRICT_LANGUAGES = set([
 def _impl(ctx):
   if not ctx.attr.deps:
     fail("closure_js_binary rules can not have an empty 'deps' list")
-  srcs, externs = collect_js_srcs(ctx)
+  srcs, externs, tdata = collect_transitive_js_srcs(ctx)
   if not srcs:
     fail("There are no source files in the transitive closure")
   _validate_css_graph(ctx)
@@ -142,7 +142,10 @@ def _impl(ctx):
                 js_provided=ctx.outputs.provided,
                 required_css_labels=set(order="compile"),
                 transitive_js_srcs=set([ctx.outputs.out], order="compile"),
-                transitive_js_externs=set(order="compile"))
+                transitive_js_externs=set(order="compile"),
+                transitive_data=tdata + ctx.files.data,
+                runfiles=ctx.runfiles(files=list(files) + ctx.files.data,
+                                      transitive_files=srcs + tdata))
 
 def _validate_css_graph(ctx):
   required_css_labels = collect_required_css_labels(ctx)
@@ -208,6 +211,7 @@ closure_js_binary = rule(
         "output_wrapper": attr.string(),
         "pedantic": attr.bool(default=False),
         "property_renaming_report": attr.output(),
+        "data": attr.label_list(cfg=DATA_CFG, allow_files=True),
 
         # internal only
         "internal_expect_failure": attr.bool(default=False),

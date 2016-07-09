@@ -22,6 +22,7 @@ load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 def closure_js_template_library(
     name,
     srcs,
+    data = None,
     deps = [],
     testonly = 0,
     visibility = None,
@@ -70,7 +71,7 @@ def closure_js_template_library(
       name = name + "_soy_js",
       srcs = srcs,
       testonly = testonly,
-      visibility = visibility,
+      visibility = ["//visibility:private"],
       message = "Generating SOY v2 JS files",
       outs = js_srcs,
       tools = [compilerbin],
@@ -85,7 +86,10 @@ def closure_js_template_library(
   closure_js_library(
       name = name,
       srcs = js_srcs,
+      data = data,
       deps = deps,
+      visibility = visibility,
+      testonly = testonly,
   )
 
 

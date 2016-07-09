@@ -23,6 +23,7 @@ load("//closure/testing:phantomjs_test.bzl", "phantomjs_test")
 
 def closure_js_test(name,
                     srcs,
+                    data=None,
                     deps=None,
                     compilation_level=None,
                     css=None,
@@ -48,6 +49,7 @@ def closure_js_test(name,
     closure_js_library(
         name = "%s_lib" % shard,
         srcs = sauce,
+        data = data,
         deps = deps,
         language = language,
         suppress = suppress,

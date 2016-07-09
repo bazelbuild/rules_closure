@@ -28,16 +28,18 @@ load("//closure/private:defs.bzl",
 def _impl(ctx):
   if not ctx.attr.deps:
     fail("closure_css_binary rules can not have an empty 'deps' list")
-  srcs = set(order="compile")
+  srcs = set()
+  tdata = set()
   for dep in ctx.attr.deps:
     srcs += dep.transitive_css_srcs
-  outputs = [ctx.outputs.out]
+    tdata += dep.transitive_data
+  files = [ctx.outputs.out]
   input_orientation = _get_input_orientation(ctx.attr.deps)
   args = ["--output-file", ctx.outputs.out.path,
           "--input-orientation", input_orientation,
           "--output-orientation", ctx.attr.orientation]
   if ctx.attr.renaming:
-    outputs += [ctx.outputs.js]
+    files += [ctx.outputs.js]
     args += ["--output-renaming-map", ctx.outputs.js.path,
              "--output-renaming-map-format", "CLOSURE_COMPILED_SPLIT_HYPHENS"]
     if ctx.attr.debug:
@@ -56,20 +58,22 @@ def _impl(ctx):
   args += [src.path for src in srcs]
   ctx.action(
       inputs=list(srcs),
-      outputs=outputs,
+      outputs=files,
       arguments=args,
       executable=ctx.executable._compiler,
       progress_message="Compiling %d stylesheets to %s" % (
           len(srcs), ctx.outputs.out.short_path))
-  css_files = set([ctx.outputs.out], order="compile")
-  return struct(files=css_files,
-                transitive_css_srcs=css_files,
+  return struct(files=set(files),
                 transitive_css_labels=collect_transitive_css_labels(ctx),
                 css_orientation=(input_orientation
                                  if ctx.attr.orientation == "NOCHANGE" else
                                  ctx.attr.orientation),
                 js_css_renaming_map=ctx.outputs.js,
-                compiled_css_labels=set(order="compile"))
+                compiled_css_labels=set(),
+                transitive_css_srcs=files,
+                transitive_data=tdata + ctx.files.data,
+                runfiles=ctx.runfiles(files=files + ctx.files.data,
+                                      transitive_files=srcs + tdata))
 
 def _get_input_orientation(deps):
   orientation = None
@@ -89,6 +93,7 @@ closure_css_binary = rule(
         "orientation": attr.string(default="NOCHANGE"),
         "renaming": attr.bool(default=True),
         "vendor": attr.string(),
+        "data": attr.label_list(cfg=DATA_CFG, allow_files=True),
         "_compiler": attr.label(
             default=Label("//closure/stylesheets"),
             executable=True),

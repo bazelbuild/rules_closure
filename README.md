@@ -129,7 +129,7 @@ Please see the test directories within this project for concrete examples of usa
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
-closure_js_library(name, srcs, externs, deps, language, exports, suppress,
+closure_js_library(name, srcs, externs, data, deps, language, exports, suppress,
                    convention, no_closure_library)
 ```
 
@@ -145,6 +145,13 @@ read the [Google JavaScript Style Guide].
 
 Strict dependency checking is performed on the sources listed in each library
 target. See the documentation of the `deps` attribute for further information.
+
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will always be empty and `data` will contain all
+  transitive JS sources and data.
 
 ### Arguments
 
@@ -163,6 +170,11 @@ target. See the documentation of the `deps` attribute for further information.
   be empty. These files tell the Closure Compiler about the type signatures of
   external libraries. Please note that the externs for web browsers are enabled
   by default by the Closure Compiler.
+
+- **data:** (List of [labels]; optional) Runfiles directly referenced by JS
+  sources in this rule. For example, if the JS generated injected an img tag
+  into the page with a hard coded image named foo.png, then you might want to
+  list that image here, so it ends up in the webserver runfiles.
 
 - **deps:** (List of [labels]; optional) Direct [dependency] list. These can
   point to [closure_js_library], [closure_js_template_library], and
@@ -288,6 +300,17 @@ This rule must be used in conjunction with [closure_js_library].
   sources. This file can be loaded into browsers such as Chrome and Firefox to
   view a stacktrace when an error is thrown by compiled sources.
 
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will be the .js and .js.map output files and `data` will
+  contain those files in addition to all transitive JS sources and data.
+
+- [closure_js_library]: `srcs` will be the .js output file, `externs` will be
+  empty, `language` will be the output language, `deps` will be empty, `data`
+  will contain all transitive data, and `no_closure_library` will be `True`.
+
 ### Arguments
 
 - **name:** ([Name]; required) A unique name for this rule. Convention states
@@ -407,7 +430,7 @@ closure_js_binary(
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_test")
-closure_js_test(name, srcs, deps, css, html, language, pedantic, suppress,
+closure_js_test(name, srcs, data, deps, css, html, language, pedantic, suppress,
                 compilation_level, entry_points, defs)
 ```
 
@@ -439,6 +462,13 @@ Closure Library mocks for things like XHR. However a local HTTP server is
 started up on a random port that allows to request runfiles under the `/filez/`
 path.
 
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will be the outputted executable, `data` will contain
+  all transitive sources, data, and other runfiles.
+
 ### Arguments
 
 - **name:** ([Name]; required) A unique name for this rule.
@@ -449,6 +479,8 @@ path.
 - **deps:** (List of [labels]; optional) Direct dependency list passed along to
   [closure_js_library]. This list will almost certainly need
   `"@io_bazel_rules_closure//closure/library:testing"`.
+
+- **data:** (List of [labels]; optional) Passed to [closure_js_library].
 
 - **css:** Passed to [closure_js_binary].
 
@@ -473,16 +505,28 @@ path.
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "phantomjs_test")
-phantomjs_test(name, deps, html, harness, runner)
+phantomjs_test(name, data, deps, html, harness, runner)
 ```
 
 Runs PhantomJS (QtWebKit) for unit testing purposes.
 
 This is a low level rule. Please use the [closure_js_test] macro if possible.
 
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will be the outputted executable, `data` will contain
+  all transitive sources, data, and other runfiles.
+
 ### Arguments
 
 - **name:** ([Name]; required) Unique name for this rule.
+
+- **data:** (List of [labels]; optional) Additional runfiles for the local HTTP
+  server to serve, under the `/filez/` + repository path. This attribute should
+  not be necessary, because the transitive runfile data is already collected
+  from dependencies.
 
 - **deps:** (List of [labels]; required) Labels of Skylark rules exporting
   `transitive_js_srcs`. Each source will be inserted into the webpage in its own
@@ -535,6 +579,13 @@ admin-only path named `/filez/`, then raw source mode could be used as follows:
   Each path is expressed relative to the location of the Closure Library
   [base.js] file.
 
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will be the deps.js output files and `data` will contain
+  that file in addition to all transitive JS sources and data.
+
 ### Arguments
 
 - **name:** ([Name]; required) A unique name for this rule. Convention states
@@ -549,7 +600,7 @@ admin-only path named `/filez/`, then raw source mode could be used as follows:
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_template_library")
-closure_js_template_library(name, srcs, deps, globals, plugin_modules,
+closure_js_template_library(name, srcs, data, deps, globals, plugin_modules,
                             should_generate_js_doc,
                             should_provide_require_soy_namespaces,
                             should_generate_soy_msg_defs,
@@ -577,12 +628,29 @@ the following:
   under `srcs`. The filename will be the same as the template with a `.js`
   suffix. For example `foo.soy` would become `foo.soy.js`.
 
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will be the generated JS output files and `data` will
+  contain all transitive JS sources and data.
+
+- [closure_js_library]: `srcs` will be the generated JS output files, `externs`
+  will be empty, `data` will contain the transitive data, `language` will be
+  `ECMASCRIPT5_STRICT`, `deps` will contain necessary libraries, and
+  `no_closure_library` will be `False`.
+
 ### Arguments
 
 - **name:** ([Name]; required) A unique name for this rule.
 
 - **srcs:** (List of [labels]; required) A list of `.soy` source files that
   represent this library.
+
+- **data:** (List of [labels]; optional) Runfiles directly referenced by Soy
+  sources in this rule. For example, if the template has an `<img src=foo.png>`
+  tag, then the data attribute of its rule should be set to `["foo.png"]` so the
+  image is available in the web server runfiles.
 
 - **deps:** (List of [labels]; optional) List of [closure_js_library] and
   [closure_js_template_library] targets which define symbols referenced by the
@@ -634,7 +702,7 @@ the following:
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_java_template_library")
-closure_java_template_library(name, srcs, deps, java_package)
+closure_java_template_library(name, srcs, data, deps, java_package)
 ```
 
 Compiles Closure templates to Java source files.
@@ -661,12 +729,27 @@ the following:
   to upper camel case, with a `SoyInfo.java` suffix. For example `foo_bar.soy`
   would become `FooBarSoyInfo.java`.
 
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will be the compiled jar file and `data` will contain all
+  transitive data.
+
+- [java_library]: `srcs` will be the generated Java source files, and `data`
+  will contain the transitive data.
+
 ### Arguments
 
 - **name:** ([Name]; required) A unique name for this rule.
 
 - **srcs:** (List of [labels]; required) A list of `.soy` source files that
   represent this library.
+
+- **data:** (List of [labels]; optional) Runfiles directly referenced by Soy
+  sources in this rule. For example, if the template has an `<img src=foo.png>`
+  tag, then the data attribute of its rule should be set to `["foo.png"]` so the
+  image is available in the web server runfiles.
 
 - **deps:** (List of [labels]; optional) Soy files to parse but not to generate
   outputs for.
@@ -684,7 +767,7 @@ TODO
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_css_library")
-closure_css_library(name, srcs, deps)
+closure_css_library(name, srcs, data, deps)
 ```
 
 Defines a set of CSS stylesheets.
@@ -696,6 +779,19 @@ This rule should be referenced by any [closure_js_library] rule whose sources
 contain a `goog.getCssName('foo')` call if `foo` is a CSS class name defined by
 this rule. The same concept applies to [closure_js_template_library] rules that
 contain `{css foo}` expressions.
+
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will be the generated JS output files and `data` will
+  contain all transitive CSS/GSS sources and data.
+
+- [closure_js_library]: `srcs` is empty, `externs` is empty, `data` is the
+  transitive CSS sources and data, `language` is `ANY`, and `no_closure_library`
+  is `True`. However the closure\_css\_library rule does pass special
+  information along when used as a dep in closure\_js\_library. See its
+  documentation to learn more.
 
 ### Arguments
 
@@ -712,6 +808,11 @@ contain `{css foo}` expressions.
 
   It is strongly recommended you use `@provide` and `@require` statements in
   your stylesheets so the CSS compiler can assert that the ordering is accurate.
+
+- **data:** (List of [labels]; optional) Runfiles directly referenced by CSS
+  sources in this rule. For example, if the CSS has a `url(foo.png)` then the
+  data attribute of its rule should be set to `["foo.png"]` so the image is
+  available in the web server runfiles.
 
 - **deps:** (List of [labels]; optional) List of other [closure_css_library]
   targets on which the CSS files in `srcs` depend.
@@ -763,6 +864,16 @@ Closure Compiler know how to substitute the minified class names. See the
   templates from Java code, because its contents will need to be parsed into a
   map using a regular expression, which is then passed to the Soy Tofu Java
   runtime.
+
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will be the generated .css, .css.map, and .css.js output
+  files. `data` will contain all transitive CSS/GSS sources and data.
+
+- [closure_css_library]: `srcs` is the output .css file, `data` is the
+  transitive CSS sources and data, and `orientation` is the output orientation.
 
 ### Arguments
 
@@ -847,6 +958,17 @@ Defines a set of Protocol Buffer files.
 
 - *name*.js: A generated protocol buffer JavaScript library.
 
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will be empty and `data` will contain all transitive JS
+  sources and data.
+
+- [closure_js_library]: `srcs` will be the generated JS output files, `externs`
+  will be empty, `data` will contain the transitive data, `language` will be
+  `ECMASCRIPT5_STRICT`, and `deps` will contain necessary libraries.
+
 ### Arguments
 
 - **name:** ([Name]; required) A unique name for this rule. Convention states
@@ -907,9 +1029,11 @@ Defines a set of Protocol Buffer files.
 [compiler-issue]: https://github.com/google/closure-compiler/issues/new
 [css-sourcemap]: https://developer.chrome.com/devtools/docs/css-preprocessors
 [dependency]: http://bazel.io/docs/build-ref.html#dependencies
+[filegroup]: http://www.bazel.io/docs/be/general.html#filegroup
 [idom-example]: https://github.com/bazelbuild/rules_closure/blob/80d493d5ffc3099372929a8cd4a301da72e1b43f/closure/templates/test/greeter_idom.js
 [jQuery coding conventions]: https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/JqueryCodingConvention.java
 [java_library.exports]: http://bazel.io/docs/be/java.html#java_library.exports
+[java_library]: http://www.bazel.io/docs/be/java.html#java_library
 [jquery]: http://jquery.com/
 [labels]: http://bazel.io/docs/build-ref.html#labels
 [managing dependencies]: https://github.com/google/closure-compiler/wiki/Managing-Dependencies

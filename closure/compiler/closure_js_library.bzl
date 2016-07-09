@@ -22,13 +22,15 @@ load("//closure/private:defs.bzl",
      "JS_LANGUAGE_DEFAULT",
      "JS_DEPS_ATTR",
      "JS_FILE_TYPE",
-     "collect_js_srcs",
      "collect_required_css_labels",
+     "collect_transitive_js_srcs",
      "determine_js_language",
      "is_using_closure_library")
 
 def _impl(ctx):
-  srcs, externs = collect_js_srcs(ctx)
+  tsrcs, externs, tdata = collect_transitive_js_srcs(ctx)
+  srcs = tsrcs + JS_FILE_TYPE.filter(ctx.files.srcs)
+  externs += JS_FILE_TYPE.filter(ctx.files.externs)
   if not ctx.files.srcs and not ctx.files.externs and not ctx.attr.exports:
     fail("Either 'srcs', 'externs', or 'exports' must be specified")
   if ctx.attr.no_closure_library:
@@ -83,15 +85,16 @@ def _impl(ctx):
       execution_requirements={"supports-workers": "1"},
       progress_message="Checking %d JS files in %s" % (
           len(ctx.files.srcs) + len(ctx.files.externs), ctx.label))
-  return struct(files=set(ctx.files.srcs, order="compile"),
+  return struct(files=set(),
                 js_language=determine_js_language(ctx),
                 js_exports=ctx.attr.exports,
                 js_provided=ctx.outputs.provided,
                 required_css_labels=collect_required_css_labels(ctx),
                 transitive_js_srcs=srcs,
                 transitive_js_externs=externs,
-                runfiles=ctx.runfiles(files=[ctx.outputs.provided,
-                                             ctx.outputs.stderr]))
+                transitive_data=tdata + ctx.files.data,
+                runfiles=ctx.runfiles(files=ctx.files.srcs + ctx.files.data,
+                                      transitive_files=tsrcs + tdata))
 
 def _determine_check_language(language):
   if language == "ANY":
@@ -109,6 +112,7 @@ closure_js_library = rule(
         "no_closure_library": attr.bool(default=False),
         "srcs": attr.label_list(allow_files=JS_FILE_TYPE),
         "suppress": attr.string_list(),
+        "data": attr.label_list(cfg=DATA_CFG, allow_files=True),
 
         # internal only
         "internal_expect_failure": attr.bool(default=False),

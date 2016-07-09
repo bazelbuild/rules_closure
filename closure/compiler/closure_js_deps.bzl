@@ -18,21 +18,19 @@
 
 load("//closure/private:defs.bzl",
      "CLOSURE_LIBRARY_BASE_ATTR",
-     "CLOSURE_LIBRARY_DEPS_ATTR")
+     "CLOSURE_LIBRARY_DEPS_ATTR",
+     "collect_transitive_js_srcs")
 
 def _impl(ctx):
-  # XXX: Other files in same directory will get schlepped in w/o sandboxing.
-  if not ctx.attr.deps:
-    fail("closure_js_deps rules can not have an empty 'deps' list")
+  srcs, _, tdata = collect_transitive_js_srcs(ctx)
   basejs = ctx.file._closure_library_base
   closure_root = _dirname(basejs.short_path)
   closure_rel = '/'.join(['..' for _ in range(len(closure_root.split('/')))])
-  srcs = set(order="compile")
-  for src in ctx.attr.deps:
-    srcs += src.transitive_js_srcs
+  files = [ctx.outputs.out]
+  # XXX: Other files in same directory will get schlepped in w/o sandboxing.
   ctx.action(
       inputs=list(srcs),
-      outputs=[ctx.outputs.out],
+      outputs=files,
       arguments=(["--output_file=%s" % ctx.outputs.out.path] +
                  ["--root_with_prefix=%s %s" % (
                      r, _make_prefix(p, closure_root, closure_rel))
@@ -41,7 +39,9 @@ def _impl(ctx):
       executable=ctx.executable._depswriter,
       progress_message="Calculating %d JavaScript deps to %s" % (
           len(srcs), ctx.outputs.out.short_path))
-  return struct(files=set([ctx.outputs.out]))
+  return struct(files=set(files),
+                runfiles=ctx.runfiles(files=files + ctx.files.data,
+                                      transitive_files=srcs + tdata))
 
 def _dirname(path):
   return path[:path.rindex('/')]
@@ -76,6 +76,7 @@ closure_js_deps = rule(
         "deps": attr.label_list(
             allow_files=False,
             providers=["transitive_js_srcs"]),
+        "data": attr.label_list(cfg=DATA_CFG, allow_files=True),
         "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
         "_closure_library_deps": CLOSURE_LIBRARY_DEPS_ATTR,
         "_depswriter": attr.label(
