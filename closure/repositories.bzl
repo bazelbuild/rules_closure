@@ -16,6 +16,8 @@
 
 """External dependencies for Closure Rules."""
 
+load("//closure/private:platform_http_file.bzl", "platform_http_file")
+
 def closure_repositories(
     omit_aopalliance=False,
     omit_args4j=False,
@@ -23,8 +25,7 @@ def closure_repositories(
     omit_asm_analysis=False,
     omit_asm_commons=False,
     omit_asm_util=False,
-    omit_clang_linux_x86_64=False,
-    omit_clang_macosx=False,
+    omit_clang=False,
     omit_closure_compiler=False,
     omit_closure_library=False,
     omit_closure_stylesheets=False,
@@ -44,8 +45,7 @@ def closure_repositories(
     omit_libfontconfig_amd64_deb=False,
     omit_libfreetype_amd64_deb=False,
     omit_libpng_amd64_deb=False,
-    omit_phantomjs_linux_x86_64=False,
-    omit_phantomjs_macosx=False,
+    omit_phantomjs=False,
     omit_protobuf_java=False,
     omit_protobuf_js=False,
     omit_protoc_linux_x86_64=False,
@@ -65,10 +65,8 @@ def closure_repositories(
     asm_commons()
   if not omit_asm_util:
     asm_util()
-  if not omit_clang_linux_x86_64:
-    clang_linux_x86_64()
-  if not omit_clang_macosx:
-    clang_macosx()
+  if not omit_clang:
+    clang()
   if not omit_closure_compiler:
     closure_compiler()
   if not omit_closure_library:
@@ -107,10 +105,8 @@ def closure_repositories(
     libfreetype_amd64_deb()
   if not omit_libpng_amd64_deb:
     libpng_amd64_deb()
-  if not omit_phantomjs_linux_x86_64:
-    phantomjs_linux_x86_64()
-  if not omit_phantomjs_macosx:
-    phantomjs_macosx()
+  if not omit_phantomjs:
+    phantomjs()
   if not omit_protobuf_java:
     protobuf_java()
   if not omit_protobuf_js:
@@ -208,18 +204,13 @@ def asm_util():
       server = "closure_maven_server",
   )
 
-def clang_linux_x86_64():
-  native.http_file(
-      name = "clang_linux_x86_64",
-      sha256 = "3120c3055ea78bbbb6848510a2af70c68538b990cb0545bac8dad01df8ff69d7",
-      url = "http://bazel-mirror.storage.googleapis.com/llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz",
-  )
-
-def clang_macosx():
-  native.http_file(
-      name = "clang_macosx",
-      sha256 = "e5a961e04b0e1738bbb5b824886a34932dc13b0af699d1fe16519d814d7b776f",
-      url = "http://bazel-mirror.storage.googleapis.com/llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-apple-darwin.tar.xz",
+def clang():
+  platform_http_file(
+      name = "clang",
+      amd64_url = "http://bazel-mirror.storage.googleapis.com/llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz",
+      amd64_sha256 = "3120c3055ea78bbbb6848510a2af70c68538b990cb0545bac8dad01df8ff69d7",
+      macos_url = "http://bazel-mirror.storage.googleapis.com/llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-apple-darwin.tar.xz",
+      macos_sha256 = "e5a961e04b0e1738bbb5b824886a34932dc13b0af699d1fe16519d814d7b776f",
   )
 
 def closure_compiler():
@@ -384,19 +375,14 @@ def libpng_amd64_deb():
       sha256 = "a57b6d53169c67a7754719f4b742c96554a18f931ca5b9e0408fb6502bb77e80",
   )
 
-def phantomjs_linux_x86_64():
-  native.http_file(
-      name = "phantomjs_linux_x86_64",
-      sha256 = "86dd9a4bf4aee45f1a84c9f61cf1947c1d6dce9b9e8d2a907105da7852460d2f",
-      url = "http://bazel-mirror.storage.googleapis.com/bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2",
-  )
-
-def phantomjs_macosx():
-  native.http_file(
-      name = "phantomjs_macosx",
-      sha256 = "538cf488219ab27e309eafc629e2bcee9976990fe90b1ec334f541779150f8c1",
-      url = "http://bazel-mirror.storage.googleapis.com/bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip",
-  )
+def phantomjs():
+  platform_http_file(
+      name = "phantomjs",
+      amd64_url = "http://bazel-mirror.storage.googleapis.com/bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2",
+      amd64_sha256 = "86dd9a4bf4aee45f1a84c9f61cf1947c1d6dce9b9e8d2a907105da7852460d2f",
+      macos_url = "http://bazel-mirror.storage.googleapis.com/bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip",
+      macos_sha256 = "538cf488219ab27e309eafc629e2bcee9976990fe90b1ec334f541779150f8c1",
+)
 
 def protobuf_java():
   native.maven_jar(

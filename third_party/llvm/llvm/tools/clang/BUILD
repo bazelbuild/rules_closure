@@ -4,10 +4,7 @@ licenses(["notice"])  # BSD
 
 genrule(
     name = "clang_format_extract",
-    srcs = select({
-        ":darwin": ["@clang_macosx//file"],
-        "//conditions:default": ["@clang_linux_x86_64//file"],
-    }),
+    srcs = ["@clang//file"],
     outs = ["clang-format"],
     cmd = " && ".join([
         "IN=$$(pwd)/$(SRCS)",

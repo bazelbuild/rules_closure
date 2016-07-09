@@ -17,10 +17,7 @@ sh_binary(
 
 genrule(
     name = "phantomjs_bin",
-    srcs = select({
-        ":darwin": ["@phantomjs_macosx//file"],
-        "//conditions:default": ["@phantomjs_linux_x86_64//file"],
-    }),
+    srcs = ["@phantomjs//file"],
     outs = ["bin/phantomjs"],
     cmd = " && ".join([
         "IN=$$(pwd)/$(SRCS)",
