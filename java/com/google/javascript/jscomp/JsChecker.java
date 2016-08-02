@@ -27,6 +27,7 @@ import com.google.devtools.build.lib.worker.WorkerProtocol.WorkRequest;
 import com.google.devtools.build.lib.worker.WorkerProtocol.WorkResponse;
 import com.google.javascript.jscomp.CompilerOptions.LanguageMode;
 import com.google.javascript.jscomp.lint.CheckJSDocStyle;
+import com.google.javascript.jscomp.parsing.Config;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -218,7 +219,11 @@ public final class JsChecker {
     options.setLanguage(language);
     options.setCodingConvention(convention.convention);
     options.setSkipTranspilationAndCrash(true);
-    options.setIdeMode(true);
+    options.setChecksOnly(true);
+    options.setContinueAfterErrors(true);
+    options.setAllowHotswapReplaceScript(true);
+    options.setPreserveDetailedSourceInfo(true);
+    options.setParseJsDocDocumentation(Config.JsDocParsing.INCLUDE_DESCRIPTIONS_NO_WHITESPACE);
     JsCheckerErrorFormatter errorFormatter = new JsCheckerErrorFormatter(state, compiler);
     errorFormatter.setColorize(true);
     JsCheckerErrorManager errorManager = new JsCheckerErrorManager(errorFormatter);
