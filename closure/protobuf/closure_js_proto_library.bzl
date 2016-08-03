@@ -40,7 +40,7 @@ def closure_js_proto_library(
   if import_style:
     js_out_options += ["import_style=%s" % import_style]
   cmd += ["--js_out=%s:$(@D)" % ",".join(js_out_options)]
-  cmd += ["$(location " + src + ")" for src in srcs]
+  cmd += ["$(locations " + src + ")" for src in srcs]
 
   native.genrule(
       name = name + "_gen",
