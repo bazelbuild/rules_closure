@@ -58,7 +58,7 @@ def _impl(ctx):
       "--language_out=%s" % language_out,
       "--compilation_level=%s" % ctx.attr.compilation_level,
       "--dependency_mode=%s" % ctx.attr.dependency_mode,
-      "--warning_level=VERBOSE",
+      "--warning_level=%s" % ctx.attr.warning_level,
       "--new_type_inf",
       "--generate_exports",
   ]
@@ -214,6 +214,7 @@ closure_js_binary = rule(
         "output_wrapper": attr.string(),
         "pedantic": attr.bool(default=False),
         "property_renaming_report": attr.output(),
+        "warning_level": attr.string(default="VERBOSE"),
         "data": attr.label_list(cfg=DATA_CFG, allow_files=True),
 
         # internal only
