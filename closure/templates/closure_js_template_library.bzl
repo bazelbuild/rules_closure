@@ -79,7 +79,7 @@ def closure_js_template_library(
   )
 
   deps = deps + [str(Label("//closure/library")),
-                 str(Label("//closure/templates:soyutils_usegoog"))]
+                 str(Label("//closure/templates:soy_jssrc"))]
   if incremental_dom:
     deps = deps + [str(Label("//closure/templates:incremental_dom"))]
 

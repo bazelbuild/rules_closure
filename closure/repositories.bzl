@@ -52,7 +52,7 @@ def closure_repositories(
     omit_protoc_macosx=False,
     omit_safe_html_types=False,
     omit_soy=False,
-    omit_soyutils_usegoog=False):
+    omit_soy_jssrc=False):
   closure_maven_server()
   if not omit_aopalliance:
     aopalliance()
@@ -120,8 +120,8 @@ def closure_repositories(
     safe_html_types()
   if not omit_soy:
     soy()
-  if not omit_soyutils_usegoog:
-    soyutils_usegoog()
+  if not omit_soy_jssrc:
+    soy_jssrc()
 
 # MAINTAINERS
 #
@@ -428,14 +428,14 @@ def safe_html_types():
 def soy():
   native.maven_jar(
       name = "soy",
-      artifact = "com.google.template:soy:2016-07-21",
-      sha1 = "7a1b0cc72eb3873a5a8cb1d5da185f57efa3084a",
+      artifact = "com.google.template:soy:2016-08-19",
+      sha1 = "bcd2e516217bd2cd058ccae719301177c4ebb6b0",
       server = "closure_maven_server",
   )
 
-def soyutils_usegoog():
+def soy_jssrc():
   native.http_file(
-      name = "soyutils_usegoog",
-      sha256 = "a1128ad98fd918a55eb1f86c46d92c488320b2beba55bf5dec28ece89e61c743",
-      url = "http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/template/soy/2016-07-21/soy-2016-07-21-soyutils_usegoog.js",
+      name = "soy_jssrc",
+      sha256 = "878cae5b36002c8614d5af759320361f19388b83e4c2430d462def63e03b0143",
+      url = "http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/template/soy/2016-08-19/soy-2016-08-19-jssrc_js.jar",
   )

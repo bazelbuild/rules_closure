@@ -49,8 +49,8 @@ java_library(
 )
 
 closure_js_library(
-    name = "soyutils_usegoog",
-    srcs = ["@soyutils_usegoog//file"],
+    name = "soy_jssrc",
+    srcs = ["//third_party/jssrc"],
     suppress = [
         "JSC_OPTIONAL_PARAM_NOT_MARKED_OPTIONAL",
     ],
