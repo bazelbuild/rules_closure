@@ -18,7 +18,7 @@
 """
 
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
-load("//closure/private:defs.bzl", "SOY_FILE_TYPE")
+load("//closure/private:defs.bzl", "SOY_DEPS_ATTR", "SOY_FILE_TYPE")
 
 
 def _impl(ctx):
@@ -53,6 +53,11 @@ def _impl(ctx):
   if ctx.attr.globals:
     args += ["--compileTimeGlobalsFile='%s'" % ctx.attr.globals.path]
     srcs += ctx.attr.globals
+  for dep in ctx.attr.deps:
+    for desc in dep.proto_descriptor_sets:
+      srcs += list(desc.files)
+      for f in desc.files:
+        args += ["--protoFileDescriptors=%s" % f.path]
 
   ctx.action(
       inputs=srcs,
@@ -70,6 +75,7 @@ _closure_js_template_library = rule(
     output_to_genfiles = True,
     attrs={
         "srcs": attr.label_list(allow_files=SOY_FILE_TYPE),
+        "deps": SOY_DEPS_ATTR,
         "outputs": attr.output_list(),
         "globals": attr.label_list(),
         "plugin_modules": attr.label_list(),
@@ -107,6 +113,7 @@ def closure_js_template_library(
   _closure_js_template_library(
       name = name + "_soy_js",
       srcs = srcs,
+      deps = deps,
       outputs = js_srcs,
       testonly = testonly,
       visibility = ["//visibility:private"],

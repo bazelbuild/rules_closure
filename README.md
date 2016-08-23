@@ -960,6 +960,9 @@ Defines a set of Protocol Buffer files.
 
 - *name*.js: A generated protocol buffer JavaScript library.
 
+- *name*.descriptor: A protoc FileDescriptorsSet representation of the .proto
+  files.
+
 #### Rule Polymorphism
 
 This rule can be referenced as though it were the following:

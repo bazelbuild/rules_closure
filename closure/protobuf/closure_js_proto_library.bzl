@@ -40,6 +40,7 @@ def closure_js_proto_library(
   if import_style:
     js_out_options += ["import_style=%s" % import_style]
   cmd += ["--js_out=%s:$(@D)" % ",".join(js_out_options)]
+  cmd += ["--descriptor_set_out=$(@D)/%s.descriptor" % name]
   cmd += ["$(locations " + src + ")" for src in srcs]
 
   native.genrule(
@@ -48,7 +49,7 @@ def closure_js_proto_library(
       testonly = testonly,
       visibility = ["//visibility:private"],
       message = "Generating JavaScript Protocol Buffer file",
-      outs = [name + ".js"],
+      outs = [name + ".js", name + ".descriptor"],
       tools = [protocbin],
       cmd = " ".join(cmd),
   )
@@ -56,6 +57,7 @@ def closure_js_proto_library(
   closure_js_library(
       name = name,
       srcs = [name + ".js"],
+      proto_descriptor_set = name + ".descriptor",
       data = data,
       deps = [
           str(Label("//closure/library")),

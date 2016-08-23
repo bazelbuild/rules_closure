@@ -67,6 +67,8 @@ CSS_DEPS_ATTR = attr.label_list(
                "transitive_css_srcs",
                "transitive_css_labels"])
 
+SOY_DEPS_ATTR = attr.label_list(allow_files=False, providers=["proto_descriptor_sets"])
+
 CLOSURE_LIBRARY_BASE_ATTR = attr.label(
     default=Label("@closure_library//:closure/goog/base.js"),
     allow_files=True,

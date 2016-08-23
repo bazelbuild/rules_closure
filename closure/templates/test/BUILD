@@ -15,10 +15,16 @@
 package(default_testonly = True)
 
 load("//closure:defs.bzl", "closure_js_library")
+load("//closure:defs.bzl", "closure_js_proto_library")
 load("//closure:defs.bzl", "closure_js_template_library")
 load("//closure:defs.bzl", "closure_js_test")
 load("//closure:defs.bzl", "closure_java_template_library")
 load("//closure/private:file_test.bzl", "file_test")
+
+closure_js_proto_library(
+    name = "person_proto",
+    srcs = ["person.proto"],
+)
 
 closure_js_template_library(
     name = "greeter_soy",
@@ -28,6 +34,19 @@ closure_js_template_library(
 closure_js_template_library(
     name = "greeter_idom_soy",
     srcs = ["greeter_idom.soy"],
+    incremental_dom = 1,
+)
+
+closure_js_template_library(
+    name = "greeter_proto_soy",
+    srcs = ["greeter_proto.soy"],
+    deps = [":person_proto"],
+)
+
+closure_js_template_library(
+    name = "greeter_idom_proto_soy",
+    srcs = ["greeter_idom_proto.soy"],
+    deps = [":person_proto"],
     incremental_dom = 1,
 )
 
@@ -51,6 +70,28 @@ closure_js_library(
     ],
 )
 
+closure_js_library(
+    name = "greeter_proto_lib",
+    srcs = ["greeter_proto.js"],
+    deps = [
+        ":greeter_proto_soy",
+        ":person_proto",
+        "//closure/library",
+    ],
+)
+
+closure_js_library(
+    name = "greeter_idom_proto_lib",
+    srcs = ["greeter_idom_proto.js"],
+    language = "ECMASCRIPT6_STRICT",
+    deps = [
+        ":greeter_idom_proto_soy",
+        ":person_proto",
+        "//closure/library",
+        "//closure/templates:incremental_dom",
+    ],
+)
+
 closure_js_test(
     name = "greeter_test",
     srcs = ["greeter_test.js"],
@@ -68,6 +109,27 @@ closure_js_test(
     language = "ECMASCRIPT6_STRICT",
     deps = [
         ":greeter_idom_lib",
+        "//closure/library",
+        "//closure/library:testing",
+    ],
+)
+
+closure_js_test(
+    name = "greeter_proto_test",
+    srcs = ["greeter_proto_test.js"],
+    deps = [
+        ":greeter_proto_lib",
+        "//closure/library",
+        "//closure/library:testing",
+    ],
+)
+
+closure_js_test(
+    name = "greeter_idom_proto_test",
+    srcs = ["greeter_idom_proto_test.js"],
+    language = "ECMASCRIPT6_STRICT",
+    deps = [
+        ":greeter_idom_proto_lib",
         "//closure/library",
         "//closure/library:testing",
     ],

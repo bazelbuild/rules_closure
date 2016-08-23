@@ -45,6 +45,9 @@ def _impl(ctx):
           "--label=%s" % ctx.label,
           "--convention=%s" % ctx.attr.convention,
           "--language=%s" % _determine_check_language(ctx.attr.language)]
+  proto_descriptor_sets = []
+  if ctx.attr.proto_descriptor_set:
+    proto_descriptor_sets += [ctx.attr.proto_descriptor_set]
   if ctx.attr.testonly:
     args += ["--testonly"]
   roots = set(order="compile")
@@ -65,6 +68,8 @@ def _impl(ctx):
     for edep in direct_dep.js_exports:
       args += ["--dep=%s" % edep.js_provided.path]
       inputs.append(edep.js_provided)
+    if hasattr(direct_dep, "proto_descriptor_sets"):
+      proto_descriptor_sets += direct_dep.proto_descriptor_sets
   args += ["--suppress=%s" % s for s in ctx.attr.suppress]
   if ctx.attr.internal_expect_failure:
     args += ["--expect_failure"]
@@ -86,6 +91,7 @@ def _impl(ctx):
       progress_message="Checking %d JS files in %s" % (
           len(ctx.files.srcs) + len(ctx.files.externs), ctx.label))
   return struct(files=set(),
+                proto_descriptor_sets=proto_descriptor_sets,
                 js_language=determine_js_language(ctx),
                 js_exports=ctx.attr.exports,
                 js_provided=ctx.outputs.provided,
@@ -111,6 +117,7 @@ closure_js_library = rule(
         "language": attr.string(default=JS_LANGUAGE_DEFAULT),
         "no_closure_library": attr.bool(default=False),
         "srcs": attr.label_list(allow_files=JS_FILE_TYPE),
+        "proto_descriptor_set": attr.label(allow_files=True),
         "suppress": attr.string_list(),
         "data": attr.label_list(cfg=DATA_CFG, allow_files=True),
 
