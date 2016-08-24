@@ -51,6 +51,7 @@ def closure_repositories(
     omit_protoc_linux_x86_64=False,
     omit_protoc_macosx=False,
     omit_safe_html_types=False,
+    omit_safe_html_types_html_proto=False,
     omit_soy=False,
     omit_soy_jssrc=False):
   closure_maven_server()
@@ -118,6 +119,8 @@ def closure_repositories(
     protoc_macosx()
   if not omit_safe_html_types:
     safe_html_types()
+  if not omit_safe_html_types_html_proto:
+    safe_html_types_html_proto()
   if not omit_soy:
     soy()
   if not omit_soy_jssrc:
@@ -423,6 +426,13 @@ def safe_html_types():
       artifact = "com.google.common.html.types:types:1.0.4",
       sha1 = "2adf4c8bfccc0ff7346f9186ac5aa57d829ad065",
       server = "closure_maven_server",
+  )
+
+def safe_html_types_html_proto():
+  native.http_file(
+      name = "safe_html_types_html_proto",
+      sha256 = "63fa9410f262b4e57588cdad19196d96a1052234d81212c3356728199c2de393",
+      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/safe-html-types/archive/release-1.0.4.tar.gz",
   )
 
 def soy():

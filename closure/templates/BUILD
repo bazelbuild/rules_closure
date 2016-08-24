@@ -15,6 +15,7 @@
 package(default_visibility = ["//visibility:public"])
 
 load("//closure:defs.bzl", "closure_js_library")
+load("//closure:defs.bzl", "closure_js_proto_library")
 
 java_library(
     name = "templates",
@@ -48,13 +49,21 @@ java_library(
     ],
 )
 
+closure_js_proto_library(
+    name = "soy_html_proto",
+    srcs = ["//third_party/jssrc:html_proto"],
+)
+
 closure_js_library(
     name = "soy_jssrc",
     srcs = ["//third_party/jssrc"],
     suppress = [
         "JSC_OPTIONAL_PARAM_NOT_MARKED_OPTIONAL",
     ],
-    deps = ["//closure/library"],
+    deps = [
+        ":soy_html_proto",
+        "//closure/library",
+    ],
 )
 
 java_binary(
