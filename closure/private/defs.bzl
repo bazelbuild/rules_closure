@@ -22,6 +22,7 @@ HTML_FILE_TYPE = FileType([".html"])
 JS_FILE_TYPE = FileType([".js"])
 JS_LANGUAGE_DEFAULT = "ECMASCRIPT5_STRICT"
 JS_TEST_FILE_TYPE = FileType(["_test.js"])
+SOY_FILE_TYPE = FileType([".soy"])
 
 JS_LANGUAGES = set([
     "ANY",

@@ -18,6 +18,76 @@
 """
 
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
+load("//closure/private:defs.bzl", "SOY_FILE_TYPE")
+
+
+def _impl(ctx):
+  if ctx.attr.incremental_dom:
+    compilerbin = ctx.executable._soyidomcompilerbin
+    if not ctx.attr.should_generate_js_doc:
+      fail('should_generate_js_doc must be 1 when using incremental_dom')
+    if not ctx.attr.should_provide_require_soy_namespaces:
+      fail('should_provide_require_soy_namespaces must be 1 when using incremental_dom')
+    if ctx.attr.should_generate_soy_msg_defs:
+      fail('should_generate_soy_msg_defs must be 0 when using incremental_dom')
+    if ctx.attr.soy_msgs_are_external:
+      fail('soy_msgs_are_external must be 0 when using incremental_dom')
+  else:
+    compilerbin = ctx.executable._soycompilerbin
+
+  args = ["--outputPathFormat=%s/{INPUT_DIRECTORY}/{INPUT_FILE_NAME}.js" %
+          ctx.configuration.genfiles_dir.path]
+  if not ctx.attr.incremental_dom:
+    if ctx.attr.soy_msgs_are_external:
+      args += ["--googMsgsAreExternal"]
+    if ctx.attr.should_generate_js_doc:
+      args += ["--shouldGenerateJsdoc"]
+    if ctx.attr.should_provide_require_soy_namespaces:
+      args += ["--shouldProvideRequireSoyNamespaces"]
+    if ctx.attr.should_generate_soy_msg_defs:
+      args += "--shouldGenerateGoogMsgDefs"
+  if ctx.attr.plugin_modules:
+    args += ["--pluginModules=%s" % ",".join(ctx.attr.plugin_modules)]
+  args += [src.path for src in ctx.files.srcs]
+  srcs = ctx.files.srcs
+  if ctx.attr.globals:
+    args += ["--compileTimeGlobalsFile='%s'" % ctx.attr.globals.path]
+    srcs += ctx.attr.globals
+
+  ctx.action(
+      inputs=srcs,
+      outputs=ctx.outputs.outputs,
+      executable=compilerbin,
+      arguments=args,
+      mnemonic="SoyCompiler",
+      progress_message = "Generating %d SOY v2 JS file(s)" % len(
+        ctx.attr.outputs),
+  )
+
+
+_closure_js_template_library = rule(
+    implementation=_impl,
+    output_to_genfiles = True,
+    attrs={
+        "srcs": attr.label_list(allow_files=SOY_FILE_TYPE),
+        "outputs": attr.output_list(),
+        "globals": attr.label_list(),
+        "plugin_modules": attr.label_list(),
+        "should_generate_js_doc": attr.bool(default=True),
+        "should_provide_require_soy_namespaces": attr.bool(default=True),
+        "should_generate_soy_msg_defs": attr.bool(default=False),
+        "soy_msgs_are_external": attr.bool(default=False),
+        "incremental_dom": attr.bool(default=False),
+
+        # internal only
+        "_soycompilerbin": attr.label(
+            default=Label("//closure/templates:SoyToJsSrcCompiler"),
+            executable=True),
+        "_soyidomcompilerbin": attr.label(
+            default=Label("//closure/templates:SoyToIncrementalDomSrcCompiler"),
+            executable=True),
+    },
+)
 
 def closure_js_template_library(
     name,
@@ -32,50 +102,21 @@ def closure_js_template_library(
     should_provide_require_soy_namespaces = 1,
     should_generate_soy_msg_defs = 0,
     soy_msgs_are_external = 0,
-    incremental_dom = 0,
-    soycompilerbin = str(Label("//closure/templates:SoyToJsSrcCompiler")),
-    soyidomcompilerbin = str(Label("//closure/templates:SoyToIncrementalDomSrcCompiler"))):
-  if incremental_dom:
-    compilerbin = soyidomcompilerbin
-    if not should_generate_js_doc:
-      fail('should_generate_js_doc must be 1 when using incremental_dom')
-    if not should_provide_require_soy_namespaces:
-      fail('should_provide_require_soy_namespaces must be 1 when using incremental_dom')
-    if should_generate_soy_msg_defs:
-      fail('should_generate_soy_msg_defs must be 0 when using incremental_dom')
-    if soy_msgs_are_external:
-      fail('soy_msgs_are_external must be 0 when using incremental_dom')
-  else:
-    compilerbin = soycompilerbin
-
+    incremental_dom = 0):
   js_srcs = [src + ".js" for src in srcs]
-  cmd = ["$(location %s)" % compilerbin,
-         "--outputPathFormat='$(@D)/{INPUT_FILE_NAME}.js'"]
-  if not incremental_dom:
-    if soy_msgs_are_external:
-      cmd += ["--googMsgsAreExternal"]
-    if should_generate_js_doc:
-      cmd += ["--shouldGenerateJsdoc"]
-    if should_provide_require_soy_namespaces:
-      cmd += ["--shouldProvideRequireSoyNamespaces"]
-    if should_generate_soy_msg_defs:
-      cmd += "--shouldGenerateGoogMsgDefs"
-  if plugin_modules:
-    cmd += ["--pluginModules=%s" % ",".join(plugin_modules)]
-  cmd += ["$(location " + src + ")" for src in srcs]
-  if globals != None:
-    cmd += ["--compileTimeGlobalsFile='$(location %s)'" % globals]
-    srcs = srcs + [globals]
-
-  native.genrule(
+  _closure_js_template_library(
       name = name + "_soy_js",
       srcs = srcs,
+      outputs = js_srcs,
       testonly = testonly,
       visibility = ["//visibility:private"],
-      message = "Generating SOY v2 JS files",
-      outs = js_srcs,
-      tools = [compilerbin],
-      cmd = " ".join(cmd),
+      globals = globals,
+      plugin_modules = plugin_modules,
+      should_generate_js_doc = should_generate_js_doc,
+      should_provide_require_soy_namespaces = should_provide_require_soy_namespaces,
+      should_generate_soy_msg_defs = should_generate_soy_msg_defs,
+      soy_msgs_are_external = soy_msgs_are_external,
+      incremental_dom = incremental_dom,
   )
 
   deps = deps + [str(Label("//closure/library")),
