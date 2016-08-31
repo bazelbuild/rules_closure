@@ -112,6 +112,39 @@ maven_jar(
 )
 ```
 
+### Source code formatting
+
+It is recomended that you configure your editor to format your JavaScript and
+Protocol Buffer source files automatically at save. Doing so makes it easy to
+follow Google coding style conventions.
+
+#### Emacs
+
+This section configures `js2-mode` as your major mode for JavaScript editing
+and uses `clang-format` to format JavaScript and Protocol Buffer source files
+automatically when saving. Depending on your preferences you may need to
+customize these instructions. You will also need to ensure that `clang-format`
+is in your `PATH`.
+
+If you aren't already using MELPA, see:
+http://melpa.milkbox.net/#/getting-started
+Then, use `M-x install-package` to install the following three packages:
+
+  * `clang-format`
+  * `js2-mode`
+  * `protobuf-mode`
+
+Finally add the following to your `.emacs` file:
+
+```lisp
+(setq-default js2-basic-offset 2)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(eval-after-load 'js2-mode
+  '(add-hook 'before-save-hook (lambda () (clang-format-buffer '"Google"))))
+(eval-after-load 'protobuf-mode
+  '(add-hook 'before-save-hook (lambda () (clang-format-buffer '"Google"))))
+```
+
 ## Examples
 
 Please see the test directories within this project for concrete examples of usage:
@@ -945,7 +978,7 @@ This rule can be referenced as though it were the following:
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_proto_library")
 closure_js_proto_library(name, srcs, add_require_for_enums, binary,
-                         import_style)
+                         import_style, style)
 ```
 
 Defines a set of Protocol Buffer files.
@@ -993,6 +1026,11 @@ This rule can be referenced as though it were the following:
   - `IMPORT_COMMONJS`   // require()
   - `IMPORT_BROWSER`    // no import statements
   - `IMPORT_ES6`        // import { member } from ''
+
+- **style** (Boolean; optional; default is `True`) Enforce Google coding style
+  conventions with [ClangFormat][clang-format]. It is strongly recommended that
+  you [configure](#source-code-formatting) your editor to run clang-format
+  automatically at save.
 
 
 [Bazel]: http://bazel.io/

@@ -20,6 +20,7 @@ closure_js_library(
     name = "jspb",
     srcs = ["@protobuf_js//:proto_js_library_files"],
     suppress = [
+        "CLANG_FORMAT",
         "JSC_EXTRA_REQUIRE_WARNING",
         "JSC_OPTIONAL_PARAM_NOT_MARKED_OPTIONAL",
     ],
