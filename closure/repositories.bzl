@@ -222,8 +222,8 @@ def clang():
 def closure_compiler():
   native.maven_jar(
       name = "closure_compiler",
-      artifact = "com.google.javascript:closure-compiler-unshaded:v20160713",
-      sha1 = "7df7b683e16c93f65361a15356283599ba012c78",
+      artifact = "com.google.javascript:closure-compiler-unshaded:v20160822",
+      sha1 = "227153aedf239124c2b0c5a680e912c95480fbe6",
       server = "closure_maven_server",
   )
 
@@ -233,9 +233,9 @@ def closure_library():
   # closure_library.BUILD.
   native.new_http_archive(
       name = "closure_library",
-      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/closure-library/archive/v20160713.tar.gz",
-      sha256 = "869c360dc4dc224fc4261f41778e77630bf9e71176a184add687a5c8c0c54b60",
-      strip_prefix = "closure-library-20160713",
+      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/closure-library/archive/v20160822.tar.gz",
+      sha256 = "5430fa398f40059713fe06dd204333601bd398db92bf07cb7bab56c7fb887d5d",
+      strip_prefix = "closure-library-20160822",
       build_file = str(Label("//closure/library:closure_library.BUILD")),
   )
 
@@ -248,8 +248,8 @@ def closure_maven_server():
 def closure_stylesheets():
   native.maven_jar(
       name = "closure_stylesheets",
-      artifact = "com.google.closure-stylesheets:closure-stylesheets:20160212",
-      sha1 = "f0e8625a2cfe0f501b28f5e6438b836358da8a97",
+      artifact = "com.google.closure-stylesheets:closure-stylesheets:1.3.0",
+      sha1 = "52be53d0f5be5cc65a3a87dd69ecdaacfb427b66",
       server = "closure_maven_server",
   )
 
