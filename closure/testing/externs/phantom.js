@@ -180,7 +180,7 @@ phantomjs.Server.prototype.port;
 
 
 /**
- * @param {number} port
+ * @param {(number|string)} port
  * @param {function(!phantomjs.Server.Request,
  *                  !phantomjs.Server.Response)} callback
  */

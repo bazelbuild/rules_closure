@@ -18,7 +18,7 @@ var system = require('system');
 var webserver = require('webserver');
 var port = Math.floor(Math.random() * (60000 - 32768)) + 32768;
 
-webserver.create().listen(port, function(request, response) {
+webserver.create().listen('127.0.0.1:' + port, function(request, response) {
   response.writeHead(200, {'Content-Type': 'text/html'});
   response.write(fs.read(system.args[1]));
   response.closeGracefully();
