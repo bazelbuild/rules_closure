@@ -179,8 +179,8 @@ This rule can be referenced as though it were the following:
   list that image here, so it ends up in the webserver runfiles.
 
 - **deps:** (List of [labels]; optional) Direct [dependency] list. These can
-  point to [closure_js_library], [closure_js_template_library], and
-  [closure_css_library] rules.
+  point to [closure_js_library], [closure_js_template_library],
+  [closure_css_library] and [closure_js_proto_library] rules.
 
   This rule performs strict dependency checking. Your dependency graph must form
   an [acyclic][acyclic] transitive closure, otherwise a build error is
@@ -654,9 +654,9 @@ This rule can be referenced as though it were the following:
   tag, then the data attribute of its rule should be set to `["foo.png"]` so the
   image is available in the web server runfiles.
 
-- **deps:** (List of [labels]; optional) List of [closure_js_library] and
-  [closure_js_template_library] targets which define symbols referenced by the
-  template.
+- **deps:** (List of [labels]; optional) List of [closure_js_library],
+  [closure_js_template_library] and [closure_js_proto_library] targets which
+  define symbols referenced by the template.
 
 - **globals:** (List of [labels]; optional) List of text files containing symbol
   definitions that are only considered at compile-time. For example, this file
