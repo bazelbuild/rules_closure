@@ -85,6 +85,8 @@ genrule(
     outs = ["fontdemo-generated.png"],
     cmd = "$(location //third_party/phantomjs) $(SRCS) $@",
     tools = ["//third_party/phantomjs"],
+    local = 1,
+    tags = ["requires-network"],
 )
 
 files_equal_test(
