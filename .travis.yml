@@ -18,7 +18,6 @@ jdk:
 env:
   - V=HEAD URL=http://ci.bazel.io/job/Bazel/JAVA_VERSION=1.8,PLATFORM_NAME=linux-x86_64/lastSuccessfulBuild/artifact/output/ci/bazel--installer.sh FLAGS='--worker_verbose --strategy=Javac=worker --strategy=JsChecker=worker'
   - V=0.3.0 URL=http://bazel-mirror.storage.googleapis.com/github.com/bazelbuild/bazel/releases/download/0.3.0/bazel-0.3.0-installer-linux-x86_64.sh FLAGS=''
-  - V=0.2.2b URL=http://bazel-mirror.storage.googleapis.com/github.com/bazelbuild/bazel/releases/download/0.2.2b/bazel-0.2.2b-installer-linux-x86_64.sh FLAGS=''
 
 before_install:
   - wget -O install.sh $URL

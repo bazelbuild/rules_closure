@@ -143,7 +143,7 @@ def determine_js_language(ctx, normalize=False):
   return language
 
 def is_using_closure_library(srcs):
-  return contains_file(srcs, "external/closure_library/closure/goog/base.js")
+  return contains_file(srcs, "../closure_library/closure/goog/base.js")
 
 def runpath(f):
   """Figures out the proper runfiles path for a file, using voodoo"""
