@@ -85,6 +85,7 @@ genrule(
     outs = ["fontdemo-generated.png"],
     cmd = "$(location //third_party/phantomjs) $(SRCS) $@",
     tools = ["//third_party/phantomjs"],
+    # TODO(dmarting): Remove local = 1 when ariya/phantomjs#13876 is fixed.
     local = 1,
     tags = ["requires-network"],
 )

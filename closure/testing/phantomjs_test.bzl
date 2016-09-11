@@ -72,7 +72,7 @@ def _first(iterable):
     return item
   fail("iterable was empty")
 
-phantomjs_test = rule(
+_phantomjs_test = rule(
     test=True,
     implementation=_impl,
     attrs={
@@ -94,3 +94,11 @@ phantomjs_test = rule(
             default=Label("//third_party/phantomjs"),
             allow_files=True),
     })
+
+# Workaround https://github.com/ariya/phantomjs/issues/13876 by setting
+# phantomjs_test to local.
+# TODO(dmarting): Remove when https://github.com/ariya/phantomjs/issues/13876
+# is fixed.
+def phantomjs_test(**kwargs):
+  tags = kwargs.pop("tags", [])
+  _phantomjs_test(tags = ["local"] + tags, **kwargs)
