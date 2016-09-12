@@ -40,6 +40,7 @@ exports = class GreeterIdomProto {
   greet() {
     var person = new Person();
     person.setName(this.name_);
-    idom.patchInner(goog.global.document.body, greeter.greet, {person: person});
+    idom.patchInner(/** @type {!Element} */ (goog.global.document.body),
+                    greeter.greet, {person: person});
   }
 };

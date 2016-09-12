@@ -35,9 +35,12 @@ def _impl(ctx):
       fail('should_generate_soy_msg_defs must be 0 when using incremental_dom')
     if ctx.attr.soy_msgs_are_external:
       fail('soy_msgs_are_external must be 0 when using incremental_dom')
+    args = ["--outputPathFormat=%s/{INPUT_DIRECTORY}/{INPUT_FILE_NAME}_idom.js" %
+            ctx.configuration.genfiles_dir.path]
+  else:
+    args = ["--outputPathFormat=%s/{INPUT_DIRECTORY}/{INPUT_FILE_NAME}.js" %
+            ctx.configuration.genfiles_dir.path]
 
-  args = ["--outputPathFormat=%s/{INPUT_DIRECTORY}/{INPUT_FILE_NAME}.js" %
-          ctx.configuration.genfiles_dir.path]
   if not ctx.attr.incremental_dom:
     if ctx.attr.soy_msgs_are_external:
       args += ["--googMsgsAreExternal"]
@@ -104,9 +107,10 @@ def closure_js_template_library(
     **kwargs):
   if incremental_dom:
     compiler = str(Label(_SOYTOINCREMENTALDOMSRCCOMPILER))
+    js_srcs = [src + "_idom.js" for src in srcs]
   else:
     compiler = str(Label(_SOYTOJSSRCCOMPILER))
-  js_srcs = [src + ".js" for src in srcs]
+    js_srcs = [src + ".js" for src in srcs]
   _closure_js_template_library(
       name = name + "_soy_js",
       srcs = srcs,
