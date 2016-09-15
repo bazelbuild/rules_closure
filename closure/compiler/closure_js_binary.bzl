@@ -116,11 +116,12 @@ def _impl(ctx):
   args += ctx.attr.defs
 
   # add gigantic list of files
+  args += ["--conformance_configs=%s" % config.path for config in ctx.files.conformance]
   args += ["--externs=%s" % extern.path for extern in externs]
   args += ["--js=%s" % src.path for src in srcs]
 
   # tell bazel how the javascript compiler should be run
-  inputs = list(srcs) + list(externs)
+  inputs = list(srcs) + list(externs) + ctx.files.conformance
   # These rule-provided.txt files will not be used by JsCompiler. But we list
   # them as inputs anyway to ensure that JsChecker runs. This is because Bazel
   # only runs an action if something else in the graph depends on its output.
@@ -215,6 +216,7 @@ closure_js_binary = rule(
         "property_renaming_report": attr.output(),
         "warning_level": attr.string(default="VERBOSE"),
         "data": attr.label_list(cfg=DATA_CFG, allow_files=True),
+        "conformance": attr.label_list(allow_files=True),
 
         # internal only
         "internal_expect_failure": attr.bool(default=False),
