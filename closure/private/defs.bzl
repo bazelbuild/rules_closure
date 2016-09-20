@@ -43,6 +43,12 @@ JS_PEDANTIC_ARGS = [
 ]
 
 JS_HIDE_WARNING_ARGS = [
+    # bazel > 0.3.1
+    "--hide_warnings_for=../closure_library/",
+    "--hide_warnings_for=../incremental_dom/",
+    "--hide_warnings_for=../protobuf_js/",
+    "--hide_warnings_for=../soy_jssrc/",
+    # bazel <= 0.3.1
     "--hide_warnings_for=external/closure_library/",
     "--hide_warnings_for=external/incremental_dom/",
     "--hide_warnings_for=external/protobuf_js/",
