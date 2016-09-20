@@ -16,6 +16,7 @@ package(default_testonly = True)
 
 licenses(["notice"])  # Apache 2.0
 
+load("//closure:defs.bzl", "closure_js_binary")
 load("//closure:defs.bzl", "closure_js_library")
 load("//closure:defs.bzl", "closure_js_proto_library")
 load("//closure:defs.bzl", "closure_js_template_library")
@@ -73,6 +74,17 @@ closure_js_library(
 )
 
 closure_js_library(
+    name = "greeter_idom_fail_lib",
+    srcs = ["greeter_idom_fail.js", "greeter_idom_fail_test.js"],
+    language = "ECMASCRIPT6_STRICT",
+    deps = [
+        ":greeter_idom_soy",
+        "//closure/library",
+        "//third_party/javascript/incremental_dom",
+    ],
+)
+
+closure_js_library(
     name = "greeter_proto_lib",
     srcs = ["greeter_proto.js"],
     deps = [
@@ -114,6 +126,18 @@ closure_js_test(
         "//closure/library",
         "//closure/library:testing",
     ],
+)
+
+closure_js_binary(
+    name = "greeter_idom_fail_bin",
+    language = "ECMASCRIPT5_STRICT",
+    deps = [
+        ":greeter_idom_fail_lib",
+        "//closure/library",
+        "//closure/library:testing",
+    ],
+    pedantic = True,
+    internal_expect_failure = True,
 )
 
 closure_js_test(

@@ -31,22 +31,23 @@ set -u
 tar xfz $1 --strip 1;
 
 echo "goog.module('incrementaldom');" > $2;
+echo "Object.defineProperty(exports, '__esModule', { value: true });" >> $2;
 
 cat src/util.js \
     src/node_data.js \
-    src/symbols.js \
-    src/attributes.js \
     src/nodes.js \
     src/notifications.js \
     src/context.js \
     src/assertions.js \
     src/dom_util.js \
     src/core.js \
+    src/symbols.js \
+    src/attributes.js \
     src/virtual_elements.js | \
     tr '\n' '\r' | \
     sed 's/export [^;]*;//g' | \
     sed 's/import [^;]*;//g' | \
-    sed "s/process.env.NODE_ENV/'undefined'/g" | \
+    sed "s/process.env.NODE_ENV !== 'production'/goog.DEBUG/g" | \
     sed 's/const elementOpen /const coreElementOpen /' | \
     sed 's/const elementClose /const coreElementClose /' | \
     sed 's/const text /const coreText /' | \
