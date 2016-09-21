@@ -52,8 +52,6 @@ Closure Rules bundles the following tools and makes them "just work."
 - [Protocol Buffers]: Google's language-neutral, platform-neutral, extensible
   mechanism for serializing structured data. This is used instead of untyped
   JSON.
-- [ClangFormat]: Code formatting tool to automatically format JavaScript and
-  Protocol Buffer source code per Google's style conventions.
 - [Incremental DOM][Incremental DOM] (experimental): Google's in-place DOM
   diffing library. This optional backend for Closure Templates builds DOM trees
   and updates them in-place when data changes.
@@ -998,7 +996,6 @@ This rule can be referenced as though it were the following:
 
 
 [Bazel]: http://bazel.io/
-[ClangFormat]: http://clang.llvm.org/docs/ClangFormat.html
 [Closure Compiler]: https://developers.google.com/closure/compiler/
 [Closure Library]: https://developers.google.com/closure/library/
 [Closure Stylesheets]: https://github.com/google/closure-stylesheets
