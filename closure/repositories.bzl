@@ -248,8 +248,8 @@ def closure_maven_server():
 def closure_stylesheets():
   native.maven_jar(
       name = "closure_stylesheets",
-      artifact = "com.google.closure-stylesheets:closure-stylesheets:1.3.0",
-      sha1 = "52be53d0f5be5cc65a3a87dd69ecdaacfb427b66",
+      artifact = "com.google.closure-stylesheets:closure-stylesheets:1.4.0",
+      sha1 = "ae6a43ac97312c74328b5b2e9135e5126b286fa3",
       server = "closure_maven_server",
   )
 
