@@ -390,34 +390,32 @@ def phantomjs():
 def protobuf_java():
   native.maven_jar(
       name = "protobuf_java",
-      artifact = "com.google.protobuf:protobuf-java:3.0.0-beta-3",
-      sha1 = "ed8c2f9a63cfa770292f8173fd0172bdaa014fe3",
+      artifact = "com.google.protobuf:protobuf-java:3.1.0",
+      sha1 = "e13484d9da178399d32d2d27ee21a77cfb4b7873",
       server = "closure_maven_server",
   )
 
 def protobuf_js():
   native.new_http_archive(
       name = "protobuf_js",
-      # TODO(hochhaus): Use protobuf-js-*.zip once it includes encoder.js.
-      # https://github.com/google/protobuf/pull/1589
-      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/archive/v3.0.0-beta-3.zip",
-      sha256 = "dad1912814e9d9b8642036d07c086ac79faf2cc534c992911375a39924a45860",
-      strip_prefix = "protobuf-3.0.0-beta-3",
+      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/releases/download/v3.1.0/protobuf-js-3.1.0.zip",
+      sha256 = "b257641b1f151e91f2e159c26b015bd43c1b57fa8053e541dcd2dc9408e82a3e",
+      strip_prefix = "protobuf-3.1.0",
       build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
   )
 
 def protoc_linux_x86_64():
   native.http_file(
       name = "protoc_linux_x86_64",
-      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/releases/download/v3.0.0-beta-3/protoc-3.0.0-beta-3-linux-x86_64.zip",
-      sha256 = "48c592c6272e2a5043de792ff00ff162fe6f9bebd60147b05888b08f8d0e434b",
+      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-linux-x86_64.zip",
+      sha256 = "7c98f9e8a3d77e49a072861b7a9b18ffb22c98e37d2a80650264661bfaad5b3a",
   )
 
 def protoc_macosx():
   native.http_file(
       name = "protoc_macosx",
-      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/releases/download/v3.0.0-beta-3/protoc-3.0.0-beta-3-osx-x86_64.zip",
-      sha256 = "b009b2b433affcf00dbe645d0637139f9a6c1e38c2c7d4cc99c30919f5c2eaac",
+      url = "http://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-osx-x86_64.zip",
+      sha256 = "2cea7b1acb86671362f7aa554a21b907d18de70b15ad1f68e72ad2b50502920e",
   )
 
 def safe_html_types():

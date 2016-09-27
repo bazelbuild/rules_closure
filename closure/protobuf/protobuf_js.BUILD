@@ -6,6 +6,7 @@ filegroup(
     name = "proto_js_library_files",
     srcs = [
         "js/debug.js",
+        "js/map.js",
         "js/message.js",
         "js/binary/arith.js",
         "js/binary/constants.js",
