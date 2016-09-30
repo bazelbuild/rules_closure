@@ -7,12 +7,21 @@ licenses([
 
 java_library(
     name = "jscomp",
+    visibility = ["//visibility:public"],
     exports = ["@closure_compiler//jar"],
     runtime_deps = [
-        "@args4j//jar",
         "@gson//jar",
         "@guava//jar",
         "@jsr305//jar",
         "@protobuf_java//jar",
+    ],
+)
+
+java_binary(
+    name = "main",
+    main_class = "com.google.javascript.jscomp.CommandLineRunner",
+    runtime_deps = [
+        ":jscomp",
+        "@args4j//jar",
     ],
 )

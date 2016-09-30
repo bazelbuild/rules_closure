@@ -210,3 +210,9 @@ def contains_file(srcs, path):
     if src.short_path == path:
       return True
   return False
+
+def create_argfile(ctx, args):
+  argfile = ctx.new_file(ctx.configuration.bin_dir,
+                         "%s_worker_input" % ctx.label.name)
+  ctx.file_action(output=argfile, content="\n".join(args))
+  return argfile

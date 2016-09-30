@@ -12,26 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-java_library(
-    name = "jscomp",
+load("//closure/private:java_proto_library.bzl", "java_proto_library")
+
+java_binary(
+    name = "ClosureUberAlles",
     srcs = [
-        "CheckSetTestOnly.java",
-        "CheckStrictDeps.java",
-        "JsChecker.java",
-        "JsCheckerClosureCodingConvention.java",
-        "JsCheckerErrorFormatter.java",
-        "JsCheckerErrorManager.java",
-        "JsCheckerHelper.java",
-        "JsCheckerPassConfig.java",
-        "JsCheckerState.java",
-        "JsCompiler.java",
+        "BazelWorker.java",
+        "ClosureUberAlles.java",
     ],
-    visibility = ["//java/io/bazel/rules/closure:__pkg__"],
+    main_class = "io.bazel.rules.closure.ClosureUberAlles",
+    visibility = ["//visibility:public"],
     deps = [
+        ":worker_protocol_proto",
+        "//java/com/google/javascript/jscomp",
         "//java/io/bazel/rules/closure/program",
-        "//third_party/java/jscomp",
-        "@args4j//jar",  # for //third_party/java/jscomp
         "@guava//jar",
-        "@protobuf_java//jar",
     ],
+)
+
+java_proto_library(
+    name = "worker_protocol_proto",
+    src = "worker_protocol.proto",
 )

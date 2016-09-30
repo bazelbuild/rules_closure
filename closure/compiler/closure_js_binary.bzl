@@ -25,6 +25,7 @@ load("//closure/private:defs.bzl",
      "JS_HIDE_WARNING_ARGS",
      "collect_required_css_labels",
      "collect_transitive_js_srcs",
+     "create_argfile",
      "determine_js_language",
      "difference",
      "is_using_closure_library",
@@ -51,6 +52,7 @@ def _impl(ctx):
 
   # build list of flags for closure compiler
   args = [
+      "JsCompiler",
       "--js_output_file=%s" % ctx.outputs.out.path,
       "--create_source_map=%s" % ctx.outputs.map.path,
       "--output_errors=%s" % ctx.outputs.stderr.path,
@@ -120,18 +122,29 @@ def _impl(ctx):
   args += ["--externs=%s" % extern.path for extern in externs]
   args += ["--js=%s" % src.path for src in srcs]
 
-  # tell bazel how the javascript compiler should be run
-  inputs = list(srcs) + list(externs) + ctx.files.conformance
+  inputs = []
+  for src in srcs:
+    inputs.append(src)
+  for extern in externs:
+    inputs.append(extern)
+  inputs.extend(ctx.files.conformance)
+
   # These rule-provided.txt files will not be used by JsCompiler. But we list
   # them as inputs anyway to ensure that JsChecker runs. This is because Bazel
   # only runs an action if something else in the graph depends on its output.
-  inputs += [dep.js_provided for dep in ctx.attr.deps]
+  for dep in ctx.attr.deps:
+    inputs.append(dep.js_provided)
+
+  # run our modded closure compiler
+  argfile = create_argfile(ctx, args)
+  inputs.append(argfile)
   ctx.action(
       inputs=inputs,
       outputs=outputs,
-      executable=ctx.executable._jscompiler,
-      arguments=args,
-      mnemonic="JsCompiler",
+      executable=ctx.executable._ClosureUberAlles,
+      arguments=["@" + argfile.path],
+      mnemonic="Closure",
+      execution_requirements={"supports-workers": "1"},
       progress_message="Compiling %d JavaScript files to %s" % (
           len(srcs) + len(externs),
           ctx.outputs.out.short_path))
@@ -221,8 +234,8 @@ closure_js_binary = rule(
         # internal only
         "internal_expect_failure": attr.bool(default=False),
         "internal_expect_warnings": attr.bool(default=False),
-        "_jscompiler": attr.label(
-            default=Label("//java/com/google/javascript/jscomp:jscompiler"),
+        "_ClosureUberAlles": attr.label(
+            default=Label("//java/io/bazel/rules/closure:ClosureUberAlles"),
             executable=True),
         "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
         "_closure_library_deps": CLOSURE_LIBRARY_DEPS_ATTR,

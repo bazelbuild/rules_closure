@@ -23,14 +23,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.google.devtools.build.lib.worker.WorkerProtocol.WorkRequest;
-import com.google.devtools.build.lib.worker.WorkerProtocol.WorkResponse;
 import com.google.javascript.jscomp.CompilerOptions.LanguageMode;
 import com.google.javascript.jscomp.lint.CheckJSDocStyle;
 import com.google.javascript.jscomp.parsing.Config;
-import java.io.ByteArrayOutputStream;
+import io.bazel.rules.closure.program.CommandLineProgram;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -328,73 +325,29 @@ public final class JsChecker {
     return result.build();
   }
 
-  static int processRequest(Collection<String> args) throws IOException {
-    String lastArg = Iterables.getLast(args, "");
-    if (lastArg.startsWith("@")) {
-      args = Files.readAllLines(Paths.get(lastArg.substring(1)), UTF_8);
-    }
-    JsChecker checker = new JsChecker();
-    CmdLineParser parser = new CmdLineParser(checker);
-    parser.setUsageWidth(80);
-    try {
-      parser.parseArgument(args);
-    } catch (CmdLineException e) {
-      System.err.println(e.getMessage());
-      System.err.println(USAGE);
-      parser.printUsage(System.err);
-      System.err.println();
-      return 1;
-    }
-    if (checker.help) {
-      System.err.println(USAGE);
-      parser.printUsage(System.out);
-      System.out.println();
-      return 0;
-    } else {
-      return checker.run() == !checker.expectFailure ? 0 : 1;
-    }
-  }
-
-  private static void runWorker() throws IOException {
-    PrintStream originalStdOut = System.out;
-    PrintStream originalStdErr = System.err;
-    while (true) {
-      WorkRequest request = WorkRequest.parseDelimitedFrom(System.in);
-      if (request == null) {
-        break;
+  public static final class Program implements CommandLineProgram {
+    @Override
+    public int run(Collection<String> args) throws IOException {
+      JsChecker checker = new JsChecker();
+      CmdLineParser parser = new CmdLineParser(checker);
+      parser.setUsageWidth(80);
+      try {
+        parser.parseArgument(args);
+      } catch (CmdLineException e) {
+        System.err.println(e.getMessage());
+        System.err.println(USAGE);
+        parser.printUsage(System.err);
+        System.err.println();
+        return 1;
       }
-      ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-      int exitCode = 0;
-      try (PrintStream ps = new PrintStream(buffer)) {
-        System.setOut(ps);
-        System.setErr(ps);
-        try {
-          exitCode = processRequest(request.getArgumentsList());
-        } catch (Exception e) {
-          e.printStackTrace();
-          exitCode = 1;
-        } finally {
-          ps.flush();
-          System.setOut(originalStdOut);
-          System.setErr(originalStdErr);
-        }
+      if (checker.help) {
+        System.err.println(USAGE);
+        parser.printUsage(System.out);
+        System.out.println();
+        return 0;
+      } else {
+        return checker.run() == !checker.expectFailure ? 0 : 1;
       }
-      WorkResponse.newBuilder()
-          .setOutput(buffer.toString())
-          .setExitCode(exitCode)
-          .build()
-          .writeDelimitedTo(System.out);
-      System.out.flush();
-      System.gc();  // be a good little worker process and consume less memory when idle
-    }
-  }
-
-  public static void main(String[] args) throws IOException {
-    ImmutableList<String> argsList = ImmutableList.copyOf(args);
-    if (argsList.contains("--persistent_worker")) {
-      runWorker();
-    } else {
-      System.exit(processRequest(argsList));
     }
   }
 }

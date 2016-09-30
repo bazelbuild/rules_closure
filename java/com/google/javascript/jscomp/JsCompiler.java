@@ -19,15 +19,17 @@ package com.google.javascript.jscomp;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.collect.Iterables;
+import io.bazel.rules.closure.program.CommandLineProgram;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /** Closure Rules runner for Closure Compiler. */
-public final class JsCompiler {
+public final class JsCompiler implements CommandLineProgram {
 
   private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
 
@@ -65,7 +67,8 @@ public final class JsCompiler {
     }
   }
 
-  public static void main(String[] args) throws IOException {
+  @Override
+  public int run(Collection<String> args) throws IOException {
     // Our flags, which we won't pass along to the compiler.
     Path outputErrors = null;
     boolean expectFailure = false;
@@ -77,7 +80,7 @@ public final class JsCompiler {
     Path createSourceMap = null;
 
     // Parse flags in an ad-hoc manner.
-    List<String> passThroughArgs = new ArrayList<>(args.length);
+    List<String> passThroughArgs = new ArrayList<>(args.size());
     for (String arg : args) {
       if (arg.startsWith("--output_errors=")) {
         outputErrors = Paths.get(arg.substring(16));
@@ -132,8 +135,6 @@ public final class JsCompiler {
     if (!failed && expectFailure) {
       System.err.println("ERROR: Expected failure but didn't fail.");
     }
-    System.exit(failed == expectFailure ? 0 : 1);
+    return failed == expectFailure ? 0 : 1;
   }
-
-  private JsCompiler() {}
 }

@@ -24,6 +24,7 @@ load("//closure/private:defs.bzl",
      "JS_FILE_TYPE",
      "collect_required_css_labels",
      "collect_transitive_js_srcs",
+     "create_argfile",
      "determine_js_language",
      "is_using_closure_library")
 
@@ -40,7 +41,8 @@ def _impl(ctx):
       fail("no_closure_library is pointless when the Closure Library is " +
            "already part of the transitive closure")
   inputs = []
-  args = ["--output=%s" % ctx.outputs.provided.path,
+  args = ["JsChecker",
+          "--output=%s" % ctx.outputs.provided.path,
           "--output_errors=%s" % ctx.outputs.stderr.path,
           "--label=%s" % ctx.label,
           "--convention=%s" % ctx.attr.convention,
@@ -75,18 +77,14 @@ def _impl(ctx):
     args += ["--expect_failure"]
   if ctx.attr.internal_expect_warnings:
     args += ["--expect_warnings"]
-  argfile = ctx.new_file(ctx.configuration.bin_dir,
-                         "%s_worker_input" % ctx.label.name)
-  ctx.file_action(output=argfile, content="\n".join(args))
+  argfile = create_argfile(ctx, args)
   inputs.append(argfile)
   ctx.action(
       inputs=inputs,
       outputs=[ctx.outputs.provided, ctx.outputs.stderr],
-      executable=ctx.executable._jschecker,
+      executable=ctx.executable._ClosureUberAlles,
       arguments=["@" + argfile.path],
-      mnemonic="JsChecker",
-      # This is needed to signal Blaze that the action actually supports
-      # running as a worker.
+      mnemonic="Closure",
       execution_requirements={"supports-workers": "1"},
       progress_message="Checking %d JS files in %s" % (
           len(ctx.files.srcs) + len(ctx.files.externs), ctx.label))
@@ -124,8 +122,8 @@ closure_js_library = rule(
         # internal only
         "internal_expect_failure": attr.bool(default=False),
         "internal_expect_warnings": attr.bool(default=False),
-        "_jschecker": attr.label(
-            default=Label("//java/com/google/javascript/jscomp:jschecker"),
+        "_ClosureUberAlles": attr.label(
+            default=Label("//java/io/bazel/rules/closure:ClosureUberAlles"),
             executable=True),
         "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
         "_closure_library_deps": CLOSURE_LIBRARY_DEPS_ATTR,

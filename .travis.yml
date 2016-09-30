@@ -16,10 +16,11 @@ jdk:
   - oraclejdk8
 
 env:
-  - V=HEAD URL=http://ci.bazel.io/job/Bazel/JAVA_VERSION=1.8,PLATFORM_NAME=linux-x86_64/lastSuccessfulBuild/artifact/output/ci/bazel--installer.sh FLAGS='--worker_verbose --strategy=Javac=worker --strategy=JsChecker=worker'
-  - V=0.3.0 URL=http://bazel-mirror.storage.googleapis.com/github.com/bazelbuild/bazel/releases/download/0.3.0/bazel-0.3.0-installer-linux-x86_64.sh FLAGS=''
+  - V=HEAD URL=http://ci.bazel.io/job/Bazel/JAVA_VERSION=1.8,PLATFORM_NAME=linux-x86_64/lastSuccessfulBuild/artifact/output/ci/bazel--installer.sh FLAGS='--worker_verbose --strategy=Javac=worker --strategy=JsChecker=worker --strategy=JsCompiler=worker'
+  - V=0.3.1 URL=http://bazel-mirror.storage.googleapis.com/github.com/bazelbuild/bazel/releases/download/0.3.1/bazel-0.3.1-installer-linux-x86_64.sh FLAGS='--worker_verbose --strategy=Javac=worker --strategy=JsChecker=worker --strategy=JsCompiler=worker'
 
 before_install:
+  - sudo sysctl kernel.unprivileged_userns_clone=1
   - wget -O install.sh $URL
   - chmod +x install.sh
   - ./install.sh --user
@@ -39,7 +40,7 @@ script:
       --test_strategy=standalone \
       --spawn_strategy=standalone \
       --genrule_strategy=standalone \
-      --local_resources=400,1,1.0 \
+      --local_resources=400,2,1.0 \
       $FLAGS
 
 notifications:

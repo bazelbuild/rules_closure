@@ -69,8 +69,8 @@ notes.
 
 ## Setup
 
-First you must [install][bazel-install] Bazel. Then you must add the following
-to your `WORKSPACE` file:
+First you must [install][bazel-install] Bazel >=0.3.1. Then you must add the
+following to your `WORKSPACE` file:
 
 ```python
 http_archive(
@@ -85,8 +85,14 @@ load("@io_bazel_rules_closure//closure:defs.bzl", "closure_repositories")
 closure_repositories()
 ```
 
-You are not required to install the Closure Tools or PhantomJS. They will be
-fetched automatically.
+You are not required to install the Closure Tools, PhantomJS, or anything else
+for that matter; they will be fetched automatically by Bazel.
+
+We also strongly recommend that you add the following to your `~/.bazelrc` file:
+
+```
+build --strategy=Closure=worker
+```
 
 ### Overriding Dependency Versions
 
@@ -407,7 +413,7 @@ This rule can be referenced as though it were the following:
 - **defs:** (List of strings; optional) Specifies additional flags to be passed
   to the Closure Compiler, e.g. `"--hide_warnings_for=some/path/"`. To see what
   flags are available, run:
-  `bazel run @io_bazel_rules_closure//java/com/google/javascript/jscomp:jscompiler -- --help`
+  `bazel run @io_bazel_rules_closure//third_party/java/jscomp:main -- --help`
 
 ### Support for AngularJS
 
