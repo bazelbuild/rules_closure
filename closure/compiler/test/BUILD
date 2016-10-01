@@ -205,3 +205,26 @@ file_test(
     content = "-- console.log(\"hello world\");\n",
     file = "hello_output_wrapper_dash_dash_space_bin.js",
 )
+
+################################################################################
+# If we initialize a variable to an incorrect type, it will fail to compile
+
+closure_js_library(
+    name = "type_fail_lib",
+    srcs = ["type_fail.js"],
+    no_closure_library = True,
+)
+
+closure_js_binary(
+    name = "type_fail_bin",
+    internal_expect_failure = True,
+    pedantic = True,
+    deps = [":type_fail_lib"],
+    defs = ["--new_type_inf"],
+)
+
+file_test(
+    name = "type_incorrectInitialization_failsToCompile",
+    file = "type_fail_bin-stderr.txt",
+    regexp = ".*The right side in the assignment is not a subtype of the left",
+)
