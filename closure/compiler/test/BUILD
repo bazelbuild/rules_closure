@@ -205,3 +205,26 @@ file_test(
     content = "-- console.log(\"hello world\");\n",
     file = "hello_output_wrapper_dash_dash_space_bin.js",
 )
+
+################################################################################
+# If we use an unknown annotation, it will fail to compile
+
+closure_js_library(
+    name = "annotation_fail_lib",
+    srcs = ["annotation_fail.js"],
+    no_closure_library = True,
+)
+
+closure_js_binary(
+    name = "annotation_fail_bin",
+    pedantic = True,
+    deps = [":annotation_fail_lib"],
+    # TODO(hochhaus): Enable the failure test
+    # internal_expect_failure = True,
+)
+
+#file_test(
+#    name = "annotation_unknown_failsToCompile",
+#    file = "annotation_fail_bin-stderr.txt",
+#    regexp = "Parse error. illegal use of unknown JSDoc tag \"exportDoc\"",
+#)
