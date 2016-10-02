@@ -16,8 +16,8 @@ jdk:
   - oraclejdk8
 
 env:
-  - V=HEAD URL=http://ci.bazel.io/job/Bazel/JAVA_VERSION=1.8,PLATFORM_NAME=linux-x86_64/lastSuccessfulBuild/artifact/output/ci/bazel--installer.sh FLAGS='--worker_verbose --strategy=Javac=worker --strategy=JsChecker=worker --strategy=JsCompiler=worker'
-  - V=0.3.1 URL=http://bazel-mirror.storage.googleapis.com/github.com/bazelbuild/bazel/releases/download/0.3.1/bazel-0.3.1-installer-linux-x86_64.sh FLAGS='--worker_verbose --strategy=Javac=worker --strategy=JsChecker=worker --strategy=JsCompiler=worker'
+  - V=HEAD URL_BASE=http://ci.bazel.io/job/Bazel/JAVA_VERSION=1.8,PLATFORM_NAME=linux-x86_64/lastSuccessfulBuild/artifact/output/ci/ URL="$URL_BASE`wget -qO- $URL_BASE | grep -oP 'bazel-.*?-installer.sh' | uniq`" FLAGS='--worker_verbose --strategy=Javac=worker --strategy=Closure=worker'
+  - V=0.3.1 URL=http://bazel-mirror.storage.googleapis.com/github.com/bazelbuild/bazel/releases/download/0.3.1/bazel-0.3.1-installer-linux-x86_64.sh FLAGS='--worker_verbose --strategy=Javac=worker --strategy=Closure=worker'
 
 before_install:
   - sudo sysctl kernel.unprivileged_userns_clone=1
