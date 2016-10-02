@@ -23,19 +23,19 @@ load("//closure:defs.bzl", "closure_js_library")
 closure_js_library(
     name = "love",
     srcs = ["love.js"],
-    internal_expect_warnings = True,
+    internal_expect_failure = True,
 )
 
 file_test(
-    name = "memberWithUnderscoreButNoPrivateMarker_causesWarning",
+    name = "memberWithUnderscoreButNoPrivateMarker_causesError",
     file = "love-stderr.txt",
-    regexp = "WARNING.*lintChecks JSC_MUST_BE_PRIVATE - Property b_ must be marked @private",
+    regexp = "ERROR.*lintChecks JSC_MUST_BE_PRIVATE - Property b_ must be marked @private",
 )
 
 file_test(
-    name = "methodMissingJsdoc_causesWarning",
+    name = "methodMissingJsdoc_causesError",
     file = "love-stderr.txt",
-    regexp = "WARNING.*lintChecks JSC_MISSING_JSDOC",
+    regexp = "ERROR.*lintChecks JSC_MISSING_JSDOC",
 )
 
 closure_js_library(

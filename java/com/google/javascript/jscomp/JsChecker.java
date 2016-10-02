@@ -66,20 +66,16 @@ public final class JsChecker {
         CheckSetTestOnly.INVALID_SETTESTONLY);
   }
 
-  private static final ImmutableSet<String> WARNINGS =
+  private static final ImmutableSet<String> ERRORS =
       ImmutableSet.of(
+          "checkRegExp",
           "checkTypes",
           "deprecated",
           "deprecatedAnnotations",
           "extraRequire",
           "lintChecks",
-          "nonStandardJsDocs");
-
-  private static final ImmutableSet<String> ERRORS =
-      ImmutableSet.of(
-          "checkRegExp",
-          "extraRequire",
           "misplacedTypeAnnotation",
+          "nonStandardJsDocs",
           "setTestOnly",
           "strictDependencies",
           "strictMissingRequire");
@@ -167,11 +163,6 @@ public final class JsChecker {
   private boolean expectFailure;
 
   @Option(
-      name = "--expect_warnings",
-      usage = "Disables printing warnings")
-  private boolean expectWarnings;
-
-  @Option(
       name = "--help",
       usage = "Displays this message on stdout and exit")
   private boolean help;
@@ -183,7 +174,7 @@ public final class JsChecker {
     // map diagnostic codes back to groups
     Map<String, DiagnosticType> diagnosticTypes = new HashMap<>(256);
     DiagnosticGroups groups = new DiagnosticGroups();
-    for (String groupName : Iterables.concat(WARNINGS, ERRORS)) {
+    for (String groupName : ERRORS) {
       DiagnosticGroup group = groups.forName(groupName);
       for (DiagnosticType type : group.getTypes()) {
         state.diagnosticGroups.put(type, groupName);
@@ -222,9 +213,6 @@ public final class JsChecker {
     // configure which error messages appear
     for (String error : ERRORS) {
       options.setWarningLevel(groups.forName(error), CheckLevel.ERROR);
-    }
-    for (String warning : WARNINGS) {
-      options.setWarningLevel(groups.forName(warning), CheckLevel.WARNING);
     }
     List<DiagnosticType> types = new ArrayList<>();
     for (String name : suppress) {
@@ -295,7 +283,7 @@ public final class JsChecker {
     errorManager.generateReport();
 
     // write errors
-    if (!expectFailure && !expectWarnings) {
+    if (!expectFailure) {
       for (String line : errorManager.stderr) {
         System.err.println(line);
       }

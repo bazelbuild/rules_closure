@@ -40,7 +40,7 @@ _STRICT_LANGUAGES = set([
 
 # TODO(jart): Properly propagate exceptions up here.
 _SUPPRESS_THINGS_JSCHECKER_ALREADY_DID = [
-    # See also: WARNINGS and ERRORS in JsChecker.java
+    # See also: ERRORS in JsChecker.java
     "--jscomp_off=checkRegExp",
     "--jscomp_off=deprecated",
     "--jscomp_off=deprecatedAnnotations",

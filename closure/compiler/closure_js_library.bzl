@@ -83,8 +83,6 @@ def _impl(ctx):
     args.append(s)
   if ctx.attr.internal_expect_failure:
     args.append("--expect_failure")
-  if ctx.attr.internal_expect_warnings:
-    args.append("--expect_warnings")
   argfile = create_argfile(ctx, args)
   inputs.append(argfile)
   ctx.action(
@@ -128,7 +126,6 @@ closure_js_library = rule(
 
         # internal only
         "internal_expect_failure": attr.bool(default=False),
-        "internal_expect_warnings": attr.bool(default=False),
         "_ClosureUberAlles": attr.label(
             default=Label("//java/io/bazel/rules/closure:ClosureUberAlles"),
             executable=True,
