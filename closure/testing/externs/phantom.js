@@ -13,9 +13,7 @@
 // limitations under the License.
 
 /**
- * @fileoverview PhantomJS API definitions. We're only defining the parts of
- *     the API we plan on using. This file is necessary in order to have 100%
- *     strict type safety in {@code testrunner.js}.
+ * @fileoverview External definition for subset of PhantomJS API.
  * @externs
  * @see http://phantomjs.org/api/
  */
@@ -24,40 +22,34 @@
 /**
  * Fake namespace for PhantomJS types.
  */
-var phantomjs = {};
-
+const phantomjs = {};
 
 
 /**
- * @constructor
- * @final
+ * @record
  * @see https://github.com/ariya/phantomjs/blob/master/examples/stdin-stdout-stderr.js
  */
-phantomjs.File = function() {};
+phantomjs.File = class {
+
+  /**
+   * @param {string} text
+   * @const
+   */
+  write(text) {}
+
+  /**
+   * @param {string} text
+   * @const
+   */
+  writeLine(text) {}
+};
 
 
 /**
- * @param {string} text
- * @const
- */
-phantomjs.File.prototype.write = function(text) {};
-
-
-/**
- * @param {string} text
- * @const
- */
-phantomjs.File.prototype.writeLine = function(text) {};
-
-
-
-/**
- * @constructor
- * @final
+ * @record
  * @see http://phantomjs.org/api/system/
  */
-phantomjs.System = function() {};
-
+phantomjs.System = class {};
 
 /**
  * @type {!Array<string>}
@@ -65,13 +57,11 @@ phantomjs.System = function() {};
  */
 phantomjs.System.prototype.args;
 
-
 /**
  * @type {!phantomjs.File}
  * @const
  */
 phantomjs.System.prototype.stdout;
-
 
 /**
  * @type {!phantomjs.File}
@@ -80,50 +70,45 @@ phantomjs.System.prototype.stdout;
 phantomjs.System.prototype.stderr;
 
 
-
 /**
- * @constructor
- * @final
+ * @record
  * @see http://phantomjs.org/api/fs/
  */
-phantomjs.FileSystem = function() {};
+phantomjs.FileSystem = class {
+
+  /**
+   * @param {string} path
+   * @return {boolean}
+   * @const
+   */
+  exists(path) {}
+
+  /**
+   * @param {string} path
+   * @return {string}
+   * @const
+   */
+  read(path) {}
+};
 
 
 /**
- * @param {string} path
- * @return {boolean}
+ * @record
  */
-phantomjs.FileSystem.prototype.exists = function(path) {};
+phantomjs.WebPage = class {
+
+  /**
+   * @return {!phantomjs.Page}
+   * @const
+   */
+  create() {}
+};
 
 
 /**
- * @param {string} path
- * @return {string}
+ * @record
  */
-phantomjs.FileSystem.prototype.read = function(path) {};
-
-
-
-/**
- * @constructor
- * @final
- */
-phantomjs.WebPage = function() {};
-
-
-/**
- * @return {!phantomjs.Page}
- */
-phantomjs.WebPage.prototype.create = function() {};
-
-
-
-/**
- * @constructor
- * @final
- */
-phantomjs.PageSettings = function() {};
-
+phantomjs.PageSettings = class {};
 
 /**
  * @type {number}
@@ -131,31 +116,114 @@ phantomjs.PageSettings = function() {};
 phantomjs.PageSettings.prototype.resourceTimeout;
 
 
+/**
+ * @record
+ */
+phantomjs.StackFrame = class {};
 
 /**
- * @constructor
- * @final
+ * @type {string}
+ * @const
  */
-phantomjs.Page = function() {};
+phantomjs.StackFrame.prototype.file;
+
+/**
+ * @type {number}
+ * @const
+ */
+phantomjs.StackFrame.prototype.line;
+
+/**
+ * @type {string}
+ * @const
+ */
+phantomjs.StackFrame.prototype.function;
 
 
 /**
- * @param {string} url
- * @param {function(string)=} opt_callback
+ * @typedef {Array<!phantomjs.StackFrame>}
  */
-phantomjs.Page.prototype.open = function(url, opt_callback) {};
-
-
-phantomjs.Page.prototype.close = function() {};
+phantomjs.StackTrace;
 
 
 /**
- * @param {function(): T} callback
- * @return {T}
- * @template T
+ * @enum {string}
+ * @const
  */
-phantomjs.Page.prototype.evaluate = function(callback) {};
+phantomjs.LoadStatus = {
+  SUCCESS: 'success',
+  FAIL: 'fail',
+};
 
+
+/**
+ * @record
+ */
+phantomjs.Page = class {
+
+  /**
+   * @param {string} url
+   * @param {function(string)=} opt_callback
+   * @const
+   */
+  open(url, opt_callback) {}
+
+  /**
+   * @const
+   */
+  close() {}
+
+  /**
+   * @param {function(): T} callback
+   * @return {T}
+   * @template T
+   * @const
+   */
+  evaluate(callback) {}
+
+  /**
+   * @param {string} message
+   */
+  onAlert(message) {}
+
+  /**
+   * @param {?} data
+   */
+  onCallback(data) {}
+
+  /**
+   * @param {!phantomjs.Page} data
+   */
+  onClosing(data) {}
+
+  /**
+   * @param {string} message
+   * @return {boolean}
+   */
+  onConfirm(message) {}
+
+  /**
+   * @param {string} message
+   * @param {?string} line
+   * @param {?string} source
+   */
+  onConsoleMessage(message, line, source) {}
+
+  /**
+   * @param {string} message
+   * @param {!phantomjs.StackTrace} trace
+   */
+  onError(message, trace) {}
+
+  onInitialized() {}
+
+  /**
+   * @param {phantomjs.LoadStatus} status
+   */
+  onLoadFinished(status) {}
+
+  onLoadStarted() {}
+};
 
 /**
  * @type {!phantomjs.PageSettings}
@@ -164,37 +232,33 @@ phantomjs.Page.prototype.evaluate = function(callback) {};
 phantomjs.Page.prototype.settings;
 
 
-
 /**
- * @constructor
- * @final
+ * @record
  * @see http://phantomjs.org/api/webserver/
  */
-phantomjs.Server = function() {};
+phantomjs.Server = class {
 
+  /**
+   * @param {number|string} port
+   * @param {function(!phantomjs.Server.Request,
+   *                  !phantomjs.Server.Response)} callback
+   * @const
+   */
+  listen(port, callback) {}
+};
 
 /**
  * @type {number}
+ * @const
  */
 phantomjs.Server.prototype.port;
 
 
 /**
- * @param {(number|string)} port
- * @param {function(!phantomjs.Server.Request,
- *                  !phantomjs.Server.Response)} callback
- */
-phantomjs.Server.prototype.listen = function(port, callback) {};
-
-
-
-/**
- * @constructor
- * @final
+ * @record
  * @see http://phantomjs.org/api/webserver/method/listen.html
  */
-phantomjs.Server.Request = function() {};
-
+phantomjs.Server.Request = class {};
 
 /**
  * @type {string}
@@ -203,76 +267,76 @@ phantomjs.Server.Request = function() {};
 phantomjs.Server.Request.prototype.url;
 
 
-
 /**
- * @constructor
- * @final
+ * @record
  * @see http://phantomjs.org/api/webserver/method/listen.html
  */
-phantomjs.Server.Response = function() {};
+phantomjs.Server.Response = class {
+
+  /**
+   * @param {string} encoding
+   * @const
+   */
+  setEncoding(encoding) {}
+
+  /**
+   * @param {number} statusCode
+   * @param {!Object<string, string>=} opt_headers
+   * @const
+   */
+  writeHead(statusCode, opt_headers) {}
+
+  /**
+   * @param {string} data
+   * @const
+   */
+  write(data) {}
+
+  /**
+   * @const
+   */
+  close() {}
+
+  /**
+   * @const
+   */
+  closeGracefully() {}
+};
 
 
 /**
- * @param {string} encoding
- */
-phantomjs.Server.Response.prototype.setEncoding = function(encoding) {};
-
-
-/**
- * @param {number} statusCode
- * @param {!Object<string, string>=} opt_headers
- */
-phantomjs.Server.Response.prototype.writeHead =
-    function(statusCode, opt_headers) {};
-
-
-/**
- * @param {string} data
- */
-phantomjs.Server.Response.prototype.write = function(data) {};
-
-
-phantomjs.Server.Response.prototype.close = function() {};
-
-
-phantomjs.Server.Response.prototype.closeGracefully = function() {};
-
-
-
-/**
- * @constructor
- * @final
+ * @record
  * @see http://phantomjs.org/api/webserver/
  */
-phantomjs.WebServer = function() {};
+phantomjs.WebServer = class {
+
+  /**
+   * @return {!phantomjs.Server}
+   * @const
+   */
+  create() {}
+};
 
 
 /**
- * @return {!phantomjs.Server}
- */
-phantomjs.WebServer.prototype.create = function() {};
-
-
-
-/**
- * @constructor
- * @final
+ * @record
  * @see http://phantomjs.org/api/phantom/
  */
-phantomjs.Phantom = function() {};
+phantomjs.Phantom = class {
 
-
-/**
- * @param {number=} opt_status
- */
-phantomjs.Phantom.prototype.exit = function(opt_status) {};
+  /**
+   * @param {number=} opt_status
+   * @const
+   */
+  exit(opt_status) {}
+};
 
 
 /**
  * @type {!phantomjs.Phantom}
  * @const
  */
-var phantom;
+let phantom;
 
 
 /**

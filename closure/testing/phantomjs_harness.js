@@ -31,7 +31,6 @@ var /** !phantomjs.System */ system = require('system');
 
 /**
  * Location of virtual test page.
- * @type {string}
  * @const
  */
 var VIRTUAL_PAGE = '/index.html';
@@ -39,7 +38,6 @@ var VIRTUAL_PAGE = '/index.html';
 
 /**
  * Path under which runfiles are served.
- * @type {string}
  * @const
  */
 var RUNFILES_PREFIX = '/filez/';
@@ -190,9 +188,7 @@ function onAlert(message) {
 /**
  * Callback when headless web page throws an error.
  * @param {string} message
- * @param {!Array<{file: string,
- *                 line: number,
- *                 function: string}>} trace
+ * @param {!phantomjs.StackTrace} trace
  */
 function onError(message, trace) {
   system.stderr.writeLine(message);

@@ -27,9 +27,6 @@ set -ex
 [[ -e closure/compiler/test/closure_js_deps/hyperion.js ]]
 [[ -e closure/compiler/test/closure_js_deps/hyperion2.js ]]
 
-# none of the externs (same behavior as closure_js_library)
-[[ ! -e closure/compiler/test/closure_js_deps/external_library.js ]]
-
 # none of the internal-only files we generate (same as closure_js_library)
 [[ ! -e closure/compiler/test/closure_js_deps/hyperion_lib-provided.txt ]]
 [[ ! -e closure/compiler/test/closure_js_deps/hyperion_lib-stderr.txt ]]

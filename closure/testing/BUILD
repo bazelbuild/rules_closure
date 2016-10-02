@@ -19,7 +19,7 @@ package(
 
 licenses(["notice"])  # Apache 2.0
 
-load("//closure:defs.bzl", "closure_js_library")
+load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
 
 exports_files(["empty.html"])
 
@@ -34,4 +34,11 @@ closure_js_library(
     srcs = ["phantomjs_harness.js"],
     no_closure_library = True,
     deps = ["//closure/testing/externs:phantomjs"],
+)
+
+closure_js_binary(
+    name = "phantomjs_harness_bin",
+    defs = ["--env=CUSTOM"],
+    pedantic = True,
+    deps = [":phantomjs_harness"],
 )

@@ -38,7 +38,7 @@ load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
     name = "external_library",
-    externs = ["external_library.js"],
+    srcs = ["external_library.js"],
 )
 
 closure_js_library(

@@ -84,7 +84,7 @@ _phantomjs_test = rule(
         "harness": attr.label(
             allow_files=False,
             providers=JS_DEPS_PROVIDERS,
-            default=Label("//closure/testing:phantomjs_harness")),
+            default=Label("//closure/testing:phantomjs_harness_bin")),
         "runner": attr.label(
             allow_files=False,
             providers=JS_DEPS_PROVIDERS,

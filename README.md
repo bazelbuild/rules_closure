@@ -135,11 +135,11 @@ Please see the test directories within this project for concrete examples of usa
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
-closure_js_library(name, srcs, externs, data, deps, language, exports, suppress,
+closure_js_library(name, srcs, data, deps, language, exports, suppress,
                    convention, no_closure_library)
 ```
 
-Defines a set of JavaScript sources or externs.
+Defines a set of JavaScript sources.
 
 The purpose of this rule is to define an abstract graph of JavaScript sources.
 It must be used in conjunction with [closure_js_binary] to output a minified
@@ -167,15 +167,9 @@ This rule can be referenced as though it were the following:
   then convention states that the `_lib` suffix should be used.
 
 - **srcs:** (List of [labels]; optional) The list of `.js` source files that
-  represent this library. This attribute is required unless the `exports`
-  attribute is being defined. Files listed under this attribute must not use the
-  `@externs` annotation.
-
-- **externs:** (List of [labels]; optional) A list of `.js` files annotated
-  `@externs` at the top of the file. If this attribute is specified, `srcs` must
-  be empty. These files tell the Closure Compiler about the type signatures of
-  external libraries. Please note that the externs for web browsers are enabled
-  by default by the Closure Compiler.
+  represent this library. This can include files marked as `@externs` or
+  `@nocompile`. This attribute is required unless the `exports` attribute is
+  being defined.
 
 - **data:** (List of [labels]; optional) Runfiles directly referenced by JS
   sources in this rule. For example, if the JS generated injected an img tag
@@ -312,9 +306,9 @@ This rule can be referenced as though it were the following:
 - [filegroup]: `srcs` will be the .js and .js.map output files and `data` will
   contain those files in addition to all transitive JS sources and data.
 
-- [closure_js_library]: `srcs` will be the .js output file, `externs` will be
-  empty, `language` will be the output language, `deps` will be empty, `data`
-  will contain all transitive data, and `no_closure_library` will be `True`.
+- [closure_js_library]: `srcs` will be the .js output file, `language` will be
+  the output language, `deps` will be empty, `data` will contain all transitive
+  data, and `no_closure_library` will be `True`.
 
 ### Arguments
 
@@ -641,10 +635,10 @@ This rule can be referenced as though it were the following:
 - [filegroup]: `srcs` will be the generated JS output files and `data` will
   contain all transitive JS sources and data.
 
-- [closure_js_library]: `srcs` will be the generated JS output files, `externs`
-  will be empty, `data` will contain the transitive data, `language` will be
-  `ECMASCRIPT5_STRICT`, `deps` will contain necessary libraries, and
-  `no_closure_library` will be `False`.
+- [closure_js_library]: `srcs` will be the generated JS output files, `data`
+  will contain the transitive data, `language` will be `ECMASCRIPT5_STRICT`,
+  `deps` will contain necessary libraries, and `no_closure_library` will be
+  `False`.
 
 ### Arguments
 
@@ -793,11 +787,10 @@ This rule can be referenced as though it were the following:
 - [filegroup]: `srcs` will be the generated JS output files and `data` will
   contain all transitive CSS/GSS sources and data.
 
-- [closure_js_library]: `srcs` is empty, `externs` is empty, `data` is the
-  transitive CSS sources and data, `language` is `ANY`, and `no_closure_library`
-  is `True`. However the closure\_css\_library rule does pass special
-  information along when used as a dep in closure\_js\_library. See its
-  documentation to learn more.
+- [closure_js_library]: `srcs` is empty, `data` is the transitive CSS sources
+  and data, `language` is `ANY`, and `no_closure_library` is `True`. However the
+  closure\_css\_library rule does pass special information along when used as a
+  dep in closure\_js\_library. See its documentation to learn more.
 
 ### Arguments
 
@@ -973,9 +966,9 @@ This rule can be referenced as though it were the following:
 - [filegroup]: `srcs` will be empty and `data` will contain all transitive JS
   sources and data.
 
-- [closure_js_library]: `srcs` will be the generated JS output files, `externs`
-  will be empty, `data` will contain the transitive data, `language` will be
-  `ECMASCRIPT5_STRICT`, and `deps` will contain necessary libraries.
+- [closure_js_library]: `srcs` will be the generated JS output files, `data`
+  will contain the transitive data, `language` will be `ECMASCRIPT5_STRICT`, and
+  `deps` will contain necessary libraries.
 
 ### Arguments
 

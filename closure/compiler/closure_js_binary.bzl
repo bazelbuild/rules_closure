@@ -55,7 +55,7 @@ _SUPPRESS_THINGS_JSCHECKER_ALREADY_DID = [
 def _impl(ctx):
   if not ctx.attr.deps:
     fail("closure_js_binary rules can not have an empty 'deps' list")
-  srcs, externs, tdata = collect_transitive_js_srcs(ctx)
+  srcs, tdata = collect_transitive_js_srcs(ctx)
   if not srcs:
     fail("There are no source files in the transitive closure")
   _validate_css_graph(ctx)
@@ -130,11 +130,7 @@ def _impl(ctx):
   for config in ctx.files.conformance:
     args.append("--conformance_configs")
     args.append(config.path)
-  for extern in externs:
-    args.append("--externs")
-    args.append(extern.path)
   for src in srcs:
-    args.append("--js")
     args.append(src.path)
     if src.owner == BASE_JS:
       if not ctx.attr.debug:
@@ -152,8 +148,6 @@ def _impl(ctx):
   inputs = []
   for src in srcs:
     inputs.append(src)
-  for extern in externs:
-    inputs.append(extern)
   inputs.extend(ctx.files.conformance)
 
   # These rule-provided.txt files will not be used by JsCompiler. But we list
@@ -173,8 +167,7 @@ def _impl(ctx):
       mnemonic="Closure",
       execution_requirements={"supports-workers": "1"},
       progress_message="Compiling %d JavaScript files to %s" % (
-          len(srcs) + len(externs),
-          ctx.outputs.out.short_path))
+          len(srcs), ctx.outputs.out.short_path))
 
   # this is necessary for closure_js_binary to behave like closure_js_library
   ctx.file_action(output=ctx.outputs.provided, content="")
@@ -185,7 +178,6 @@ def _impl(ctx):
                 js_provided=ctx.outputs.provided,
                 required_css_labels=set(order="compile"),
                 transitive_js_srcs=set([ctx.outputs.out], order="compile"),
-                transitive_js_externs=set(order="compile"),
                 transitive_data=tdata + ctx.files.data,
                 runfiles=ctx.runfiles(files=list(files) + ctx.files.data,
                                       transitive_files=srcs + tdata))

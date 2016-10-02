@@ -118,13 +118,8 @@ public final class JsChecker {
 
   @Option(
       name = "--src",
-      usage = "JavaScript source files, sans externs.")
+      usage = "JavaScript source and externs files.")
   private List<String> sources = new ArrayList<>();
-
-  @Option(
-      name = "--extern",
-      usage = "JavaScript @externs source files.")
-  private List<String> externs = new ArrayList<>();
 
   @Option(
       name = "--dep",
@@ -286,7 +281,7 @@ public final class JsChecker {
     // run the compiler
     compiler.setPassConfig(new JsCheckerPassConfig(state, options));
     compiler.disableThreads();
-    compiler.compile(getSourceFiles(externs), getSourceFiles(sources), options);
+    compiler.compile(ImmutableList.<SourceFile>of(), getSourceFiles(sources), options);
 
     // make sure all suppress codes were actually suppressed
     Set<String> useless = Sets.difference(ImmutableSet.copyOf(suppress), actuallySuppressed);

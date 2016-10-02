@@ -54,7 +54,6 @@ JS_DEPS_PROVIDERS = [
     "js_provided",
     "required_css_labels",
     "transitive_js_srcs",
-    "transitive_js_externs",
 ]
 
 JS_DEPS_ATTR = attr.label_list(allow_files=False, providers=JS_DEPS_PROVIDERS)
@@ -74,7 +73,6 @@ CLOSURE_LIBRARY_DEPS_ATTR = attr.label(
 
 def collect_transitive_js_srcs(ctx):
   srcs = set(order="compile")
-  externs = set(order="compile")
   data = set(order="compile")
   if hasattr(ctx.attr, 'css'):
     if ctx.attr.css:
@@ -90,13 +88,11 @@ def collect_transitive_js_srcs(ctx):
              ctx.file._closure_library_deps]
   for dep in ctx.attr.deps:
     srcs += dep.transitive_js_srcs
-    externs += dep.transitive_js_externs
     data += dep.transitive_data
     for edep in dep.js_exports:
       srcs += edep.transitive_js_srcs
-      externs += edep.transitive_js_externs
       data += edep.transitive_data
-  return srcs, externs, data
+  return srcs, data
 
 def collect_transitive_css_labels(ctx):
   result = set(order="compile")

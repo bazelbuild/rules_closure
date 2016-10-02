@@ -56,7 +56,6 @@ rule_test(
         "js_language": "^\"ECMASCRIPT5_STRICT\"$",
         "js_exports": "^\\[\\]$",
         "transitive_js_srcs": "/a.js\\]",
-        "transitive_js_externs": "",
     },
     rule = ":a",
 )
@@ -67,7 +66,6 @@ rule_test(
         "js_language": "^\"ECMASCRIPT5_STRICT\"$",
         "js_exports": "^\\[\\]$",
         "transitive_js_srcs": "/a\\.js.*/b\\.js\\]",
-        "transitive_js_externs": "",
     },
     rule = ":b",
 )
@@ -78,7 +76,6 @@ rule_test(
         "js_language": "^\"ECMASCRIPT5_STRICT\"$",
         "js_exports": "^\\[\\]$",
         "transitive_js_srcs": "/a\\.js.*/b\\.js.*/c\\.js\\]",
-        "transitive_js_externs": "",
     },
     rule = ":c",
 )
@@ -89,7 +86,6 @@ rule_test(
         "js_language": "^\"ECMASCRIPT5_STRICT\"$",
         "js_exports": "^\\[\\]$",
         "transitive_js_srcs": "/t\\.js\\]",
-        "transitive_js_externs": "",
     },
     rule = ":t",
 )

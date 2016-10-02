@@ -205,3 +205,48 @@ file_test(
     content = "-- console.log(\"hello world\");\n",
     file = "hello_output_wrapper_dash_dash_space_bin.js",
 )
+
+################################################################################
+# External definitions work
+
+closure_js_library(
+    name = "extern_lib",
+    srcs = ["extern.js"],
+)
+
+closure_js_library(
+    name = "extern_invoke_lib",
+    srcs = ["extern_invoke.js"],
+    deps = [":extern_lib"],
+)
+
+closure_js_binary(
+    name = "extern_bin",
+    pedantic = True,
+    deps = [":extern_invoke_lib"],
+)
+
+file_test(
+    name = "externFile_namesDidntCollapse",
+    content = "omg.im_an_extern(\"hello\");\n",
+    file = "extern_bin.js",
+)
+
+closure_js_library(
+    name = "extern_invoke_bad_lib",
+    srcs = ["extern_invoke_bad.js"],
+    deps = [":extern_lib"],
+)
+
+closure_js_binary(
+    name = "extern_bad_bin",
+    internal_expect_failure = True,
+    pedantic = True,
+    deps = [":extern_invoke_bad_lib"],
+)
+
+file_test(
+    name = "externTypeError_failsToCompile",
+    file = "extern_bad_bin-stderr.txt",
+    regexp = "actual parameter 1 of omg.im_an_extern does not match formal parameter",
+)

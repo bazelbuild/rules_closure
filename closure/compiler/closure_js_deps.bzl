@@ -23,7 +23,7 @@ load("//closure/private:defs.bzl",
      "long_path")
 
 def _impl(ctx):
-  srcs, _, tdata = collect_transitive_js_srcs(ctx)
+  srcs, tdata = collect_transitive_js_srcs(ctx)
   basejs = ctx.file._closure_library_base
   closure_root = _dirname(long_path(ctx, basejs))
   closure_rel = '/'.join(['..' for _ in range(len(closure_root.split('/')))])

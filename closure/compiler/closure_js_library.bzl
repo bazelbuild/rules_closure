@@ -29,11 +29,13 @@ load("//closure/private:defs.bzl",
      "determine_js_language")
 
 def _impl(ctx):
-  tsrcs, externs, tdata = collect_transitive_js_srcs(ctx)
+  tsrcs, tdata = collect_transitive_js_srcs(ctx)
   srcs = tsrcs + JS_FILE_TYPE.filter(ctx.files.srcs)
-  externs += JS_FILE_TYPE.filter(ctx.files.externs)
+  if ctx.files.externs:
+    print("closure_js_library 'externs' is deprecated; use 'srcs'")
+    srcs += JS_FILE_TYPE.filter(ctx.files.externs)
   if not ctx.files.srcs and not ctx.files.externs and not ctx.attr.exports:
-    fail("Either 'srcs', 'externs', or 'exports' must be specified")
+    fail("Either 'srcs' or 'exports' must be specified")
   if ctx.attr.no_closure_library:
     if not ctx.files.srcs:
       fail("no_closure_library is pointless when srcs is empty")
@@ -56,7 +58,7 @@ def _impl(ctx):
   if ctx.attr.testonly:
     args.append("--testonly")
   roots = set(order="compile")
-  for direct_src in ctx.files.srcs:
+  for direct_src in ctx.files.srcs + ctx.files.externs:
     args.append("--src")
     args.append(direct_src.path)
     inputs.append(direct_src)
@@ -66,10 +68,6 @@ def _impl(ctx):
   for src_root in roots:
     args.append("--root")
     args.append(src_root)
-  for direct_extern in ctx.files.externs:
-    args.append("--extern")
-    args.append(direct_extern.path)
-    inputs.append(direct_extern)
   for direct_dep in ctx.attr.deps:
     args.append("--dep")
     args.append(direct_dep.js_provided.path)
@@ -105,7 +103,6 @@ def _impl(ctx):
                 js_provided=ctx.outputs.provided,
                 required_css_labels=collect_required_css_labels(ctx),
                 transitive_js_srcs=srcs,
-                transitive_js_externs=externs,
                 transitive_data=tdata + ctx.files.data,
                 runfiles=ctx.runfiles(files=ctx.files.srcs + ctx.files.data,
                                       transitive_files=tsrcs + tdata))

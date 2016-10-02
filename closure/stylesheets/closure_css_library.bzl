@@ -36,7 +36,6 @@ def _impl(ctx):
                 js_exports=[],
                 js_provided=ctx.outputs.provided,
                 transitive_js_srcs=set(),
-                transitive_js_externs=set(),
                 css_orientation=ctx.attr.orientation,
                 required_css_labels=set(),
                 transitive_css_labels=collect_transitive_css_labels(ctx),

@@ -31,9 +31,6 @@ set -ex
 # transitive data
 [[ -e closure/compiler/test/closure_js_deps/data1.txt ]]
 
-# no externs sources, since they're only useful to the compiler
-[[ ! -e closure/compiler/test/closure_js_deps/external_library.js ]]
-
 # none of those internal-only files we generate
 [[ ! -e closure/compiler/test/closure_js_deps/hyperion_lib-provided.txt ]]
 [[ ! -e closure/compiler/test/closure_js_deps/hyperion_lib-stderr.txt ]]
