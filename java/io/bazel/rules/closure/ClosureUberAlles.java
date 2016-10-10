@@ -21,6 +21,7 @@ import com.google.common.collect.Iterables;
 import com.google.javascript.jscomp.JsChecker;
 import com.google.javascript.jscomp.JsCompiler;
 import io.bazel.rules.closure.program.CommandLineProgram;
+import io.bazel.rules.closure.webfiles.WebfilesValidator;
 
 /** Bazel worker for all Closure Tools programs, some of which are modded. */
 public final class ClosureUberAlles implements CommandLineProgram {
@@ -41,6 +42,8 @@ public final class ClosureUberAlles implements CommandLineProgram {
         return new JsChecker.Program().apply(tail);
       case "JsCompiler":
         return new JsCompiler().apply(tail);
+      case "WebfilesValidator":
+        return new WebfilesValidator().apply(tail);
       default:
         System.err.println(
             "\nERROR: First flag to ClosureUberAlles should be specific compiler to run, "

@@ -36,6 +36,7 @@ script:
       --host_jvm_args=-Xms500m \
       test \
       closure/... \
+      javatests/... \
       --verbose_failures \
       --test_output=errors \
       --test_strategy=standalone \

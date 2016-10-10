@@ -26,8 +26,16 @@ java_binary(
         ":worker_protocol_proto",
         "//java/com/google/javascript/jscomp",
         "//java/io/bazel/rules/closure/program",
+        "//java/io/bazel/rules/closure/webfiles",
         "@guava//jar",
     ],
+)
+
+java_library(
+    name = "tarjan",
+    srcs = ["Tarjan.java"],
+    visibility = ["//visibility:public"],
+    deps = ["@guava//jar"],
 )
 
 java_proto_library(
