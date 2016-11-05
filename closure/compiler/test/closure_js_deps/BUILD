@@ -188,6 +188,6 @@ genrule(
 
 file_test(
     name = "srcsReferencingJsBinary_getsJsBinaryAndMapNotData",
-    content = "bazel-out/local-fastbuild/bin/closure/compiler/test/closure_js_deps/hyperion2_bin.js bazel-out/local-fastbuild/bin/closure/compiler/test/closure_js_deps/hyperion2_bin.js.map",
     file = "hyperion2_bin_srcs.txt",
+    regexp = "bazel-out/local-.*/bin/closure/compiler/test/closure_js_deps/hyperion2_bin.js bazel-out/local-.*/bin/closure/compiler/test/closure_js_deps/hyperion2_bin.js.map",
 )
