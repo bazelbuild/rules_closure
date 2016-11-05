@@ -49,7 +49,7 @@ final class CheckSetTestOnly
   @Override
   public final void visit(NodeTraversal t, Node n, Node parent) {
     if (!state.testonly
-        && n.getType() == Token.CALL
+        && n.getToken() == Token.CALL
         && n.getFirstChild().matchesQualifiedName("goog.setTestOnly")) {
       t.report(n, INVALID_SETTESTONLY, state.label);
       return;

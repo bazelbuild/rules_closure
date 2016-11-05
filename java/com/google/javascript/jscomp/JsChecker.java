@@ -83,8 +83,7 @@ public final class JsChecker {
       ImmutableSet.of(
           CheckJSDocStyle.MISSING_PARAMETER_JSDOC,
           CheckJSDocStyle.MISSING_RETURN_JSDOC,
-          CheckJSDocStyle.OPTIONAL_PARAM_NOT_MARKED_OPTIONAL,
-          CheckJSDocStyle.OPTIONAL_TYPE_NOT_USING_OPTIONAL_NAME);
+          CheckJSDocStyle.OPTIONAL_PARAM_NOT_MARKED_OPTIONAL);
 
   private static final DiagnosticType SUPERFLUOUS_SUPPRESS =
       DiagnosticType.error(

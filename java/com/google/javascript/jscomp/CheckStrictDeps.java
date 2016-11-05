@@ -62,7 +62,7 @@ abstract class CheckStrictDeps
 
     @Override
     public final void visit(NodeTraversal t, Node n, Node parent) {
-      if (n.getType() != Token.CALL) {
+      if (n.getToken() != Token.CALL) {
         return;
       }
       Node callee = n.getFirstChild();
@@ -91,7 +91,7 @@ abstract class CheckStrictDeps
 
     @Override
     public void visit(NodeTraversal t, Node n, Node parent) {
-      switch (n.getType()) {
+      switch (n.getToken()) {
         case CALL:
           visitFunctionCall(t, n);
           break;

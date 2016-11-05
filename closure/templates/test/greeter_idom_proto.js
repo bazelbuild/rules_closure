@@ -14,9 +14,9 @@
 
 goog.module('io.bazel.rules.closure.GreeterIdomProto');
 
-const idom = goog.require('incrementaldom');
-const greeter = goog.require('io.bazel.rules.closure.soy.greeter.incrementaldom');
 const Person = goog.require('proto.io.bazel.rules.closure.soy.Person');
+const greeter = goog.require('io.bazel.rules.closure.soy.greeter.incrementaldom');
+const idom = goog.require('incrementaldom');
 
 
 

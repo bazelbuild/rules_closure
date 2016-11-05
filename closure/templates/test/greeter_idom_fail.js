@@ -14,8 +14,8 @@
 
 goog.module('io.bazel.rules.closure.GreeterIdomFail');
 
-const idom = goog.require('incrementaldom');
 const greeter = goog.require('io.bazel.rules.closure.soy.greeter.incrementaldom');
+const idom = goog.require('incrementaldom');
 
 idom.patchInner(
     /** @type {!Element} */ (goog.global.document.body),

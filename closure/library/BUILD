@@ -25,6 +25,7 @@ closure_js_library(
     language = "ECMASCRIPT5_STRICT",
     suppress = [
         "JSC_DUPLICATE_ENUM_VALUE",
+        "JSC_EXTRA_REQUIRE_WARNING",
         "JSC_ILLEGAL_PROTOTYPE_MEMBER",
         "JSC_INVALID_SUPPRESS",
         "JSC_MISSING_JSDOC",
@@ -32,7 +33,7 @@ closure_js_library(
         "JSC_MISSING_SEMICOLON",
         "JSC_MUST_BE_PRIVATE",
         "JSC_PROVIDES_NOT_SORTED",
-        "JSC_EXTRA_REQUIRE_WARNING",
+        "JSC_REQUIRES_NOT_SORTED",
     ],
 )
 
@@ -49,6 +50,7 @@ closure_js_library(
         "JSC_MISSING_SEMICOLON",
         "JSC_MUST_BE_PRIVATE",
         "JSC_PRIMITIVE_OBJECT",
+        "JSC_REQUIRES_NOT_SORTED",
     ],
     deps = [":library"],
 )

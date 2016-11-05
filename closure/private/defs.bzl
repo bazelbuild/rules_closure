@@ -46,6 +46,7 @@ JS_PEDANTIC_ARGS = [
 
 JS_HIDE_WARNING_ARGS = [
     "--hide_warnings_for=/closure_library/",
+    "--hide_warnings_for=/genfiles/",
     "--hide_warnings_for=/incremental_dom/",
     "--hide_warnings_for=/protobuf_js/",
     "--hide_warnings_for=/soy_jssrc/",
