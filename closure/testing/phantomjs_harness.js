@@ -40,7 +40,7 @@ var VIRTUAL_PAGE = '/index.html';
  * Path under which runfiles are served.
  * @const
  */
-var RUNFILES_PREFIX = '/filez/';
+var RUNFILES_PREFIX = '/_/runfiles/';
 
 
 /**

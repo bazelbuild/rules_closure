@@ -4,7 +4,7 @@ JavaScript | Templating | Stylesheets | Miscellaneous
 --- | --- | --- | ---
 [closure_js_library] | [closure_js_template_library] | [closure_css_library] | [closure_js_proto_library]
 [closure_js_binary] | [closure_java_template_library] | [closure_css_binary] | [phantomjs_test]
-[closure_js_deps] | [closure_py_template_library] | |
+[closure_js_deps] | [closure_py_template_library] | | [webfiles]
 [closure_js_test] | | |
 
 Bazel ≥0.3.1 | linux-x86_64 | ubuntu_15.10-x86_64 | darwin-x86_64
@@ -463,7 +463,7 @@ Your test will run within a hermetically sealed environment. You are not allowed
 to send HTTP requests to any external servers. It is expected that you'll use
 Closure Library mocks for things like XHR. However a local HTTP server is
 started up on a random port that allows to request runfiles under the
-`/filez/WORKSPACE_NAME/` path.
+`/_/runfiles/WORKSPACE_NAME/` path.
 
 #### Rule Polymorphism
 
@@ -566,11 +566,12 @@ mode, because it tells the Closure Library how to load namespaces from the web
 server that are requested by `goog.require()`.
 
 For example, if you've made your source runfiles available under a protected
-admin-only path named `/filez/`, then raw source mode could be used as follows:
+admin-only path named `/_/runfiles/`, then raw source mode could be used as
+follows:
 
 ```html
-<script src="/filez/external/closure_library/closure/goog/base.js"></script>
-<script src="/filez/myapp/deps.js"></script>
+<script src="/_/runfiles/closure_library/closure/goog/base.js"></script>
+<script src="/_/runfiles/__main__/myapp/deps.js"></script>
 <script>goog.require('myapp.main');</script>
 <script>myapp.main();</script>
 ```
@@ -996,6 +997,59 @@ This rule can be referenced as though it were the following:
   - `IMPORT_COMMONJS`   // require()
   - `IMPORT_BROWSER`    // no import statements
   - `IMPORT_ES6`        // import { member } from ''
+
+
+## webfiles
+
+```python
+load("@io_bazel_rules_closure//closure:defs.bzl", "webfiles")
+webfiles(name, path, srcs, deps, data)
+```
+
+Defines set of public web server files.
+
+This rule is used to map files in the source tree to public web server paths.
+It is particularly suitable for web components, e.g. Polymer. Each component can
+depend on other components, which together form a directed acyclic graph. This
+graph can then be used for website validation and compilation.
+
+The dependency graph is validated by inspecting the relationships between files.
+Relative paths must be used when referencing other files. If a link, import, or
+image points to a file that isn't a direct dependency, then a build error
+occurs. This rule also enforces that sources are acyclic. The only exception is
+when referencing directories, URLs with a hostname, or data URIs.
+
+This rule is executable. When invoked with `bazel run` it creates a development
+web server that serves all static assets in the transitive closure of a
+particular rule. This includes both runfiles and webfiles. Runfiles are long
+canonical confidential Bazel paths that are available under a special prefix,
+e.g. `/_/runfiles/org_tensorflow/tensorflow/tensorboard/components/foo/foo.html`.
+Webfiles are a subset of runfiles which are public and mapped to hard-coded
+paths on the web server, e.g. `/foo/foo.html`. These paths are symbolic links
+which allow live source editing. The 404 page displays a listing of webfiles
+beginning with the path prefix in a convenient reverse topological order.
+
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [filegroup]: `srcs` will be the `srcs` of this rule, `data` will contain all
+  transitive sources, data, and other runfiles.
+
+### Arguments
+
+- **name:** ([Name]; required) Unique name for this rule.
+
+- **path:** (String; required) Web server path under which `srcs` are prefixed.
+  Must begin with / and must not end with /.
+
+- **deps:** (List of [labels]; required) Labels of other webfiles rules
+  providing sources referenced by the `srcs` in this rule.
+
+- **data:** (List of [labels]; optional) Additional runfiles for the local HTTP
+  server to serve, under the `/_/runfiles/` + repository path. This attribute is
+  sometimes necessary for confidential files, e.g. raw uncompiled sources, that
+  need to be served in development but never made available in production.
 
 
 [Bazel]: http://bazel.io/

@@ -180,9 +180,7 @@ def _soy__gen_file_list_arg_as_file(out_name, targets, flag):
 def _soy__GetJavaPackageForCurrentDirectory():
   """Returns the java package corresponding to the current directory."""
   directory = PACKAGE_NAME
-  idx = directory.find('/com/google')
-  if idx == -1:
-    fail(
-        None,
-        'Unable to infer java package from directory [%s]' % (directory))
-  return '.'.join(directory[idx + 1:].split('/'))
+  for prefix in ("java/", "javatests/"):
+    if directory.startswith(prefix):
+      return ".".join(directory[len(prefix):].split("/"))
+  fail("Unable to infer java package from directory: " + directory)

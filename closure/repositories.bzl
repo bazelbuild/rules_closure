@@ -38,6 +38,8 @@ def closure_repositories(
     omit_guice_multibindings=False,
     omit_icu4j=False,
     omit_incremental_dom=False,
+    omit_jetty=False,
+    omit_jetty_util=False,
     omit_json=False,
     omit_jsr305=False,
     omit_jsr330_inject=False,
@@ -52,6 +54,7 @@ def closure_repositories(
     omit_protoc_macosx=False,
     omit_safe_html_types=False,
     omit_safe_html_types_html_proto=False,
+    omit_servlet_api=False,
     omit_soy=False,
     omit_soy_jssrc=False):
   closure_maven_server()
@@ -93,6 +96,10 @@ def closure_repositories(
     icu4j()
   if not omit_incremental_dom:
     incremental_dom()
+  if not omit_jetty:
+    jetty()
+  if not omit_jetty_util:
+    jetty_util()
   if not omit_json:
     json()
   if not omit_jsr305:
@@ -121,6 +128,8 @@ def closure_repositories(
     safe_html_types()
   if not omit_safe_html_types_html_proto:
     safe_html_types_html_proto()
+  if not omit_servlet_api:
+    servlet_api()
   if not omit_soy:
     soy()
   if not omit_soy_jssrc:
@@ -326,6 +335,22 @@ def incremental_dom():
       sha256 = "bb268af74c411c84372fb9926021859f1ebdbeff86d4ec3e8865758f10482fda",
   )
 
+def jetty():
+  native.maven_jar(
+      name = "jetty",
+      artifact = "org.mortbay.jetty:jetty:6.1.22",
+      sha1 = "e097b3b684cececf84a35cfdd08e56096a3188da",
+      server = "closure_maven_server",
+  )
+
+def jetty_util():
+  native.maven_jar(
+      name = "jetty_util",
+      artifact = "org.mortbay.jetty:jetty-util:6.1.22",
+      sha1 = "9039d1940a9ae1c91d2b5d7fdfd64bd1924cd447",
+      server = "closure_maven_server",
+  )
+
 def json():
   native.maven_jar(
       name = "json",
@@ -431,6 +456,14 @@ def safe_html_types_html_proto():
       name = "safe_html_types_html_proto",
       sha256 = "6ece202f11574e37d0c31d9cf2e9e11a0dbc9218766d50d211059ebd495b49c3",
       url = "http://bazel-mirror.storage.googleapis.com/raw.githubusercontent.com/google/safe-html-types/release-1.0.5/proto/src/main/protobuf/webutil/html/types/proto/html.proto",
+  )
+
+def servlet_api():
+  native.maven_jar(
+      name = "servlet_api",
+      artifact = "org.apache.tomcat:servlet-api:6.0.20",
+      sha1 = "230937c21f1e2da527bf5ebb13f28bab6b2f3849",
+      server = "closure_maven_server",
   )
 
 def soy():
