@@ -1,5 +1,3 @@
-# -*- mode: python; -*-
-#
 # Copyright 2016 The Closure Rules Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,31 +16,39 @@
 
 load("//closure/private:defs.bzl",
      "CLOSURE_LIBRARY_BASE_ATTR",
-     "CLOSURE_LIBRARY_DEPS_ATTR",
-     "collect_transitive_js_srcs",
-     "long_path")
+     "collect_data",
+     "collect_js",
+     "long_path",
+     "unfurl")
+
+_DEPSWRITER = "@closure_library//:depswriter"
 
 def _impl(ctx):
-  srcs, tdata = collect_transitive_js_srcs(ctx)
-  basejs = ctx.file._closure_library_base
-  closure_root = _dirname(long_path(ctx, basejs))
+  deps = unfurl(ctx.attr.deps)
+  js = collect_js(ctx, deps)
+  data = collect_data(deps)
+  closure_root = _dirname(long_path(ctx, ctx.file._closure_library_base))
   closure_rel = '/'.join(['..' for _ in range(len(closure_root.split('/')))])
   files = [ctx.outputs.out]
   # XXX: Other files in same directory will get schlepped in w/o sandboxing.
   ctx.action(
-      inputs=list(srcs),
+      inputs=list(js.srcs),
       outputs=files,
       arguments=(["--output_file=%s" % ctx.outputs.out.path] +
                  ["--root_with_prefix=%s %s" % (
                      r, _make_prefix(p, closure_root, closure_rel))
                   for r, p in _find_roots(
-                      [(src.dirname, long_path(ctx, src)) for src in srcs])]),
+                      [(src.dirname, long_path(ctx, src))
+                       for src in js.srcs])]),
       executable=ctx.executable._depswriter,
       progress_message="Calculating %d JavaScript deps to %s" % (
-          len(srcs), ctx.outputs.out.short_path))
-  return struct(files=set(files),
-                runfiles=ctx.runfiles(files=files + ctx.files.data,
-                                      transitive_files=srcs + tdata))
+          len(js.srcs), ctx.outputs.out.short_path))
+  return struct(
+      files=set(files),
+      closure_data=data + ctx.files.data,
+      runfiles=ctx.runfiles(
+          files=files + ctx.files.data,
+          transitive_files=js.srcs + data))
 
 def _dirname(path):
   return path[:path.rindex('/')]
@@ -74,14 +80,11 @@ def _make_prefix(prefix, closure_root, closure_rel):
 closure_js_deps = rule(
     implementation=_impl,
     attrs={
-        "deps": attr.label_list(
-            allow_files=False,
-            providers=["transitive_js_srcs"]),
+        "deps": attr.label_list(),
         "data": attr.label_list(cfg="data", allow_files=True),
         "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
-        "_closure_library_deps": CLOSURE_LIBRARY_DEPS_ATTR,
         "_depswriter": attr.label(
-            default=Label("@closure_library//:depswriter"),
+            default=Label(_DEPSWRITER),
             executable=True,
             cfg="host"),
     },

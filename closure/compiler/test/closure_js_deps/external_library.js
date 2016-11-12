@@ -17,11 +17,10 @@
  * @externs
  */
 
+class external_library {
 
-var external_library = {};
-
-
-/**
- * Does something someone else defined.
- */
-external_library.doodle = function() {};
+  /**
+   * Does something someone else defined.
+   */
+  static doodle() {}
+}

@@ -16,11 +16,10 @@
 
 package com.google.javascript.jscomp;
 
-import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Ordering;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -28,8 +27,10 @@ import java.util.TreeSet;
 final class JsCheckerState {
 
   final String label;
+  final boolean legacy;
   final boolean testonly;
-  final ImmutableSortedSet<String> roots;
+  final ImmutableList<String> roots;
+  final ImmutableSet<String> mysterySources;
 
   // XXX: There are actually cooler data structures we could be using here to save space. Like maybe
   //      a trie represented as an IdentityHashMap. But it'd take too much braining for too little
@@ -43,23 +44,27 @@ final class JsCheckerState {
 
   // Set of namespaces provided by direct dependencies of this closure_js_library.
   //
-  // Nearly all closure_js_library rules will directly depend on //closure/library which has 4788
-  // provides. This sets a very large lower bound for the size of this hash table. Since HashMap has
-  // a default load factor of 0.75, it would need to have a capacity of 6385 (4788/0.75+1) to store
-  // those namespaces without redimensioning. We've expanded this to 9000 to allow plenty of room
-  // for other dependencies.
+  // The initial capacity of 9000 was chosen because nearly all closure_js_library rules will
+  // directly depend on //closure/library which has 4788 provides. This sets a very large lower
+  // bound for the size of this hash table. Since HashMap has a default load factor of 0.75, it
+  // would need to have a capacity of 6385 (4788/0.75+1) to store those namespaces without
+  // redimensioning.
   final Set<String> provided = new HashSet<>(9000);
 
   // These are used to avoid flooding the user with certain types of error messages.
   final Set<String> notProvidedNamespaces = new HashSet<>();
   final Set<String> redeclaredProvides = new HashSet<>();
 
-  // Allows JsCheckerErrorFormatter to turn diagnostic types into their group names.
-  final Map<DiagnosticType, String> diagnosticGroups = new HashMap<>();
-
-  JsCheckerState(String label, boolean testonly, Iterable<String> roots) {
+  JsCheckerState(
+      String label,
+      boolean legacy,
+      boolean testonly,
+      Iterable<String> roots,
+      Iterable<String> mysterySources) {
     this.label = label;
+    this.legacy = legacy;
     this.testonly = testonly;
-    this.roots = ImmutableSortedSet.copyOf(roots);
+    this.roots = ImmutableList.copyOf(roots);
+    this.mysterySources = ImmutableSet.copyOf(mysterySources);
   }
 }

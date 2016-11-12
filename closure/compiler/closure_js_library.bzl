@@ -1,5 +1,3 @@
-# -*- mode: python; -*-
-#
 # Copyright 2016 The Closure Rules Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,93 +15,175 @@
 """Build definitions for Closure JavaScript libraries."""
 
 load("//closure/private:defs.bzl",
-     "BASE_JS",
      "CLOSURE_LIBRARY_BASE_ATTR",
      "CLOSURE_LIBRARY_DEPS_ATTR",
      "JS_LANGUAGE_DEFAULT",
-     "JS_DEPS_ATTR",
      "JS_FILE_TYPE",
-     "collect_required_css_labels",
-     "collect_transitive_js_srcs",
+     "collect_data",
+     "collect_js",
+     "convert_path_to_es6_module_name",
      "create_argfile",
-     "determine_js_language")
+     "determine_js_language",
+     "find_roots",
+     "make_jschecker_progress_message",
+     "sort_roots",
+     "unfurl")
 
 def _impl(ctx):
-  tsrcs, tdata = collect_transitive_js_srcs(ctx)
-  srcs = tsrcs + JS_FILE_TYPE.filter(ctx.files.srcs)
-  if ctx.files.externs:
-    print("closure_js_library 'externs' is deprecated; use 'srcs'")
-    srcs += JS_FILE_TYPE.filter(ctx.files.externs)
   if not ctx.files.srcs and not ctx.files.externs and not ctx.attr.exports:
     fail("Either 'srcs' or 'exports' must be specified")
-  if ctx.attr.no_closure_library:
-    if not ctx.files.srcs:
-      fail("no_closure_library is pointless when srcs is empty")
-    for src in srcs:
-      if src.owner == BASE_JS:
-        fail("no_closure_library is pointless when the Closure Library is " +
-             "already part of the transitive closure")
-  inputs = []
+  if not ctx.files.srcs and ctx.attr.deps:
+    fail("'srcs' must be set when using 'deps', otherwise consider 'exports'")
+
+  # Create a list of the sources defined by this specific rule.
+  srcs = ctx.files.srcs
+  if ctx.files.externs:
+    print("closure_js_library 'externs' is deprecated; just use 'srcs'")
+    srcs = ctx.files.externs + srcs
+
+  # Create a list of direct children of this rule. If any direct dependencies
+  # have the exports attribute, those labels become direct dependencies here.
+  deps = unfurl(ctx.attr.deps)
+
+  # Collect all the transitive stuff the child rules have propagated. Bazel has
+  # a special nested set data structure that makes this efficient.
+  js = collect_js(ctx, deps, bool(srcs), ctx.attr.no_closure_library)
+  data = collect_data(deps)
+
+  # If closure_js_library depends on closure_css_library, that means
+  # goog.getCssName() is being used in srcs to reference CSS names in the
+  # dependent library. In order to guarantee renaming works, we're going to
+  # pass along all those CSS library labels to closure_js_binary. Then when the
+  # JS binary is compiled, we'll make sure it's linked against a CSS binary
+  # which is a superset of the CSS libraries in its transitive closure.
+  stylesheets = []
+  for dep in deps:
+    if hasattr(dep, 'closure_css_library'):
+      stylesheets.append(dep.label)
+
+  # JsChecker is a program that's run via the ClosureUberAlles persistent Bazel
+  # worker. This program is a modded version of the Closure Compiler. It does
+  # syntax checking and linting on the srcs files specified by this target, and
+  # only this target. It does not output a JS file, but it does output a
+  # ClosureJsLibrary protobuf info file with useful information extracted from
+  # the abstract syntax tree, such as provided namespaces. This information is
+  # propagated up to parent rules for strict dependency checking. It's also
+  # used by the Closure Compiler when producing the final JS binary.
   args = [
       "JsChecker",
-      "--output", ctx.outputs.provided.path,
+      "--label", str(ctx.label),
+      "--output", ctx.outputs.info.path,
       "--output_errors", ctx.outputs.stderr.path,
-      "--label", ctx.label,
       "--convention", ctx.attr.convention,
       "--language", _determine_check_language(ctx.attr.language),
   ]
-  proto_descriptor_sets = []
-  if ctx.attr.proto_descriptor_set:
-    proto_descriptor_sets += [ctx.attr.proto_descriptor_set]
+
+  # Because JsChecker is an edge in the build graph, we need to declare all of
+  # its input vertices.
+  inputs = []
+
+  # We want to test the failure conditions of this rule from within Bazel,
+  # rather than from a meta-system like shell scripts. In order to do that, we
+  # need a way to toggle the return status of the process.
+  if ctx.attr.internal_expect_failure:
+    args.append("--expect_failure")
+
+  # JsChecker wants to know if this is a testonly rule so it can throw an error
+  # if goog.setTestOnly() is used.
   if ctx.attr.testonly:
     args.append("--testonly")
-  roots = set(order="compile")
-  for direct_src in ctx.files.srcs + ctx.files.externs:
-    args.append("--src")
-    args.append(direct_src.path)
-    inputs.append(direct_src)
-    root = direct_src.root.path
-    if root:
-      roots += [root]
-  for src_root in roots:
-    args.append("--root")
-    args.append(src_root)
-  for direct_dep in ctx.attr.deps:
-    args.append("--dep")
-    args.append(direct_dep.js_provided.path)
-    inputs.append(direct_dep.js_provided)
-    for edep in direct_dep.js_exports:
-      args.append("--dep")
-      args.append(edep.js_provided.path)
-      inputs.append(edep.js_provided)
-    if hasattr(direct_dep, "proto_descriptor_sets"):
-      proto_descriptor_sets += direct_dep.proto_descriptor_sets
+
+  # The suppress attribute is a Closure Rules feature that makes warnings and
+  # errors go away. It's a list of strings containing DiagnosticGroup (coarse
+  # grained) or DiagnosticType (fine grained) codes. These apply not only to
+  # JsChecker, but also propagate up to closure_js_binary.
   for s in ctx.attr.suppress:
     args.append("--suppress")
     args.append(s)
-  if ctx.attr.internal_expect_failure:
-    args.append("--expect_failure")
+
+  # Pass source file paths to JsChecker. Under normal circumstances, these
+  # paths appear to be relative to the root of the repository. But they're
+  # actually relative to the ctx.action working directory, which is a folder
+  # full of symlinks generated by Bazel which point to the actual files. These
+  # paths might contain weird bazel-out/blah/external/ prefixes. These paths
+  # are by no means canonical and can change for a particular file based on
+  # where the ctx.action is located.
+  for f in srcs:
+    args.append("--src")
+    args.append(f.path)
+    inputs.append(f)
+
+  # In order for JsChecker to turn weird Bazel paths into ES6 module names, we
+  # need to give it a list of path prefixes to strip. By default, the ES6
+  # module name is the same as the filename relative to the root of the
+  # repository, ignoring the workspace name. The exception is when the includes
+  # attribute is being used, which chops the path down even further.
+  roots = sort_roots(find_roots(ctx, srcs))
+  for root in roots:
+    args.append("--root")
+    args.append(root)
+
+  # We keep track of ES6 module names so we can guarantee that no namespace
+  # collisions exist for any particular transitive closure. By making it
+  # canonical, we can use it to propagate suppressions up to closure_js_binary.
+  modules = [convert_path_to_es6_module_name(f.path, roots) for f in srcs]
+  for module in modules:
+    if module in js.modules:
+      fail(("ES6 namespace '%s' already defined by a dependency. Check the " +
+            "deps transitively. Remember that namespaces are relative to the " +
+            "root of the repository unless includes=[...] is used") % module)
+  if len(modules) != len(set(modules)):
+    fail("Intrarule namespace collision detected")
+
+  # Give JsChecker the ClosureJsLibrary protobufs outputted by direct children.
+  for dep in deps:
+    # Polymorphic rules, e.g. closure_css_library, might not provide this.
+    info = getattr(dep.closure_js_library, 'info', None)
+    if info:
+      args.append("--dep")
+      args.append(info.path)
+      inputs.append(info)
+
+  # The list of flags could potentially be very long. So we're going to write
+  # them all to a file which gets loaded automatically by our BazelWorker
+  # middleware.
   argfile = create_argfile(ctx, args)
   inputs.append(argfile)
+
+  # Add a JsChecker edge to the build graph. The command itself will only be
+  # executed if something that requires its output is executed.
   ctx.action(
       inputs=inputs,
-      outputs=[ctx.outputs.provided, ctx.outputs.stderr],
+      outputs=[ctx.outputs.info, ctx.outputs.stderr],
       executable=ctx.executable._ClosureUberAlles,
       arguments=["@@" + argfile.path],
       mnemonic="Closure",
       execution_requirements={"supports-workers": "1"},
-      progress_message="Checking %d JS files in %s" % (
-          len(ctx.files.srcs) + len(ctx.files.externs), ctx.label))
-  return struct(files=set(),
-                proto_descriptor_sets=proto_descriptor_sets,
-                js_language=determine_js_language(ctx),
-                js_exports=ctx.attr.exports,
-                js_provided=ctx.outputs.provided,
-                required_css_labels=collect_required_css_labels(ctx),
-                transitive_js_srcs=srcs,
-                transitive_data=tdata + ctx.files.data,
-                runfiles=ctx.runfiles(files=ctx.files.srcs + ctx.files.data,
-                                      transitive_files=tsrcs + tdata))
+      progress_message=make_jschecker_progress_message(srcs, ctx.label))
+
+  # Return providers which can be accessed by parent rules.
+  return struct(
+      files=set(),
+      exports=unfurl(ctx.attr.exports),
+      closure_data=data + ctx.files.data,
+      # This struct contains information about the JS transitive closure. Any
+      # rule that also exports this provider will be considered polymorphically
+      # compatible with this rule and able to be listed as a dependency.
+      closure_js_library=struct(
+          info=ctx.outputs.info,
+          infos=js.infos + [ctx.outputs.info],
+          srcs=js.srcs + srcs,
+          roots=js.roots + roots,
+          modules=js.modules + modules,
+          descriptors=js.descriptors + ctx.files.internal_descriptors,
+          stylesheets=js.stylesheets + stylesheets,
+          language=determine_js_language(ctx, deps),
+          has_closure_library=js.has_closure_library),
+      # This is the set of files that will be made available to any test or
+      # program that transitively depends on this rule.
+      runfiles=ctx.runfiles(
+          files=srcs + ctx.files.data,
+          transitive_files=js.srcs + data))
 
 def _determine_check_language(language):
   if language == "ANY":
@@ -114,17 +194,22 @@ closure_js_library = rule(
     implementation=_impl,
     attrs={
         "convention": attr.string(default="CLOSURE"),
-        "deps": JS_DEPS_ATTR,
-        "exports": JS_DEPS_ATTR,
-        "externs": attr.label_list(allow_files=JS_FILE_TYPE),
-        "language": attr.string(default=JS_LANGUAGE_DEFAULT),
-        "no_closure_library": attr.bool(default=False),
-        "srcs": attr.label_list(allow_files=JS_FILE_TYPE),
-        "proto_descriptor_set": attr.label(allow_files=True),
-        "suppress": attr.string_list(),
         "data": attr.label_list(cfg="data", allow_files=True),
+        "deps": attr.label_list(
+            providers=["closure_js_library"]),
+        "exports": attr.label_list(
+            providers=["closure_js_library"]),
+        "includes": attr.string_list(),
+        "language": attr.string(default=JS_LANGUAGE_DEFAULT),
+        "no_closure_library": attr.bool(),
+        "srcs": attr.label_list(allow_files=JS_FILE_TYPE),
+        "suppress": attr.string_list(),
+
+        # deprecated
+        "externs": attr.label_list(allow_files=JS_FILE_TYPE),
 
         # internal only
+        "internal_descriptors": attr.label_list(allow_files=True),
         "internal_expect_failure": attr.bool(default=False),
         "_ClosureUberAlles": attr.label(
             default=Label("//java/io/bazel/rules/closure:ClosureUberAlles"),
@@ -134,6 +219,6 @@ closure_js_library = rule(
         "_closure_library_deps": CLOSURE_LIBRARY_DEPS_ATTR,
     },
     outputs={
-        "provided": "%{name}-provided.txt",
+        "info": "%{name}.pbtxt",
         "stderr": "%{name}-stderr.txt",
     })

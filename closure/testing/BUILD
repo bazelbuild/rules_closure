@@ -39,6 +39,5 @@ closure_js_library(
 closure_js_binary(
     name = "phantomjs_harness_bin",
     defs = ["--env=CUSTOM"],
-    pedantic = True,
     deps = [":phantomjs_harness"],
 )

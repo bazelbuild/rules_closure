@@ -1,5 +1,3 @@
-# -*- mode: python; -*-
-#
 # Copyright 2016 The Closure Rules Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,25 +16,26 @@
 """
 
 load("//closure/private:defs.bzl",
-     "CSS_DEPS_ATTR",
-     "collect_transitive_css_labels")
+     "collect_css",
+     "collect_data",
+     "unfurl")
 
 def _impl(ctx):
   if not ctx.attr.deps:
     fail("closure_css_binary rules can not have an empty 'deps' list")
-  srcs = set()
-  tdata = set()
-  for dep in ctx.attr.deps:
-    srcs += dep.transitive_css_srcs
-    tdata += dep.transitive_data
-  files = [ctx.outputs.out, ctx.outputs.map]
-  input_orientation = _get_input_orientation(ctx.attr.deps)
-  args = ["--output-file", ctx.outputs.out.path,
+  deps = unfurl(ctx.attr.deps)
+  css = collect_css(deps)
+  data = collect_data(deps)
+  if not css.srcs:
+    fail("There are no CSS source files in the transitive closure")
+  inputs = []
+  outputs = [ctx.outputs.bin, ctx.outputs.map]
+  args = ["--output-file", ctx.outputs.bin.path,
           "--output-source-map", ctx.outputs.map.path,
-          "--input-orientation", input_orientation,
+          "--input-orientation", css.orientation,
           "--output-orientation", ctx.attr.orientation]
   if ctx.attr.renaming:
-    files += [ctx.outputs.js]
+    outputs += [ctx.outputs.js]
     args += ["--output-renaming-map", ctx.outputs.js.path,
              "--output-renaming-map-format", "CLOSURE_COMPILED_SPLIT_HYPHENS"]
     if ctx.attr.debug:
@@ -52,41 +51,39 @@ def _impl(ctx):
   if ctx.attr.vendor:
     args += ["--vendor", ctx.attr.vendor]
   args += ctx.attr.defs
-  args += [src.path for src in srcs]
+  for f in css.srcs:
+    args.append(f.path)
+    inputs.append(f)
   ctx.action(
-      inputs=list(srcs),
-      outputs=files,
+      inputs=inputs,
+      outputs=outputs,
       arguments=args,
       executable=ctx.executable._compiler,
       progress_message="Compiling %d stylesheets to %s" % (
-          len(srcs), ctx.outputs.out.short_path))
-  return struct(files=set(files),
-                transitive_css_labels=collect_transitive_css_labels(ctx),
-                css_orientation=(input_orientation
-                                 if ctx.attr.orientation == "NOCHANGE" else
-                                 ctx.attr.orientation),
-                js_css_renaming_map=ctx.outputs.js,
-                compiled_css_labels=set(),
-                transitive_css_srcs=files,
-                transitive_data=tdata + ctx.files.data,
-                runfiles=ctx.runfiles(files=files + ctx.files.data,
-                                      transitive_files=srcs + tdata))
-
-def _get_input_orientation(deps):
-  orientation = None
-  for dep in deps:
-    if not orientation:
-      orientation = dep.css_orientation
-    elif orientation != dep.css_orientation:
-      fail("Not all deps have the same orientation")
-  return orientation
+          len(css.srcs), ctx.outputs.bin.short_path))
+  return struct(
+      files=set(outputs),
+      closure_data=data + ctx.files.data,
+      closure_css_binary=struct(
+          bin=ctx.outputs.bin,
+          map=ctx.outputs.map,
+          renaming_map=ctx.outputs.js,
+          labels=css.labels),
+      closure_css_library=struct(
+          srcs=set([ctx.outputs.bin]),
+          orientation=(css.orientation
+                       if ctx.attr.orientation == "NOCHANGE" else
+                       ctx.attr.orientation)),
+      runfiles=ctx.runfiles(
+          files=outputs + ctx.files.data,
+          transitive_files=css.srcs + data))
 
 closure_css_binary = rule(
     implementation=_impl,
     attrs={
-        "debug": attr.bool(default=False),
+        "debug": attr.bool(),
         "defs": attr.string_list(),
-        "deps": CSS_DEPS_ATTR,
+        "deps": attr.label_list(providers=["closure_css_library"]),
         "orientation": attr.string(default="NOCHANGE"),
         "renaming": attr.bool(default=True),
         "vendor": attr.string(),
@@ -97,6 +94,8 @@ closure_css_binary = rule(
             executable=True,
             cfg="host"),
     },
-    outputs={"out": "%{name}.css",
-             "map": "%{name}.css.map",
-             "js": "%{name}.css.js"})
+    outputs={
+        "bin": "%{name}.css",
+        "map": "%{name}.css.map",
+        "js": "%{name}.css.js",
+    })

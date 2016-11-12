@@ -98,7 +98,6 @@ closure_js_library(
 closure_js_test(
     name = "greeter_test",
     srcs = ["greeter_test.js"],
-    pedantic = True,
     deps = [
         ":greeter_lib",
         "//closure/library",
@@ -169,7 +168,6 @@ closure_js_binary(
     name = "greeter_idom_fail_bin",
     entry_points = ["goog:io.bazel.rules.closure.GreeterIdomFail"],
     internal_expect_failure = True,
-    pedantic = True,
     deps = [":greeter_idom_fail_lib"],
 )
 

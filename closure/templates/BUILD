@@ -36,7 +36,11 @@ closure_js_library(
         "@soy_jssrc//:soydata_converters.js",
         "@soy_jssrc//:soyutils_usegoog.js",
     ],
-    suppress = ["JSC_OPTIONAL_PARAM_NOT_MARKED_OPTIONAL"],
+    suppress = [
+        "JSC_IMPLICITLY_NULLABLE_JSDOC",
+        "JSC_OPTIONAL_PARAM_NOT_MARKED_OPTIONAL",
+        "JSC_UNKNOWN_EXPR_TYPE",
+    ],
     deps = [
         ":soy_html_proto",
         "//closure/library",
@@ -45,7 +49,9 @@ closure_js_library(
 
 java_library(
     name = "safe_html_types",
-    exports = ["@safe_html_types//jar"],
+    exports = [
+        "@safe_html_types//jar",
+    ],
     runtime_deps = [
         "@guava//jar",
         "@protobuf_java//jar",

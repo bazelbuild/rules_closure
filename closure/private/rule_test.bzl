@@ -1,5 +1,3 @@
-# -*- mode: python; -*-
-#
 # Copyright 2016 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,8 +48,8 @@ def _impl(ctx):
     files = []
     commands = []
     for k in provides.keys():
-      if hasattr(rule_, k):
-        v = repr(getattr(rule_, k))
+      if _hasattr(rule_, k):
+        v = repr(_getattr(rule_, k))
       else:
         fail(("rule %s doesn't provide attribute %s. "
               + "Its list of attributes is: %s")
@@ -68,6 +66,20 @@ def _impl(ctx):
     return struct(runfiles=ctx.runfiles([exe] + files))
   else:
     return _success_target(ctx, "success")
+
+def _hasattr(obj, name):
+  for label in name.split("."):
+    if not hasattr(obj, label):
+      return False
+    obj = getattr(obj, label)
+  return True
+
+def _getattr(obj, name):
+  for label in name.split("."):
+    if not hasattr(obj, label):
+      return False
+    obj = getattr(obj, label)
+  return obj
 
 rule_test = rule(
     attrs = {

@@ -17,7 +17,6 @@ package(default_testonly = True)
 licenses(["notice"])  # Apache 2.0
 
 load("//closure/private:file_test.bzl", "file_test")
-load("//closure/private:rule_test.bzl", "rule_test")
 load("//closure:defs.bzl", "closure_js_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
@@ -31,7 +30,6 @@ closure_js_library(
 
 closure_js_binary(
     name = "property_bin",
-    pedantic = True,
     property_renaming_report = "property_bin_renaming_report.txt",
     deps = [":property_lib"],
 )

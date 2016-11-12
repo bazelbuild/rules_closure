@@ -37,7 +37,6 @@ closure_js_library(
 
 closure_js_binary(
     name = "program_bin",
-    pedantic = True,
     deps = [":program_lib"],
 )
 
@@ -63,7 +62,6 @@ closure_js_library(
 
 closure_js_binary(
     name = "library_bin",
-    pedantic = True,
     deps = [":library_lib"],
 )
 
@@ -91,7 +89,6 @@ closure_js_library(
 closure_js_binary(
     name = "library_goog_bin",
     entry_points = ["goog:io.bazel.rules.closure.iWillGoIntoTheBinary"],
-    pedantic = True,
     deps = [":library_goog_lib"],
 )
 
@@ -112,7 +109,6 @@ closure_js_binary(
     name = "program_strict_bin",
     dependency_mode = "STRICT",
     entry_points = ["closure/compiler/test/empty"],
-    pedantic = True,
     deps = [
         ":program_lib",
         "//closure/compiler/test:empty_lib",
@@ -129,7 +125,6 @@ closure_js_binary(
     name = "program_strict_bin2",
     dependency_mode = "STRICT",
     entry_points = ["closure/compiler/test/exports_and_entry_points/program"],
-    pedantic = True,
     deps = [
         ":program_lib",
         "//closure/compiler/test:empty_lib",

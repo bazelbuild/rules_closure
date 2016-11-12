@@ -28,7 +28,6 @@ closure_js_library(
 closure_js_test(
     name = "simple_test",
     srcs = ["simple_test.js"],
-    pedantic = True,
     deps = ["//closure/library:testing"],
 )
 
@@ -42,7 +41,6 @@ closure_js_test(
     name = "arithmetic_module_test",
     srcs = ["arithmetic_module_test.js"],
     entry_points = ["goog:arithmetic_module_test"],
-    pedantic = True,
     deps = [
         ":arithmetic_module_lib",
         "//closure/library:testing",
@@ -52,7 +50,6 @@ closure_js_test(
 closure_js_test(
     name = "arithmetic_scope_test",
     srcs = ["arithmetic_scope_test.js"],
-    pedantic = True,
     deps = [
         ":arithmetic_lib",
         "//closure/library:testing",
@@ -69,7 +66,6 @@ closure_js_test(
     name = "arithmetic_es6module_test",
     srcs = ["arithmetic_es6module_test.js"],
     language = "ECMASCRIPT6_STRICT",
-    pedantic = True,
     deps = [
         ":arithmetic_es6module_lib",
         "//closure/library:testing",
@@ -84,10 +80,10 @@ genrule(
     ],
     outs = ["fontdemo-generated.png"],
     cmd = "$(location //third_party/phantomjs) $(SRCS) $@",
-    tools = ["//third_party/phantomjs"],
-    # TODO(dmarting): Remove local = 1 when ariya/phantomjs#13876 is fixed.
+    # TODO(user): Remove local = 1 when ariya/phantomjs#13876 is fixed.
     local = 1,
     tags = ["requires-network"],
+    tools = ["//third_party/phantomjs"],
 )
 
 files_equal_test(

@@ -1,5 +1,3 @@
-# -*- mode:python; -*-
-#
 # Copyright 2016 The Closure Rules Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +16,7 @@
 """
 
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
-load("//closure/private:defs.bzl", "SOY_DEPS_ATTR", "SOY_FILE_TYPE")
+load("//closure/private:defs.bzl", "SOY_FILE_TYPE", "unfurl")
 
 _SOYTOJSSRCCOMPILER = '//third_party/java/soy:SoyToJsSrcCompiler'
 
@@ -40,7 +38,6 @@ def _impl(ctx):
   else:
     args = ["--outputPathFormat=%s/{INPUT_DIRECTORY}/{INPUT_FILE_NAME}.js" %
             ctx.configuration.genfiles_dir.path]
-
   if not ctx.attr.incremental_dom:
     if ctx.attr.soy_msgs_are_external:
       args += ["--googMsgsAreExternal"]
@@ -52,19 +49,19 @@ def _impl(ctx):
       args += ["--shouldGenerateGoogMsgDefs"]
   if ctx.attr.plugin_modules:
     args += ["--pluginModules=%s" % ",".join(ctx.attr.plugin_modules)]
-  args += [src.path for src in ctx.files.srcs]
-  srcs = ctx.files.srcs[:]
+  inputs = []
+  for f in ctx.files.srcs:
+    args.append(f.path)
+    inputs.append(f)
   if ctx.file.globals:
     args += ["--compileTimeGlobalsFile=%s" % ctx.file.globals.path]
-    srcs += [ctx.file.globals]
-  for dep in ctx.attr.deps:
-    for desc in dep.proto_descriptor_sets:
-      srcs += list(desc.files)
-      for f in desc.files:
-        args += ["--protoFileDescriptors=%s" % f.path]
-
+    inputs.append(ctx.file.globals)
+  for dep in unfurl(ctx.attr.deps):
+    for f in dep.closure_js_library.descriptors:
+      args += ["--protoFileDescriptors=%s" % f.path]
+      inputs.append(f)
   ctx.action(
-      inputs=srcs,
+      inputs=inputs,
       outputs=ctx.outputs.outputs,
       executable=ctx.executable.compiler,
       arguments=args,
@@ -73,13 +70,13 @@ def _impl(ctx):
         ctx.attr.outputs),
   )
 
-
 _closure_js_template_library = rule(
     implementation=_impl,
     output_to_genfiles = True,
     attrs={
         "srcs": attr.label_list(allow_files=SOY_FILE_TYPE),
-        "deps": SOY_DEPS_ATTR,
+        "deps": attr.label_list(
+            providers=["closure_js_library"]),
         "outputs": attr.output_list(),
         "globals": attr.label(allow_files=True, single_file=True),
         "plugin_modules": attr.label_list(),
@@ -96,6 +93,7 @@ def closure_js_template_library(
     name,
     srcs,
     deps = [],
+    suppress = [],
     incremental_dom = False,
     testonly = None,
     globals = None,
@@ -138,5 +136,9 @@ def closure_js_template_library(
       srcs = js_srcs,
       deps = deps,
       testonly = testonly,
+      suppress = suppress + [
+          "analyzerChecks",
+          "reportUnknownTypes",
+      ],
       **kwargs
   )

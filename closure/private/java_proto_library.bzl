@@ -1,5 +1,3 @@
-# -*- mode: python; -*-
-#
 # Copyright 2016 The Closure Rules Authors. All rights reserved.
 # Copyright 2014 The Bazel Authors. All rights reserved.
 #
@@ -14,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 
 def _impl(ctx):
   out = ctx.outputs.srcjar
@@ -67,7 +66,6 @@ def java_proto_library(name, src, testonly=None, visibility=None, **kwargs):
       testonly = testonly,
       visibility = visibility,
   )
-
   native.java_library(
       name = name,
       srcs = [":%s_srcjar" % name],

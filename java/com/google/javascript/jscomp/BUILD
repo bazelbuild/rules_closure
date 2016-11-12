@@ -12,26 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+licenses(["notice"])  # Apache 2.0
+
 java_library(
     name = "jscomp",
     srcs = [
         "CheckSetTestOnly.java",
         "CheckStrictDeps.java",
+        "Diagnostics.java",
         "JsChecker.java",
         "JsCheckerClosureCodingConvention.java",
+        "JsCheckerConvention.java",
         "JsCheckerErrorFormatter.java",
         "JsCheckerErrorManager.java",
         "JsCheckerHelper.java",
         "JsCheckerPassConfig.java",
         "JsCheckerState.java",
         "JsCompiler.java",
+        "JsCompilerRunner.java",
+        "JsCompilerWarnings.java",
     ],
-    visibility = ["//java/io/bazel/rules/closure:__pkg__"],
+    visibility = [
+        "//java/io/bazel/rules/closure:__pkg__",
+        "//javatests/com/google/javascript/jscomp:__pkg__",
+    ],
     deps = [
+        "//java/com/google/common:guava",
+        "//java/io/bazel/rules/closure:build_info_java_proto",
         "//java/io/bazel/rules/closure/program",
         "//third_party/java/jscomp",
+        "//third_party/protobuf:protobuf-java",
         "@args4j//jar",  # for //third_party/java/jscomp
-        "@guava//jar",
-        "@protobuf_java//jar",
     ],
 )

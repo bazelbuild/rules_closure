@@ -245,6 +245,11 @@ phantomjs.Server = class {
    * @const
    */
   listen(port, callback) {}
+
+  /**
+   * @const
+   */
+  close() {}
 };
 
 /**
@@ -341,6 +346,6 @@ let phantom;
 
 /**
  * @param {string} name
- * @return {?}
+ * @return {*}
  */
 function require(name) {}

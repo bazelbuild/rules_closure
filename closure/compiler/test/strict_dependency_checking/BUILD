@@ -53,9 +53,8 @@ closure_js_library(
 rule_test(
     name = "a_rule_test",
     provides = {
-        "js_language": "^\"ECMASCRIPT5_STRICT\"$",
-        "js_exports": "^\\[\\]$",
-        "transitive_js_srcs": "/a.js\\]",
+        "closure_js_library.language": "^\"ECMASCRIPT5_STRICT\"$",
+        "closure_js_library.srcs": "/a.js\\]",
     },
     rule = ":a",
 )
@@ -63,9 +62,8 @@ rule_test(
 rule_test(
     name = "b_rule_test",
     provides = {
-        "js_language": "^\"ECMASCRIPT5_STRICT\"$",
-        "js_exports": "^\\[\\]$",
-        "transitive_js_srcs": "/a\\.js.*/b\\.js\\]",
+        "closure_js_library.language": "^\"ECMASCRIPT5_STRICT\"$",
+        "closure_js_library.srcs": "/a\\.js.*/b\\.js\\]",
     },
     rule = ":b",
 )
@@ -73,9 +71,8 @@ rule_test(
 rule_test(
     name = "c_rule_test",
     provides = {
-        "js_language": "^\"ECMASCRIPT5_STRICT\"$",
-        "js_exports": "^\\[\\]$",
-        "transitive_js_srcs": "/a\\.js.*/b\\.js.*/c\\.js\\]",
+        "closure_js_library.language": "^\"ECMASCRIPT5_STRICT\"$",
+        "closure_js_library.srcs": "/a\\.js.*/b\\.js.*/c\\.js\\]",
     },
     rule = ":c",
 )
@@ -83,17 +80,16 @@ rule_test(
 rule_test(
     name = "t_rule_test",
     provides = {
-        "js_language": "^\"ECMASCRIPT5_STRICT\"$",
-        "js_exports": "^\\[\\]$",
-        "transitive_js_srcs": "/t\\.js\\]",
+        "closure_js_library.language": "^\"ECMASCRIPT5_STRICT\"$",
+        "closure_js_library.srcs": "/t\\.js\\]",
     },
     rule = ":t",
 )
 
 file_test(
-    name = "fileWithGoogProvide_providesOnlyGoogProvides",
-    content = "goog:a\n",
-    file = "a-provided.txt",
+    name = "fileWithGoogProvide_providesGoogProvides",
+    file = "a.pbtxt",
+    regexp = "goog:a",
 )
 
 file_test(
@@ -225,8 +221,8 @@ closure_js_library(
 
 file_test(
     name = "fileWithoutGoogProvideInEs6Mode_providesShortPathWithoutJs",
-    content = "closure/compiler/test/strict_dependency_checking/es6_a\n",
-    file = "es6_a-provided.txt",
+    file = "es6_a.pbtxt",
+    regexp = "namespace: \"closure/compiler/test/strict_dependency_checking/es6_a\"",
 )
 
 closure_js_library(
@@ -246,10 +242,7 @@ file_test(
 
 closure_js_library(
     name = "es6_requireWithinSameLibrary_works",
-    srcs = [
-        "es6_a.js",
-        "es6_c.js",
-    ],
+    srcs = ["es6_c.js"],
     language = "ECMASCRIPT6_STRICT",
     deps = [":es6_b"],
 )
@@ -265,8 +258,9 @@ closure_js_library(
 
 file_test(
     name = "hybridGoogAndEs6Library_onlyProvidesPathForSrcsWithoutGoogProvide",
-    content = "closure/compiler/test/strict_dependency_checking/es6_a\ngoog:a\n",
-    file = "hybrid_lib-provided.txt",
+    file = "hybrid_lib.pbtxt",
+    invert = True,
+    regexp = "namespace:.*closure/compiler/test/strict_dependency_checking/a",
 )
 
 genrule(
@@ -283,8 +277,9 @@ closure_js_library(
 
 file_test(
     name = "generatedEs6Module_providedNamespaceDoesntHaveBazelJunk",
-    content = "closure/compiler/test/strict_dependency_checking/es6_g\n",
-    file = "es6_g-provided.txt",
+    file = "es6_g.pbtxt",
+    invert = True,
+    regexp = "namespace: \".*bazel-",
 )
 
 genrule(
@@ -302,7 +297,6 @@ closure_js_library(
 
 closure_js_binary(
     name = "es6_g2_bin",
-    pedantic = True,
     deps = [":es6_g2"],
 )
 

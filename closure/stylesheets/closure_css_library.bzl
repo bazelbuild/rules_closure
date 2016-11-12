@@ -1,5 +1,3 @@
-# -*- mode: python; -*-
-#
 # Copyright 2016 The Closure Rules Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,41 +15,34 @@
 """Build definitions for Closure Stylesheet libraries."""
 
 load("//closure/private:defs.bzl",
-     "CSS_DEPS_ATTR",
      "CSS_FILE_TYPE",
-     "collect_transitive_css_labels")
+     "collect_css",
+     "collect_data",
+     "unfurl")
 
 def _impl(ctx):
-  tsrcs = set()
-  tdata = set()
-  for dep in ctx.attr.deps:
-    tsrcs += dep.transitive_css_srcs
-    tdata += dep.transitive_data
-    if dep.css_orientation != ctx.attr.orientation:
-      fail("%s does not have the same orientation" % dep.label)
-  # TODO: Write thing that extracts css:class-name provides.
-  ctx.file_action(output=ctx.outputs.provided, content="")
-  return struct(files=set(),
-                js_language="ANY",
-                js_exports=[],
-                js_provided=ctx.outputs.provided,
-                transitive_js_srcs=set(),
-                css_orientation=ctx.attr.orientation,
-                required_css_labels=set(),
-                transitive_css_labels=collect_transitive_css_labels(ctx),
-                transitive_css_srcs=tsrcs + ctx.files.srcs,
-                transitive_data=tdata + ctx.files.data,
-                runfiles=ctx.runfiles(files=ctx.files.srcs + ctx.files.data,
-                                      transitive_files=tsrcs + tdata))
+  deps = unfurl(ctx.attr.deps)
+  css = collect_css(deps, ctx.attr.orientation)
+  data = collect_data(deps)
+  return struct(
+      files=set(),
+      exports=unfurl(ctx.attr.exports),
+      closure_data=data + ctx.files.data,
+      closure_js_library=struct(),
+      closure_css_library=struct(
+          srcs=css.srcs + ctx.files.srcs,
+          labels=css.labels + [ctx.label],
+          orientation=ctx.attr.orientation),
+      runfiles=ctx.runfiles(
+          files=ctx.files.srcs + ctx.files.data,
+          transitive_files=css.srcs + data))
 
 closure_css_library = rule(
     implementation=_impl,
     attrs={
         "srcs": attr.label_list(allow_files=CSS_FILE_TYPE),
-        "deps": CSS_DEPS_ATTR,
-        "orientation": attr.string(default="LTR"),
         "data": attr.label_list(cfg="data", allow_files=True),
-    },
-    outputs={
-        "provided": "%{name}-provided.txt",
+        "deps": attr.label_list(providers=["closure_css_library"]),
+        "exports": attr.label_list(providers=["closure_css_library"]),
+        "orientation": attr.string(default="LTR"),
     })

@@ -22,7 +22,6 @@ closure_js_test(
     name = "dom_test",
     srcs = ["dom_test.js"],
     language = "ECMASCRIPT5_STRICT",
-    pedantic = True,
     deps = [
         "//closure/library",
         "//closure/library:testing",

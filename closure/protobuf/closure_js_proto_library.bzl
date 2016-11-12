@@ -1,5 +1,3 @@
-# -*- mode: python; -*-
-#
 # Copyright 2016 The Closure Rules Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,13 +20,13 @@ load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 def closure_js_proto_library(
     name,
     srcs,
-    data = None,
-    visibility = None,
+    suppress = [],
     add_require_for_enums = 0,
-    testonly = 0,
+    testonly = None,
     binary = 1,
     import_style = None,
-    protocbin = Label("//third_party/protobuf:protoc")):
+    protocbin = Label("//third_party/protobuf:protoc"),
+    **kwargs):
   cmd = ["$(location %s)" % protocbin]
   js_out_options = ["library=%s,error_on_name_conflict" % name]
   if add_require_for_enums:
@@ -57,11 +55,16 @@ def closure_js_proto_library(
   closure_js_library(
       name = name,
       srcs = [name + ".js"],
-      proto_descriptor_set = name + ".descriptor",
-      data = data,
+      testonly = testonly,
       deps = [
           str(Label("//closure/library")),
           str(Label("//closure/protobuf:jspb")),
       ],
-      visibility = visibility,
+      internal_descriptors = [name + ".descriptor"],
+      suppress = suppress + [
+          "analyzerChecks",
+          "missingProperties",
+          "reportUnknownTypes",
+      ],
+      **kwargs
   )

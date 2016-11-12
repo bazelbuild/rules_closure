@@ -3,7 +3,7 @@
 JavaScript | Templating | Stylesheets | Miscellaneous
 --- | --- | --- | ---
 [closure_js_library] | [closure_js_template_library] | [closure_css_library] | [closure_js_proto_library]
-[closure_js_binary] | [closure_java_template_library] | [closure_css_binary] | [phantomjs_test]
+[closure_js_binary] | [closure_java_template_library] | [closure_css_binary]
 [closure_js_deps] | [closure_py_template_library] | |
 [closure_js_test] | | |
 
@@ -79,9 +79,9 @@ following to your `WORKSPACE` file:
 ```python
 http_archive(
     name = "io_bazel_rules_closure",
-    sha256 = "b8c6dfea8ad3e691037b7eeecf5ab18ae39b74a51ff74c377d4f5eff97c894f4",
-    strip_prefix = "rules_closure-0.4.0",
-    url = "http://bazel-mirror.storage.googleapis.com/github.com/bazelbuild/rules_closure/archive/0.4.0.tar.gz",
+    sha256 = "59498e75805ad8767625729b433b9409f80d0ab985068d513f880fc1928eb39f",
+    strip_prefix = "rules_closure-0.3.0",
+    url = "http://bazel-mirror.storage.googleapis.com/github.com/bazelbuild/rules_closure/archive/0.3.0.tar.gz",
 )
 
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_repositories")
@@ -236,7 +236,7 @@ This rule can be referenced as though it were the following:
   the package. Another use is to roll up a bunch of fine-grained libraries into
   a single big one.
 
-- **suppress** (List of String; optional; default is `[]`) List of codes the
+- **suppress:** (List of String; optional; default is `[]`) List of codes the
   linter should ignore. Warning and error messages that are allowed to be
   suppressed, will display the codes for disabling it. For example, if the
   linter says:
@@ -252,7 +252,7 @@ This rule can be referenced as though it were the following:
   If a code is used that isn't necessary, an error is raised. Therefore the use
   of fine-grained suppression codes is maintainable.
 
-- **convention** (String; optional; default is `"CLOSURE"`) Specifies the coding
+- **convention:** (String; optional; default is `"CLOSURE"`) Specifies the coding
   convention which affects how the linter operates. This can be the following
   values:
 
@@ -263,7 +263,10 @@ This rule can be referenced as though it were the following:
     linting. See the [Google JavaScript Style Guide] for more information.
   - `JQUERY`: Take [jQuery coding conventions] into consideration when linting.
 
-- **no_closure_library** (Boolean; optional; default is `False`) Do not link
+  Changing this value will also disable compiler checks that are deemed
+  convention specific.
+
+- **no_closure_library:** (Boolean; optional; default is `False`) Do not link
   Closure Library [base.js]. If this flag is used, an error will be raised if
   any `deps` do not also specify this flag.
 
@@ -408,10 +411,23 @@ This rule can be referenced as though it were the following:
   has some fringe use cases, such as minifying JSON messages. However it's
   recommended that you use protobuf instead.
 
+- **suppress_on_all_sources_in_transitive_closure:** (List of String; optional;
+  default is `[]`) When suppressing warnings, it is better to put a suppress
+  code on the [closure_js_library] rule that defined the source responsible for
+  an error. This attribute provides an escape hatch for situations in which that
+  is unfeasible or burdensome.
+
 - **defs:** (List of strings; optional) Specifies additional flags to be passed
   to the Closure Compiler, e.g. `"--hide_warnings_for=some/path/"`. To see what
   flags are available, run:
   `bazel run @io_bazel_rules_closure//third_party/java/jscomp:main -- --help`
+
+- **nodefs:** (List of strings; optional) Specifies arguments that should be
+  removed from the argument list that would otherwise be passed to the Closure
+  Compiler. This provides an escape hatch for some of the "sane defaults"
+  decided upon by Closure Rules. For example, users wishing to support IE7 might
+  set this value to `nodefs = ["--define=goog.json.USE_NATIVE_JSON"]` which will
+  permit the Closure Library's JSON implementation to bloat the output binary.
 
 ### Support for AngularJS
 
@@ -513,7 +529,8 @@ phantomjs_test(name, data, deps, html, harness, runner)
 
 Runs PhantomJS (QtWebKit) for unit testing purposes.
 
-This is a low level rule. Please use the [closure_js_test] macro if possible.
+This is a low level rule. Please use the [closure_js_test] macro. This rule is
+going to be removed soon in favor of [rules_webtesting].
 
 #### Rule Polymorphism
 
@@ -533,7 +550,15 @@ This rule can be referenced as though it were the following:
 
 - **deps:** (List of [labels]; required) Labels of Skylark rules exporting
   `transitive_js_srcs`. Each source will be inserted into the webpage in its own
-  `<script>` tag based on a depth-first preordering.
+  `<script>` tag based on depth-first post-ordering. **Warning:** PhantomJS
+  freezes if there's a lot of resources to load. So it's better to depend on
+  [closure_js_binary] rather than [closure_js_library].
+
+- **runner:** (Label; optional) Special JS dependency that is guaranteed to be
+  loaded last inside the web page. This should run whatever tests got loaded by
+  `deps` and then invoke `callPhantom` to report the result to the `harness`.
+  The [closure_js_test] macro sets this to
+  `"@io_bazel_rules_closure//closure/testing:phantomjs_jsunit_runner"`.
 
 - **html:** (Label; optional; default is
   `"@io_bazel_rules_closure//closure/testing:empty.html"`) HTML file containing
@@ -544,12 +569,6 @@ This rule can be referenced as though it were the following:
   `"@io_bazel_rules_closure//closure/testing:phantomjs_harness"`) JS binary or
   library exporting a single source file, to be used as the PhantomJS outer
   script.
-
-- **runner:** (Label; optional; default is
-  `"@io_bazel_rules_closure//closure/testing:phantomjs_jsunit_runner"`) Same as
-  `deps` but guaranteed to be loaded inside the virtual web page last. This
-  should run whatever tests got loaded by `deps` and then invoke `callPhantom`
-  to report the result to the `harness`.
 
 
 ## closure\_js\_deps
@@ -1047,4 +1066,5 @@ This rule can be referenced as though it were the following:
 [protobuf-generator]: https://github.com/google/protobuf/blob/master/src/google/protobuf/compiler/js/js_generator.h
 [protobuf-js]: https://github.com/google/protobuf/tree/master/js
 [repositories.bzl]: https://github.com/bazelbuild/rules_closure/tree/master/closure/repositories.bzl
+[rules_webtesting]: https://github.com/bazelbuild/rules_webtesting
 [verbose]: https://github.com/google/closure-library/blob/master/closure/goog/html/safehtml.js

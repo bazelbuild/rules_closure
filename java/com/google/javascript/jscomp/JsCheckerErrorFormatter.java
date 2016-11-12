@@ -16,22 +16,34 @@
 
 package com.google.javascript.jscomp;
 
+import static com.google.common.base.Strings.nullToEmpty;
+import static com.google.javascript.jscomp.JsCheckerHelper.convertPathToModuleName;
+
+import com.google.common.collect.Ordering;
 import com.google.debugging.sourcemap.proto.Mapping.OriginalMapping;
 import com.google.javascript.jscomp.SourceExcerptProvider.ExcerptFormatter;
 import com.google.javascript.jscomp.SourceExcerptProvider.SourceExcerpt;
 import com.google.javascript.rhino.TokenUtil;
+import java.util.List;
+import java.util.Map;
 
 final class JsCheckerErrorFormatter extends AbstractMessageFormatter {
 
-  private static final SourceExcerpt excerpt = SourceExcerptProvider.SourceExcerpt.LINE;
+  private static final SourceExcerpt EXCERPT = SourceExcerptProvider.SourceExcerpt.LINE;
   private static final ExcerptFormatter excerptFormatter =
       new LightweightMessageFormatter.LineNumberingFormatter();
 
-  private final JsCheckerState state;
+  private final List<String> roots;
+  private final Map<String, String> labels;
+  private boolean colorize;
 
-  JsCheckerErrorFormatter(JsCheckerState state, SourceExcerptProvider source) {
+  JsCheckerErrorFormatter(
+      SourceExcerptProvider source,
+      List<String> roots,
+      Map<String, String> labels) {
     super(source);
-    this.state = state;
+    this.roots = roots;
+    this.labels = labels;
   }
 
   @Override
@@ -42,6 +54,12 @@ final class JsCheckerErrorFormatter extends AbstractMessageFormatter {
   @Override
   public String formatWarning(JSError warning) {
     return format(warning, true);
+  }
+
+  @Override
+  public void setColorize(boolean colorize) {
+    super.setColorize(colorize);
+    this.colorize = colorize;
   }
 
   private String format(JSError error, boolean warning) {
@@ -72,22 +90,15 @@ final class JsCheckerErrorFormatter extends AbstractMessageFormatter {
 
     // extract source excerpt
     String sourceExcerpt = source == null ? null :
-        excerpt.get(
+        EXCERPT.get(
             source, sourceName, lineNumber, excerptFormatter);
 
     boldLine.append(getLevelName(warning ? CheckLevel.WARNING : CheckLevel.ERROR));
-    String typeName = error.getType().key;
-    String groupName = state.diagnosticGroups.get(error.getType());
-    if (groupName != null) {
-      boldLine.append(" ");
-      boldLine.append(groupName);
-      boldLine.append(" ");
-      boldLine.append(typeName);
-    }
     boldLine.append(" - ");
     boldLine.append(error.description);
 
     b.append(maybeEmbolden(boldLine.toString()));
+
     b.append('\n');
     if (sourceExcerpt != null) {
       b.append(sourceExcerpt);
@@ -108,6 +119,40 @@ final class JsCheckerErrorFormatter extends AbstractMessageFormatter {
         b.append("^\n");
       }
     }
+
+    // Help the user know how to suppress this warning.
+    String module = convertPathToModuleName(nullToEmpty(error.sourceName), roots).or("");
+    String label = labels.get(module);
+    if (label != null) {
+      b.append("  ");
+      if (colorize) {
+        b.append("\033[1;34m");
+      }
+      b.append("ProTip:");
+      if (colorize) {
+        b.append("\033[0m");
+      }
+      b.append(" \"");
+      b.append(error.getType().key);
+      for (String groupName
+          : Ordering.natural().sortedCopy(Diagnostics.DIAGNOSTIC_GROUPS.get(error.getType()))) {
+        if (groupName.startsWith("old")) {
+          continue;
+        }
+        b.append("\" or \"");
+        b.append(groupName);
+      }
+      b.append("\" can be added to the `suppress` attribute of:\n  ");
+      b.append(label);
+      b.append('\n');
+      String jsdocSuppress = Diagnostics.JSDOC_SUPPRESS_CODES.get(error.getType());
+      if (jsdocSuppress != null) {
+        b.append("  Alternatively /** @suppress {");
+        b.append(jsdocSuppress);
+        b.append("} */ can be added to the source file.\n");
+      }
+    }
+
     return b.toString();
   }
 

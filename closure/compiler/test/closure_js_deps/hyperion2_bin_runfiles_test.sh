@@ -28,11 +28,11 @@ set -ex
 [[ -e closure/compiler/test/closure_js_deps/hyperion2.js ]]
 
 # none of the internal-only files we generate (same as closure_js_library)
-[[ ! -e closure/compiler/test/closure_js_deps/hyperion_lib-provided.txt ]]
+[[ ! -e closure/compiler/test/closure_js_deps/hyperion_lib.pbtxt ]]
 [[ ! -e closure/compiler/test/closure_js_deps/hyperion_lib-stderr.txt ]]
-[[ ! -e closure/compiler/test/closure_js_deps/hyperion2_lib-provided.txt ]]
+[[ ! -e closure/compiler/test/closure_js_deps/hyperion2_lib.pbtxt ]]
 [[ ! -e closure/compiler/test/closure_js_deps/hyperion2_lib-stderr.txt ]]
-[[ ! -e closure/compiler/test/closure_js_deps/hyperion2_bin-provided.txt ]]
+[[ ! -e closure/compiler/test/closure_js_deps/hyperion2_bin.pbtxt ]]
 [[ ! -e closure/compiler/test/closure_js_deps/hyperion2_bin-stderr.txt ]]
 
 # but we still get the full transitive closure of data=[...] stuff

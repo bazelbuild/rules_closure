@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+licenses(["notice"])  # Apache 2.0
+
 java_library(
     name = "program",
     srcs = ["CommandLineProgram.java"],
     visibility = ["//visibility:public"],
-    deps = ["@guava//jar"],
+    deps = ["//java/com/google/common:guava"],
 )

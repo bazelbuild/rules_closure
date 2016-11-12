@@ -30,7 +30,6 @@ closure_js_library(
 closure_js_binary(
     name = "hello_bin",
     language = "ECMASCRIPT3",
-    pedantic = True,
     deps = [":hello_lib"],
 )
 
@@ -44,10 +43,10 @@ file_test(
     name = "sourcemap_doesntContainWeirdBazelDirectories",
     content = ("{\n" +
                "\"version\":3,\n" +
-               "\"file\":\"/closure/compiler/test/hello_bin.js\",\n" +
+               "\"file\":\"hello_bin.js\",\n" +
                "\"lineCount\":1,\n" +
                "\"mappings\":\"AAgBAA,OAAAC,IAAA,CAAgB,aAAhB;\",\n" +
-               "\"sources\":[\"/closure/compiler/test/hello.js\"],\n" +
+               "\"sources\":[\"/_/runfiles/closure/compiler/test/hello.js\"],\n" +
                "\"names\":[\"console\",\"log\"]\n" +
                "}\n"),
     file = "hello_bin.js.map",
@@ -57,7 +56,6 @@ closure_js_binary(
     name = "hello_wrap_bin",
     language = "ECMASCRIPT3",
     output_wrapper = "(function(){%output%}).call(this);",
-    pedantic = True,
     deps = [":hello_lib"],
 )
 
@@ -69,21 +67,20 @@ file_test(
 
 file_test(
     name = "sourcemapWithWrapper_hasDifferentMappingCodes",
-    content = ("{\n" +
-               "\"version\":3,\n" +
-               "\"file\":\"/closure/compiler/test/hello_wrap_bin.js\",\n" +
-               "\"lineCount\":1,\n" +
-               "\"mappings\":\"A,YAgBAA,OAAAC,IAAA,CAAgB,aAAhB;\",\n" +
-               "\"sources\":[\"/closure/compiler/test/hello.js\"],\n" +
-               "\"names\":[\"console\",\"log\"]\n" +
-               "}\n"),
+    content = "{\n" +
+              "\"version\":3,\n" +
+              "\"file\":\"hello_wrap_bin.js\",\n" +
+              "\"lineCount\":1,\n" +
+              "\"mappings\":\"A,YAgBAA,OAAAC,IAAA,CAAgB,aAAhB;\",\n" +
+              "\"sources\":[\"/_/runfiles/closure/compiler/test/hello.js\"],\n" +
+              "\"names\":[\"console\",\"log\"]\n" +
+              "}\n",
     file = "hello_wrap_bin.js.map",
 )
 
 closure_js_binary(
     name = "hello_es5strict_bin",
     language = "ECMASCRIPT5_STRICT",
-    pedantic = True,
     deps = [":hello_lib"],
 )
 
@@ -108,13 +105,12 @@ closure_js_library(
 
 rule_test(
     name = "hello_decay_lib_test",
-    provides = {"js_language": "^\"ECMASCRIPT6\"$"},
+    provides = {"closure_js_library.language": "^\"ECMASCRIPT6\"$"},
     rule = ":hello_decay_lib",
 )
 
 closure_js_binary(
     name = "hello_decay_bin",
-    pedantic = True,
     deps = [":hello_decay_lib"],
 )
 
@@ -135,7 +131,6 @@ closure_js_binary(
     name = "es6const_bin",
     compilation_level = "WHITESPACE_ONLY",
     language = "ECMASCRIPT5",
-    pedantic = True,
     deps = [":es6const_lib"],
 )
 
@@ -156,7 +151,6 @@ closure_js_binary(
     name = "es6arrow_bin",
     compilation_level = "WHITESPACE_ONLY",
     language = "ECMASCRIPT5",
-    pedantic = True,
     deps = [":es6arrow_lib"],
 )
 
@@ -196,7 +190,6 @@ closure_js_binary(
     name = "hello_output_wrapper_dash_dash_space_bin",
     language = "ECMASCRIPT3",
     output_wrapper = "-- %output%",
-    pedantic = True,
     deps = [":hello_lib"],
 )
 
@@ -212,6 +205,7 @@ file_test(
 closure_js_library(
     name = "extern_lib",
     srcs = ["extern.js"],
+    language = "ECMASCRIPT6_STRICT",
 )
 
 closure_js_library(
@@ -222,7 +216,6 @@ closure_js_library(
 
 closure_js_binary(
     name = "extern_bin",
-    pedantic = True,
     deps = [":extern_invoke_lib"],
 )
 
@@ -241,7 +234,6 @@ closure_js_library(
 closure_js_binary(
     name = "extern_bad_bin",
     internal_expect_failure = True,
-    pedantic = True,
     deps = [":extern_invoke_bad_lib"],
 )
 

@@ -22,8 +22,8 @@ set -ex
 [[ -e closure/compiler/test/closure_js_deps/hyperion2.js ]]
 
 # transitive sources
-[[ -e closure/compiler/test/closure_js_deps/hyperion.js ]]
 [[ -e external/closure_library/closure/goog/base.js ]]
+[[ -e closure/compiler/test/closure_js_deps/hyperion.js ]]
 
 # direct data
 [[ -e closure/compiler/test/closure_js_deps/data2.txt ]]
@@ -32,9 +32,9 @@ set -ex
 [[ -e closure/compiler/test/closure_js_deps/data1.txt ]]
 
 # none of those internal-only files we generate
-[[ ! -e closure/compiler/test/closure_js_deps/hyperion_lib-provided.txt ]]
+[[ ! -e closure/compiler/test/closure_js_deps/hyperion_lib.pbtxt ]]
 [[ ! -e closure/compiler/test/closure_js_deps/hyperion_lib-stderr.txt ]]
-[[ ! -e closure/compiler/test/closure_js_deps/hyperion2_lib-provided.txt ]]
+[[ ! -e closure/compiler/test/closure_js_deps/hyperion2_lib.pbtxt ]]
 [[ ! -e closure/compiler/test/closure_js_deps/hyperion2_lib-stderr.txt ]]
 
 # and none of the stuff from the js binary we didn't reference

@@ -36,11 +36,9 @@ abstract class CheckStrictDeps
   public static final DiagnosticType REDECLARED_PROVIDES =
       DiagnosticType.error("CR_REDECLARED_PROVIDES", "Namespace already provided by deps of {0}.");
 
-  final JsCheckerState state;
-  final AbstractCompiler compiler;
+  private final AbstractCompiler compiler;
 
-  private CheckStrictDeps(JsCheckerState state, AbstractCompiler compiler) {
-    this.state = state;
+  private CheckStrictDeps(AbstractCompiler compiler) {
     this.compiler = compiler;
   }
 
@@ -56,8 +54,11 @@ abstract class CheckStrictDeps
 
   static final class FirstPass extends CheckStrictDeps {
 
+    private final JsCheckerState state;
+
     FirstPass(JsCheckerState state, AbstractCompiler compiler) {
-      super(state, compiler);
+      super(compiler);
+      this.state = state;
     }
 
     @Override
@@ -71,22 +72,31 @@ abstract class CheckStrictDeps
           && (callee.matchesQualifiedName("goog.provide")
               || callee.matchesQualifiedName("goog.module"))) {
         String namespace = JsCheckerHelper.normalizeClosureNamespace(parameter.getString());
-        if (!state.provides.add(namespace)) {
-          t.report(parameter, DUPLICATE_PROVIDES, state.label);
+        if (!state.mysterySources.contains(t.getSourceName())) {
+          if (!state.provides.add(namespace)) {
+            t.report(parameter, DUPLICATE_PROVIDES, state.label);
+          }
+          if (state.provided.contains(namespace)
+              && state.redeclaredProvides.add(namespace)) {
+            t.report(parameter, REDECLARED_PROVIDES, state.label);
+          }
+          // Since this file uses Google namespaces, it can no longer be loaded as an ES6 module.
+          state.provides.removeAll(convertPathToModuleName(t.getSourceName(), state.roots).asSet());
+        } else {
+          state.provided.add(namespace);
+          state.provided.removeAll(convertPathToModuleName(t.getSourceName(), state.roots).asSet());
         }
-        if (state.provided.contains(namespace)
-            && state.redeclaredProvides.add(namespace)) {
-          t.report(parameter, REDECLARED_PROVIDES, state.label);
-        }
-        state.provides.removeAll(convertPathToModuleName(t.getSourceName(), state.roots).asSet());
       }
     }
   }
 
   static final class SecondPass extends CheckStrictDeps {
 
+    private final JsCheckerState state;
+
     SecondPass(JsCheckerState state, AbstractCompiler compiler) {
-      super(state, compiler);
+      super(compiler);
+      this.state = state;
     }
 
     @Override

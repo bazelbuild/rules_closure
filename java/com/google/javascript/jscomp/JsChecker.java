@@ -16,6 +16,8 @@
 
 package com.google.javascript.jscomp;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.javascript.jscomp.JsCheckerHelper.convertPathToModuleName;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.base.Joiner;
@@ -24,15 +26,17 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.javascript.jscomp.CompilerOptions.LanguageMode;
-import com.google.javascript.jscomp.lint.CheckJSDocStyle;
 import com.google.javascript.jscomp.parsing.Config;
+import io.bazel.rules.closure.BuildInfo.ClosureJsLibrary;
 import io.bazel.rules.closure.program.CommandLineProgram;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,64 +60,28 @@ import org.kohsuke.args4j.Option;
  */
 public final class JsChecker {
 
-  static {
-    DiagnosticGroups.registerGroup("strictDependencies",
-        CheckStrictDeps.DUPLICATE_PROVIDES,
-        CheckStrictDeps.REDECLARED_PROVIDES,
-        CheckStrictDeps.NOT_PROVIDED);
-    DiagnosticGroups.registerGroup("setTestOnly",
-        CheckSetTestOnly.INVALID_SETTESTONLY);
-  }
-
-  private static final ImmutableSet<String> ERRORS =
-      ImmutableSet.of(
-          "checkRegExp",
-          "checkTypes",
-          "deprecated",
-          "deprecatedAnnotations",
-          "extraRequire",
-          "lintChecks",
-          "misplacedTypeAnnotation",
-          "nonStandardJsDocs",
-          "setTestOnly",
-          "strictDependencies",
-          "strictMissingRequire");
-
-  private static final ImmutableSet<DiagnosticType> DISABLE_FOR_ES6 =
-      ImmutableSet.of(
-          CheckJSDocStyle.MISSING_PARAMETER_JSDOC,
-          CheckJSDocStyle.MISSING_RETURN_JSDOC,
-          CheckJSDocStyle.OPTIONAL_PARAM_NOT_MARKED_OPTIONAL);
-
-  private static final DiagnosticType SUPERFLUOUS_SUPPRESS =
-      DiagnosticType.error(
-          "CR_SUPERFLUOUS_SUPPRESS", "Build rule ({0}) contains superfluous suppress codes: {1}");
-
-  private enum Convention {
-    NONE(CodingConventions.getDefault()),
-    CLOSURE(new JsCheckerClosureCodingConvention()),
-    GOOGLE(new GoogleCodingConvention()),
-    JQUERY(new JqueryCodingConvention());
-
-    final CodingConvention convention;
-
-    private Convention(CodingConvention convention) {
-      this.convention = convention;
-    }
-  }
-
   private static final String USAGE =
       String.format("Usage:\n  java %s [FLAGS]\n", JsChecker.class.getName());
 
   @Option(
       name = "--label",
       usage = "Name of rule being compiled.")
-  private String label = "//ohmygoth";
+  private String label = "@repo//ohmygoth:some_lib";
+
+  @Option(
+      name = "--legacy",
+      usage = "Used for sources defined by legacy rules.")
+  private boolean legacy;
 
   @Option(
       name = "--src",
       usage = "JavaScript source and externs files.")
   private List<String> sources = new ArrayList<>();
+
+  @Option(
+      name = "--mystery_src",
+      usage = "Transitive JS dependency whose position in the graph we're uncertain.")
+  private List<String> mysterySources = new ArrayList<>();
 
   @Option(
       name = "--dep",
@@ -122,13 +90,15 @@ public final class JsChecker {
 
   @Option(
       name = "--root",
-      usage = "Prefixes to disregard in module namespaces, e.g. bazel-out/local-fastbuild/genfiles")
+      usage = "Prefixes to disregard in module namespaces, e.g. "
+          + "bazel-out/local-fastbuild/genfiles. These values must be reverse sorted by the number "
+          + "of path components.")
   private List<String> roots = new ArrayList<>();
 
   @Option(
       name = "--convention",
       usage = "Coding convention for linting.")
-  private Convention convention = Convention.CLOSURE;
+  private JsCheckerConvention convention = JsCheckerConvention.CLOSURE;
 
   @Option(
       name = "--language",
@@ -147,7 +117,7 @@ public final class JsChecker {
 
   @Option(
       name = "--output",
-      usage = "Incremental -provides.txt report output filename.")
+      usage = "Path of outputted ClosureJsLibrary.pbtxt file.")
   private String output = "";
 
   @Option(
@@ -166,29 +136,38 @@ public final class JsChecker {
   private boolean help;
 
   private boolean run() throws IOException {
-    final JsCheckerState state = new JsCheckerState(label, testonly, roots);
+    final JsCheckerState state = new JsCheckerState(label, legacy, testonly, roots, mysterySources);
     final Set<String> actuallySuppressed = new HashSet<>();
-
-    // map diagnostic codes back to groups
-    Map<String, DiagnosticType> diagnosticTypes = new HashMap<>(256);
-    DiagnosticGroups groups = new DiagnosticGroups();
-    for (String groupName : ERRORS) {
-      DiagnosticGroup group = groups.forName(groupName);
-      for (DiagnosticType type : group.getTypes()) {
-        state.diagnosticGroups.put(type, groupName);
-        diagnosticTypes.put(type.key, type);
-      }
-    }
 
     // read provided files created by this program on deps
     for (String dep : deps) {
-      state.provided.addAll(Files.readAllLines(Paths.get(dep), UTF_8));
+      state.provided.addAll(
+          JsCheckerHelper.loadClosureJsLibraryInfo(Paths.get(dep))
+              .getNamespaceList());
     }
 
-    // if we're using ES6 then the sources themselves count as provides iff no goog.provide
-    if (JsCheckerHelper.isEs6OrHigher(language)) {
-      for (String source : sources) {
-        state.provides.addAll(JsCheckerHelper.convertPathToModuleName(source, state.roots).asSet());
+    Map<String, String> labels = new HashMap<>();
+    labels.put("", label);
+    Set<String> modules = new LinkedHashSet<>();
+    for (String source : sources) {
+      for (String module : convertPathToModuleName(source, state.roots).asSet()) {
+        modules.add(module);
+        labels.put(module, label);
+        // if we're using ES6 then the sources themselves count as provides
+        if (JsCheckerHelper.isEs6OrHigher(language)) {
+          state.provides.add(module);
+        }
+      }
+    }
+
+    for (String source : mysterySources) {
+      for (String module : convertPathToModuleName(source, state.roots).asSet()) {
+        checkArgument(!module.startsWith("blaze-out/"),
+            "oh no: %s", state.roots);
+        modules.add(module);
+        if (JsCheckerHelper.isEs6OrHigher(language)) {
+          state.provided.add(module);
+        }
       }
     }
 
@@ -203,45 +182,58 @@ public final class JsChecker {
     options.setAllowHotswapReplaceScript(true);
     options.setPreserveDetailedSourceInfo(true);
     options.setParseJsDocDocumentation(Config.JsDocParsing.INCLUDE_DESCRIPTIONS_NO_WHITESPACE);
-    JsCheckerErrorFormatter errorFormatter = new JsCheckerErrorFormatter(state, compiler);
+    JsCheckerErrorFormatter errorFormatter =
+        new JsCheckerErrorFormatter(compiler, state.roots, labels);
     errorFormatter.setColorize(true);
     JsCheckerErrorManager errorManager = new JsCheckerErrorManager(errorFormatter);
     compiler.setErrorManager(errorManager);
 
     // configure which error messages appear
-    for (String error : ERRORS) {
-      options.setWarningLevel(groups.forName(error), CheckLevel.ERROR);
-    }
-    List<DiagnosticType> types = new ArrayList<>();
-    for (String name : suppress) {
-      DiagnosticGroup group = groups.forName(name);
-      if (group != null) {
-        options.setWarningLevel(group, CheckLevel.OFF);
-        continue;
+    if (!legacy) {
+      for (String error
+          : Iterables.concat(
+              Diagnostics.JSCHECKER_ONLY_ERRORS,
+              Diagnostics.JSCHECKER_EXTRA_ERRORS)) {
+        options.setWarningLevel(Diagnostics.GROUPS.forName(error), CheckLevel.ERROR);
       }
-      DiagnosticType type = diagnosticTypes.get(name);
-      if (type == null) {
-        System.err.println("Bad --suppress value: " + name);
+    }
+    Set<DiagnosticType> suppressions = Sets.newHashSetWithExpectedSize(256);
+    for (String code : suppress) {
+      ImmutableSet<DiagnosticType> types = Diagnostics.getDiagnosticTypesForSuppressCode(code);
+      if (types.isEmpty()) {
+        System.err.println("ERROR: Bad --suppress value: " + code);
         return false;
       }
-      types.add(type);
+      suppressions.addAll(types);
     }
     if (JsCheckerHelper.isEs6OrHigher(language)) {
-      types.addAll(DISABLE_FOR_ES6);
-    }
-    if (!types.isEmpty()) {
-      options.setWarningLevel(
-          DiagnosticGroups.registerGroup("doodle",
-              Iterables.toArray(types, DiagnosticType.class)),
-          CheckLevel.OFF);
+      suppressions.addAll(Diagnostics.DISABLE_FOR_ES6);
     }
 
-    // don't show lint errors on generated files
     options.addWarningsGuard(
         new WarningsGuard() {
           @Override
           public CheckLevel level(JSError error) {
-            if ("lintChecks".equals(state.diagnosticGroups.get(error.getType()))
+            // Disable warnings specific to conventions other than the one we're using.
+            if (!convention.diagnostics.contains(error.getType())) {
+              for (JsCheckerConvention conv : JsCheckerConvention.values()) {
+                if (!conv.equals(convention)) {
+                  if (conv.diagnostics.contains(error.getType())) {
+                    suppressions.add(error.getType());
+                    return CheckLevel.OFF;
+                  }
+                }
+              }
+            }
+            // Disable warnings we've suppressed.
+            Collection<String> groupNames = Diagnostics.DIAGNOSTIC_GROUPS.get(error.getType());
+            if (suppressions.contains(error.getType())) {
+              actuallySuppressed.add(error.getType().key);
+              actuallySuppressed.addAll(groupNames);
+              return CheckLevel.OFF;
+            }
+            // Ignore linter warnings on generated sources.
+            if (groupNames.contains("lintChecks")
                 && JsCheckerHelper.isGeneratedPath(error.sourceName)) {
               return CheckLevel.OFF;
             }
@@ -249,31 +241,25 @@ public final class JsChecker {
           }
         });
 
-    // keep track of emitted diagnostic codes
-    options.addWarningsGuard(
-        new WarningsGuard() {
-          @Override
-          public CheckLevel level(JSError error) {
-            String typeName = error.getType().key;
-            String groupName = state.diagnosticGroups.get(error.getType());
-            if (groupName != null) {
-              actuallySuppressed.add(typeName);
-              actuallySuppressed.add(groupName);
-            }
-            return null;
-          }
-        });
-
-    // run the compiler
+    // Run the compiler.
     compiler.setPassConfig(new JsCheckerPassConfig(state, options));
     compiler.disableThreads();
-    compiler.compile(ImmutableList.<SourceFile>of(), getSourceFiles(sources), options);
+    compiler.compile(
+        ImmutableList.<SourceFile>of(),
+        getSourceFiles(Iterables.concat(sources, mysterySources)),
+        options);
 
-    // make sure all suppress codes were actually suppressed
-    Set<String> useless = Sets.difference(ImmutableSet.copyOf(suppress), actuallySuppressed);
+    // In order for suppress to be maintainable, we need to make sure the suppress codes relating to
+    // linting were actually suppressed. However we can only offer this safety on the checks over
+    // which JsChecker has sole dominion. Other suppress codes won't actually be suppressed until
+    // they've been propagated up to the closure_js_binary rule.
+    Set<String> useless =
+        Sets.intersection(
+            Sets.difference(ImmutableSet.copyOf(suppress), actuallySuppressed),
+            Diagnostics.JSCHECKER_ONLY_SUPPRESS_CODES);
     if (!useless.isEmpty()) {
       errorManager.report(CheckLevel.ERROR,
-          JSError.make(SUPERFLUOUS_SUPPRESS, label, Joiner.on(", ").join(useless)));
+          JSError.make(Diagnostics.SUPERFLUOUS_SUPPRESS, label, Joiner.on(", ").join(useless)));
     }
 
     // TODO: Make compiler.compile() package private so we don't have to do this.
@@ -290,9 +276,22 @@ public final class JsChecker {
       Files.write(Paths.get(outputErrors), errorManager.stderr, UTF_8);
     }
 
-    // write provided file
+    // write file full of information about these sauces
     if (!output.isEmpty()) {
-      Files.write(Paths.get(output), state.provides, UTF_8);
+      ClosureJsLibrary.Builder info =
+          ClosureJsLibrary.newBuilder()
+              .setLabel(label)
+              .setLegacy(legacy)
+              .addAllNamespace(state.provides)
+              .addAllModule(modules);
+      if (!legacy) {
+        for (DiagnosticType suppression : suppressions) {
+          if (!Diagnostics.JSCHECKER_ONLY_SUPPRESS_CODES.contains(suppression.key)) {
+            info.addSuppress(suppression.key);
+          }
+        }
+      }
+      Files.write(Paths.get(output), info.build().toString().getBytes(UTF_8));
     }
 
     return errorManager.getErrorCount() == 0;
@@ -324,7 +323,7 @@ public final class JsChecker {
       if (checker.help) {
         System.err.println(USAGE);
         parser.printUsage(System.out);
-        System.out.println();
+        System.err.println();
         return 0;
       }
       try {

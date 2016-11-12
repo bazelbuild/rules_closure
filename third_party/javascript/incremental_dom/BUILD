@@ -20,6 +20,11 @@ closure_js_library(
     name = "incremental_dom",
     srcs = ["incremental-dom-closure.js"],
     language = "ECMASCRIPT6_STRICT",
+    suppress = [
+        "JSC_UNKNOWN_EXPR_TYPE",
+        "JSC_TYPE_MISMATCH",
+        "JSC_IMPLICITLY_NULLABLE_JSDOC",
+    ],
     visibility = ["//visibility:public"],
 )
 

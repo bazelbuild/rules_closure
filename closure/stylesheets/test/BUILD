@@ -83,14 +83,14 @@ file_test(
 
 file_test(
     name = "sourcemap",
-    content = ("{\n" +
-               "\"version\":3,\n" +
-               "\"file\":\"hello_rename_bin.css.map\",\n" +
-               "\"lineCount\":1,\n" +
-               "\"mappings\":\"AAAC,GAAD,CAEuC,aADN;\",\n" +
-               "\"sources\":[\"closure/stylesheets/test/hello.css\"],\n" +
-               "\"names\":[]\n" +
-               "}\n"),
+    content = "{\n" +
+              "\"version\":3,\n" +
+              "\"file\":\"hello_rename_bin.css.map\",\n" +
+              "\"lineCount\":1,\n" +
+              "\"mappings\":\"AAAC,GAAD,CAEuC,aADN;\",\n" +
+              "\"sources\":[\"closure/stylesheets/test/hello.css\"],\n" +
+              "\"names\":[]\n" +
+              "}\n",
     file = "hello_rename_bin.css.map",
 )
 
@@ -103,7 +103,6 @@ closure_js_library(
 closure_js_binary(
     name = "rename_bin",
     css = ":hello_rename_bin",
-    pedantic = True,
     deps = [":rename_lib"],
 )
 

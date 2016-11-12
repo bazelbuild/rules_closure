@@ -1,5 +1,3 @@
-# -*- mode: python; -*-
-#
 # Copyright 2016 The Closure Rules Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +29,6 @@ def closure_js_test(name,
                     entry_points=None,
                     html=None,
                     language=None,
-                    pedantic=None,
                     suppress=None,
                     visibility=None,
                     **kwargs):
@@ -66,13 +63,13 @@ def closure_js_test(name,
         defs = defs,
         entry_points = entry_points,
         formatting = "PRETTY_PRINT",
-        pedantic = pedantic,
         visibility = visibility,
         testonly = True,
     )
 
     phantomjs_test(
         name = shard,
+        runner = str(Label("//closure/testing:phantomjs_jsunit_runner")),
         deps = [":%s_bin" % shard],
         html = html,
         visibility = visibility,

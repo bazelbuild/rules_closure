@@ -27,13 +27,16 @@ closure_js_library(
         "JSC_DUPLICATE_ENUM_VALUE",
         "JSC_EXTRA_REQUIRE_WARNING",
         "JSC_ILLEGAL_PROTOTYPE_MEMBER",
+        "JSC_IMPLICITLY_NULLABLE_JSDOC",
         "JSC_INVALID_SUPPRESS",
         "JSC_MISSING_JSDOC",
         "JSC_MISSING_RETURN_JSDOC",
         "JSC_MISSING_SEMICOLON",
         "JSC_MUST_BE_PRIVATE",
+        "JSC_NULLABLE_RETURN_WITH_NAME",
         "JSC_PROVIDES_NOT_SORTED",
         "JSC_REQUIRES_NOT_SORTED",
+        "JSC_UNKNOWN_EXPR_TYPE",
     ],
 )
 
@@ -44,6 +47,7 @@ closure_js_library(
     language = "ECMASCRIPT5_STRICT",
     suppress = [
         "JSC_EXTRA_REQUIRE_WARNING",
+        "JSC_IMPLICITLY_NULLABLE_JSDOC",
         "JSC_INVALID_SUPPRESS",
         "JSC_MISSING_JSDOC",
         "JSC_MISSING_RETURN_JSDOC",
@@ -51,11 +55,14 @@ closure_js_library(
         "JSC_MUST_BE_PRIVATE",
         "JSC_PRIMITIVE_OBJECT",
         "JSC_REQUIRES_NOT_SORTED",
+        "JSC_UNKNOWN_EXPR_TYPE",
     ],
     deps = [":library"],
 )
 
 closure_css_library(
     name = "css",
-    srcs = ["@closure_library//:css_files"],
+    srcs = [
+        "@closure_library//:css_files",
+    ],
 )

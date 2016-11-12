@@ -2,6 +2,11 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # BSD
 
+java_library(
+    name = "protobuf-java",
+    exports = ["@protobuf_java//jar"],
+)
+
 genrule(
     name = "protoc_bin",
     srcs = select({

@@ -17,10 +17,10 @@
  * @externs
  */
 
-var omg = {};
+class omg {
 
-
-/**
- * @param {string} a
- */
-omg.im_an_extern = function(a) {};
+  /**
+   * @param {string} a
+   */
+  static im_an_extern(a) {}
+}

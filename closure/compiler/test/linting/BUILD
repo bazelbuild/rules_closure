@@ -17,7 +17,6 @@ package(default_testonly = True)
 licenses(["notice"])  # Apache 2.0
 
 load("//closure/private:file_test.bzl", "file_test")
-load("//closure/private:rule_test.bzl", "rule_test")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -29,13 +28,13 @@ closure_js_library(
 file_test(
     name = "memberWithUnderscoreButNoPrivateMarker_causesError",
     file = "love-stderr.txt",
-    regexp = "ERROR.*lintChecks JSC_MUST_BE_PRIVATE - Property b_ must be marked @private",
+    regexp = "JSC_MUST_BE_PRIVATE",
 )
 
 file_test(
     name = "methodMissingJsdoc_causesError",
     file = "love-stderr.txt",
-    regexp = "ERROR.*lintChecks JSC_MISSING_JSDOC",
+    regexp = "JSC_MISSING_JSDOC",
 )
 
 closure_js_library(

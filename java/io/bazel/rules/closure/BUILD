@@ -14,6 +14,8 @@
 
 load("//closure/private:java_proto_library.bzl", "java_proto_library")
 
+licenses(["notice"])  # Apache 2.0
+
 java_binary(
     name = "ClosureUberAlles",
     srcs = [
@@ -23,14 +25,20 @@ java_binary(
     main_class = "io.bazel.rules.closure.ClosureUberAlles",
     visibility = ["//visibility:public"],
     deps = [
-        ":worker_protocol_proto",
+        ":worker_protocol_java_proto",
+        "//java/com/google/common:guava",
         "//java/com/google/javascript/jscomp",
         "//java/io/bazel/rules/closure/program",
-        "@guava//jar",
     ],
 )
 
 java_proto_library(
-    name = "worker_protocol_proto",
+    name = "build_info_java_proto",
+    src = "build_info.proto",
+    visibility = ["//visibility:public"],
+)
+
+java_proto_library(
+    name = "worker_protocol_java_proto",
     src = "worker_protocol.proto",
 )

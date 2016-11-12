@@ -23,10 +23,10 @@
 
 'use strict';
 
-var /** !phantomjs.WebPage */ webpage = require('webpage');
-var /** !phantomjs.FileSystem */ fs = require('fs');
-var /** !phantomjs.WebServer */ webserver = require('webserver');
-var /** !phantomjs.System */ system = require('system');
+var webpage = /** @type {!phantomjs.WebPage} */ (require('webpage'));
+var fs = /** @type {!phantomjs.FileSystem} */ (require('fs'));
+var webserver = /** @type {!phantomjs.WebServer} */ (require('webserver'));
+var system = /** @type {!phantomjs.System} */ (require('system'));
 
 
 /**
@@ -61,7 +61,20 @@ var virtualPageHtml;
  * PhantomJS page object.
  * @type {!phantomjs.Page}
  */
-var page = webpage.create();
+var page;
+
+
+/**
+ * Local web server for serving runfiles.
+ * @type {!phantomjs.Server}
+ */
+var server;
+
+
+/**
+ * Number of suspiciously failed runs.
+ */
+var flakes = 0;
 
 
 /**
@@ -169,9 +182,8 @@ function onConsoleMessage(message, line, source) {
  */
 function onLoadFinished(status) {
   if (status != 'success') {
-    system.stderr.writeLine('Load Failed');
-    phantom.exit(1);
-    return;
+    system.stderr.writeLine('Load Failed: ' + status);
+    retry();
   }
 }
 
@@ -219,8 +231,24 @@ function onCallback(succeeded) {
 }
 
 
-(function() {
+/**
+ * Tries again if there was a suspicious failure.
+ */
+function retry() {
+  page.close();
+  server.close();
+  if (++flakes == 3) {
+    system.stderr.writeLine('too many flakes; giving up');
+    phantom.exit(1);
+  }
+  main();
+}
 
+
+/**
+ * Attempts to run the test.
+ */
+function main() {
   // construct the web page
   var body = fs.read(system.args[1]);
   if (body.match(/^<!/)) {
@@ -246,12 +274,13 @@ function onCallback(succeeded) {
 
   // start a local webserver
   var port = Math.floor(Math.random() * (60000 - 32768)) + 32768;
-  var server = webserver.create();
+  server = webserver.create();
   server.listen('127.0.0.1:' + port, onRequest);
   url = 'http://localhost:' + port + VIRTUAL_PAGE;
   system.stderr.writeLine('Listening ' + url);
 
   // run the web page
+  page = webpage.create();
   page.onAlert = onAlert;
   page.onCallback = onCallback;
   page.onConsoleMessage = onConsoleMessage;
@@ -261,4 +290,7 @@ function onCallback(succeeded) {
   //      https://github.com/ariya/phantomjs/issues/10652
   page.settings.resourceTimeout = 2000;
   page.open(url);
-})();
+}
+
+
+main();

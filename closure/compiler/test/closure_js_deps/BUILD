@@ -39,6 +39,7 @@ load("//closure:defs.bzl", "closure_js_library")
 closure_js_library(
     name = "external_library",
     srcs = ["external_library.js"],
+    language = "ECMASCRIPT6_STRICT",
 )
 
 closure_js_library(
@@ -56,7 +57,7 @@ closure_js_deps(
 file_test(
     name = "noTransitiveDeps_containsSingleLineRelativeToClosureLibraryBaseJs",
     file = "hyperion_deps.js",
-    regexp = "^goog.addDependency('../../../io_bazel_rules_closure/closure/compiler/test/closure_js_deps/hyperion.js', \\['hyperion'\\], \\[\\], false);$",
+    regexp = "^goog.addDependency('.*closure/compiler/test/closure_js_deps/hyperion.js', \\['hyperion'\\], \\[\\], false);$",
 )
 
 closure_js_library(
@@ -73,7 +74,7 @@ closure_js_deps(
 file_test(
     name = "module_usesTrueArgument",
     file = "goblin_deps.js",
-    regexp = "^goog.addDependency('../../../io_bazel_rules_closure/closure/compiler/test/closure_js_deps/goblin.js', \\['goblin'\\], \\['goog.dom'\\], true);$",
+    regexp = "^goog.addDependency('.*closure/compiler/test/closure_js_deps/goblin.js', \\['goblin'\\], \\['goog.dom'\\], true);$",
 )
 
 file_test(
@@ -108,7 +109,7 @@ closure_js_deps(
 file_test(
     name = "hasTransitiveDep_showsUpInDepsFile",
     file = "hyperion2_deps.js",
-    regexp = "^goog.addDependency('../../../io_bazel_rules_closure/closure/compiler/test/closure_js_deps/hyperion.js', \\['hyperion'\\], \\[\\], false);$",
+    regexp = "^goog.addDependency('.*closure/compiler/test/closure_js_deps/hyperion.js', \\['hyperion'\\], \\[\\], false);$",
 )
 
 ################################################################################
@@ -122,7 +123,7 @@ genrule(
 )
 
 file_test(
-    name = "srcsReferencingJsLibrary_getsNothing",
+    name = "srcsReferencingJsLibrary_getsDirectSources",
     content = "",
     file = "hyperion2_srcs.txt",
 )
@@ -157,7 +158,6 @@ closure_js_binary(
     name = "hyperion2_bin",
     data = ["data3.txt"],
     entry_points = ["goog:hyperion2"],
-    pedantic = True,
     deps = [":hyperion2_lib"],
 )
 
@@ -189,5 +189,5 @@ genrule(
 file_test(
     name = "srcsReferencingJsBinary_getsJsBinaryAndMapNotData",
     file = "hyperion2_bin_srcs.txt",
-    regexp = "bazel-out/local-.*/bin/closure/compiler/test/closure_js_deps/hyperion2_bin.js bazel-out/local-.*/bin/closure/compiler/test/closure_js_deps/hyperion2_bin.js.map",
+    regexp = "^.*/closure/compiler/test/closure_js_deps/hyperion2_bin.js .*/closure/compiler/test/closure_js_deps/hyperion2_bin.js.map$",
 )
