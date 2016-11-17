@@ -12,27 +12,26 @@ os:
 
 env:
   - V=HEAD
+  - V=0.4.0
   - V=0.3.2
-  - V=0.3.1
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sysctl kernel.unprivileged_userns_clone=1; fi
-  - OS=linux
-  - ARCH=x86_64
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then OS=darwin; fi
-  - GH_BASE="https://github.com/bazelbuild/bazel/releases/download/$V"
-  - GH_ARTIFACT="bazel-$V-installer-$OS-$ARCH.sh"
-  - CI_BASE="http://ci.bazel.io/job/Bazel/JAVA_VERSION=1.8,PLATFORM_NAME=$OS-$ARCH/lastSuccessfulBuild/artifact/output/ci"
-  - CI_ARTIFACT="bazel--installer.sh"
-  - URL="$GH_BASE/$GH_ARTIFACT"
-  - if [[ "$V" == "HEAD" && "$OS" == "linux" ]]; then CI_ARTIFACT="`wget -qO- $CI_BASE | grep -oP 'bazel-.*?-installer.sh' | uniq`"; fi
-  - if [[ "$V" == "HEAD" && "$OS" == "darwin" ]]; then CI_ARTIFACT="`wget -qO- $CI_BASE | pcregrep -o 'bazel-.*?-installer.sh' | uniq`"; fi
-  - if [[ "$V" == "HEAD" ]]; then URL="$CI_BASE/$CI_ARTIFACT"; fi
-  - echo $URL
-  - wget -O install.sh $URL
-  - chmod +x install.sh
-  - ./install.sh --user
-  - rm -f install.sh
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      OS=darwin
+    else
+      sysctl kernel.unprivileged_userns_clone=1
+      OS=linux
+    fi
+    if [[ "${V}" == "HEAD" ]]; then
+      URL="http://ci.bazel.io/job/Bazel/JAVA_VERSION=1.8,PLATFORM_NAME=${OS}-x86_64/lastSuccessfulBuild/artifact/output/ci/bazel--installer.sh"
+    else
+      URL="https://github.com/bazelbuild/bazel/releases/download/${V}/bazel-${V}-installer-${OS}-x86_64.sh"
+    fi
+    wget -O install.sh "${URL}"
+    chmod +x install.sh
+    ./install.sh --user
+    rm -f install.sh
 
 script:
   - |
@@ -44,13 +43,12 @@ script:
       test \
       closure/... \
       javatests/... \
+      --worker_verbose \
       --verbose_failures \
       --test_output=errors \
-      --test_strategy=standalone \
-      --spawn_strategy=standalone \
-      --genrule_strategy=standalone \
+      --spawn_strategy=sandboxed \
+      --genrule_strategy=sandboxed \
       --local_resources=400,2,1.0 \
-      --worker_verbose \
       --strategy=Javac=worker \
       --strategy=Closure=worker
 

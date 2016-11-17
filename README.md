@@ -7,7 +7,7 @@ JavaScript | Templating | Stylesheets | Miscellaneous
 [closure_js_deps] | [closure_py_template_library] | |
 [closure_js_test] | | |
 
-Bazel ≥0.3.1 | linux-x86_64 | ubuntu_15.10-x86_64 | darwin-x86_64
+Bazel ≥0.3.2 | linux-x86_64 | ubuntu_15.10-x86_64 | darwin-x86_64
 :---: | :---: | :---: | :---:
 [![Build Status](https://travis-ci.org/bazelbuild/rules_closure.svg?branch=master)](https://travis-ci.org/bazelbuild/rules_closure) | [![Build Status](http://ci.bazel.io/buildStatus/icon?job=rules_closure/BAZEL_VERSION=latest,PLATFORM_NAME=linux-x86_64)](http://ci.bazel.io/job/rules_closure/BAZEL_VERSION=latest,PLATFORM_NAME=linux-x86_64) | [![Build Status](http://ci.bazel.io/buildStatus/icon?job=rules_closure/BAZEL_VERSION=latest,PLATFORM_NAME=ubuntu_15.10-x86_64)](http://ci.bazel.io/job/rules_closure/BAZEL_VERSION=latest,PLATFORM_NAME=ubuntu_15.10-x86_64) | [![Build Status](http://ci.bazel.io/buildStatus/icon?job=rules_closure/BAZEL_VERSION=latest,PLATFORM_NAME=darwin-x86_64)](http://ci.bazel.io/job/rules_closure/BAZEL_VERSION=latest,PLATFORM_NAME=darwin-x86_64)
 
