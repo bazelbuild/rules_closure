@@ -137,6 +137,7 @@ def closure_js_template_library(
       deps = deps,
       testonly = testonly,
       suppress = suppress + [
+          "JSC_NTI_COULD_NOT_INFER_CONST_TYPE",
           "analyzerChecks",
           "reportUnknownTypes",
       ],
