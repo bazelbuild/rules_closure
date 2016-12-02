@@ -23,6 +23,9 @@ closure_js_library(
     suppress = [
         "JSC_IMPLICITLY_NULLABLE_JSDOC",
         "JSC_NTI_COULD_NOT_INFER_CONST_TYPE",
+        "JSC_NTI_INEXISTENT_PROPERTY",
+        "JSC_NTI_INVALID_ARGUMENT_TYPE",
+        "JSC_NTI_UNKNOWN_EXPR_TYPE",
         "JSC_TYPE_MISMATCH",
         "JSC_UNKNOWN_EXPR_TYPE",
     ],
