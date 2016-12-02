@@ -12,6 +12,7 @@ os:
 
 env:
   - V=HEAD
+  - V=0.4.1
   - V=0.4.0
   - V=0.3.2
 
@@ -24,7 +25,9 @@ before_install:
       OS=linux
     fi
     if [[ "${V}" == "HEAD" ]]; then
-      URL="http://ci.bazel.io/job/Bazel/JAVA_VERSION=1.8,PLATFORM_NAME=${OS}-x86_64/lastSuccessfulBuild/artifact/output/ci/bazel--installer.sh"
+      CI_BASE="http://ci.bazel.io/job/Bazel/JAVA_VERSION=1.8,PLATFORM_NAME=${OS}-x86_64/lastSuccessfulBuild/artifact/output/ci"
+      CI_ARTIFACT="`wget -qO- ${CI_BASE} | grep -o 'bazel-[^\"]*-installer.sh' | uniq`"
+      URL="${CI_BASE}/${CI_ARTIFACT}"
     else
       URL="https://github.com/bazelbuild/bazel/releases/download/${V}/bazel-${V}-installer-${OS}-x86_64.sh"
     fi
@@ -49,7 +52,6 @@ script:
       --spawn_strategy=sandboxed \
       --genrule_strategy=sandboxed \
       --local_resources=400,2,1.0 \
-      --strategy=Javac=worker \
       --strategy=Closure=worker
 
 notifications:
