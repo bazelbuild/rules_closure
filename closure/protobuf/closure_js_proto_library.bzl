@@ -17,6 +17,16 @@
 
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 
+def _collect_includes(srcs):
+  includes = ["."]
+  for src in srcs:
+    include = ""
+    if src.startswith("@"):
+      include = Label(src).workspace_root
+    if include and not include in includes:
+      includes += [include]
+  return includes
+
 def closure_js_proto_library(
     name,
     srcs,
@@ -37,6 +47,8 @@ def closure_js_proto_library(
     js_out_options += ["binary"]
   if import_style:
     js_out_options += ["import_style=%s" % import_style]
+
+  cmd += ["-I%s" % i for i in _collect_includes(srcs)]
   cmd += ["--js_out=%s:$(@D)" % ",".join(js_out_options)]
   cmd += ["--descriptor_set_out=$(@D)/%s.descriptor" % name]
   cmd += ["$(locations " + src + ")" for src in srcs]
