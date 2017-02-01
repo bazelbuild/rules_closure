@@ -13,15 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 def _impl(ctx):
   out = ctx.outputs.srcjar
+  includes = ["-I."]
+  if ctx.attr.src.label.workspace_root:
+    includes += "-I%s" % ctx.attr.src.label.workspace_root
   ctx.action(
       command=' '.join([
           "JAR='%s'" % ctx.executable._jar.path,
           "OUTPUT='%s'" % out.path,
           "PROTO_COMPILER='%s'" % ctx.executable._proto_compiler.path,
           "SOURCE='%s'" % ctx.file.src.path,
+          "INCLUDES='%s'" % ' '.join(includes),
           ctx.executable._gensrcjar.path,
       ]),
       inputs=([ctx.file.src] + ctx.files._gensrcjar + ctx.files._jar +
