@@ -20,7 +20,7 @@
 # We use environment variables instead of positional arguments or flags for
 # clarity in the caller .bzl file and for simplicity of processing.  There is no
 # need to implement a full-blown argument parser for this simple script.
-INPUT_VARS="JAR OUTPUT PREPROCESSOR PROTO_COMPILER SOURCE"
+INPUT_VARS="JAR OUTPUT PREPROCESSOR PROTO_COMPILER SOURCE INCLUDES"
 
 # Now set defaults for optional input variables.
 : "${PREPROCESSOR:=cat}"
@@ -68,11 +68,11 @@ main() {
       || err "Preprocessor ${PREPROCESSOR} failed"
 
   if [ -n "${GRPC_JAVA_PLUGIN}" ]; then
-    "${PROTO_COMPILER}" --plugin=protoc-gen-grpc="${GRPC_JAVA_PLUGIN}" \
+    "${PROTO_COMPILER}" --plugin=protoc-gen-grpc="${GRPC_JAVA_PLUGIN}" "${INCLUDES}" \
         --grpc_out="${proto_output}" --java_out="${proto_output}" "${processed_source}" \
         || err "proto_compiler failed"
   else
-    "${PROTO_COMPILER}" --java_out="${proto_output}" "${processed_source}" \
+    "${PROTO_COMPILER}" "${INCLUDES}" --java_out="${proto_output}" "${processed_source}" \
         || err "proto_compiler failed"
   fi
   find "${proto_output}" -exec touch -t "${TIMESTAMP}" '{}' \; \

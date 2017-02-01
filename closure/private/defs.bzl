@@ -146,9 +146,15 @@ def find_js_module_roots(ctx, srcs):
   rules, there is no penalty for using includes in JavaScript compilation.
   """
   roots = set([f.root.path for f in srcs if f.root.path])
+  # Bazel started prefixing external repo paths with ../
+  new_bazel_version = Label('@foo//bar').workspace_root.startswith('../')
   if ctx.workspace_name != "__main__":
-    roots += ["%s/external/%s" % (root, ctx.workspace_name) for root in roots]
-    roots += ["external/%s" % ctx.workspace_name]
+    if new_bazel_version:
+      roots += ["%s" % root for root in roots]
+      roots += ["../%s" % ctx.workspace_name]
+    else:
+      roots += ["%s/external/%s" % (root, ctx.workspace_name) for root in roots]
+      roots += ["external/%s" % ctx.workspace_name]
   if getattr(ctx.attr, "includes", []):
     for f in srcs:
       if f.owner.package != ctx.label.package:
@@ -203,7 +209,9 @@ def long_path(ctx, file_):
   return ctx.workspace_name + "/" + file_.short_path
 
 def create_argfile(ctx, args):
-  argfile = ctx.new_file(ctx.configuration.bin_dir,
-                         "%s_worker_input" % ctx.label.name)
+  bin_dir = ctx.configuration.bin_dir
+  if hasattr(ctx, 'bin_dir'):
+    bin_dir = ctx.bin_dir
+  argfile = ctx.new_file(bin_dir, "%s_worker_input" % ctx.label.name)
   ctx.file_action(output=argfile, content="\n".join(args))
   return argfile
