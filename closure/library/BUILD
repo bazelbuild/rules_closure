@@ -63,9 +63,9 @@ closure_js_library(
         "JSC_NTI_WRONG_ARGUMENT_COUNT",
         "JSC_NULLABLE_RETURN_WITH_NAME",
         "JSC_PROVIDES_NOT_SORTED",
-        "JSC_REQUIRES_NOT_SORTED",
         "JSC_UNKNOWN_EXPR_TYPE",
         "JSC_UNUSED_PRIVATE_PROPERTY",
+        "CR_INVALID_SETTESTONLY",
     ],
 )
 
