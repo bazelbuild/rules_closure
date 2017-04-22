@@ -68,6 +68,7 @@ closure_js_library(
         "JSC_PROVIDES_NOT_SORTED",
         "JSC_UNKNOWN_EXPR_TYPE",
         "JSC_UNUSED_PRIVATE_PROPERTY",
+        "CR_INVALID_SETTESTONLY",
     ],
 )
 
