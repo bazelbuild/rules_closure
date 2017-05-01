@@ -378,7 +378,7 @@ def com_google_closure_stylesheets():
       ],
       jar_sha256 = "4038c17fa38a90983fe4030a63ff8a644ed53a48187f55f3c4c3487fe9ad9f97",
       deps = [
-          "@args4j",
+          "@args4j//jar",
           "@com_google_javascript_closure_compiler",
           "@com_google_code_gson",
           "@com_google_guava",
@@ -456,7 +456,7 @@ def com_google_dagger():
           "http://repo1.maven.org/maven2/com/google/dagger/dagger/2.9/dagger-2.9.jar",
       ],
       licenses = ["notice"],  # Apache 2.0
-      deps = ["@javax_inject"],
+      deps = ["@javax_inject//jar"],
       generated_rule_name = "runtime",
       extra_build_file_content = "\n".join([
           "java_library(",
@@ -464,7 +464,7 @@ def com_google_dagger():
           "    exported_plugins = [\"@com_google_dagger_compiler//:ComponentProcessor\"],",
           "    exports = [",
           "        \":runtime\",",
-          "        \"@javax_inject\",",
+          "        \"@javax_inject//jar\",",
           "    ],",
           ")",
       ]),
@@ -521,7 +521,7 @@ def com_google_dagger_producers():
           "    exports = [",
           "        \":runtime\",",
           "        \"@com_google_dagger//:runtime\",",
-          "        \"@javax_inject\",",
+          "        \"@javax_inject//jar\",",
           "    ],",
           ")",
       ]),
@@ -613,10 +613,10 @@ def com_google_javascript_closure_compiler():
       name = "com_google_javascript_closure_compiler",
       licenses = ["reciprocal"],  # MPL v1.1 (Rhino AST), Apache 2.0 (JSCompiler)
       jar_urls = [
-          "http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170124/closure-compiler-unshaded-v20170124.jar",
-          "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170124/closure-compiler-unshaded-v20170124.jar",
+          "http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170423/closure-compiler-unshaded-v20170423.jar",
+          "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170423/closure-compiler-unshaded-v20170423.jar",
       ],
-      jar_sha256 = "1be9f716c09397156229cbf93479f78e82b54f56752843d5b733beec75df37e7",
+      jar_sha256 = "13950cb2b039ba2d0be54ad4575df6c5e6a9ee5582e31cd341ae18d099943383",
       deps = [
           "@com_google_code_gson",
           "@com_google_guava",
@@ -643,11 +643,11 @@ def com_google_javascript_closure_library():
   native.new_http_archive(
       name = "com_google_javascript_closure_library",
       urls = [
-          "http://bazel-mirror.storage.googleapis.com/github.com/google/closure-library/archive/v20170124.tar.gz",
-          "https://github.com/google/closure-library/archive/v20170124.tar.gz",
+          "http://bazel-mirror.storage.googleapis.com/github.com/google/closure-library/archive/v20170409.tar.gz",
+          "https://github.com/google/closure-library/archive/v20170409.tar.gz",
       ],
-      sha256 = "2bd046004e741283641f761ab0a2c7caf4a457db4b3b81bd3299eeca609c11a2",
-      strip_prefix = "closure-library-20170124",
+      sha256 = "2592a89ff2c6f7c9283d1b9697b3394b9c7359adab04f0dde7c5f4ea0de6d597",
+      strip_prefix = "closure-library-20170409",
       build_file = str(Label("//closure/library:closure_library.BUILD")),
   )
 

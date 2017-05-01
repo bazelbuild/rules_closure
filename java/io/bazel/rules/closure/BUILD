@@ -27,7 +27,7 @@ java_binary(
         "//java/io/bazel/rules/closure/worker",
         "@com_google_dagger",
         "@com_google_guava",
-        "@javax_inject",
+        "@javax_inject//jar",
     ],
 )
 
@@ -51,7 +51,7 @@ java_library(
     deps = [
         "@com_google_code_findbugs_jsr305",
         "@com_google_guava",
-        "@javax_inject",
+        "@javax_inject//jar",
     ],
 )
 

@@ -32,7 +32,7 @@ java_library(
         "@com_google_dagger",
         "@com_google_guava",
         "@com_google_protobuf_java",
-        "@javax_inject",
+        "@javax_inject//jar",
         "@org_jsoup",
     ],
 )

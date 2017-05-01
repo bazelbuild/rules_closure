@@ -39,7 +39,7 @@ java_library(
     deps = [
         "//java/io/bazel/rules/closure:build_info_java_proto",
         "//java/io/bazel/rules/closure/worker",
-        "@args4j",
+        "@args4j//jar",
         "@com_google_dagger",
         "@com_google_guava",
         "@com_google_javascript_closure_compiler",
