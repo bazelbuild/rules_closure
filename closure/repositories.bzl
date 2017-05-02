@@ -40,6 +40,7 @@ def closure_repositories(
     omit_com_google_javascript_closure_compiler=False,
     omit_com_google_javascript_closure_library=False,
     omit_com_google_javascript_incremental_dom=False,
+    omit_com_google_jsinterop_annotations=False,
     omit_com_google_protobuf_java=False,
     omit_com_google_protobuf_js=False,
     omit_com_google_protobuf_protoc_linux_x86_64=False,
@@ -109,6 +110,8 @@ def closure_repositories(
     com_google_javascript_closure_library()
   if not omit_com_google_javascript_incremental_dom:
     com_google_javascript_incremental_dom()
+  if not omit_com_google_jsinterop_annotations:
+    com_google_jsinterop_annotations()
   if not omit_com_google_protobuf_java:
     com_google_protobuf_java()
   if not omit_com_google_protobuf_js:
@@ -400,11 +403,11 @@ def com_google_code_findbugs_jsr305():
       name = "com_google_code_findbugs_jsr305",
       licenses = ["notice"],  # BSD 3-clause
       jar_urls = [
-          "http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/2.0.3/jsr305-2.0.3.jar",
-          "http://repo1.maven.org/maven2/com/google/code/findbugs/jsr305/2.0.3/jsr305-2.0.3.jar",
-          "http://maven.ibiblio.org/maven2/com/google/code/findbugs/jsr305/2.0.3/jsr305-2.0.3.jar",
+          "http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.1/jsr305-3.0.1.jar",
+          "http://repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.1/jsr305-3.0.1.jar",
+          "http://maven.ibiblio.org/maven2/com/google/code/findbugs/jsr305/3.0.1/jsr305-3.0.1.jar",
       ],
-      jar_sha256 = "bec0b24dcb23f9670172724826584802b80ae6cbdaba03bdebdef9327b962f6a",
+      jar_sha256 = "c885ce34249682bc0236b4a7d56efcc12048e6135a5baf7a9cde8ad8cda13fcd",
   )
 
 def com_google_code_gson():
@@ -617,9 +620,11 @@ def com_google_javascript_closure_compiler():
       ],
       jar_sha256 = "13950cb2b039ba2d0be54ad4575df6c5e6a9ee5582e31cd341ae18d099943383",
       deps = [
-          "@com_google_code_gson",
-          "@com_google_guava",
           "@com_google_code_findbugs_jsr305",
+          "@com_google_code_gson",
+          "@com_google_errorprone_error_prone_annotations",
+          "@com_google_guava",
+          "@com_google_jsinterop_annotations",
           "@com_google_protobuf_java",
       ],
       extra_build_file_content = "\n".join([
@@ -662,6 +667,18 @@ def com_google_javascript_incremental_dom():
           "https://github.com/google/incremental-dom/archive/0.5.2.tar.gz",
       ],
       sha256 = "554a778dff5cba561a98619b2f3de5061848744644c870f718e2cdcf9bf0dccf",
+  )
+
+def com_google_jsinterop_annotations():
+  java_import_external(
+      name = "com_google_jsinterop_annotations",
+      licenses = ["notice"],  # GWT Terms
+      jar_sha256 = "e5c1e0ceef98fb65a3d382641bcc1faab97649da1b422bbfc60e21b47345c854",
+      jar_urls = [
+          "http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/jsinterop/jsinterop-annotations/1.0.0/jsinterop-annotations-1.0.0.jar",
+          "http://repo1.maven.org/maven2/com/google/jsinterop/jsinterop-annotations/1.0.0/jsinterop-annotations-1.0.0.jar",
+          "http://maven.ibiblio.org/maven2/com/google/jsinterop/jsinterop-annotations/1.0.0/jsinterop-annotations-1.0.0.jar",
+      ],
   )
 
 def com_google_protobuf_java():
