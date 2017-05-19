@@ -44,6 +44,7 @@ def closure_repositories(
     omit_com_google_protobuf_js=False,
     omit_com_google_protobuf_protoc_linux_x86_64=False,
     omit_com_google_protobuf_protoc_macosx=False,
+    omit_com_google_protobuf_protoc_windows=False,
     omit_com_google_template_soy=False,
     omit_com_google_template_soy_jssrc=False,
     omit_com_ibm_icu_icu4j=False,
@@ -117,6 +118,8 @@ def closure_repositories(
     com_google_protobuf_protoc_linux_x86_64()
   if not omit_com_google_protobuf_protoc_macosx:
     com_google_protobuf_protoc_macosx()
+  if not omit_com_google_protobuf_protoc_windows:
+    com_google_protobuf_protoc_windows()
   if not omit_com_google_template_soy:
     com_google_template_soy()
   if not omit_com_google_template_soy_jssrc:
@@ -706,6 +709,16 @@ def com_google_protobuf_protoc_macosx():
           "https://github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-osx-x86_64.zip",
       ],
       sha256 = "2cea7b1acb86671362f7aa554a21b907d18de70b15ad1f68e72ad2b50502920e",
+  )
+
+def com_google_protobuf_protoc_windows():
+  native.http_file(
+      name = "com_google_protobuf_protoc_windows",
+      urls = [
+          "http://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-win32.zip",
+          "https://github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-win32.zip",
+      ],
+      sha256 = "e46b3b7c5c99361bbdd1bbda93c67e5cbf2873b7098482d85ff8e587ff596b23",
   )
 
 def com_google_template_soy():

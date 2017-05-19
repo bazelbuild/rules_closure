@@ -46,7 +46,7 @@ _gensrcjar = rule(
             executable = True,
             cfg = "host"),
         "_proto_compiler": attr.label(
-            default = Label("//third_party/protobuf:protoc"),
+            default = Label("//third_party/protobuf:protoc_bin"),
             allow_files = True,
             executable = True,
             single_file = True,
