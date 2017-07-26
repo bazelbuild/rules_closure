@@ -24,12 +24,12 @@ SOY_FILE_TYPE = FileType([".soy"])
 
 JS_LANGUAGE_IN = "ECMASCRIPT_2015"
 JS_LANGUAGE_OUT_DEFAULT = "ECMASCRIPT5"
-JS_LANGUAGES = set([
+JS_LANGUAGES = [
     "ECMASCRIPT3",
     "ECMASCRIPT5",
     "ECMASCRIPT5_STRICT",
     "ECMASCRIPT_2015",
-])
+]
 
 CLOSURE_LIBRARY_BASE_ATTR = attr.label(
     default=Label("@com_google_javascript_closure_library//:closure/goog/base.js"),
@@ -63,13 +63,13 @@ def collect_js(ctx, deps,
                no_closure_library=False,
                css=None):
   """Aggregates transitive JavaScript source files from unfurled deps."""
-  srcs = set()
-  ijs_files = set()
-  infos = set()
-  modules = set()
-  descriptors = set()
-  stylesheets = set()
-  js_module_roots = set()
+  srcs = depset()
+  ijs_files = depset()
+  infos = depset()
+  modules = depset()
+  descriptors = depset()
+  stylesheets = depset()
+  js_module_roots = depset()
   has_closure_library = False
   for dep in deps:
     srcs += getattr(dep.closure_js_library, "srcs", [])
@@ -87,13 +87,13 @@ def collect_js(ctx, deps,
       fail("no_closure_library can't be used when Closure Library is " +
            "already part of the transitive closure")
   elif has_direct_srcs and not has_closure_library:
-    tmp = set([ctx.file._closure_library_base,
+    tmp = depset([ctx.file._closure_library_base,
                ctx.file._closure_library_deps])
     tmp += srcs
     srcs = tmp
     has_closure_library = True
   if css:
-    tmp = set([ctx.file._closure_library_base,
+    tmp = depset([ctx.file._closure_library_base,
                css.closure_css_binary.renaming_map])
     tmp += srcs
     srcs = tmp
@@ -109,8 +109,8 @@ def collect_js(ctx, deps,
 
 def collect_css(deps, orientation=None):
   """Aggregates transitive CSS source files from unfurled deps."""
-  srcs = set()
-  labels = set()
+  srcs = depset()
+  labels = depset()
   for dep in deps:
     srcs += getattr(dep.closure_css_library, "srcs", [])
     labels += getattr(dep.closure_css_library, "labels", [])
@@ -125,7 +125,7 @@ def collect_css(deps, orientation=None):
 
 def collect_runfiles(targets):
   """Aggregates data runfiles from targets."""
-  data = set()
+  data = depset()
   for target in targets:
     if hasattr(target, "closure_legacy_js_runfiles"):
       data += target.closure_legacy_js_runfiles
@@ -152,7 +152,7 @@ def find_js_module_roots(ctx, srcs):
   relative to the root of a monolithic Bazel repository. Also, unlike the C++
   rules, there is no penalty for using includes in JavaScript compilation.
   """
-  roots = set([f.root.path for f in srcs if f.root.path])
+  roots = depset([f.root.path for f in srcs if f.root.path])
   # Bazel started prefixing external repo paths with ../
   new_bazel_version = Label('@foo//bar').workspace_root.startswith('../')
   if ctx.workspace_name != "__main__":

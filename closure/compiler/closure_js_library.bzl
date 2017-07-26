@@ -139,7 +139,7 @@ def _closure_js_library(ctx):
       fail(("ES6 namespace '%s' already defined by a dependency. Check the " +
             "deps transitively. Remember that namespaces are relative to the " +
             "root of the repository unless includes=[...] is used") % module)
-  if len(modules) != len(set(modules)):
+  if len(modules) != len({module: None for module in modules}):
     fail("Intrarule namespace collision detected")
 
   # Give JsChecker the ClosureJsLibrary protobufs outputted by direct children.
@@ -182,7 +182,7 @@ def _closure_js_library(ctx):
   # this data. Other Skylark rules can even export their own provider with the
   # same name to become polymorphically compatible with this one.
   return struct(
-      files=set(),
+      files=depset(),
       # Iterable<Target> of deps that should only become deps in parent rules.
       # Exports are not deps of the Target to which they belong. The exports
       # provider does not contain the exports its deps export. Targets in this
@@ -247,7 +247,7 @@ def _closure_js_library(ctx):
       # The usual suspects are exported as runfiles, in addition to raw source.
       runfiles=ctx.runfiles(
           files=srcs + ctx.files.data,
-          transitive_files=(set([] if ctx.attr.no_closure_library
+          transitive_files=(depset([] if ctx.attr.no_closure_library
                                 else [ctx.file._closure_library_base,
                                       ctx.file._closure_library_deps]) |
                             collect_runfiles(deps) |

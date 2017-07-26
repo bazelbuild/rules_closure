@@ -28,7 +28,7 @@ def _impl(ctx):
   if not ctx.attr.deps:
     fail("phantomjs_rule needs at least one dep")
   files = [ctx.outputs.executable]
-  srcs = set()
+  srcs = depset()
   deps = unfurl(ctx.attr.deps, provider="closure_js_library")
   deps.append(ctx.attr.runner)
   for dep in deps:
@@ -45,7 +45,7 @@ def _impl(ctx):
       output=ctx.outputs.executable,
       content=" \\\n  ".join(args))
   return struct(
-      files=set(files),
+      files=depset(files),
       runfiles=ctx.runfiles(
           files=files + ctx.attr.data + [ctx.file.html],
           transitive_files=(collect_runfiles(deps) |

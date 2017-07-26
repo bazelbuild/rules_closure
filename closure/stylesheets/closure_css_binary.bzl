@@ -62,14 +62,14 @@ def _closure_css_binary(ctx):
       progress_message="Compiling %d stylesheets to %s" % (
           len(css.srcs), ctx.outputs.bin.short_path))
   return struct(
-      files=set(files),
+      files=depset(files),
       closure_css_binary=struct(
           bin=ctx.outputs.bin,
           map=ctx.outputs.map,
           renaming_map=ctx.outputs.js,
           labels=css.labels),
       closure_css_library=struct(
-          srcs=set([ctx.outputs.bin]),
+          srcs=depset([ctx.outputs.bin]),
           orientation=(css.orientation
                        if ctx.attr.orientation == "NOCHANGE" else
                        ctx.attr.orientation)),

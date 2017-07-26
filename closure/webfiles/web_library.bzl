@@ -40,8 +40,8 @@ def _web_library(ctx):
 
   # process what came before
   deps = unfurl(ctx.attr.deps, provider="webfiles")
-  webpaths = set()
-  manifests = set(order="link")
+  webpaths = depset()
+  manifests = depset(order="topological")
   for dep in deps:
     webpaths += dep.webfiles.webpaths
     manifests += dep.webfiles.manifests
@@ -81,7 +81,7 @@ def _web_library(ctx):
 
   # perform strict dependency checking
   inputs = [manifest]
-  direct_manifests = set([manifest])
+  direct_manifests = depset([manifest])
   args = ["WebfilesValidator",
           "--dummy", ctx.outputs.dummy.path,
           "--target", manifest.path]
@@ -130,12 +130,12 @@ def _web_library(ctx):
           long_path(ctx, params_file)))
 
   # export data to parent rules
-  transitive_runfiles = set()
+  transitive_runfiles = depset()
   transitive_runfiles += ctx.attr._WebfilesServer.data_runfiles.files
   for dep in deps:
     transitive_runfiles += dep.data_runfiles.files
   return struct(
-      files=set([ctx.outputs.executable, ctx.outputs.dummy]),
+      files=depset([ctx.outputs.executable, ctx.outputs.dummy]),
       exports=unfurl(ctx.attr.exports),
       webfiles=struct(
           manifest=manifest,

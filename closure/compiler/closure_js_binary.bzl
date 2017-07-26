@@ -217,7 +217,7 @@ def _impl(ctx):
   # are free to ignore the binary in favor of the raw sauces propagated by the
   # closure_js_library provider, in which case, no compilation is performed.
   return struct(
-      files=set(files),
+      files=depset(files),
       closure_js_library=js,
       closure_js_binary=struct(
           bin=ctx.outputs.bin,

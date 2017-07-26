@@ -24,7 +24,7 @@ def _closure_css_library(ctx):
   deps = unfurl(ctx.attr.deps, provider="closure_css_library")
   css = collect_css(deps, ctx.attr.orientation)
   return struct(
-      files=set(),
+      files=depset(),
       exports=unfurl(ctx.attr.exports),
       closure_js_library=struct(),
       closure_css_library=struct(
