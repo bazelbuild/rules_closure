@@ -52,25 +52,25 @@ closure_js_library(
 
 rule_test(
     name = "a_rule_test",
-    provides = {"closure_js_library.srcs": "/a.js\\]"},
+    provides = {"closure_js_library.srcs": "/a.js>\\?\\]"},
     rule = ":a",
 )
 
 rule_test(
     name = "b_rule_test",
-    provides = {"closure_js_library.srcs": "/a\\.js.*/b\\.js\\]"},
+    provides = {"closure_js_library.srcs": "/a\\.js.*/b\\.js>\\?\\]"},
     rule = ":b",
 )
 
 rule_test(
     name = "c_rule_test",
-    provides = {"closure_js_library.srcs": "/a\\.js.*/b\\.js.*/c\\.js\\]"},
+    provides = {"closure_js_library.srcs": "/a\\.js.*/b\\.js.*/c\\.js>\\?\\]"},
     rule = ":c",
 )
 
 rule_test(
     name = "t_rule_test",
-    provides = {"closure_js_library.srcs": "/t\\.js\\]"},
+    provides = {"closure_js_library.srcs": "/t\\.js>\\?\\]"},
     rule = ":t",
 )
 
