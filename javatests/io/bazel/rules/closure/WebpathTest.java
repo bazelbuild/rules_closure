@@ -559,7 +559,7 @@ public class WebpathTest {
   }
 
   @Test
-  @SuppressWarnings("BooleanConstantChecker") // suppression needed for assume statements
+  @SuppressWarnings("ComplexBooleanConstant") // suppression needed for assume statements
   public void testCompareTo_comparesComponentsIndividually() {
     assumeTrue('.' < '/');
     assertThat("hi./there".compareTo("hi/there")).isEqualTo(-1); // demonstration
