@@ -35,7 +35,7 @@ final class Annotations {
   @Qualifier
   @Documented
   @Retention(RetentionPolicy.RUNTIME)
-  @interface ConfigPath {}
+  @interface Args {}
 
   private Annotations() {}
 }

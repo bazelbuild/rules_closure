@@ -36,6 +36,9 @@ message WebfilesServerInfo {
   // If true, dev server process will fail if bind port is in use, rather than
   // incrementing the port until one can be found.
   bool fail_if_port_in_use = 5;
+
+  // If true, don't spawn the thread that monitors the file system for changes.
+  bool no_reloader = 6;
 }
 
 // Static asset mapping for development web server which is served when a

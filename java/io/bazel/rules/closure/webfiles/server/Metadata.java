@@ -14,19 +14,24 @@
 
 package io.bazel.rules.closure.webfiles.server;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.common.base.Joiner;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
+import com.google.protobuf.TextFormat;
 import dagger.Module;
 import dagger.Provides;
 import io.bazel.rules.closure.Webpath;
 import io.bazel.rules.closure.webfiles.BuildInfo.Webfiles;
 import io.bazel.rules.closure.webfiles.BuildInfo.WebfilesSource;
-import io.bazel.rules.closure.webfiles.server.Annotations.ConfigPath;
+import io.bazel.rules.closure.webfiles.server.Annotations.Args;
 import io.bazel.rules.closure.webfiles.server.Annotations.RequestScope;
 import io.bazel.rules.closure.webfiles.server.Annotations.ServerScope;
 import io.bazel.rules.closure.webfiles.server.BuildInfo.AssetInfo;
@@ -34,8 +39,10 @@ import io.bazel.rules.closure.webfiles.server.BuildInfo.WebfilesServerInfo;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.nio.channels.ClosedByInterruptException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -43,6 +50,7 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -77,21 +85,26 @@ final class Metadata {
   }
 
   static class Config {
-    private final Runfiles runfiles;
-    private final String configPath;
+    private final Path path;
+    private final String args;
 
     @Inject
-    Config(Runfiles runfiles, @ConfigPath String configPath) {
-      this.runfiles = runfiles;
-      this.configPath = configPath;
+    Config(Runfiles runfiles, @Args ImmutableList<String> args) {
+      Iterator<String> i = args.iterator();
+      this.path = runfiles.getPath(i.next());
+      this.args = Joiner.on(' ').join(i);
     }
 
     Path getPath() {
-      return runfiles.getPath(configPath);
+      return path;
     }
 
     WebfilesServerInfo get() throws IOException {
-      return Utilities.loadParamsPbtxt(getPath());
+      TextFormat.Parser parser = TextFormat.getParser();
+      WebfilesServerInfo.Builder builder = WebfilesServerInfo.newBuilder();
+      parser.merge(new String(Files.readAllBytes(path), StandardCharsets.UTF_8), builder);
+      parser.merge(args, builder);
+      return builder.build();
     }
   }
 
@@ -134,7 +147,7 @@ final class Metadata {
       }
     }
 
-    private void loadMetadataIntoObjectGraph() throws IOException {
+    void loadMetadataIntoObjectGraph() throws IOException {
       long start = System.currentTimeMillis();
       ImmutableSet.Builder<Path> manifestPaths = new ImmutableSet.Builder<>();
       manifestPaths.add(config.getPath());
@@ -143,11 +156,9 @@ final class Metadata {
       for (String longPath : Lists.reverse(params.getManifestList())) {
         Path manifestPath = runfiles.getPath(longPath);
         manifestPaths.add(manifestPath);
-        try {
-          manifests.add(Utilities.loadWebfilesPbtxt(manifestPath));
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+        Webfiles.Builder builder = Webfiles.newBuilder();
+        TextFormat.getParser().merge(new String(Files.readAllBytes(manifestPath), UTF_8), builder);
+        manifests.add(builder.build());
       }
       SortedMap<Webpath, Path> assets = new TreeMap<>(Ordering.natural());
       for (AssetInfo asset : params.getExternalAssetList()) {

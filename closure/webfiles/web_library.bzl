@@ -125,7 +125,7 @@ def _web_library(ctx):
   ctx.file_action(
       executable=True,
       output=ctx.outputs.executable,
-      content="#!/bin/sh\nexec %s %s" % (
+      content="#!/bin/sh\nexec %s %s \"$@\"" % (
           ctx.executable._WebfilesServer.short_path,
           long_path(ctx, params_file)))
 

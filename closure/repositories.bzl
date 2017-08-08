@@ -41,6 +41,7 @@ def closure_repositories(
     omit_com_google_javascript_closure_compiler=False,
     omit_com_google_javascript_closure_library=False,
     omit_com_google_javascript_incremental_dom=False,
+    omit_com_google_jsinterop_annotations=False,
     omit_com_google_protobuf_java=False,
     omit_com_google_protobuf_js=False,
     omit_com_google_protobuf_protoc=False,
@@ -50,6 +51,7 @@ def closure_repositories(
     omit_com_squareup_javawriter=False,
     omit_fonts_noto_hinted_deb=False,
     omit_fonts_noto_mono_deb=False,
+    omit_javax_annotation_jsr250_api=False,
     omit_javax_inject=False,
     omit_libexpat_amd64_deb=False,
     omit_libfontconfig_amd64_deb=False,
@@ -109,6 +111,8 @@ def closure_repositories(
     com_google_javascript_closure_library()
   if not omit_com_google_javascript_incremental_dom:
     com_google_javascript_incremental_dom()
+  if not omit_com_google_jsinterop_annotations:
+    com_google_jsinterop_annotations()
   if not omit_com_google_protobuf_java:
     com_google_protobuf_java()
   if not omit_com_google_protobuf_js:
@@ -127,6 +131,8 @@ def closure_repositories(
     fonts_noto_hinted_deb()
   if not omit_fonts_noto_mono_deb:
     fonts_noto_mono_deb()
+  if not omit_javax_annotation_jsr250_api:
+    javax_annotation_jsr250_api()
   if not omit_javax_inject:
     javax_inject()
   if not omit_libexpat_amd64_deb:
@@ -422,15 +428,17 @@ def com_google_common_html_types():
       name = "com_google_common_html_types",
       licenses = ["notice"],  # Apache 2.0
       jar_urls = [
-          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/common/html/types/types/1.0.5/types-1.0.5.jar",
-          "http://repo1.maven.org/maven2/com/google/common/html/types/types/1.0.5/types-1.0.5.jar",
-          "http://maven.ibiblio.org/maven2/com/google/common/html/types/types/1.0.5/types-1.0.5.jar",
+          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/common/html/types/types/1.0.7/types-1.0.7.jar",
+          "http://repo1.maven.org/maven2/com/google/common/html/types/types/1.0.7/types-1.0.7.jar",
       ],
-      jar_sha256 = "bf62fc3bf994ab1e043f3884b19cba6156181118eb7fbb6fbf7ff398a21170b2",
+      jar_sha256 = "78b6baa2ecc56435dc0ae88c57f442bd2d07127cb50424d400441ddccc45ea24",
       deps = [
-          "@com_google_guava",
           "@com_google_code_findbugs_jsr305",
+          "@com_google_errorprone_error_prone_annotations",
+          "@com_google_guava",
+          "@com_google_jsinterop_annotations",
           "@com_google_protobuf_java",
+          "@javax_annotation_jsr250_api",
       ],
   )
 
@@ -609,10 +617,10 @@ def com_google_javascript_closure_compiler():
       name = "com_google_javascript_closure_compiler",
       licenses = ["reciprocal"],  # MPL v1.1 (Rhino AST), Apache 2.0 (JSCompiler)
       jar_urls = [
-          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170423/closure-compiler-unshaded-v20170423.jar",
-          "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170423/closure-compiler-unshaded-v20170423.jar",
+          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170626/closure-compiler-unshaded-v20170626.jar",
+          "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170626/closure-compiler-unshaded-v20170626.jar",
       ],
-      jar_sha256 = "13950cb2b039ba2d0be54ad4575df6c5e6a9ee5582e31cd341ae18d099943383",
+      jar_sha256 = "a2d746d986dd08730be743ec553e39e0dba0e74fab847e7e1962723c41cc398b",
       deps = [
           "@com_google_code_gson",
           "@com_google_guava",
@@ -639,11 +647,11 @@ def com_google_javascript_closure_library():
   native.new_http_archive(
       name = "com_google_javascript_closure_library",
       urls = [
-          "http://mirror.bazel.build/github.com/google/closure-library/archive/0e309e9c5fb611a70a47736a2eb1204ae48ab989.tar.gz",
-          "https://github.com/google/closure-library/archive/0e309e9c5fb611a70a47736a2eb1204ae48ab989.tar.gz",
+          "http://mirror.bazel.build/github.com/google/closure-library/archive/v20170626.tar.gz",
+          "https://github.com/google/closure-library/archive/v20170626.tar.gz",
       ],
-      sha256 = "08b34d8efe3026f106c1ae2901a2cd1c7106be0c4173681c1fc57415e8532be9",
-      strip_prefix = "closure-library-0e309e9c5fb611a70a47736a2eb1204ae48ab989",
+      sha256 = "d018003a6895141f6e24b11fd969f6a9ad7756fc15dff6acfb49e2aab1d02b14",
+      strip_prefix = "closure-library-20170626",
       build_file = str(Label("//closure/library:closure_library.BUILD")),
   )
 
@@ -661,14 +669,25 @@ def com_google_javascript_incremental_dom():
       sha256 = "554a778dff5cba561a98619b2f3de5061848744644c870f718e2cdcf9bf0dccf",
   )
 
+def com_google_jsinterop_annotations():
+  java_import_external(
+      name = "com_google_jsinterop_annotations",
+      licenses = ["notice"],  # GWT Terms
+      jar_sha256 = "b2cc45519d62a1144f8cd932fa0c2c30a944c3ae9f060934587a337d81b391c8",
+      jar_urls = [
+          "http://mirror.bazel.build/maven.ibiblio.org/maven2/com/google/jsinterop/jsinterop-annotations/1.0.1/jsinterop-annotations-1.0.1.jar",
+          "http://maven.ibiblio.org/maven2/com/google/jsinterop/jsinterop-annotations/1.0.1/jsinterop-annotations-1.0.1.jar",
+          "http://repo1.maven.org/maven2/com/google/jsinterop/jsinterop-annotations/1.0.1/jsinterop-annotations-1.0.1.jar",
+      ],
+  )
+
 def com_google_protobuf_java():
   java_import_external(
       name = "com_google_protobuf_java",
-      jar_sha256 = "8d7ec605ca105747653e002bfe67bddba90ab964da697aaa5daa1060923585db",
+      jar_sha256 = "f3411ade77523d5f0d013d4f25c36879e66f0c5e1e4310f7096d54d0d2553554",
       jar_urls = [
-          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/protobuf/protobuf-java/3.1.0/protobuf-java-3.1.0.jar",
-          "http://repo1.maven.org/maven2/com/google/protobuf/protobuf-java/3.1.0/protobuf-java-3.1.0.jar",
-          "http://maven.ibiblio.org/maven2/com/google/protobuf/protobuf-java/3.1.0/protobuf-java-3.1.0.jar",
+          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/protobuf/protobuf-java/3.3.0/protobuf-java-3.3.0.jar",
+          "http://repo1.maven.org/maven2/com/google/protobuf/protobuf-java/3.3.0/protobuf-java-3.3.0.jar",
       ],
       licenses = ["notice"],  # New BSD and Apache 2.0
   )
@@ -677,11 +696,16 @@ def com_google_protobuf_js():
   native.new_http_archive(
       name = "com_google_protobuf_js",
       urls = [
-          "http://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.1.0/protobuf-js-3.1.0.zip",
-          "https://github.com/google/protobuf/releases/download/v3.1.0/protobuf-js-3.1.0.zip",
+          # 3.3.0 has a Closure Compiler bug because it references Node's Buffer
+          # type. This was fixed in f00e06c95bc117fb2ed0ca56c96041c93039f1fe.
+          #
+          # TODO(jart): Update when https://github.com/google/protobuf/pull/3387
+          #             is merged.
+          "http://mirror.bazel.build/github.com/google/protobuf/archive/33545583286a31940b6a732b1888e639cdf2e3c4.tar.gz",
+          "https://github.com/google/protobuf/archive/33545583286a31940b6a732b1888e639cdf2e3c4.tar.gz",  # 2017-07-17
       ],
-      sha256 = "b257641b1f151e91f2e159c26b015bd43c1b57fa8053e541dcd2dc9408e82a3e",
-      strip_prefix = "protobuf-3.1.0",
+      sha256 = "ecd9f92f137e75d140a8b611cd2c0d6c0f34f561946dc5f7fcecde631bb13c25",
+      strip_prefix = "protobuf-33545583286a31940b6a732b1888e639cdf2e3c4/js",
       build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
   )
 
@@ -690,21 +714,21 @@ def com_google_protobuf_protoc():
       name = "com_google_protobuf_protoc",
       licenses = ["notice"],  # BSD
       sha256_urls_extract_macos = {
-          "2cea7b1acb86671362f7aa554a21b907d18de70b15ad1f68e72ad2b50502920e": [
-              "http://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-osx-x86_64.zip",
-              "https://github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-osx-x86_64.zip",
+          "d752ba0ea67239e327a48b2f23da0e673928a9ff06ee530319fc62200c0aff89": [
+              "http://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-osx-x86_64.zip",
+              "https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-osx-x86_64.zip",
           ],
       },
       sha256_urls_extract_windows = {
-          "e46b3b7c5c99361bbdd1bbda93c67e5cbf2873b7098482d85ff8e587ff596b23": [
-              "http://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-win32.zip",
-              "https://github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-win32.zip",
+          "19ec3d3853c1181912dc442840b3a76bfe0607ecc67d0854b323fdd1fdd8ab77": [
+              "http://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-win32.zip",
+              "https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-win32.zip",
           ],
       },
       sha256_urls_extract = {
-          "7c98f9e8a3d77e49a072861b7a9b18ffb22c98e37d2a80650264661bfaad5b3a": [
-              "http://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-linux-x86_64.zip",
-              "https://github.com/google/protobuf/releases/download/v3.1.0/protoc-3.1.0-linux-x86_64.zip",
+          "feb112bbc11ea4e2f7ef89a359b5e1c04428ba6cfa5ee628c410eccbfe0b64c3": [
+              "http://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-linux-x86_64.zip",
+              "https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-linux-x86_64.zip",
           ],
       },
       generated_rule_name = "files",
@@ -737,25 +761,27 @@ def com_google_template_soy():
       name = "com_google_template_soy",
       licenses = ["notice"],  # Apache 2.0
       jar_urls = [
-          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2017-02-01/soy-2017-02-01.jar",
-          "http://repo1.maven.org/maven2/com/google/template/soy/2017-02-01/soy-2017-02-01.jar",
+          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2017-06-22/soy-2017-06-22.jar",
+          "http://repo1.maven.org/maven2/com/google/template/soy/2017-06-22/soy-2017-06-22.jar",
       ],
-      jar_sha256 = "b4baa7eaa2dc00fd949d7a0a4a95ab1818876877734468f1b2a9495d7e528218",
+      jar_sha256 = "3c4e61234e9ee9f79411da997e23b201bcf281255469c76d162dac07a67dbb78",
       deps = [
           "@args4j",
+          "@com_google_code_findbugs_jsr305",
+          "@com_google_code_gson",
+          "@com_google_common_html_types",
+          "@com_google_guava",
+          "@com_google_inject_extensions_guice_assistedinject",
+          "@com_google_inject_extensions_guice_multibindings",
+          "@com_google_inject_guice",
+          "@com_google_protobuf_java",
+          "@com_ibm_icu_icu4j",
+          "@javax_inject",
+          "@org_json",
           "@org_ow2_asm",
           "@org_ow2_asm_analysis",
           "@org_ow2_asm_commons",
           "@org_ow2_asm_util",
-          "@com_google_guava",
-          "@com_google_inject_guice",
-          "@com_google_inject_extensions_guice_assistedinject",
-          "@com_google_inject_extensions_guice_multibindings",
-          "@com_ibm_icu_icu4j",
-          "@org_json",
-          "@com_google_code_findbugs_jsr305",
-          "@javax_inject",
-          "@com_google_common_html_types",
       ],
       extra_build_file_content = "\n".join([
           ("java_binary(\n" +
@@ -775,10 +801,10 @@ def com_google_template_soy():
 def com_google_template_soy_jssrc():
   native.new_http_archive(
       name = "com_google_template_soy_jssrc",
-      sha256 = "ed0be8195f5a05eea82099d234dab074ca80d7c1f2e54928e0fb2ee0a7ba666d",
+      sha256 = "604b363d00fc4712356f0ca37dded83062d46b6c39043fff4d1ae23f5661edac",
       urls = [
-          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2017-02-01/soy-2017-02-01-jssrc_js.jar",
-          "http://repo1.maven.org/maven2/com/google/template/soy/2017-02-01/soy-2017-02-01-jssrc_js.jar",
+          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2017-06-22/soy-2017-06-22-jssrc_js.jar",
+          "http://repo1.maven.org/maven2/com/google/template/soy/2017-06-22/soy-2017-06-22-jssrc_js.jar",
       ],
       build_file = str(Label("//closure/templates:soy_jssrc.BUILD")),
       type = "zip",
@@ -826,6 +852,18 @@ def fonts_noto_mono_deb():
           "http://http.us.debian.org/debian/pool/main/f/fonts-noto/fonts-noto-mono_20161116-1_all.deb",
       ],
       sha256 = "71ff715cf50a74a8cc11b02e7c906b69a242d3d677e739e0b2d18cd23b7de375",
+  )
+
+def javax_annotation_jsr250_api():
+  java_import_external(
+      name = "javax_annotation_jsr250_api",
+      licenses = ["reciprocal"],  # CDDL 1.0
+      jar_sha256 = "a1a922d0d9b6d183ed3800dfac01d1e1eb159f0e8c6f94736931c1def54a941f",
+      jar_urls = [
+          "http://mirror.bazel.build/repo1.maven.org/maven2/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar",
+          "http://repo1.maven.org/maven2/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar",
+          "http://maven.ibiblio.org/maven2/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar",
+      ],
   )
 
 def javax_inject():

@@ -17,6 +17,7 @@ package io.bazel.rules.closure.webfiles.server;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
@@ -75,7 +76,7 @@ public class WebfilesServerTest {
   private final FileSystem fs = Jimfs.newFileSystem(Configuration.unix());
   private final WebfilesServer server =
       DaggerWebfilesServer_Server.builder()
-          .configPath("/config.pbtxt")
+          .args(ImmutableList.of("/config.pbtxt"))
           .executor(executor)
           .fs(fs)
           .serverSocketFactory(ServerSocketFactory.getDefault())

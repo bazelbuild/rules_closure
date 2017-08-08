@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.io.Resources.getResource;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
 import com.google.common.net.HostAndPort;
 import dagger.BindsInstance;
@@ -32,7 +33,7 @@ import io.bazel.rules.closure.http.filter.GzipFilter;
 import io.bazel.rules.closure.http.filter.LoggingFilter;
 import io.bazel.rules.closure.http.filter.NoCacheFilter;
 import io.bazel.rules.closure.http.filter.Transmitter;
-import io.bazel.rules.closure.webfiles.server.Annotations.ConfigPath;
+import io.bazel.rules.closure.webfiles.server.Annotations.Args;
 import io.bazel.rules.closure.webfiles.server.Annotations.RequestScope;
 import io.bazel.rules.closure.webfiles.server.Annotations.ServerScope;
 import io.bazel.rules.closure.webfiles.server.BuildInfo.WebfilesServerInfo;
@@ -65,7 +66,7 @@ public final class WebfilesServer implements Runnable {
     ExecutorService executor = Executors.newCachedThreadPool();
     try {
       DaggerWebfilesServer_Server.builder()
-          .configPath(args[0])
+          .args(ImmutableList.copyOf(args))
           .executor(executor)
           .fs(FileSystems.getDefault())
           .serverSocketFactory(ServerSocketFactory.getDefault())
@@ -81,6 +82,7 @@ public final class WebfilesServer implements Runnable {
   private final NetworkUtils network;
   private final HttpServer<Server> httpServer;
   private final Metadata.Config config;
+  private final Metadata.Loader metadataLoader;
   private final Metadata.Reloader metadataReloader;
 
   @Nullable
@@ -93,11 +95,13 @@ public final class WebfilesServer implements Runnable {
       NetworkUtils network,
       HttpServer<Server> httpServer,
       Metadata.Config config,
+      Metadata.Loader metadataLoader,
       Metadata.Reloader metadataReloader) {
     this.executor = executor;
     this.network = network;
     this.httpServer = httpServer;
     this.config = config;
+    this.metadataLoader = metadataLoader;
     this.metadataReloader = metadataReloader;
   }
 
@@ -130,7 +134,11 @@ public final class WebfilesServer implements Runnable {
     WebfilesServerInfo params = config.get();
     HostAndPort bind = HostAndPort.fromString(params.getBind()).withDefaultPort(80);
     try (ServerSocket socket = network.createServerSocket(bind, !params.getFailIfPortInUse())) {
-      metadataReloader.spawn();
+      if (params.getNoReloader()) {
+        metadataLoader.loadMetadataIntoObjectGraph();
+      } else {
+        metadataReloader.spawn();
+      }
       HostAndPort address = HostAndPort.fromParts(bind.getHost(), socket.getLocalPort());
       synchronized (this) {
         checkState(actualAddress == null);
@@ -192,7 +200,7 @@ public final class WebfilesServer implements Runnable {
 
     @Component.Builder
     interface Builder {
-      @BindsInstance Builder configPath(@ConfigPath String configPath);
+      @BindsInstance Builder args(@Args ImmutableList<String> args);
       @BindsInstance Builder executor(Executor executor);
       @BindsInstance Builder fs(FileSystem fs);
       @BindsInstance Builder serverSocketFactory(ServerSocketFactory serverSocketFactory);
