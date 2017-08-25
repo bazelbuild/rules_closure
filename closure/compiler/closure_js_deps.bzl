@@ -41,10 +41,10 @@ def _impl(ctx):
       progress_message="Calculating %d JavaScript deps to %s" % (
           len(js.srcs), ctx.outputs.out.short_path))
   return struct(
-      files=set(outputs),
+      files=depset(outputs),
       runfiles=ctx.runfiles(
           files=outputs + ctx.files.data,
-          transitive_files=(set([ctx.file._closure_library_base]) |
+          transitive_files=(depset([ctx.file._closure_library_base]) |
                             collect_runfiles(deps) |
                             collect_runfiles(ctx.attr.data))))
 
