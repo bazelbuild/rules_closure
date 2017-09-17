@@ -94,7 +94,6 @@ public final class JsCompiler implements CommandLineProgram {
     boolean expectFailure = false;
     boolean expectWarnings = false;
     boolean exportTestFunctions = false;
-    boolean sourceMapIncludeSourcesContent = false;
 
     // Compiler flags we want to read.
     Path jsOutputFile = null;
@@ -124,11 +123,6 @@ public final class JsCompiler implements CommandLineProgram {
         case "--export_test_functions":
           // TODO(jart): Remove this when it's added to open source Closure Compiler.
           exportTestFunctions = true;
-          continue;
-        case "--source_map_include_sources_content":
-          // TODO(jart): Remove this when it's added to open source Closure Compiler.
-          //             https://github.com/google/closure-compiler/issues/1890
-          sourceMapIncludeSourcesContent = true;
           continue;
         case "--js_module_root":
           roots.add(iargs.peek());
@@ -187,7 +181,6 @@ public final class JsCompiler implements CommandLineProgram {
             passThroughArgs,
             compiler,
             exportTestFunctions,
-            sourceMapIncludeSourcesContent,
             warnings);
     if (runner.shouldRunCompiler()) {
       failed |= runner.go() != 0;

@@ -114,7 +114,7 @@ def _impl(ctx):
 
   # By default we're going to include the raw sources in the .js.map file. This
   # can be disabled with the nodefs attribute.
-  args.append("--source_map_include_sources_content")
+  args.append("--source_map_include_content")
 
   # We still need to map the source files to paths on the web server. We're
   # going to use absolute paths relative to the root of the repository. For
