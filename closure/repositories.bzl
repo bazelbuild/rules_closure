@@ -620,7 +620,7 @@ def com_google_javascript_closure_compiler():
           "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170910/closure-compiler-unshaded-v20170910.jar",
           "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170910/closure-compiler-unshaded-v20170910.jar",
       ],
-      jar_sha256 = "a2d746d986dd08730be743ec553e39e0dba0e74fab847e7e1962723c41cc398b",
+      jar_sha256 = "9feae9214c5a90cc58abc632fae78a3760a3b5bdc766d2fc1bb83aeaa496f4ff",
       deps = [
           "@com_google_code_gson",
           "@com_google_guava",
