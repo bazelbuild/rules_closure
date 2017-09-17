@@ -617,8 +617,8 @@ def com_google_javascript_closure_compiler():
       name = "com_google_javascript_closure_compiler",
       licenses = ["reciprocal"],  # MPL v1.1 (Rhino AST), Apache 2.0 (JSCompiler)
       jar_urls = [
-          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170626/closure-compiler-unshaded-v20170626.jar",
-          "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170626/closure-compiler-unshaded-v20170626.jar",
+          "http://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170910/closure-compiler-unshaded-v20170910.jar",
+          "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20170910/closure-compiler-unshaded-v20170910.jar",
       ],
       jar_sha256 = "a2d746d986dd08730be743ec553e39e0dba0e74fab847e7e1962723c41cc398b",
       deps = [
