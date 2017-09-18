@@ -647,11 +647,11 @@ def com_google_javascript_closure_library():
   native.new_http_archive(
       name = "com_google_javascript_closure_library",
       urls = [
-          "http://mirror.bazel.build/github.com/google/closure-library/archive/v20170626.tar.gz",
-          "https://github.com/google/closure-library/archive/v20170626.tar.gz",
+          "http://mirror.bazel.build/github.com/google/closure-library/archive/v20170910.tar.gz",
+          "https://github.com/google/closure-library/archive/v20170910.tar.gz",
       ],
-      sha256 = "d018003a6895141f6e24b11fd969f6a9ad7756fc15dff6acfb49e2aab1d02b14",
-      strip_prefix = "closure-library-20170626",
+      sha256 = "2b98ddcc6171eb2350f4db9d3ae65169916ca375337e2475ec8dd92e8d3f89ee",
+      strip_prefix = "closure-library-20170910",
       build_file = str(Label("//closure/library:closure_library.BUILD")),
   )
 
