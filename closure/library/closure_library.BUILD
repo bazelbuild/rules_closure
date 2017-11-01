@@ -184,6 +184,7 @@ filegroup(
         "closure/goog/dom/tags.js",
         "closure/goog/dom/textrange.js",
         "closure/goog/dom/textrangeiterator.js",
+        "closure/goog/dom/uri.js",
         "closure/goog/dom/vendor.js",
         "closure/goog/dom/uri.js",
         "closure/goog/dom/viewportsizemonitor.js",
