@@ -437,7 +437,7 @@ def com_google_common_html_types():
           "@com_google_errorprone_error_prone_annotations",
           "@com_google_guava",
           "@com_google_jsinterop_annotations",
-          "@com_google_protobuf_java",
+          "@com_google_protobuf_java//:protobuf_java",
           "@javax_annotation_jsr250_api",
       ],
   )
@@ -625,7 +625,7 @@ def com_google_javascript_closure_compiler():
           "@com_google_code_gson",
           "@com_google_guava",
           "@com_google_code_findbugs_jsr305",
-          "@com_google_protobuf_java",
+          "@com_google_protobuf_java//:protobuf_java",
       ],
       extra_build_file_content = "\n".join([
           "java_binary(",
@@ -682,14 +682,14 @@ def com_google_jsinterop_annotations():
   )
 
 def com_google_protobuf_java():
-  java_import_external(
+  native.http_archive(
       name = "com_google_protobuf_java",
-      jar_sha256 = "f3411ade77523d5f0d013d4f25c36879e66f0c5e1e4310f7096d54d0d2553554",
-      jar_urls = [
-          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/protobuf/protobuf-java/3.3.0/protobuf-java-3.3.0.jar",
-          "https://repo1.maven.org/maven2/com/google/protobuf/protobuf-java/3.3.0/protobuf-java-3.3.0.jar",
+      sha256 = "0cc6607e2daa675101e9b7398a436f09167dffb8ca0489b0307ff7260498c13c",
+      strip_prefix = "protobuf-3.5.0",
+      urls = [
+        "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.5.0.tar.gz",
+        "https://github.com/google/protobuf/archive/v3.5.0.tar.gz",
       ],
-      licenses = ["notice"],  # New BSD and Apache 2.0
   )
 
 def com_google_protobuf_js():
@@ -774,7 +774,7 @@ def com_google_template_soy():
           "@com_google_inject_extensions_guice_assistedinject",
           "@com_google_inject_extensions_guice_multibindings",
           "@com_google_inject_guice",
-          "@com_google_protobuf_java",
+          "@com_google_protobuf_java//:protobuf_java",
           "@com_ibm_icu_icu4j",
           "@javax_inject",
           "@org_json",
