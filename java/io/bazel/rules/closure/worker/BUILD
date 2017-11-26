@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("//closure/private:java_proto_library.bzl", "java_proto_library")
-
 licenses(["notice"])  # Apache 2.0
 
 java_library(
@@ -35,8 +33,13 @@ java_library(
     ],
 )
 
+proto_library(
+    name = "worker_protocol_proto",
+    srcs = ["worker_protocol.proto"],
+)
+
 java_proto_library(
     name = "worker_protocol_java_proto",
-    src = "worker_protocol.proto",
+    deps = [":worker_protocol_proto"],
     visibility = ["//javatests/io/bazel/rules/closure/worker:__pkg__"],
 )

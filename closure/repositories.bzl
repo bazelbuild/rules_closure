@@ -42,6 +42,7 @@ def closure_repositories(
     omit_com_google_javascript_closure_library=False,
     omit_com_google_javascript_incremental_dom=False,
     omit_com_google_jsinterop_annotations=False,
+    omit_com_google_protobuf=False,
     omit_com_google_protobuf_java=False,
     omit_com_google_protobuf_js=False,
     omit_com_google_protobuf_protoc=False,
@@ -113,6 +114,8 @@ def closure_repositories(
     com_google_javascript_incremental_dom()
   if not omit_com_google_jsinterop_annotations:
     com_google_jsinterop_annotations()
+  if not omit_com_google_protobuf:
+    com_google_protobuf()
   if not omit_com_google_protobuf_java:
     com_google_protobuf_java()
   if not omit_com_google_protobuf_js:
@@ -679,6 +682,17 @@ def com_google_jsinterop_annotations():
           "http://maven.ibiblio.org/maven2/com/google/jsinterop/jsinterop-annotations/1.0.1/jsinterop-annotations-1.0.1.jar",
           "https://repo1.maven.org/maven2/com/google/jsinterop/jsinterop-annotations/1.0.1/jsinterop-annotations-1.0.1.jar",
       ],
+  )
+
+def com_google_protobuf():
+  native.http_archive(
+    name = "com_google_protobuf",
+    sha256 = "0cc6607e2daa675101e9b7398a436f09167dffb8ca0489b0307ff7260498c13c",
+    strip_prefix = "protobuf-3.5.0",
+    urls = [
+      "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.5.0.tar.gz",
+      "https://github.com/google/protobuf/archive/v3.5.0.tar.gz",
+    ],
   )
 
 def com_google_protobuf_java():
