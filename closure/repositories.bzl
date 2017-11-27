@@ -42,6 +42,7 @@ def closure_repositories(
     omit_com_google_javascript_closure_library=False,
     omit_com_google_javascript_incremental_dom=False,
     omit_com_google_jsinterop_annotations=False,
+    omit_com_google_protobuf=False,
     omit_com_google_protobuf_java=False,
     omit_com_google_protobuf_js=False,
     omit_com_google_protobuf_protoc=False,
@@ -113,12 +114,12 @@ def closure_repositories(
     com_google_javascript_incremental_dom()
   if not omit_com_google_jsinterop_annotations:
     com_google_jsinterop_annotations()
+  if not omit_com_google_protobuf:
+    com_google_protobuf()
   if not omit_com_google_protobuf_java:
     com_google_protobuf_java()
   if not omit_com_google_protobuf_js:
     com_google_protobuf_js()
-  if not omit_com_google_protobuf_protoc:
-    com_google_protobuf_protoc()
   if not omit_com_google_template_soy:
     com_google_template_soy()
   if not omit_com_google_template_soy_jssrc:
@@ -437,7 +438,7 @@ def com_google_common_html_types():
           "@com_google_errorprone_error_prone_annotations",
           "@com_google_guava",
           "@com_google_jsinterop_annotations",
-          "@com_google_protobuf_java",
+          "@com_google_protobuf_java//:protobuf_java",
           "@javax_annotation_jsr250_api",
       ],
   )
@@ -625,7 +626,7 @@ def com_google_javascript_closure_compiler():
           "@com_google_code_gson",
           "@com_google_guava",
           "@com_google_code_findbugs_jsr305",
-          "@com_google_protobuf_java",
+          "@com_google_protobuf_java//:protobuf_java",
       ],
       extra_build_file_content = "\n".join([
           "java_binary(",
@@ -681,79 +682,38 @@ def com_google_jsinterop_annotations():
       ],
   )
 
+def com_google_protobuf():
+  native.http_archive(
+    name = "com_google_protobuf",
+    sha256 = "0cc6607e2daa675101e9b7398a436f09167dffb8ca0489b0307ff7260498c13c",
+    strip_prefix = "protobuf-3.5.0",
+    urls = [
+      "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.5.0.tar.gz",
+      "https://github.com/google/protobuf/archive/v3.5.0.tar.gz",
+    ],
+  )
+
 def com_google_protobuf_java():
-  java_import_external(
+  native.http_archive(
       name = "com_google_protobuf_java",
-      jar_sha256 = "f3411ade77523d5f0d013d4f25c36879e66f0c5e1e4310f7096d54d0d2553554",
-      jar_urls = [
-          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/protobuf/protobuf-java/3.3.0/protobuf-java-3.3.0.jar",
-          "https://repo1.maven.org/maven2/com/google/protobuf/protobuf-java/3.3.0/protobuf-java-3.3.0.jar",
+      sha256 = "0cc6607e2daa675101e9b7398a436f09167dffb8ca0489b0307ff7260498c13c",
+      strip_prefix = "protobuf-3.5.0",
+      urls = [
+        "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.5.0.tar.gz",
+        "https://github.com/google/protobuf/archive/v3.5.0.tar.gz",
       ],
-      licenses = ["notice"],  # New BSD and Apache 2.0
   )
 
 def com_google_protobuf_js():
   native.new_http_archive(
-      name = "com_google_protobuf_js",
-      urls = [
-          # 3.3.0 has a Closure Compiler bug because it references Node's Buffer
-          # type. This was fixed in f00e06c95bc117fb2ed0ca56c96041c93039f1fe.
-          #
-          # TODO(jart): Update when https://github.com/google/protobuf/pull/3387
-          #             is merged.
-          "https://mirror.bazel.build/github.com/google/protobuf/archive/33545583286a31940b6a732b1888e639cdf2e3c4.tar.gz",
-          "https://github.com/google/protobuf/archive/33545583286a31940b6a732b1888e639cdf2e3c4.tar.gz",  # 2017-07-17
-      ],
-      sha256 = "ecd9f92f137e75d140a8b611cd2c0d6c0f34f561946dc5f7fcecde631bb13c25",
-      strip_prefix = "protobuf-33545583286a31940b6a732b1888e639cdf2e3c4/js",
-      build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
-  )
-
-def com_google_protobuf_protoc():
-  filegroup_external(
-      name = "com_google_protobuf_protoc",
-      licenses = ["notice"],  # BSD
-      sha256_urls_extract_macos = {
-          "d752ba0ea67239e327a48b2f23da0e673928a9ff06ee530319fc62200c0aff89": [
-              "https://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-osx-x86_64.zip",
-              "https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-osx-x86_64.zip",
-          ],
-      },
-      sha256_urls_extract_windows = {
-          "19ec3d3853c1181912dc442840b3a76bfe0607ecc67d0854b323fdd1fdd8ab77": [
-              "https://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-win32.zip",
-              "https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-win32.zip",
-          ],
-      },
-      sha256_urls_extract = {
-          "feb112bbc11ea4e2f7ef89a359b5e1c04428ba6cfa5ee628c410eccbfe0b64c3": [
-              "https://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-linux-x86_64.zip",
-              "https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-linux-x86_64.zip",
-          ],
-      },
-      generated_rule_name = "files",
-      extra_build_file_content = "\n".join([
-          "filegroup(",
-          "    name = \"com_google_protobuf_protoc\",",
-          "    srcs = select({",
-          "        \":windows\": [\"bin/protoc.exe\"],",
-          "        \":windows_msvc\": [\"bin/protoc.exe\"],",
-          "        \"//conditions:default\": [\"bin/protoc\"],",
-          "    }),",
-          ")",
-          "",
-          "config_setting(",
-          "    name = \"windows\",",
-          "    values = {\"cpu\": \"x64_windows\"},",
-          "    visibility = [\"//visibility:private\"],",
-          ")",
-          "",
-          "config_setting(",
-          "    name = \"windows_msvc\",",
-          "    values = {\"cpu\": \"x64_windows_msvc\"},",
-          "    visibility = [\"//visibility:private\"],",
-          ")",
-      ]),
+    name = "com_google_protobuf_js",
+    sha256 = "0cc6607e2daa675101e9b7398a436f09167dffb8ca0489b0307ff7260498c13c",
+    strip_prefix = "protobuf-3.5.0/js",
+    urls = [
+      "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.5.0.tar.gz",
+      "https://github.com/google/protobuf/archive/v3.5.0.tar.gz",
+    ],
+    build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
   )
 
 def com_google_template_soy():
@@ -774,7 +734,7 @@ def com_google_template_soy():
           "@com_google_inject_extensions_guice_assistedinject",
           "@com_google_inject_extensions_guice_multibindings",
           "@com_google_inject_guice",
-          "@com_google_protobuf_java",
+          "@com_google_protobuf_java//:protobuf_java",
           "@com_ibm_icu_icu4j",
           "@javax_inject",
           "@org_json",

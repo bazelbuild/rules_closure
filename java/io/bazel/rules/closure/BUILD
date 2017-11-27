@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("//closure/private:java_proto_library.bzl", "java_proto_library")
-
 licenses(["notice"])  # Apache 2.0
 
 java_binary(
@@ -59,8 +57,13 @@ java_library(
     ],
 )
 
+proto_library(
+    name = "build_info_proto",
+    srcs = ["build_info.proto"],
+)
+
 java_proto_library(
     name = "build_info_java_proto",
-    src = "build_info.proto",
+    deps = [":build_info_proto"],
     visibility = ["//visibility:public"],
 )
