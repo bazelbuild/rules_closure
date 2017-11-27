@@ -120,8 +120,6 @@ def closure_repositories(
     com_google_protobuf_java()
   if not omit_com_google_protobuf_js:
     com_google_protobuf_js()
-  if not omit_com_google_protobuf_protoc:
-    com_google_protobuf_protoc()
   if not omit_com_google_template_soy:
     com_google_template_soy()
   if not omit_com_google_template_soy_jssrc:
@@ -708,66 +706,14 @@ def com_google_protobuf_java():
 
 def com_google_protobuf_js():
   native.new_http_archive(
-      name = "com_google_protobuf_js",
-      urls = [
-          # 3.3.0 has a Closure Compiler bug because it references Node's Buffer
-          # type. This was fixed in f00e06c95bc117fb2ed0ca56c96041c93039f1fe.
-          #
-          # TODO(jart): Update when https://github.com/google/protobuf/pull/3387
-          #             is merged.
-          "https://mirror.bazel.build/github.com/google/protobuf/archive/33545583286a31940b6a732b1888e639cdf2e3c4.tar.gz",
-          "https://github.com/google/protobuf/archive/33545583286a31940b6a732b1888e639cdf2e3c4.tar.gz",  # 2017-07-17
-      ],
-      sha256 = "ecd9f92f137e75d140a8b611cd2c0d6c0f34f561946dc5f7fcecde631bb13c25",
-      strip_prefix = "protobuf-33545583286a31940b6a732b1888e639cdf2e3c4/js",
-      build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
-  )
-
-def com_google_protobuf_protoc():
-  filegroup_external(
-      name = "com_google_protobuf_protoc",
-      licenses = ["notice"],  # BSD
-      sha256_urls_extract_macos = {
-          "d752ba0ea67239e327a48b2f23da0e673928a9ff06ee530319fc62200c0aff89": [
-              "https://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-osx-x86_64.zip",
-              "https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-osx-x86_64.zip",
-          ],
-      },
-      sha256_urls_extract_windows = {
-          "19ec3d3853c1181912dc442840b3a76bfe0607ecc67d0854b323fdd1fdd8ab77": [
-              "https://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-win32.zip",
-              "https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-win32.zip",
-          ],
-      },
-      sha256_urls_extract = {
-          "feb112bbc11ea4e2f7ef89a359b5e1c04428ba6cfa5ee628c410eccbfe0b64c3": [
-              "https://mirror.bazel.build/github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-linux-x86_64.zip",
-              "https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-linux-x86_64.zip",
-          ],
-      },
-      generated_rule_name = "files",
-      extra_build_file_content = "\n".join([
-          "filegroup(",
-          "    name = \"com_google_protobuf_protoc\",",
-          "    srcs = select({",
-          "        \":windows\": [\"bin/protoc.exe\"],",
-          "        \":windows_msvc\": [\"bin/protoc.exe\"],",
-          "        \"//conditions:default\": [\"bin/protoc\"],",
-          "    }),",
-          ")",
-          "",
-          "config_setting(",
-          "    name = \"windows\",",
-          "    values = {\"cpu\": \"x64_windows\"},",
-          "    visibility = [\"//visibility:private\"],",
-          ")",
-          "",
-          "config_setting(",
-          "    name = \"windows_msvc\",",
-          "    values = {\"cpu\": \"x64_windows_msvc\"},",
-          "    visibility = [\"//visibility:private\"],",
-          ")",
-      ]),
+    name = "com_google_protobuf_js",
+    sha256 = "0cc6607e2daa675101e9b7398a436f09167dffb8ca0489b0307ff7260498c13c",
+    strip_prefix = "protobuf-3.5.0/js",
+    urls = [
+      "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.5.0.tar.gz",
+      "https://github.com/google/protobuf/archive/v3.5.0.tar.gz",
+    ],
+    build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
   )
 
 def com_google_template_soy():
