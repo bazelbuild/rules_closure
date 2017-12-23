@@ -18,7 +18,6 @@ load("//closure/compiler:closure_js_deps.bzl", _closure_js_deps = "closure_js_de
 load("//closure/compiler:closure_js_library.bzl", _closure_js_library = "closure_js_library", _create_closure_js_library = "create_closure_js_library")
 load("//closure/private:defs.bzl", _CLOSURE_JS_TOOLCHAIN_ATTRS = "CLOSURE_JS_TOOLCHAIN_ATTRS")
 load("//closure/private:files_equal_test.bzl", _files_equal_test = "files_equal_test")
-load("//closure/private:java_import_external.bzl", _java_import_external = "java_import_external")
 load("//closure/protobuf:closure_js_proto_library.bzl", _closure_js_proto_library = "closure_js_proto_library")
 load("//closure/protobuf:closure_proto_library.bzl", _closure_proto_library = "closure_proto_library")
 load("//closure/stylesheets:closure_css_binary.bzl", _closure_css_binary = "closure_css_binary")
@@ -39,7 +38,6 @@ closure_js_library = _closure_js_library
 create_closure_js_library = _create_closure_js_library
 CLOSURE_JS_TOOLCHAIN_ATTRS = _CLOSURE_JS_TOOLCHAIN_ATTRS
 files_equal_test = _files_equal_test
-java_import_external = _java_import_external
 closure_js_proto_library = _closure_js_proto_library
 closure_proto_library = _closure_proto_library
 closure_css_binary = _closure_css_binary
