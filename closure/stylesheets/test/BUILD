@@ -87,7 +87,7 @@ file_test(
               "\"version\":3,\n" +
               "\"file\":\"hello_rename_bin.css.map\",\n" +
               "\"lineCount\":1,\n" +
-              "\"mappings\":\"AAAC,GAAD,CAEuC,aADN;\",\n" +
+              "\"mappings\":\"AAAC,IACmB,CAAA,YAAa;\",\n" +
               "\"sources\":[\"closure/stylesheets/test/hello.css\"],\n" +
               "\"names\":[]\n" +
               "}\n",

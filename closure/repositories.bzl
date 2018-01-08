@@ -376,11 +376,11 @@ def com_google_closure_stylesheets():
       name = "com_google_closure_stylesheets",
       licenses = ["notice"],  # Apache 2.0
       jar_urls = [
-          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/closure-stylesheets/closure-stylesheets/1.4.0/closure-stylesheets-1.4.0.jar",
-          "https://repo1.maven.org/maven2/com/google/closure-stylesheets/closure-stylesheets/1.4.0/closure-stylesheets-1.4.0.jar",
-          "http://maven.ibiblio.org/maven2/com/google/closure-stylesheets/closure-stylesheets/1.4.0/closure-stylesheets-1.4.0.jar",
+          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/closure-stylesheets/closure-stylesheets/1.5.0/closure-stylesheets-1.5.0.jar",
+          "https://repo1.maven.org/maven2/com/google/closure-stylesheets/closure-stylesheets/1.5.0/closure-stylesheets-1.5.0.jar",
+          "http://maven.ibiblio.org/maven2/com/google/closure-stylesheets/closure-stylesheets/1.5.0/closure-stylesheets-1.5.0.jar",
       ],
-      jar_sha256 = "4038c17fa38a90983fe4030a63ff8a644ed53a48187f55f3c4c3487fe9ad9f97",
+      jar_sha256 = "fef768d4f7cead3c0c0783891118e7d3d6ecf17a3093557891f583d842362e2b",
       deps = [
           "@args4j",
           "@com_google_javascript_closure_compiler",
