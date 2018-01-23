@@ -25,7 +25,7 @@ java_test(
         "@com_google_dagger",
         "@com_google_guava",
         "@com_google_jimfs",
-        "@com_google_protobuf_java//:protobuf_java",
+        "@com_google_protobuf//:protobuf_java",
         "@com_google_truth",
         "@junit",
         "@org_mockito_all",
