@@ -1,6 +1,6 @@
 workspace(name = "io_bazel_rules_closure")
 
-load("//closure/private:java_import_external.bzl", "java_import_external")
+load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 load("//closure:repositories.bzl", "closure_repositories")
 
 closure_repositories()

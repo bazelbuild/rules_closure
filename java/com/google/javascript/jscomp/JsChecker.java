@@ -323,6 +323,8 @@ public final class JsChecker {
       CmdLineParser parser = new CmdLineParser(checker);
       parser.setUsageWidth(80);
       try {
+        // Turn off interpreting @-prefixed options as being a file
+        parser.getProperties().withAtSyntax(false);
         parser.parseArgument(ImmutableList.copyOf(args));
       } catch (CmdLineException e) {
         System.err.println(e.getMessage());
