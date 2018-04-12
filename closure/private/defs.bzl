@@ -58,7 +58,9 @@ def unfurl(deps, provider=""):
           res.append(edep)
   return res
 
-def collect_js(ctx, deps,
+def collect_js(deps,
+               closure_library_base=None,
+               closure_library_deps=None,
                has_direct_srcs=False,
                no_closure_library=False,
                css=None):
@@ -87,13 +89,12 @@ def collect_js(ctx, deps,
       fail("no_closure_library can't be used when Closure Library is " +
            "already part of the transitive closure")
   elif has_direct_srcs and not has_closure_library:
-    tmp = depset([ctx.file._closure_library_base,
-               ctx.file._closure_library_deps])
+    tmp = depset([closure_library_base, closure_library_deps])
     tmp += srcs
     srcs = tmp
     has_closure_library = True
   if css:
-    tmp = depset([ctx.file._closure_library_base,
+    tmp = depset([closure_library_base,
                css.closure_css_binary.renaming_map])
     tmp += srcs
     srcs = tmp
@@ -139,7 +140,7 @@ def collect_runfiles(targets):
       data += target.default_runfiles.files
   return data
 
-def find_js_module_roots(ctx, srcs):
+def find_js_module_roots(srcs, workspace_name, label, includes):
   """Finds roots of JavaScript sources.
 
   This discovers --js_module_root paths for direct srcs that deviate from the
@@ -155,23 +156,23 @@ def find_js_module_roots(ctx, srcs):
   roots = depset([f.root.path for f in srcs if f.root.path])
   # Bazel started prefixing external repo paths with ../
   new_bazel_version = Label('@foo//bar').workspace_root.startswith('../')
-  if ctx.workspace_name != "__main__":
+  if workspace_name != "__main__":
     if new_bazel_version:
       roots += ["%s" % root for root in roots]
-      roots += ["../%s" % ctx.workspace_name]
+      roots += ["../%s" % workspace_name]
     else:
-      roots += ["%s/external/%s" % (root, ctx.workspace_name) for root in roots]
-      roots += ["external/%s" % ctx.workspace_name]
-  if getattr(ctx.attr, "includes", []):
+      roots += ["%s/external/%s" % (root, workspace_name) for root in roots]
+      roots += ["external/%s" % workspace_name]
+  if includes:
     for f in srcs:
-      if f.owner.package != ctx.label.package:
+      if f.owner.package != label.package:
         fail("Can't have srcs from a different package when using includes")
     magic_roots = []
-    for include in ctx.attr.includes:
+    for include in includes:
       if include == ".":
-        prefix = ctx.label.package
+        prefix = label.package
       else:
-        prefix = "%s/%s" % (ctx.label.package, include)
+        prefix = "%s/%s" % (label.package, include)
         found = False
         for f in srcs:
           if f.owner.name.startswith(include + "/"):
@@ -215,15 +216,13 @@ def long_path(ctx, file_):
     return file_.owner.workspace_root + "/" + file_.short_path
   return ctx.workspace_name + "/" + file_.short_path
 
-def create_argfile(ctx, args):
-  bin_dir = ctx.configuration.bin_dir
-  if hasattr(ctx, 'bin_dir'):
-    bin_dir = ctx.bin_dir
-  argfile = ctx.new_file(bin_dir, "%s_worker_input" % ctx.label.name)
-  ctx.file_action(output=argfile, content="\n".join(args))
+def create_argfile(actions, name, args):
+  argfile = actions.declare_file("%s_worker_input" % name)
+  actions.write(output=argfile, content="\n".join(args))
   return argfile
 
-def library_level_checks(ctx, ijs_deps, srcs, executable, output, suppress = []):
+def library_level_checks(
+    actions, label, ijs_deps, srcs, executable, output, suppress = []):
   args = [
       "JsCompiler",
       "--checks_only",
@@ -244,10 +243,10 @@ def library_level_checks(ctx, ijs_deps, srcs, executable, output, suppress = [])
   for s in suppress:
     args.append("--suppress")
     args.append(s)
-  ctx.action(
+  actions.run(
       inputs=inputs,
       outputs=[output],
       executable=executable,
       arguments=args,
       mnemonic="LibraryLevelChecks",
-      progress_message="Doing library-level typechecking of " + str(ctx.label))
+      progress_message="Doing library-level typechecking of " + str(label))

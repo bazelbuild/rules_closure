@@ -101,7 +101,7 @@ def _web_library(ctx):
     inputs.append(man)
     args.append("--transitive_dep")
     args.append(man.path)
-  argfile = create_argfile(ctx, args)
+  argfile = create_argfile(ctx.actions, ctx.label.name, args)
   inputs.append(argfile)
   ctx.action(
       inputs=inputs,

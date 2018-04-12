@@ -11,7 +11,7 @@ os:
   - osx
 
 env:
-  - V=0.5.3
+  - V=0.12.0
 
 before_install:
   - |
@@ -33,14 +33,19 @@ before_install:
 
 script:
   - |
+    excludes=()
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      # https://github.com/bazelbuild/rules_closure/issues/247
+      excludes+=('//closure/testing/test:noto_fonts_render_as_expected')
+    fi
+
+    targets=$(bazel query "... except set($excludes)")
     bazel \
       --output_base=$HOME/.cache/bazel \
       --batch \
       --host_jvm_args=-Xmx500m \
       --host_jvm_args=-Xms500m \
       test \
-      closure/... \
-      javatests/... \
       --worker_verbose \
       --verbose_failures \
       --test_output=errors \
@@ -48,7 +53,8 @@ script:
       --genrule_strategy=sandboxed \
       --local_resources=400,2,1.0 \
       --strategy=Javac=worker \
-      --strategy=Closure=worker
+      --strategy=Closure=worker \
+      $targets
 
 notifications:
   email: false
