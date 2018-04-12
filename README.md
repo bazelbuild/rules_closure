@@ -5,7 +5,7 @@ JavaScript | Templating | Stylesheets | Miscellaneous
 --- | --- | --- | ---
 [closure_js_library] | [closure_js_template_library] | [closure_css_library] | [closure_js_proto_library]
 [closure_js_binary] | [closure_java_template_library] | [closure_css_binary] | [phantomjs_test]
-[closure_js_deps] | [closure_py_template_library] | |
+[closure_js_deps] | [closure_py_template_library] | | [closure_proto_library] \(Experimental\)
 [closure_js_test] | | |
 
 ## Overview
@@ -950,6 +950,30 @@ This rule can be referenced as though it were the following:
   - `IMPORT_ES6`        // import { member } from ''
 
 
+## closure\_proto\_library
+
+```python
+load("@io_bazel_rules_closure//closure:defs.bzl", "closure_proto_library")
+closure_proto_library(name, deps)
+```
+
+`closure_proto_library` generates JS code from `.proto` files.
+
+`deps` must point to [proto_library] rules.
+
+#### Rule Polymorphism
+
+This rule can be referenced as though it were the following:
+
+- [closure_js_library]: `srcs` will be the generated JS files,
+  and `deps` will contain necessary libraries.
+
+- **name:** ([Name]; required) A unique name for this rule. Convention states
+  that such rules be named `*_closure_proto`.
+
+- **deps:** (List of [labels]; required) The list of [proto_library] rules
+  to generate JS code for.
+
 [Bazel]: http://bazel.io/
 [Closure Compiler]: https://developers.google.com/closure/compiler/
 [Closure Library]: https://developers.google.com/closure/library/
@@ -980,6 +1004,7 @@ This rule can be referenced as though it were the following:
 [closure_js_proto_library]: #closure_js_proto_library
 [closure_js_template_library]: #closure_js_template_library
 [closure_js_test]: #closure_js_test
+[closure_proto_library]: #closure_proto_library
 [closure_py_template_library]: #closure_py_template_library
 [coffeescript]: http://coffeescript.org/
 [compiler-issue]: https://github.com/google/closure-compiler/issues/new
@@ -995,6 +1020,7 @@ This rule can be referenced as though it were the following:
 [output-wrapper-faq]: https://github.com/google/closure-compiler/wiki/FAQ#when-using-advanced-optimizations-closure-compiler-adds-new-variables-to-the-global-scope-how-do-i-make-sure-my-variables-dont-collide-with-other-scripts-on-the-page
 [phantomjs-bug]: https://github.com/ariya/phantomjs/issues/14028
 [phantomjs_test]: #phantomjs_test
+[proto_library]: https://docs.bazel.build/versions/master/be/protocol-buffer.html#proto_library
 [protobuf-generator]: https://github.com/google/protobuf/blob/master/src/google/protobuf/compiler/js/js_generator.h
 [protobuf-js]: https://github.com/google/protobuf/tree/master/js
 [repositories.bzl]: https://github.com/bazelbuild/rules_closure/tree/master/closure/repositories.bzl
