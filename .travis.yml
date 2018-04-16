@@ -32,7 +32,8 @@ before_install:
     rm -f install.sh
 
 script:
-  - bazel \
+  - |
+    bazel \
       --output_base=$HOME/.cache/bazel \
       --batch \
       --host_jvm_args=-Xmx500m \
