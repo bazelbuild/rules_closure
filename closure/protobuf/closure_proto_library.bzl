@@ -22,7 +22,8 @@ load("//closure/private:defs.bzl",
      "CLOSURE_LIBRARY_DEPS_ATTR",
      "unfurl")
 
-# This was taken from https://github.com/bazelbuild/rules_go/blob/67f44035d84a352cffb9465159e199066ecb814c/proto/compiler.bzl#L72
+# This was borrowed from Rules Go, licensed under Apache 2.
+# https://github.com/bazelbuild/rules_go/blob/67f44035d84a352cffb9465159e199066ecb814c/proto/compiler.bzl#L72
 def _proto_path(proto):
   path = proto.path
   root = proto.root.path

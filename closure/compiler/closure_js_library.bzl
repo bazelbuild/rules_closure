@@ -44,7 +44,7 @@ def closure_js_library_impl(
     srcs, deps, testonly, suppress,
     closure_library_base, closure_library_deps, _ClosureWorker,
 
-    includes=[],
+    includes=(),
     exports=depset(),
     internal_descriptors=depset(),
     convention='CLOSURE',
