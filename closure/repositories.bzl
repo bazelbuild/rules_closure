@@ -74,9 +74,9 @@ def closure_repositories(
     clang()
   if not omit_com_google_auto_common:
     com_google_auto_common()
-  if not omit_com_google_auto_common:
-    com_google_auto_factory()
   if not omit_com_google_auto_factory:
+    com_google_auto_factory()
+  if not omit_com_google_auto_value:
     com_google_auto_value()
   if not omit_com_google_closure_stylesheets:
     com_google_closure_stylesheets()
