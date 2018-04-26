@@ -66,6 +66,8 @@ def closure_repositories(
     omit_org_ow2_asm_util=False,
     omit_phantomjs=False):
   """Imports dependencies for Closure Rules."""
+  if omit_com_google_protobuf_java:
+    fail("omit_com_google_protobuf_java no longer supported and must be not be passed to closure_repositories()")
   if not omit_aopalliance:
     aopalliance()
   if not omit_args4j:
@@ -114,8 +116,6 @@ def closure_repositories(
     com_google_jsinterop_annotations()
   if not omit_com_google_protobuf:
     com_google_protobuf()
-  if not omit_com_google_protobuf_java:
-    com_google_protobuf_java()
   if not omit_com_google_protobuf_js:
     com_google_protobuf_js()
   if not omit_com_google_template_soy:
@@ -375,7 +375,7 @@ def com_google_common_html_types():
           "@com_google_errorprone_error_prone_annotations",
           "@com_google_guava",
           "@com_google_jsinterop_annotations",
-          "@com_google_protobuf_java//:protobuf_java",
+          "@com_google_protobuf//:protobuf_java",
           "@javax_annotation_jsr250_api",
       ],
   )
@@ -562,7 +562,7 @@ def com_google_javascript_closure_compiler():
           "@com_google_code_gson",
           "@com_google_guava",
           "@com_google_code_findbugs_jsr305",
-          "@com_google_protobuf_java//:protobuf_java",
+          "@com_google_protobuf//:protobuf_java",
       ],
       extra_build_file_content = "\n".join([
           "java_binary(",
@@ -629,17 +629,6 @@ def com_google_protobuf():
       ],
   )
 
-def com_google_protobuf_java():
-  native.http_archive(
-      name = "com_google_protobuf_java",
-      sha256 = "0cc6607e2daa675101e9b7398a436f09167dffb8ca0489b0307ff7260498c13c",
-      strip_prefix = "protobuf-3.5.0",
-      urls = [
-          "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.5.0.tar.gz",
-          "https://github.com/google/protobuf/archive/v3.5.0.tar.gz",
-      ],
-  )
-
 def com_google_protobuf_js():
   native.new_http_archive(
       name = "com_google_protobuf_js",
@@ -670,7 +659,7 @@ def com_google_template_soy():
           "@com_google_inject_extensions_guice_assistedinject",
           "@com_google_inject_extensions_guice_multibindings",
           "@com_google_inject_guice",
-          "@com_google_protobuf_java//:protobuf_java",
+          "@com_google_protobuf//:protobuf_java",
           "@com_ibm_icu_icu4j",
           "@javax_inject",
           "@org_json",

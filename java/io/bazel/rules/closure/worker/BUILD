@@ -29,7 +29,7 @@ java_library(
         "@com_google_code_findbugs_jsr305",
         "@com_google_dagger",
         "@com_google_guava",
-        "@com_google_protobuf_java//:protobuf_java",
+        "@com_google_protobuf//:protobuf_java",
     ],
 )
 
