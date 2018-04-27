@@ -25,6 +25,7 @@ closure_js_library(
         "JSC_NTI_INEXISTENT_PROPERTY",
         "JSC_NTI_INVALID_ARGUMENT_TYPE",
         "JSC_NTI_UNKNOWN_EXPR_TYPE",
+        "JSC_STRICT_INEXISTENT_PROPERTY",
         "JSC_TYPE_MISMATCH",
         "JSC_UNKNOWN_EXPR_TYPE",
     ],

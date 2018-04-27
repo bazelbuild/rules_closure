@@ -56,7 +56,7 @@ closure_js_deps(
 file_test(
     name = "noTransitiveDeps_containsSingleLineRelativeToClosureLibraryBaseJs",
     file = "hyperion_deps.js",
-    regexp = "^goog.addDependency('.*closure/compiler/test/closure_js_deps/hyperion.js', \\['hyperion'\\], \\[\\], false);$",
+    regexp = "^goog.addDependency('.*closure/compiler/test/closure_js_deps/hyperion.js', \\['hyperion'\\], \\[\\], {});$",
 )
 
 closure_js_library(
@@ -73,7 +73,7 @@ closure_js_deps(
 file_test(
     name = "module_usesTrueArgument",
     file = "goblin_deps.js",
-    regexp = "^goog.addDependency('.*closure/compiler/test/closure_js_deps/goblin.js', \\['goblin'\\], \\['goog.dom'\\], true);$",
+    regexp = "^goog.addDependency('.*closure/compiler/test/closure_js_deps/goblin.js', \\['goblin'\\], \\['goog.dom'\\], {'module': 'goog'});$",
 )
 
 file_test(
@@ -108,7 +108,7 @@ closure_js_deps(
 file_test(
     name = "hasTransitiveDep_showsUpInDepsFile",
     file = "hyperion2_deps.js",
-    regexp = "^goog.addDependency('.*closure/compiler/test/closure_js_deps/hyperion.js', \\['hyperion'\\], \\[\\], false);$",
+    regexp = "^goog.addDependency('.*closure/compiler/test/closure_js_deps/hyperion.js', \\['hyperion'\\], \\[\\], {});$",
 )
 
 ################################################################################

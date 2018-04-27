@@ -40,6 +40,7 @@ closure_js_library(
         "JSC_NTI_WRONG_ARGUMENT_COUNT",
         "JSC_NULLABLE_RETURN_WITH_NAME",
         "JSC_OPTIONAL_PARAM_NOT_MARKED_OPTIONAL",
+        "JSC_STRICT_INEXISTENT_PROPERTY",
         "JSC_UNKNOWN_EXPR_TYPE",
     ],
     deps = ["//closure/library"],
