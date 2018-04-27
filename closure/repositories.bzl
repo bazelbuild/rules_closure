@@ -176,11 +176,11 @@ def aopalliance():
 def args4j():
   java_import_external(
       name = "args4j",
-      jar_sha256 = "989bda2321ea073a03686e9d4437ea4928c72c99f993f9ca6fab24615f0771a4",
+      jar_sha256 = "91ddeaba0b24adce72291c618c00bbdce1c884755f6c4dba9c5c46e871c69ed6",
       jar_urls = [
-          "https://mirror.bazel.build/repo1.maven.org/maven2/args4j/args4j/2.0.26/args4j-2.0.26.jar",
-          "https://repo1.maven.org/maven2/args4j/args4j/2.0.26/args4j-2.0.26.jar",
-          "http://maven.ibiblio.org/maven2/args4j/args4j/2.0.26/args4j-2.0.26.jar",
+          "https://mirror.bazel.build/repo1.maven.org/maven2/args4j/args4j/2.33/args4j-2.33.jar",
+          "https://repo1.maven.org/maven2/args4j/args4j/2.0.33/args4j-2.33.jar",
+          "http://maven.ibiblio.org/maven2/args4j/args4j/2.0.33/args4j-2.33.jar",
       ],
       licenses = ["notice"],  # MIT License
   )
@@ -646,10 +646,9 @@ def com_google_template_soy():
       name = "com_google_template_soy",
       licenses = ["notice"],  # Apache 2.0
       jar_urls = [
-          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2018-01-03/soy-2018-01-03.jar",
-          "https://repo1.maven.org/maven2/com/google/template/soy/2018-01-03/soy-2018-01-03.jar",
+          "https://github.com/davido/closure-templates/releases/download/release-2018-03-18/soy-2018-03-18.jar",
       ],
-      jar_sha256 = "2952b430323a01070d73c7767e34c4030355b9e60c14b5165bebf69b2f6ad927",
+      jar_sha256 = "5a73bac4fec2d75982f0ce0900dffc6f9ceab42c3f6e40de1915e22854f7389b",
       deps = [
           "@args4j",
           "@com_google_code_findbugs_jsr305",
