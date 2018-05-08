@@ -47,7 +47,7 @@ def _impl(ctx):
     args += ["--pluginModules=%s" % ",".join(ctx.attr.plugin_modules)]
   inputs = []
   for f in ctx.files.srcs:
-    args.append(f.path)
+    args.append("--srcs=" + f.path)
     inputs.append(f)
   if ctx.file.globals:
     args += ["--compileTimeGlobalsFile=%s" % ctx.file.globals.path]
@@ -134,9 +134,9 @@ def closure_js_template_library(
       deps = deps,
       testonly = testonly,
       suppress = suppress + [
-          "JSC_NTI_COULD_NOT_INFER_CONST_TYPE",
           "analyzerChecks",
           "reportUnknownTypes",
+          "strictCheckTypes",
           "unusedLocalVariables",
       ],
       **kwargs

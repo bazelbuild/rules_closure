@@ -57,7 +57,9 @@ closure_js_library(
         "JSC_UNKNOWN_EXPR_TYPE",
         "JSC_UNNECESSARY_ESCAPE",
         "JSC_UNUSED_PRIVATE_PROPERTY",
+        "analyzerChecks",
         "lintChecks",
+        "strictCheckTypes",
     ],
 )
 
@@ -71,10 +73,8 @@ closure_js_library(
         "JSC_DEPRECATED_PROP_REASON",
         "JSC_EXTRA_REQUIRE_WARNING",
         "JSC_IMPLICITLY_NULLABLE_JSDOC",
-        "JSC_INVALID_SUPPRESS",
         "JSC_MISSING_JSDOC",
         "JSC_MISSING_RETURN_JSDOC",
-        "JSC_MISSING_SEMICOLON",
         "JSC_MUST_BE_PRIVATE",
         "JSC_NULLABLE_RETURN_WITH_NAME",
         "JSC_POSSIBLE_INEXISTENT_PROPERTY",
@@ -83,6 +83,9 @@ closure_js_library(
         "JSC_UNDEFINED_VARIABLE",
         "JSC_UNKNOWN_EXPR_TYPE",
         "JSC_UNUSED_PRIVATE_PROPERTY",
+        "analyzerChecks",
+        "lintChecks",
+        "strictCheckTypes",
     ],
     deps = [":library"],
 )

@@ -211,6 +211,12 @@ public final class JsChecker {
         new WarningsGuard() {
           @Override
           public CheckLevel level(JSError error) {
+            // TODO(jart): Figure out how to support this.
+            if (error.getType().key
+                    .equals("JSC_CONSTANT_WITHOUT_EXPLICIT_TYPE")) {
+              return CheckLevel.OFF;
+            }
+
             // Closure Rules will always ignore these checks no matter what.
             if (Diagnostics.IGNORE_ALWAYS.contains(error.getType())) {
               return CheckLevel.OFF;

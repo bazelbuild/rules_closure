@@ -78,7 +78,7 @@ var flakes = 0;
 
 
 /**
- * Guesses Content-Type header for {@code path}
+ * Guesses Content-Type header for `path`
  * @param {string} path
  * @return {string}
  */

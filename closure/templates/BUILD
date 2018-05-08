@@ -33,13 +33,10 @@ closure_js_library(
     name = "soy_jssrc",
     srcs = ["@com_google_template_soy_jssrc"],
     suppress = [
-        "JSC_IMPLICITLY_NULLABLE_JSDOC",
-        "JSC_NTI_INEXISTENT_PROPERTY",
-        "JSC_NTI_NULLABLE_DEREFERENCE",
-        "JSC_NTI_RETURN_NONDECLARED_TYPE",
-        "JSC_NTI_UNKNOWN_EXPR_TYPE",
-        "JSC_NULLABLE_RETURN_WITH_NAME",
-        "JSC_UNKNOWN_EXPR_TYPE",
+        "analyzerChecks",
+        "lintChecks",
+        "reportUnknownTypes",
+        "strictCheckTypes",
     ],
     deps = [
         ":soy_html_proto",
@@ -50,7 +47,10 @@ closure_js_library(
 closure_js_library(
     name = "soy_jssrc_idom",
     srcs = ["@com_google_template_soy_jssrc//:idom"],
-    suppress = ["reportUnknownTypes"],
+    suppress = [
+        "reportUnknownTypes",
+        "strictCheckTypes",
+    ],
     deps = [
         ":soy_jssrc",
         "//closure/library",

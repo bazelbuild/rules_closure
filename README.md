@@ -1,6 +1,5 @@
 # Closure Rules for Bazel (αlpha) ![Travis build status](https://travis-ci.org/bazelbuild/rules_closure.svg?branch=master) [![Bazel CI build status](https://badge.buildkite.com/7569410e2a2661076591897283051b6d137f35102167253fed.svg)](https://buildkite.com/bazel/closure-compiler-rules-closure-postsubmit)
 
-
 JavaScript | Templating | Stylesheets | Miscellaneous
 --- | --- | --- | ---
 [closure_js_library] | [closure_js_template_library] | [closure_css_library] | [closure_js_proto_library]
@@ -70,17 +69,17 @@ notes.
 
 ## Setup
 
-First you must [install][bazel-install] Bazel. Then you add the following to
-your `WORKSPACE` file:
+First you must [install Bazel]. Then you add the following to your `WORKSPACE`
+file:
 
 ```python
 http_archive(
     name = "io_bazel_rules_closure",
-    sha256 = "6691c58a2cd30a86776dd9bb34898b041e37136f2dc7e24cadaeaf599c95c657",
-    strip_prefix = "rules_closure-08039ba8ca59f64248bb3b6ae016460fe9c9914f",
+    sha256 = "d317365f46902cfc6cfb0aa032aa7f6e4063da8b8794a7c8398588af4df60deb",
+    strip_prefix = "rules_closure-0.6.1",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_closure/archive/08039ba8ca59f64248bb3b6ae016460fe9c9914f.tar.gz",
-        "https://github.com/bazelbuild/rules_closure/archive/08039ba8ca59f64248bb3b6ae016460fe9c9914f.tar.gz",  # 2018-01-16
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_closure/archive/0.6.1.tar.gz",
+        "https://github.com/bazelbuild/rules_closure/archive/0.6.1.tar.gz",
     ],
 )
 
@@ -92,10 +91,12 @@ closure_repositories()
 You are not required to install the Closure Tools, PhantomJS, or anything else
 for that matter; they will be fetched automatically by Bazel.
 
-We also strongly recommend that you add the following to your `~/.bazelrc` file:
+### Tips
+
+Adding this to `~/.bazelrc` will make Protocol Buffers build 2x faster:
 
 ```
-build --strategy=Closure=worker
+build --distinct_host_configuration=false
 ```
 
 ### Overriding Dependency Versions
@@ -110,13 +111,28 @@ custom dependency version. A full list of dependencies is available from
 [repositories.bzl]. For example, to override the version of Guava:
 
 ```python
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_repositories")
-closure_repositories(omit_guava=True)
+load(
+    "@io_bazel_rules_closure//closure:defs.bzl",
+    "closure_repositories",
+    "java_import_external",
+)
 
-maven_jar(
-    name = "guava",
-    artifact = "...",
-    sha1 = "...",
+closure_repositories(
+    omit_com_google_guava=True,
+)
+
+java_import_external(
+    name = "com_google_guava",
+    licenses = ["notice"],  # Apache 2.0
+    jar_urls = [
+        "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/guava/guava/24.1-jre/guava-24.1-jre.jar",
+        "https://repo1.maven.org/maven2/com/google/guava/guava/24.1-jre/guava-24.1-jre.jar",
+    ],
+    jar_sha256 = "31bfe27bdf9cba00cb4f3691136d3bc7847dfc87bfe772ca7a9eb68ff31d79f5",
+    exports = [
+        "@com_google_code_findbugs_jsr305",
+        "@com_google_errorprone_error_prone_annotations",
+    ],
 )
 ```
 
@@ -974,7 +990,7 @@ This rule can be referenced as though it were the following:
 - **deps:** (List of [labels]; required) The list of [proto_library] rules
   to generate JS code for.
 
-[Bazel]: http://bazel.io/
+[Bazel]: http://bazel.build/
 [Closure Compiler]: https://developers.google.com/closure/compiler/
 [Closure Library]: https://developers.google.com/closure/library/
 [Closure Stylesheets]: https://github.com/google/closure-stylesheets
@@ -986,14 +1002,14 @@ This rule can be referenced as though it were the following:
 [Google JavaScript Style Guide]: https://google.github.io/styleguide/jsguide.html
 [Google coding conventions]: https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/GoogleCodingConvention.java
 [Incremental DOM]: https://github.com/google/incremental-dom/
-[Name]: http://bazel.io/docs/build-ref.html#name
+[Name]: https://docs.bazel.build/versions/master/build-ref.html#name
 [PhantomJS]: http://phantomjs.org/
 [ProcessEs6Modules]: https://github.com/google/closure-compiler/blob/1281ed9ded137eaf578bb65a588850bf13f38aa4/src/com/google/javascript/jscomp/ProcessEs6Modules.java
 [Protocol Buffers]: https://github.com/google/protobuf
 [acyclic]: https://en.wikipedia.org/wiki/Directed_acyclic_graph
 [asserts]: https://github.com/google/closure-library/blob/master/closure/goog/testing/asserts.js#L1308
 [base.js]: https://github.com/google/closure-library/blob/master/closure/goog/base.js
-[bazel-install]: http://bazel.io/docs/install.html
+[install Bazel]: https://docs.bazel.build/versions/master/install.html
 [blockers]: https://github.com/bazelbuild/rules_closure/labels/launch%20blocker
 [closure_css_binary]: #closure_css_binary
 [closure_css_library]: #closure_css_library
@@ -1009,13 +1025,13 @@ This rule can be referenced as though it were the following:
 [coffeescript]: http://coffeescript.org/
 [compiler-issue]: https://github.com/google/closure-compiler/issues/new
 [css-sourcemap]: https://developer.chrome.com/devtools/docs/css-preprocessors
-[dependency]: http://bazel.io/docs/build-ref.html#dependencies
-[filegroup]: http://www.bazel.io/docs/be/general.html#filegroup
+[dependency]: https://docs.bazel.build/versions/master/build-ref.html#dependencies
+[filegroup]: https://docs.bazel.build/versions/master/be/general.html#filegroup
 [idom-example]: https://github.com/bazelbuild/rules_closure/blob/80d493d5ffc3099372929a8cd4a301da72e1b43f/closure/templates/test/greeter_idom.js
-[java_library.exports]: http://bazel.io/docs/be/java.html#java_library.exports
-[java_library]: http://www.bazel.io/docs/be/java.html#java_library
+[java_library.exports]: https://docs.bazel.build/versions/master/be/java.html#java_library.exports
+[java_library]: https://docs.bazel.build/versions/master/be/java.html#java_library
 [jquery]: http://jquery.com/
-[labels]: http://bazel.io/docs/build-ref.html#labels
+[labels]: https://docs.bazel.build/versions/master/build-ref.html#labels
 [managing dependencies]: https://github.com/google/closure-compiler/wiki/Managing-Dependencies
 [output-wrapper-faq]: https://github.com/google/closure-compiler/wiki/FAQ#when-using-advanced-optimizations-closure-compiler-adds-new-variables-to-the-global-scope-how-do-i-make-sure-my-variables-dont-collide-with-other-scripts-on-the-page
 [phantomjs-bug]: https://github.com/ariya/phantomjs/issues/14028

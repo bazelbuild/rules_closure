@@ -7,10 +7,10 @@ closure_repositories()
 
 java_import_external(
     name = "com_google_guava_testlib",
-    jar_sha256 = "36ea0f68fe9c88b6ed5019e93e0e67078b60d636cfd7e26ef8c23bfa9ed8e944",
+    jar_sha256 = "1e7e0e728bb8d68a985115d2439ad6a36473c3e49d78a70945919731f9ac7136",
     jar_urls = [
-        "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/guava/guava-testlib/21.0/guava-testlib-21.0.jar",
-        "https://repo1.maven.org/maven2/com/google/guava/guava-testlib/21.0/guava-testlib-21.0.jar",
+        "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/guava/guava-testlib/24.1-jre/guava-testlib-24.1-jre.jar",
+        "https://repo1.maven.org/maven2/com/google/guava/guava-testlib/24.1-jre/guava-testlib-24.1-jre.jar",
     ],
     licenses = ["notice"],  # Apache 2.0
     testonly_ = 1,

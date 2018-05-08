@@ -11,22 +11,17 @@ os:
   - osx
 
 env:
-  - V=0.12.0
+  - BAZEL=0.12.0
 
 before_install:
   - |
-    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+    if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
       OS=darwin
     else
       sysctl kernel.unprivileged_userns_clone=1
       OS=linux
     fi
-    if [[ "${V}" == "HEAD" ]]; then
-      URL="http://ci.bazel.io/job/Bazel/JAVA_VERSION=1.8,PLATFORM_NAME=${OS}-x86_64/lastSuccessfulBuild/artifact/output/ci/bazel--installer.sh"
-    else
-      URL="https://github.com/bazelbuild/bazel/releases/download/${V}/bazel-${V}-installer-${OS}-x86_64.sh"
-    fi
-    wget -O install.sh "${URL}"
+    wget -O install.sh "https://github.com/bazelbuild/bazel/releases/download/${BAZEL}/bazel-${BAZEL}-installer-${OS}-x86_64.sh"
     chmod +x install.sh
     ./install.sh --user
     rm -f install.sh
@@ -42,11 +37,11 @@ script:
       --worker_verbose \
       --verbose_failures \
       --test_output=errors \
-      --spawn_strategy=sandboxed \
       --genrule_strategy=sandboxed \
+      --spawn_strategy=sandboxed \
+      --worker_sandboxing \
       --local_resources=400,2,1.0 \
-      --strategy=Javac=worker \
-      --strategy=Closure=worker \
+      --distinct_host_configuration=false \
       ...
 
 notifications:

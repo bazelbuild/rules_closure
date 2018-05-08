@@ -70,7 +70,7 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                   new CheckJSDocStyle(compiler),
                   new CheckJSDoc(compiler),
                   new CheckMissingSemicolon(compiler),
-                  new CheckMissingSuper(compiler),
+                  new CheckSuper(compiler),
                   new CheckPrimitiveAsObject(compiler),
                   new CheckRequiresAndProvidesSorted(compiler),
                   new CheckMissingAndExtraRequires(
@@ -78,7 +78,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                   new CheckUnusedLabels(compiler),
                   new CheckUselessBlocks(compiler),
                   new ClosureCheckModule(compiler),
-                  new Es6SuperCheck(compiler),
                   new CheckSetTestOnly(state, compiler),
                   new CheckStrictDeps.FirstPass(state, compiler)));
         }
