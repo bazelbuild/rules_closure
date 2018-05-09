@@ -17,7 +17,6 @@
 load("//closure/private:defs.bzl",
      "CLOSURE_WORKER_ATTR",
      "CLOSURE_LIBRARY_BASE_ATTR",
-     "CLOSURE_LIBRARY_DEPS_ATTR",
      "JS_LANGUAGES",
      "JS_LANGUAGE_IN",
      "JS_LANGUAGE_OUT_DEFAULT",
@@ -43,8 +42,7 @@ def _impl(ctx):
         ctx.attr.language, ", ".join(JS_LANGUAGES)))
 
   deps = unfurl(ctx.attr.deps, provider="closure_js_library")
-  js = collect_js(deps, ctx.file._closure_library_base,
-                  ctx.file._closure_library_deps, css=ctx.attr.css)
+  js = collect_js(deps, ctx.files._closure_library_base, css=ctx.attr.css)
   if not js.srcs:
     fail("There are no JS source files in the transitive closure")
 
@@ -272,7 +270,6 @@ closure_js_binary = rule(
         "internal_expect_warnings": attr.bool(default=False),
         "_ClosureWorker": CLOSURE_WORKER_ATTR,
         "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
-        "_closure_library_deps": CLOSURE_LIBRARY_DEPS_ATTR,
     },
     outputs={
         "bin": "%{name}.js",

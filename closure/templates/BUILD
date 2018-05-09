@@ -32,15 +32,28 @@ closure_js_proto_library(
 closure_js_library(
     name = "soy_jssrc",
     srcs = ["@com_google_template_soy_jssrc"],
-    suppress = [
-        "analyzerChecks",
-        "lintChecks",
-        "reportUnknownTypes",
-        "strictCheckTypes",
-    ],
+    lenient = True,
     deps = [
         ":soy_html_proto",
-        "//closure/library",
+        "//closure/library/array",
+        "//closure/library/asserts",
+        "//closure/library/debug",
+        "//closure/library/format",
+        "//closure/library/html:safehtml",
+        "//closure/library/html:safescript",
+        "//closure/library/html:safestyle",
+        "//closure/library/html:safestylesheet",
+        "//closure/library/html:safeurl",
+        "//closure/library/html:trustedresourceurl",
+        "//closure/library/html:uncheckedconversions",
+        "//closure/library/i18n:bidi",
+        "//closure/library/i18n:bidiformatter",
+        "//closure/library/i18n:numberformat",
+        "//closure/library/object",
+        "//closure/library/soy:all_js",
+        "//closure/library/string",
+        "//closure/library/string:const",
+        "//closure/library/uri",
     ],
 )
 
@@ -53,7 +66,8 @@ closure_js_library(
     ],
     deps = [
         ":soy_jssrc",
-        "//closure/library",
+        "//closure/library/soy",
+        "//closure/library/soy:data",
         "//third_party/javascript/incremental_dom",
     ],
 )

@@ -58,7 +58,7 @@ closure_js_library(
     srcs = ["greeter.js"],
     deps = [
         ":greeter_soy",
-        "//closure/library",
+        "//closure/library/soy",
     ],
 )
 
@@ -67,7 +67,6 @@ closure_js_library(
     srcs = ["greeter_idom.js"],
     deps = [
         ":greeter_idom_soy",
-        "//closure/library",
         "//third_party/javascript/incremental_dom",
     ],
 )
@@ -78,7 +77,7 @@ closure_js_library(
     deps = [
         ":greeter_proto_soy",
         ":person_proto",
-        "//closure/library",
+        "//closure/library/soy",
     ],
 )
 
@@ -88,7 +87,6 @@ closure_js_library(
     deps = [
         ":greeter_idom_proto_soy",
         ":person_proto",
-        "//closure/library",
         "//third_party/javascript/incremental_dom",
     ],
 )
@@ -99,8 +97,9 @@ closure_js_test(
     srcs = ["greeter_test.js"],
     deps = [
         ":greeter_lib",
-        "//closure/library",
-        "//closure/library:testing",
+        "//closure/library/asserts",
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:jsunit",
     ],
 )
 
@@ -110,8 +109,9 @@ closure_js_test(
     srcs = ["greeter_idom_test.js"],
     deps = [
         ":greeter_idom_lib",
-        "//closure/library",
-        "//closure/library:testing",
+        "//closure/library/module",
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:jsunit",
     ],
 )
 
@@ -121,8 +121,9 @@ closure_js_test(
     srcs = ["greeter_proto_test.js"],
     deps = [
         ":greeter_proto_lib",
-        "//closure/library",
-        "//closure/library:testing",
+        "//closure/library/asserts",
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:jsunit",
     ],
 )
 
@@ -132,8 +133,9 @@ closure_js_test(
     srcs = ["greeter_idom_proto_test.js"],
     deps = [
         ":greeter_idom_proto_lib",
-        "//closure/library",
-        "//closure/library:testing",
+        "//closure/library/module",
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:jsunit",
     ],
 )
 
@@ -158,7 +160,6 @@ closure_js_library(
     srcs = ["greeter_idom_fail.js"],
     deps = [
         ":greeter_idom_soy",
-        "//closure/library",
         "//third_party/javascript/incremental_dom",
     ],
 )

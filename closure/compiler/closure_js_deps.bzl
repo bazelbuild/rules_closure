@@ -24,7 +24,7 @@ load("//closure/private:defs.bzl",
 def _impl(ctx):
   deps = unfurl(ctx.attr.deps, provider="closure_js_library")
   js = collect_js(deps)
-  closure_root = _dirname(long_path(ctx, ctx.file._closure_library_base))
+  closure_root = _dirname(long_path(ctx, ctx.files._closure_library_base[0]))
   closure_rel = '/'.join(['..' for _ in range(len(closure_root.split('/')))])
   outputs = [ctx.outputs.out]
   # XXX: Other files in same directory will get schlepped in w/o sandboxing.
@@ -44,7 +44,7 @@ def _impl(ctx):
       files=depset(outputs),
       runfiles=ctx.runfiles(
           files=outputs + ctx.files.data,
-          transitive_files=(depset([ctx.file._closure_library_base]) |
+          transitive_files=(depset(ctx.files._closure_library_base) |
                             collect_runfiles(deps) |
                             collect_runfiles(ctx.attr.data))))
 

@@ -261,13 +261,15 @@ public final class JsChecker {
     // linting were actually suppressed. However we can only offer this safety on the checks over
     // which JsChecker has sole dominion. Other suppress codes won't actually be suppressed until
     // they've been propagated up to the closure_js_binary rule.
-    Set<String> useless =
-        Sets.intersection(
-            Sets.difference(ImmutableSet.copyOf(suppress), actuallySuppressed),
-            Diagnostics.JSCHECKER_ONLY_SUPPRESS_CODES);
-    if (!useless.isEmpty()) {
-      errorManager.report(CheckLevel.ERROR,
-          JSError.make(Diagnostics.SUPERFLUOUS_SUPPRESS, label, Joiner.on(", ").join(useless)));
+    if (!suppress.contains("superfluousSuppress")) {
+      Set<String> useless =
+          Sets.intersection(
+              Sets.difference(ImmutableSet.copyOf(suppress), actuallySuppressed),
+              Diagnostics.JSCHECKER_ONLY_SUPPRESS_CODES);
+      if (!useless.isEmpty()) {
+        errorManager.report(CheckLevel.ERROR,
+            JSError.make(Diagnostics.SUPERFLUOUS_SUPPRESS, label, Joiner.on(", ").join(useless)));
+      }
     }
 
     // TODO: Make compiler.compile() package private so we don't have to do this.

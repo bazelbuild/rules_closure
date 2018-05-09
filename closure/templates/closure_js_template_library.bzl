@@ -120,8 +120,28 @@ def closure_js_template_library(
       compiler = compiler,
   )
 
-  deps = deps + [str(Label("//closure/library")),
-                 str(Label("//closure/templates:soy_jssrc"))]
+  deps = deps + [
+      str(Label("//closure/library/array")),
+      str(Label("//closure/library/asserts")),
+      str(Label("//closure/library/debug")),
+      str(Label("//closure/library/format")),
+      str(Label("//closure/library/html:safehtml")),
+      str(Label("//closure/library/html:safescript")),
+      str(Label("//closure/library/html:safestyle")),
+      str(Label("//closure/library/html:safestylesheet")),
+      str(Label("//closure/library/html:safeurl")),
+      str(Label("//closure/library/html:trustedresourceurl")),
+      str(Label("//closure/library/html:uncheckedconversions")),
+      str(Label("//closure/library/i18n:bidi")),
+      str(Label("//closure/library/i18n:bidiformatter")),
+      str(Label("//closure/library/i18n:numberformat")),
+      str(Label("//closure/library/object")),
+      str(Label("//closure/library/soy:all_js")),
+      str(Label("//closure/library/string")),
+      str(Label("//closure/library/string:const")),
+      str(Label("//closure/library/uri")),
+      str(Label("//closure/templates:soy_jssrc")),
+  ]
   if incremental_dom:
     deps = deps + [
         str(Label("//closure/templates:soy_jssrc_idom")),

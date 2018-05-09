@@ -61,13 +61,6 @@ final class Diagnostics {
           "superfluousSuppress",
           "useOfGoogBase");
 
-  /** Diagnostic groups both {@link JsChecker} and {@link JsCompiler} will check. */
-  static final ImmutableSet<String> JSCHECKER_EXTRA_ERRORS =
-      ImmutableSet.of(
-          // Even though we're not running the typechecker, enable the checkTypes DiagnosticGroup,
-          // since it contains some warnings we do want to report, such as JSDoc parse warnings.
-          "checkTypes");
-
   /** Legal values for a {@code @suppress {foo}} JSDoc tag. */
   // Keep in sync with com/google/javascript/jscomp/parsing/ParserConfig.properties
   private static final ImmutableSet<String> LEGAL_JSDOC_SUPPRESSIONS =
@@ -116,6 +109,13 @@ final class Diagnostics {
           "uselessCode",
           "visibility",
           "with");
+
+  /** Diagnostic groups both {@link JsChecker} and {@link JsCompiler} will check. */
+  static final ImmutableSet<String> JSCHECKER_EXTRA_ERRORS =
+      ImmutableSet.of(
+          // Even though we're not running the typechecker, enable the checkTypes DiagnosticGroup,
+          // since it contains some warnings we do want to report, such as JSDoc parse warnings.
+          "checkTypes");
 
   /** Checks to suppress if closure_js_library convention is not GOOGLE. */
   static final ImmutableSet<DiagnosticType> GOOGLE_LINTER_CHECKS =

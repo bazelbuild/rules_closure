@@ -635,9 +635,7 @@ def com_google_javascript_closure_compiler():
   )
 
 def com_google_javascript_closure_library():
-  # To update Closure Library, one needs to uncomment and run the
-  # js_library_files_maker and js_testing_files_maker genrules in
-  # closure_library.BUILD.
+  # After updating: bazel run //closure/library:regenerate -- "$PWD"
   native.new_http_archive(
       name = "com_google_javascript_closure_library",
       urls = [

@@ -32,14 +32,8 @@ JS_LANGUAGES = depset([
 ])
 
 CLOSURE_LIBRARY_BASE_ATTR = attr.label(
-    default=Label("@com_google_javascript_closure_library//:closure/goog/base.js"),
-    allow_files=True,
-    single_file=True)
-
-CLOSURE_LIBRARY_DEPS_ATTR = attr.label(
-    default=Label("@com_google_javascript_closure_library//:closure/goog/deps.js"),
-    allow_files=True,
-    single_file=True)
+    default=Label("//closure/library:base"),
+    allow_files=True)
 
 CLOSURE_WORKER_ATTR = attr.label(
     default=Label("//java/io/bazel/rules/closure:ClosureWorker"),
@@ -60,7 +54,6 @@ def unfurl(deps, provider=""):
 
 def collect_js(deps,
                closure_library_base=None,
-               closure_library_deps=None,
                has_direct_srcs=False,
                no_closure_library=False,
                css=None):
@@ -89,13 +82,13 @@ def collect_js(deps,
       fail("no_closure_library can't be used when Closure Library is " +
            "already part of the transitive closure")
   elif has_direct_srcs and not has_closure_library:
-    tmp = depset([closure_library_base, closure_library_deps])
+    tmp = depset(closure_library_base)
     tmp += srcs
     srcs = tmp
     has_closure_library = True
   if css:
-    tmp = depset([closure_library_base,
-               css.closure_css_binary.renaming_map])
+    tmp = depset(closure_library_base)
+    tmp += [css.closure_css_binary.renaming_map]
     tmp += srcs
     srcs = tmp
   return struct(
@@ -222,7 +215,9 @@ def create_argfile(actions, name, args):
   return argfile
 
 def library_level_checks(
-    actions, label, ijs_deps, srcs, executable, output, suppress = []):
+    actions, label, ijs_deps, srcs, executable, output,
+    suppress = [],
+    lenient = False):
   args = [
       "JsCompiler",
       "--checks_only",
@@ -243,6 +238,8 @@ def library_level_checks(
   for s in suppress:
     args.append("--suppress")
     args.append(s)
+  if lenient:
+    args.append("--lenient")
   actions.run(
       inputs=inputs,
       outputs=[output],

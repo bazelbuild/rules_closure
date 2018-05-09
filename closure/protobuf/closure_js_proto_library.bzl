@@ -69,16 +69,14 @@ def closure_js_proto_library(
       srcs = [name + ".js"],
       testonly = testonly,
       deps = [
-          str(Label("//closure/library")),
+          str(Label("//closure/library/array")),
           str(Label("//closure/protobuf:jspb")),
       ],
       internal_descriptors = [name + ".descriptor"],
       suppress = suppress + [
-          "analyzerChecks",
-          "missingOverride",
           "missingProperties",
-          "reportUnknownTypes",
           "unusedLocalVariables",
       ],
+      lenient = True,
       **kwargs
   )

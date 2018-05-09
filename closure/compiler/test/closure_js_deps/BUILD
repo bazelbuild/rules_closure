@@ -62,7 +62,7 @@ file_test(
 closure_js_library(
     name = "goblin",
     srcs = ["goblin.js"],
-    deps = ["//closure/library"],
+    deps = ["//closure/library/dom"],
 )
 
 closure_js_deps(

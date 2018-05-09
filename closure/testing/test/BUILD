@@ -29,7 +29,10 @@ closure_js_test(
     name = "simple_test",
     timeout = "short",
     srcs = ["simple_test.js"],
-    deps = ["//closure/library:testing"],
+    deps = [
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:jsunit",
+    ],
 )
 
 closure_js_library(
@@ -45,7 +48,9 @@ closure_js_test(
     entry_points = ["goog:arithmetic_module_test"],
     deps = [
         ":arithmetic_module_lib",
-        "//closure/library:testing",
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:jsunit",
+        "//closure/library/testing:testsuite",
     ],
 )
 
@@ -55,7 +60,9 @@ closure_js_test(
     srcs = ["arithmetic_scope_test.js"],
     deps = [
         ":arithmetic_lib",
-        "//closure/library:testing",
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:jsunit",
+        "//closure/library/testing:testsuite",
     ],
 )
 

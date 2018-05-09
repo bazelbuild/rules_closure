@@ -27,5 +27,12 @@ closure_js_library(
         "reportUnknownTypes",
         "strictCheckTypes",
     ],
-    deps = ["//closure/library"],
+    deps = [
+        "//closure/library/array",
+        "//closure/library/asserts",
+        "//closure/library/crypt",
+        "//closure/library/crypt:base64",
+        "//closure/library/object",
+        "//closure/library/string",
+    ],
 )

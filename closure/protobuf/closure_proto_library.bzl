@@ -19,7 +19,6 @@ load("//closure/compiler:closure_js_library.bzl", "closure_js_library_impl")
 load("//closure/private:defs.bzl",
      "CLOSURE_WORKER_ATTR",
      "CLOSURE_LIBRARY_BASE_ATTR",
-     "CLOSURE_LIBRARY_DEPS_ATTR",
      "unfurl")
 
 # This was borrowed from Rules Go, licensed under Apache 2.
@@ -96,19 +95,15 @@ def _closure_proto_aspect_impl(target, ctx):
   deps += [ctx.attr._closure_library, ctx.attr._closure_protobuf_jspb]
 
   suppress = [
-      "analyzerChecks",
-      "missingOverride",
       "missingProperties",
-      "reportUnknownTypes",
       "unusedLocalVariables",
   ]
 
   library = closure_js_library_impl(
       ctx.actions, ctx.label, ctx.workspace_name,
-      srcs, deps, ctx.rule.attr.testonly, suppress,
+      srcs, deps, ctx.rule.attr.testonly, suppress, True,
 
-      ctx.file._closure_library_base,
-      ctx.file._closure_library_deps,
+      ctx.files._closure_library_base,
       ctx.executable._ClosureWorker)
   return struct(
       exports = library.exports,
@@ -127,9 +122,8 @@ _closure_proto_aspect = aspect(
         ),
         "_ClosureWorker": CLOSURE_WORKER_ATTR,
         "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
-        "_closure_library_deps": CLOSURE_LIBRARY_DEPS_ATTR,
         "_closure_library": attr.label(
-            default = Label("//closure/library"),
+            default = Label("//closure/library/array"),
         ),
         "_closure_protobuf_jspb": attr.label(
             default = Label("//closure/protobuf:jspb"),
