@@ -20,8 +20,8 @@ def _filegroup_external(ctx):
   for different platforms.
   """
   strip_prefix = ctx.attr.strip_prefix
-  downloaded = depset()
-  basenames = depset()
+  downloaded = []
+  basenames = []
   data = depset(ctx.attr.data)
   inferred_srcs = depset()
   for sha256, urls, extract in _get_downloads(ctx):
