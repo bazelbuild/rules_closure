@@ -16,7 +16,6 @@
 
 load("//closure/private:java_import_external.bzl", "java_import_external")
 load("//closure/private:platform_http_file.bzl", "platform_http_file")
-load("//closure:filegroup_external.bzl", "filegroup_external")
 
 def closure_repositories(
     omit_aopalliance=False,
