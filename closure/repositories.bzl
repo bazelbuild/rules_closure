@@ -14,6 +14,7 @@
 
 """External dependencies for Closure Rules."""
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 load("//closure/private:java_import_external.bzl", "java_import_external")
 load("//closure/private:platform_http_file.bzl", "platform_http_file")
 load("//closure:filegroup_external.bzl", "filegroup_external")
@@ -34,6 +35,7 @@ def closure_repositories(
     omit_com_google_dagger=False,
     omit_com_google_dagger_compiler=False,
     omit_com_google_dagger_producers=False,
+    omit_com_google_dagger_spi=False,
     omit_com_google_errorprone_error_prone_annotations=False,
     omit_com_google_errorprone_javac_shaded=False,
     omit_com_google_guava=False,
@@ -100,6 +102,8 @@ def closure_repositories(
     com_google_dagger_compiler()
   if not omit_com_google_dagger_producers:
     com_google_dagger_producers()
+  if not omit_com_google_dagger_spi:
+    com_google_dagger_spi()
   if not omit_com_google_errorprone_error_prone_annotations:
     com_google_errorprone_error_prone_annotations()
   if not omit_com_google_errorprone_javac_shaded:
@@ -405,7 +409,7 @@ def com_google_common_html_types():
   )
 
 def com_google_common_html_types_html_proto():
-  native.http_file(
+  http_file(
       name = "com_google_common_html_types_html_proto",
       sha256 = "6ece202f11574e37d0c31d9cf2e9e11a0dbc9218766d50d211059ebd495b49c3",
       urls = [
@@ -417,10 +421,10 @@ def com_google_common_html_types_html_proto():
 def com_google_dagger():
   java_import_external(
       name = "com_google_dagger",
-      jar_sha256 = "8b7806518bed270950002158934fbd8281725ee09909442f2f22b58520b667a7",
+      jar_sha256 = "374cfee26c9c93f44caa1946583c9edc135bb9a42838476522551ec46aa55c7c",
       jar_urls = [
-          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger/2.9/dagger-2.9.jar",
-          "https://repo1.maven.org/maven2/com/google/dagger/dagger/2.9/dagger-2.9.jar",
+          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger/2.14.1/dagger-2.14.1.jar",
+          "https://repo1.maven.org/maven2/com/google/dagger/dagger/2.14.1/dagger-2.14.1.jar",
       ],
       licenses = ["notice"],  # Apache 2.0
       deps = ["@javax_inject"],
@@ -440,17 +444,20 @@ def com_google_dagger():
 def com_google_dagger_compiler():
   java_import_external(
       name = "com_google_dagger_compiler",
-      jar_sha256 = "afe356def27710db5b60cad8e7a6c06510dc3d3b854f30397749cbf0d0e71315",
+      jar_sha256 = "ff16d55273e375349537fc82292b00de04d8a2caca2d4aa6c642692b1a68194d",
       jar_urls = [
-          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger-compiler/2.9/dagger-compiler-2.9.jar",
-          "https://repo1.maven.org/maven2/com/google/dagger/dagger-compiler/2.9/dagger-compiler-2.9.jar",
+          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger-compiler/2.14.1/dagger-compiler-2.14.1.jar",
+          "https://repo1.maven.org/maven2/com/google/dagger/dagger-compiler/2.14.1/dagger-compiler-2.14.1.jar",
       ],
       licenses = ["notice"],  # Apache 2.0
       deps = [
           "@com_google_code_findbugs_jsr305",
           "@com_google_dagger//:runtime",
           "@com_google_dagger_producers//:runtime",
+          "@com_google_dagger_spi",
           "@com_google_guava",
+          "@com_google_java_format",
+          "@com_squareup_javapoet",
       ],
       extra_build_file_content = "\n".join([
           "java_plugin(",
@@ -470,10 +477,10 @@ def com_google_dagger_compiler():
 def com_google_dagger_producers():
   java_import_external(
       name = "com_google_dagger_producers",
-      jar_sha256 = "b452dc1b95dd02f6272e97b15d1bd35d92b5f484a7d69bb73887b6c6699d8843",
+      jar_sha256 = "96f950bc4b94d013b0c538632a4bc630f33eda8b01f63ae752b76c5e48783859",
       jar_urls = [
-          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger-producers/2.9/dagger-producers-2.9.jar",
-          "https://repo1.maven.org/maven2/com/google/dagger/dagger-producers/2.9/dagger-producers-2.9.jar",
+          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger-producers/2.14.1/dagger-producers-2.14.1.jar",
+          "https://repo1.maven.org/maven2/com/google/dagger/dagger-producers/2.14.1/dagger-producers-2.14.1.jar",
       ],
       licenses = ["notice"],  # Apache 2.0
       deps = [
@@ -492,6 +499,17 @@ def com_google_dagger_producers():
           "    ],",
           ")",
       ]),
+  )
+
+def com_google_dagger_spi():
+  java_import_external(
+      name = "com_google_dagger_spi",
+      jar_sha256 = "6a20d6c6620fefe50747e9e910e0d0c178cf39d76b67ccffb505ac9a167302cb",
+      jar_urls = [
+          "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger-spi/2.14.1/dagger-spi-2.14.1.jar",
+          "https://repo1.maven.org/maven2/com/google/dagger/dagger-spi/2.14.1/dagger-spi-2.14.1.jar",
+      ],
+      licenses = ["notice"],  # Apache 2.0
   )
 
 def com_google_errorprone_error_prone_annotations():
@@ -633,7 +651,7 @@ def com_google_javascript_closure_compiler():
 
 def com_google_javascript_closure_library():
   # After updating: bazel run //closure/library:regenerate -- "$PWD"
-  native.new_http_archive(
+  http_archive(
       name = "com_google_javascript_closure_library",
       urls = [
           "https://mirror.bazel.build/github.com/google/closure-library/archive/v20180405.tar.gz",
@@ -658,7 +676,7 @@ def com_google_jsinterop_annotations():
 
 def com_google_protobuf():
   # Note: Protobuf 3.6.0+ is going to use C++11
-  native.http_archive(
+  http_archive(
       name = "com_google_protobuf",
       strip_prefix = "protobuf-3.5.1",
       sha256 = "826425182ee43990731217b917c5c3ea7190cfda141af4869e6d4ad9085a740f",
@@ -669,7 +687,7 @@ def com_google_protobuf():
   )
 
 def com_google_protobuf_js():
-  native.new_http_archive(
+  http_archive(
       name = "com_google_protobuf_js",
       urls = [
           "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.5.1.tar.gz",
@@ -722,7 +740,7 @@ def com_google_template_soy():
   )
 
 def com_google_template_soy_jssrc():
-  native.new_http_archive(
+  http_archive(
       name = "com_google_template_soy_jssrc",
       sha256 = "c76ab4cb6e46a7c76336640b3c40d6897b420209a6c0905cdcd32533dda8126a",
       urls = [
@@ -748,16 +766,16 @@ def com_ibm_icu_icu4j():
 def com_squareup_javapoet():
   java_import_external(
       name = "com_squareup_javapoet",
-      jar_sha256 = "2f671d5f056f04922feff78dd60c34979fc9863b16ad706551a9b68842c1a3d0",
+      jar_sha256 = "5bb5abdfe4366c15c0da3332c57d484e238bd48260d6f9d6acf2b08fdde1efea",
       jar_urls = [
-          "https://mirror.bazel.build/repo1.maven.org/maven2/com/squareup/javapoet/1.7.0/javapoet-1.7.0.jar",
-          "https://repo1.maven.org/maven2/com/squareup/javapoet/1.7.0/javapoet-1.7.0.jar",
+          "https://mirror.bazel.build/repo1.maven.org/maven2/com/squareup/javapoet/1.9.0/javapoet-1.9.0.jar",
+          "https://repo1.maven.org/maven2/com/squareup/javapoet/1.9.0/javapoet-1.9.0.jar",
       ],
       licenses = ["notice"],  # Apache 2.0
   )
 
 def fonts_noto_hinted_deb():
-  native.http_file(
+  http_file(
       name = "fonts_noto_hinted_deb",
       urls = [
           "https://mirror.bazel.build/http.us.debian.org/debian/pool/main/f/fonts-noto/fonts-noto-hinted_20161116-1_all.deb",
@@ -767,7 +785,7 @@ def fonts_noto_hinted_deb():
   )
 
 def fonts_noto_mono_deb():
-  native.http_file(
+  http_file(
       name = "fonts_noto_mono_deb",
       urls = [
           "https://mirror.bazel.build/http.us.debian.org/debian/pool/main/f/fonts-noto/fonts-noto-mono_20161116-1_all.deb",
@@ -801,7 +819,7 @@ def javax_inject():
   )
 
 def libexpat_amd64_deb():
-  native.http_file(
+  http_file(
       name = "libexpat_amd64_deb",
       urls = [
           "https://mirror.bazel.build/http.us.debian.org/debian/pool/main/e/expat/libexpat1_2.1.0-6+deb8u3_amd64.deb",
@@ -811,7 +829,7 @@ def libexpat_amd64_deb():
   )
 
 def libfontconfig_amd64_deb():
-  native.http_file(
+  http_file(
       name = "libfontconfig_amd64_deb",
       urls = [
           "https://mirror.bazel.build/http.us.debian.org/debian/pool/main/f/fontconfig/libfontconfig1_2.11.0-6.3+deb8u1_amd64.deb",
@@ -821,7 +839,7 @@ def libfontconfig_amd64_deb():
   )
 
 def libfreetype_amd64_deb():
-  native.http_file(
+  http_file(
       name = "libfreetype_amd64_deb",
       urls = [
           "https://mirror.bazel.build/http.us.debian.org/debian/pool/main/f/freetype/libfreetype6_2.5.2-3+deb8u1_amd64.deb",
@@ -831,7 +849,7 @@ def libfreetype_amd64_deb():
   )
 
 def libpng_amd64_deb():
-  native.http_file(
+  http_file(
       name = "libpng_amd64_deb",
       urls = [
           "https://mirror.bazel.build/http.us.debian.org/debian/pool/main/libp/libpng/libpng12-0_1.2.50-2+deb8u2_amd64.deb",
