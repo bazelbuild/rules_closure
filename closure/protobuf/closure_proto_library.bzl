@@ -111,7 +111,7 @@ def _closure_proto_aspect_impl(target, ctx):
       # The usual suspects are exported as runfiles, in addition to raw source.
       runfiles=ctx.runfiles(files=[js]))
 
-_closure_proto_aspect = aspect(
+closure_proto_aspect = aspect(
     attr_aspects = ['deps'],
     attrs = {
         # internal only
@@ -155,7 +155,7 @@ closure_proto_library = rule(
         'deps': attr.label_list(
             mandatory = True,
             providers = ['proto'],
-            aspects = [_closure_proto_aspect],
+            aspects = [closure_proto_aspect],
         ),
     },
     implementation = _closure_proto_library_impl,

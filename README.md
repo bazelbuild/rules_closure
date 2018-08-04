@@ -5,7 +5,7 @@ JavaScript | Templating | Stylesheets | Miscellaneous
 [closure_js_library] | [closure_js_template_library] | [closure_css_library] | [closure_js_proto_library]
 [closure_js_binary] | [closure_java_template_library] | [closure_css_binary] | [phantomjs_test]
 [closure_js_deps] | [closure_py_template_library] | | [closure_proto_library] \(Experimental\)
-[closure_js_test] | | |
+[closure_js_test] | | | [closure_grpc_web_library] \(Experimental\)
 
 ## Overview
 
@@ -1005,6 +1005,7 @@ This rule can be referenced as though it were the following:
 [blockers]: https://github.com/bazelbuild/rules_closure/labels/launch%20blocker
 [closure_css_binary]: #closure_css_binary
 [closure_css_library]: #closure_css_library
+[closure_grpc_web_library]: https://github.com/grpc/grpc-web/blob/9b7b2d5411c486aa646ba2491cfd894d5352775b/bazel/closure_grpc_web_library.bzl#L149
 [closure_java_template_library]: #closure_java_template_library
 [closure_js_binary]: #closure_js_binary
 [closure_js_deps]: #closure_js_deps
