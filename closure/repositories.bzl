@@ -61,6 +61,7 @@ def closure_repositories(
     omit_libfontconfig_amd64_deb=False,
     omit_libfreetype_amd64_deb=False,
     omit_libpng_amd64_deb=False,
+    omit_org_apache_tomcat_annotations_api=False,
     omit_org_json=False,
     omit_org_jsoup=False,
     omit_org_ow2_asm=False,
@@ -152,6 +153,8 @@ def closure_repositories(
     libfreetype_amd64_deb()
   if not omit_libpng_amd64_deb:
     libpng_amd64_deb()
+  if not omit_org_apache_tomcat_annotations_api:
+    org_apache_tomcat_annotations_api()
   if not omit_org_json:
     org_json()
   if not omit_org_jsoup:
@@ -249,6 +252,7 @@ def com_google_auto_factory():
           "        \"@com_google_java_format\",",
           "        \"@com_squareup_javapoet\",",
           "        \"@javax_inject\",",
+          "        \"@org_apache_tomcat_annotations_api\",",
           "    ],",
           ")",
           "",
@@ -856,6 +860,17 @@ def libpng_amd64_deb():
           "http://http.us.debian.org/debian/pool/main/libp/libpng/libpng12-0_1.2.50-2+deb8u2_amd64.deb",
       ],
       sha256 = "a57b6d53169c67a7754719f4b742c96554a18f931ca5b9e0408fb6502bb77e80",
+  )
+
+def org_apache_tomcat_annotations_api():
+  java_import_external(
+      name = "org_apache_tomcat_annotations_api",
+      licenses = ["notice"],  # Apache License, Version 2.0
+      jar_sha256 = "748677bebb1651a313317dfd93e984ed8f8c9e345538fa8b0ab0cbb804631953",
+      jar_urls = [
+	  "http://maven.ibiblio.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
+	  "http://repo1.maven.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
+      ],
   )
 
 def org_json():
