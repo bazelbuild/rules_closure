@@ -20,6 +20,10 @@ java_binary(
     jvm_flags = [
         "-Xss20m",  # JSCompiler needs big stacks for recursive parsing
         "-XX:+UseParallelGC",  # Best GC when app isn't latency sensitive
+        # quiet warnings from com.google.protobuf.UnsafeUtil,
+        # see: https://github.com/google/protobuf/issues/3781
+        "--add-opens=java.base/java.nio=ALL-UNNAMED",
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
     ],
     main_class = "io.bazel.rules.closure.ClosureWorker",
     visibility = ["//visibility:public"],
