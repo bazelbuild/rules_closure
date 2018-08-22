@@ -26,6 +26,7 @@ java_binary(
     deps = [
         "//java/com/google/javascript/jscomp",
         "//java/io/bazel/rules/closure/webfiles",
+        "//java/io/bazel/rules/closure/webfiles/compiler",
         "//java/io/bazel/rules/closure/worker",
         "@com_google_dagger",
         "@com_google_guava",
