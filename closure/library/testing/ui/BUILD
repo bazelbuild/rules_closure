@@ -27,6 +27,8 @@ closure_js_library(
         "//closure/library/dom:nodetype",
         "//closure/library/testing:asserts",
         "//closure/library/testing:dom",
+        "//closure/library/ui:control",
+        "//closure/library/ui:controlrenderer",
     ],
 )
 

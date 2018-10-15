@@ -20,6 +20,7 @@ closure_js_library(
         ":link",
         ":node",
         ":plugin",
+        ":plugin_impl",
         ":range",
         ":seamlessfield",
         ":style",
@@ -102,7 +103,7 @@ closure_js_library(
         "//closure/library/editor:command",
         "//closure/library/editor:icontent",
         "//closure/library/editor:node",
-        "//closure/library/editor:plugin",
+        "//closure/library/editor:plugin_impl",
         "//closure/library/editor:range",
         "//closure/library/events",
         "//closure/library/events:eventhandler",
@@ -178,6 +179,16 @@ closure_js_library(
 closure_js_library(
     name = "plugin",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/editor/plugin.js"],
+    lenient = True,
+    deps = [
+        "//closure/library/editor:field",
+        "//closure/library/editor:plugin_impl",
+    ],
+)
+
+closure_js_library(
+    name = "plugin_impl",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/editor/plugin_impl.js"],
     lenient = True,
     deps = [
         "//closure/library/events:eventtarget",

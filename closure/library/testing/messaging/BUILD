@@ -14,6 +14,7 @@ closure_js_library(
     deps = [
         "//closure/library/messaging:abstractchannel",
         "//closure/library/testing:asserts",
+        "//closure/library/testing:mockcontrol",
     ],
 )
 
@@ -34,7 +35,10 @@ closure_js_library(
     testonly = True,
     srcs = ["@com_google_javascript_closure_library//:closure/goog/testing/messaging/mockmessageport.js"],
     lenient = True,
-    deps = ["//closure/library/events:eventtarget"],
+    deps = [
+        "//closure/library/events:eventtarget",
+        "//closure/library/testing:mockcontrol",
+    ],
 )
 
 closure_js_library(

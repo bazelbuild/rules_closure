@@ -11,7 +11,10 @@ closure_js_library(
     testonly = True,
     srcs = ["@com_google_javascript_closure_library//:closure/goog/testing/events/eventobserver.js"],
     lenient = True,
-    deps = ["//closure/library/array"],
+    deps = [
+        "//closure/library/array",
+        "//closure/library/events:event",
+    ],
 )
 
 closure_js_library(

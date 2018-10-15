@@ -15,12 +15,12 @@
 """Common build definitions for Closure Compiler build definitions.
 """
 
-CSS_FILE_TYPE = FileType([".css", ".gss"])
-HTML_FILE_TYPE = FileType([".html"])
-JS_FILE_TYPE = FileType([".js"])
+CSS_FILE_TYPE = [".css", ".gss"]
+HTML_FILE_TYPE = [".html"]
+JS_FILE_TYPE = [".js"]
 JS_LANGUAGE_DEFAULT = "ECMASCRIPT5_STRICT"
-JS_TEST_FILE_TYPE = FileType(["_test.js"])
-SOY_FILE_TYPE = FileType([".soy"])
+JS_TEST_FILE_TYPE = ["_test.js"]
+SOY_FILE_TYPE = [".soy"]
 
 JS_LANGUAGE_IN = "ECMASCRIPT_2017"
 JS_LANGUAGE_OUT_DEFAULT = "ECMASCRIPT5"

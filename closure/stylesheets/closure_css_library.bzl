@@ -40,7 +40,7 @@ closure_css_library = rule(
     implementation=_closure_css_library,
     attrs={
         "srcs": attr.label_list(allow_files=CSS_FILE_TYPE),
-        "data": attr.label_list(cfg="data", allow_files=True),
+        "data": attr.label_list(allow_files=True),
         "deps": attr.label_list(providers=["closure_css_library"]),
         "exports": attr.label_list(),
         "orientation": attr.string(default="LTR"),

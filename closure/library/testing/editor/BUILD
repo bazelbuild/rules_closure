@@ -12,6 +12,7 @@ closure_js_library(
     srcs = ["@com_google_javascript_closure_library//:closure/goog/testing/editor/dom.js"],
     lenient = True,
     deps = [
+        "//closure/library/dom:abstractrange",
         "//closure/library/dom:nodetype",
         "//closure/library/dom:tagiterator",
         "//closure/library/iter",

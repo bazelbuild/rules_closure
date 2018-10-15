@@ -9,10 +9,17 @@ load("//closure:defs.bzl", "closure_js_library")
 closure_js_library(
     name = "all_js",
     exports = [
+        ":nativeresolver",
         ":promise",
         ":resolver",
         ":thenable",
     ],
+)
+
+closure_js_library(
+    name = "nativeresolver",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/promise/nativeresolver.js"],
+    lenient = True,
 )
 
 closure_js_library(
