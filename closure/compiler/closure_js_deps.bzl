@@ -28,7 +28,7 @@ def _impl(ctx):
   closure_rel = '/'.join(['..' for _ in range(len(closure_root.split('/')))])
   outputs = [ctx.outputs.out]
   # XXX: Other files in same directory will get schlepped in w/o sandboxing.
-  ctx.action(
+  ctx.actions.run(
       inputs=list(js.srcs),
       outputs=outputs,
       arguments=(["--output_file=%s" % ctx.outputs.out.path] +
@@ -79,7 +79,7 @@ closure_js_deps = rule(
     implementation=_impl,
     attrs={
         "deps": attr.label_list(),
-        "data": attr.label_list(cfg="data", allow_files=True),
+        "data": attr.label_list(allow_files=True),
         "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
         "_depswriter": attr.label(
             default=Label("@com_google_javascript_closure_library//:depswriter"),

@@ -38,6 +38,7 @@ closure_js_library(
     deps = [
         "//closure/library/events",
         "//closure/library/events:event",
+        "//closure/library/events:listenable",
         "//closure/library/net:xmlhttpfactory",
     ],
 )

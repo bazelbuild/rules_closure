@@ -15,6 +15,7 @@ closure_js_library(
         "//closure/library/asserts",
         "//closure/library/debug",
         "//closure/library/testing:asserts",
+        "//closure/library/testing:mockcontrol",
         "//closure/library/testing:mockmatchers",
         "//third_party/closure/library/mochikit/async:deferred",
     ],

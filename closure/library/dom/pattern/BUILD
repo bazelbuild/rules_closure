@@ -30,7 +30,10 @@ closure_js_library(
     name = "abstractpattern",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/dom/pattern/abstractpattern.js"],
     lenient = True,
-    deps = ["//closure/library/dom/pattern"],
+    deps = [
+        "//closure/library/dom:tagiterator",
+        "//closure/library/dom/pattern",
+    ],
 )
 
 closure_js_library(

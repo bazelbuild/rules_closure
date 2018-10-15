@@ -42,7 +42,6 @@ closure_js_library(
         "//closure/library/net/xpc:crosspagechannelrole",
         "//closure/library/net/xpc:directtransport",
         "//closure/library/net/xpc:frameelementmethodtransport",
-        "//closure/library/net/xpc:iframepollingtransport",
         "//closure/library/net/xpc:iframerelaytransport",
         "//closure/library/net/xpc:nativemessagingtransport",
         "//closure/library/net/xpc:nixtransport",

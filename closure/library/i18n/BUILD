@@ -233,7 +233,10 @@ closure_js_library(
     name = "mime",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/i18n/mime.js"],
     lenient = True,
-    deps = ["//closure/library/array"],
+    deps = [
+        "//closure/library/array",
+        "//closure/library/i18n:uchar",
+    ],
 )
 
 closure_js_library(

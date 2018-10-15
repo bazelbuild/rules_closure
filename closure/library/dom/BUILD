@@ -329,6 +329,7 @@ closure_js_library(
     deps = [
         "//closure/library/asserts",
         "//closure/library/dom:asserts",
+        "//closure/library/functions",
         "//closure/library/html:safehtml",
         "//closure/library/html:safescript",
         "//closure/library/html:safestyle",

@@ -30,6 +30,7 @@ closure_js_library(
         ":colorpicker",
         ":combobox",
         ":component",
+        ":componentutil",
         ":container",
         ":containerrenderer",
         ":containerscroller",
@@ -521,6 +522,13 @@ closure_js_library(
 )
 
 closure_js_library(
+    name = "componentutil",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/ui/componentutil.js"],
+    lenient = True,
+    deps = ["//closure/library/events:eventtype"],
+)
+
+closure_js_library(
     name = "container",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/ui/container.js"],
     lenient = True,
@@ -535,6 +543,7 @@ closure_js_library(
         "//closure/library/object",
         "//closure/library/style",
         "//closure/library/ui:component",
+        "//closure/library/ui:componentutil",
         "//closure/library/ui:containerrenderer",
         "//closure/library/ui:control",
     ],
@@ -588,6 +597,7 @@ closure_js_library(
         "//closure/library/events:keyhandler",
         "//closure/library/string",
         "//closure/library/ui:component",
+        "//closure/library/ui:componentutil",
         "//closure/library/ui:controlcontent",
         "//closure/library/ui:controlrenderer",
         "//closure/library/ui:registry",
@@ -799,10 +809,12 @@ closure_js_library(
     srcs = ["@com_google_javascript_closure_library//:closure/goog/ui/dimensionpicker.js"],
     lenient = True,
     deps = [
+        "//closure/library/events:browserevent",
         "//closure/library/events:eventtype",
         "//closure/library/events:keycodes",
         "//closure/library/math:size",
         "//closure/library/ui:component",
+        "//closure/library/ui:componentutil",
         "//closure/library/ui:control",
         "//closure/library/ui:dimensionpickerrenderer",
         "//closure/library/ui:registry",
@@ -1138,7 +1150,6 @@ closure_js_library(
         "//closure/library/events:keynames",
         "//closure/library/events:keys",
         "//closure/library/object",
-        "//closure/library/timer",
         "//closure/library/useragent",
     ],
 )

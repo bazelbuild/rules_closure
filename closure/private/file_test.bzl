@@ -51,8 +51,7 @@ _file_test = rule(
     attrs = {
         "file": attr.label(
             mandatory = True,
-            allow_files = True,
-            single_file = True,
+            allow_single_file = True,
         ),
         "content": attr.string(default = ""),
         "regexp": attr.string(default = ""),

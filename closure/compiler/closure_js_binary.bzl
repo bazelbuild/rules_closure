@@ -203,7 +203,7 @@ def _impl(ctx):
   # all JavaScript sources in the transitive closure, sans dead code.
   argfile = create_argfile(ctx.actions, ctx.label.name, args)
   inputs.append(argfile)
-  ctx.action(
+  ctx.actions.run(
       inputs=inputs,
       outputs=outputs,
       executable=ctx.executable._ClosureWorker,
@@ -261,7 +261,7 @@ closure_js_binary = rule(
         "output_wrapper": attr.string(),
         "property_renaming_report": attr.output(),
         "warning_level": attr.string(default="VERBOSE"),
-        "data": attr.label_list(cfg="data", allow_files=True),
+        "data": attr.label_list(allow_files=True),
         "conformance": attr.label_list(allow_files=True),
         "suppress_on_all_sources_in_transitive_closure": attr.string_list(),
 

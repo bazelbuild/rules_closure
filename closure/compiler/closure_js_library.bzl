@@ -340,7 +340,7 @@ closure_js_library = rule(
             # TODO(yannic): Define valid values.
             # values=["CLOSURE"],
         ),
-        "data": attr.label_list(cfg="data", allow_files=True),
+        "data": attr.label_list(allow_files=True),
         "deps": attr.label_list(
             aspects=[closure_js_aspect],
             providers=["closure_js_library"]),
