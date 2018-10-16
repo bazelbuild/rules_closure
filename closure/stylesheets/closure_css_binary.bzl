@@ -36,6 +36,7 @@ def _closure_css_binary(ctx):
           "--output-orientation", ctx.attr.orientation]
   if ctx.attr.renaming:
     outputs += [ctx.outputs.js]
+    files += [ctx.outputs.js]
     args += ["--output-renaming-map", ctx.outputs.js.path,
              "--output-renaming-map-format", "CLOSURE_COMPILED_SPLIT_HYPHENS"]
     if ctx.attr.debug:
