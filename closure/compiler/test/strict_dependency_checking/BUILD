@@ -252,6 +252,9 @@ closure_js_library(
 
 closure_js_binary(
     name = "es6_g2_bin",
+    entry_points = [
+        "closure/compiler/test/strict_dependency_checking/es6_g2.js",
+    ],
     deps = [":es6_g2"],
 )
 
@@ -273,6 +276,9 @@ closure_js_library(
 
 closure_js_binary(
     name = "es6_relative_imports_bin",
+    entry_points = [
+        "closure/compiler/test/strict_dependency_checking/subdir/es6_e.js",
+    ],
     deps = [":es6_relative_imports_lib"],
 )
 
