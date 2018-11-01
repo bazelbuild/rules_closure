@@ -190,7 +190,10 @@ def closure_js_library_impl(
     # collisions exist for any particular transitive closure. By making it
     # canonical, we can use it to propagate suppressions up to closure_js_binary.
     modules = [
-        convert_path_to_es6_module_name(f.path, js_module_roots)
+        convert_path_to_es6_module_name(
+            f.path if not f.is_directory else f.path + "/*.js",
+            js_module_roots,
+        )
         for f in srcs
     ]
     for module in modules:

@@ -42,6 +42,9 @@ CLOSURE_WORKER_ATTR = attr.label(
     cfg = "host",
 )
 
+def get_jsfile_path(f):
+    return f.path
+
 def unfurl(deps, provider = ""):
     """Returns deps as well as deps exported by parent rules."""
     res = []
