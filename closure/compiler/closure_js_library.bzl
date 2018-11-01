@@ -248,7 +248,6 @@ def closure_js_library_impl(
     # this data. Other Skylark rules can even export their own provider with the
     # same name to become polymorphically compatible with this one.
     return struct(
-        files = depset(),
         # Iterable<Target> of deps that should only become deps in parent rules.
         # Exports are not deps of the Target to which they belong. The exports
         # provider does not contain the exports its deps export. Targets in this
@@ -356,7 +355,7 @@ def _closure_js_library(ctx):
     )
 
     return struct(
-        files = library.files,
+        files = depset(),
         exports = library.exports,
         closure_js_library = library.closure_js_library,
         # The usual suspects are exported as runfiles, in addition to raw source.
