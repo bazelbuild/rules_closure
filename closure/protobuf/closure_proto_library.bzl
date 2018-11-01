@@ -15,13 +15,8 @@
 """Utilities for building JavaScript Protocol Buffers.
 """
 
-load("//closure/compiler:closure_js_library.bzl", "closure_js_library_impl")
-load(
-    "//closure/private:defs.bzl",
-    "CLOSURE_LIBRARY_BASE_ATTR",
-    "CLOSURE_WORKER_ATTR",
-    "unfurl",
-)
+load("//closure/compiler:closure_js_library.bzl", "create_closure_js_library")
+load("//closure/private:defs.bzl", "CLOSURE_JS_TOOLCHAIN_ATTRS", "unfurl")
 
 # This was borrowed from Rules Go, licensed under Apache 2.
 # https://github.com/bazelbuild/rules_go/blob/67f44035d84a352cffb9465159e199066ecb814c/proto/compiler.bzl#L72
@@ -101,18 +96,7 @@ def _closure_proto_aspect_impl(target, ctx):
         "unusedLocalVariables",
     ]
 
-    library = closure_js_library_impl(
-        ctx.actions,
-        ctx.label,
-        ctx.workspace_name,
-        srcs,
-        deps,
-        ctx.rule.attr.testonly,
-        suppress,
-        True,
-        ctx.files._closure_library_base,
-        ctx.executable._ClosureWorker,
-    )
+    library = create_closure_js_library(ctx, srcs, deps, [], suppress, True)
     return struct(
         exports = library.exports,
         closure_js_library = library.closure_js_library,
@@ -122,22 +106,20 @@ def _closure_proto_aspect_impl(target, ctx):
 
 closure_proto_aspect = aspect(
     attr_aspects = ["deps"],
-    attrs = {
+    attrs = dict({
         # internal only
         "_protoc": attr.label(
             default = Label("@com_google_protobuf//:protoc"),
             executable = True,
             cfg = "host",
         ),
-        "_ClosureWorker": CLOSURE_WORKER_ATTR,
-        "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
         "_closure_library": attr.label(
             default = Label("//closure/library/array"),
         ),
         "_closure_protobuf_jspb": attr.label(
             default = Label("//closure/protobuf:jspb"),
         ),
-    },
+    }, **CLOSURE_JS_TOOLCHAIN_ATTRS),
     implementation = _closure_proto_aspect_impl,
 )
 

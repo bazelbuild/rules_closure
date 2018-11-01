@@ -16,8 +16,7 @@
 
 load(
     "//closure/private:defs.bzl",
-    "CLOSURE_LIBRARY_BASE_ATTR",
-    "CLOSURE_WORKER_ATTR",
+    "CLOSURE_JS_TOOLCHAIN_ATTRS",
     "JS_FILE_TYPE",
     "JS_LANGUAGE_IN",
     "collect_js",
@@ -40,7 +39,59 @@ def _maybe_declare_file(actions, file, name):
         return file
     return actions.declare_file(name)
 
-def closure_js_library_impl(
+def create_closure_js_library(
+        ctx,
+        srcs = [],
+        deps = [],
+        exports = [],
+        suppress = [],
+        lenient = False):
+    """ Returns closure_js_library metadata with provided attributes.
+
+    Note that the returned struct is not a proper provider since existing contract
+    of closure_js_library is not compatible with it. The rule calling this method
+    could assign properties of the returned struct to its own result to fullfil
+    the contract expected by the bazel closure rules.
+
+    Note that rules using this helper should extend its attribute set with
+    CLOSURE_JS_TOOLCHAIN_ATTRS in order to make the closure toolchain available.
+
+    Args:
+      ctx: ctx for the rule
+      srcs: JavaScript srcs for the library
+      deps: deps of the library
+      exports: exports for the library
+      suppress: list of strings containing DiagnosticGroup (coarse grained) or
+        DiagnosticType (fine grained) codes. These apply not only to JsChecker,
+        but also propagate up to closure_js_binary.
+      lenient: makes the library lenient which suppresses handful of checkings in
+        one shot.
+
+    Returns:
+      A closure_js_library metadata struct with exports and closure_js_library attribute
+    """
+
+    if not hasattr(ctx.files, "_ClosureWorker") or not hasattr(ctx.files, "_closure_library_base"):
+        fail("Closure toolchain undefined; rule should include CLOSURE_JS_TOOLCHAIN_ATTRS")
+
+    # testonly exist for all rules but if it is an aspect it need to accessed over ctx.rule.
+    testonly = ctx.attr.testonly if hasattr(ctx.attr, "testonly") else ctx.rule.attr.testonly
+
+    return _closure_js_library_impl(
+        ctx.actions,
+        ctx.label,
+        ctx.workspace_name,
+        srcs = srcs,
+        deps = deps,
+        exports = exports,
+        suppress = suppress,
+        lenient = lenient,
+        testonly = testonly,
+        closure_library_base = ctx.files._closure_library_base,
+        closure_worker = ctx.executable._ClosureWorker,
+    )
+
+def _closure_js_library_impl(
         actions,
         label,
         workspace_name,
@@ -50,7 +101,7 @@ def closure_js_library_impl(
         suppress,
         lenient,
         closure_library_base,
-        _ClosureWorker,
+        closure_worker,
         includes = (),
         exports = depset(),
         internal_descriptors = depset(),
@@ -224,7 +275,7 @@ def closure_js_library_impl(
     actions.run(
         inputs = inputs,
         outputs = [info_file, stderr_file, ijs_file],
-        executable = _ClosureWorker,
+        executable = closure_worker,
         arguments = ["@@" + argfile.path],
         mnemonic = "Closure",
         execution_requirements = {"supports-workers": "1"},
@@ -236,7 +287,7 @@ def closure_js_library_impl(
         label = label,
         ijs_deps = js.ijs_files,
         srcs = srcs,
-        executable = _ClosureWorker,
+        executable = closure_worker,
         output = _maybe_declare_file(
             actions,
             deprecated_typecheck_file,
@@ -332,7 +383,7 @@ def _closure_js_library(ctx):
         print("closure_js_library 'externs' is deprecated; just use 'srcs'")
         srcs = ctx.files.externs + srcs
 
-    library = closure_js_library_impl(
+    library = _closure_js_library_impl(
         ctx.actions,
         ctx.label,
         ctx.workspace_name,
@@ -377,7 +428,7 @@ def _closure_js_library(ctx):
 
 closure_js_library = rule(
     implementation = _closure_js_library,
-    attrs = {
+    attrs = dict({
         "convention": attr.string(
             default = "CLOSURE",
             # TODO(yannic): Define valid values.
@@ -405,9 +456,7 @@ closure_js_library = rule(
         # internal only
         "internal_descriptors": attr.label_list(allow_files = True),
         "internal_expect_failure": attr.bool(default = False),
-        "_ClosureWorker": CLOSURE_WORKER_ATTR,
-        "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
-    },
+    }, **CLOSURE_JS_TOOLCHAIN_ATTRS),
     # TODO(yannic): Deprecate.
     #     https://docs.bazel.build/versions/master/skylark/lib/globals.html#rule.outputs
     outputs = {

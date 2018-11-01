@@ -16,14 +16,12 @@
 
 load(
     "//closure/private:defs.bzl",
-    "CLOSURE_LIBRARY_BASE_ATTR",
-    "CLOSURE_WORKER_ATTR",
+    "CLOSURE_JS_TOOLCHAIN_ATTRS",
     "JS_LANGUAGES",
     "JS_LANGUAGE_IN",
     "JS_LANGUAGE_OUT_DEFAULT",
     "collect_js",
     "collect_runfiles",
-    "create_argfile",
     "difference",
     "find_js_module_roots",
     "get_jsfile_path",
@@ -210,7 +208,7 @@ def _impl(ctx):
     for src in js.srcs:
         inputs.append(src)
         if src.path.endswith(".zip"):
-            all_args.append("--jszip")
+            all_args.add("--jszip")
         all_args.add_all(
             [src],
             map_each = get_jsfile_path,
@@ -277,7 +275,7 @@ def _validate_css_graph(ctx, js):
 
 closure_js_binary = rule(
     implementation = _impl,
-    attrs = {
+    attrs = dict({
         "compilation_level": attr.string(default = "ADVANCED"),
         "css": attr.label(providers = ["closure_css_binary"]),
         "debug": attr.bool(default = False),
@@ -301,9 +299,7 @@ closure_js_binary = rule(
         # internal only
         "internal_expect_failure": attr.bool(default = False),
         "internal_expect_warnings": attr.bool(default = False),
-        "_ClosureWorker": CLOSURE_WORKER_ATTR,
-        "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
-    },
+    }, **CLOSURE_JS_TOOLCHAIN_ATTRS),
     outputs = {
         "bin": "%{name}.js",
         "map": "%{name}.js.map",
