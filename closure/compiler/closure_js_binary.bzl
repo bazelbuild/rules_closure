@@ -26,6 +26,7 @@ load(
     "create_argfile",
     "difference",
     "find_js_module_roots",
+    "get_jsfile_path",
     "sort_roots",
     "unfurl",
 )
@@ -195,17 +196,24 @@ def _impl(ctx):
         args.append("--suppress")
         args.append(code)
 
-    # We shall now pass all transitive sources, including externs files.
-    for src in js.srcs:
-        args.append(src.path)
-        inputs.append(src)
-
     # In order for us to feel comfortable creating an optimal experience for 99%
     # of users, we need to provide an escape hatch for the 1%. For example, a
     # user wishing to support IE6 might want to pass the attribute `nodefs =
     # ["--define=goog.json.USE_NATIVE_JSON"]`. Cf. nocopts in cc_library().
     if ctx.attr.nodefs:
         args = [arg for arg in args if arg not in ctx.attr.nodefs]
+
+    all_args = ctx.actions.args()
+    all_args.add_all(args)
+
+    # We shall now pass all transitive sources, including externs files.
+    for src in js.srcs:
+        inputs.append(src)
+        all_args.add_all(
+            [src],
+            map_each = get_jsfile_path,
+            expand_directories = True,
+        )
 
     # As a matter of policy, we don't add attributes to this rule just because we
     # can. We only add attributes when the Skylark code adds value beyond merely
@@ -214,17 +222,17 @@ def _impl(ctx):
     # `defs = ["--polymer_pass"]` to add type safety to Polymer, or the user
     # could pass `defs = ["--env=CUSTOM"]` to get rid of browser externs and
     # slightly speed up compilation.
-    args.extend(ctx.attr.defs)
+    all_args.add_all(ctx.attr.defs)
 
     # Insert an edge into the build graph that produces the minified version of
     # all JavaScript sources in the transitive closure, sans dead code.
-    argfile = create_argfile(ctx.actions, ctx.label.name, args)
-    inputs.append(argfile)
+    all_args.use_param_file("@@%s", use_always = True)
+    all_args.set_param_file_format("multiline")
     ctx.actions.run(
         inputs = inputs,
         outputs = outputs,
         executable = ctx.executable._ClosureWorker,
-        arguments = ["@@" + argfile.path],
+        arguments = [all_args],
         mnemonic = "Closure",
         execution_requirements = {"supports-workers": "1"},
         progress_message = "Compiling %d JavaScript files to %s" % (
