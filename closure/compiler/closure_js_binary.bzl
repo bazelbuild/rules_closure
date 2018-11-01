@@ -209,7 +209,6 @@ def _impl(ctx):
     # We shall now pass all transitive sources, including externs files.
     for src in js.srcs:
         inputs.append(src)
-        args.append(src.path)
         all_args.add_all(
             [src],
             map_each = get_jsfile_path,
@@ -223,13 +222,12 @@ def _impl(ctx):
     # `defs = ["--polymer_pass"]` to add type safety to Polymer, or the user
     # could pass `defs = ["--env=CUSTOM"]` to get rid of browser externs and
     # slightly speed up compilation.
-    args.extend(ctx.attr.defs)
     all_args.add_all(ctx.attr.defs)
 
     # Insert an edge into the build graph that produces the minified version of
     # all JavaScript sources in the transitive closure, sans dead code.
-    argfile = create_argfile(ctx.actions, ctx.label.name, args)
-    inputs.append(argfile)
+    all_args.use_param_file("@@%s", use_always = True)
+    all_args.set_param_file_format("multiline")
     ctx.actions.run(
         inputs = inputs,
         outputs = outputs,
