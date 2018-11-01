@@ -194,8 +194,8 @@ def sort_roots(roots):
 
 def convert_path_to_es6_module_name(path, roots):
     """Equivalent to JsCheckerHelper#convertPathToModuleName."""
-    if not path.endswith(".js"):
-        fail("Path didn't end with .js: %s" % path)
+    if not path.endswith(".js") and not path.endswith(".zip"):
+        fail("Path didn't end with .js or .zip: %s" % path)
     module = path[:-3]
     for root in roots:
         if module.startswith(root + "/"):

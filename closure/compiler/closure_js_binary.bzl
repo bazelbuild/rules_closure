@@ -209,6 +209,8 @@ def _impl(ctx):
     # We shall now pass all transitive sources, including externs files.
     for src in js.srcs:
         inputs.append(src)
+        if src.path.endswith(".zip"):
+            all_args.append("--jszip")
         all_args.add_all(
             [src],
             map_each = get_jsfile_path,

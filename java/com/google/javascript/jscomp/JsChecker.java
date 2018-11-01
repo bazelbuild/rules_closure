@@ -312,10 +312,15 @@ public final class JsChecker {
     return errorManager.getErrorCount() == 0;
   }
 
-  private static ImmutableList<SourceFile> getSourceFiles(Iterable<String> filenames) {
+  private static ImmutableList<SourceFile> getSourceFiles(Iterable<String> filenames)
+      throws IOException {
     ImmutableList.Builder<SourceFile> result = new ImmutableList.Builder<>();
     for (String filename : filenames) {
-      result.add(SourceFile.fromFile(filename));
+      if (filename.endsWith(".zip")) {
+        result.addAll(SourceFile.fromZipFile(filename, UTF_8));
+      } else {
+        result.add(SourceFile.fromFile(filename));
+      }
     }
     return result.build();
   }
