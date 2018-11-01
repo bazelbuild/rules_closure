@@ -19,7 +19,6 @@ load(
     "collect_js",
     "collect_runfiles",
     "convert_path_to_es6_module_name",
-    "create_argfile",
     "find_js_module_roots",
     "get_jsfile_path",
     "make_jschecker_progress_message",
