@@ -42,7 +42,10 @@ def _impl(ctx):
                          )
                          for r, p in _find_roots(
                              [
-                                 (src.dirname, long_path(ctx, src))
+                                 (
+                                     src.dirname if not src.is_directory else src.path,
+                                     long_path(ctx, src) if not src.is_directory else (src.path + "/null.js"),
+                                 )
                                  for src in js.srcs
                              ],
                          )
