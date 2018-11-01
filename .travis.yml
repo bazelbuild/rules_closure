@@ -30,7 +30,6 @@ script:
   - |
     bazel \
       --output_base=$HOME/.cache/bazel \
-      --batch \
       --host_jvm_args=-Xmx500m \
       --host_jvm_args=-Xms500m \
       test \
@@ -41,7 +40,6 @@ script:
       --spawn_strategy=sandboxed \
       --worker_sandboxing \
       --local_resources=400,2,1.0 \
-      --distinct_host_configuration=false \
       ...
 
 notifications:
