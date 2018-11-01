@@ -51,7 +51,7 @@ closure_js_test(
     ],
     deps = [
         ":foo",
-        "@io_bazel_rules_closure//closure/library:testing",
+        "//closure/library:testing",
     ],
 )
 
@@ -94,6 +94,6 @@ closure_js_test(
     deps = [
         ":baz",
         ":foo",
-        "@io_bazel_rules_closure//closure/library:testing",
+        "//closure/library:testing",
     ],
 )
