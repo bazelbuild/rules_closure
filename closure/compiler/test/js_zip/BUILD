@@ -35,3 +35,23 @@ file_test(
     content = "console.log(\"hi from zip\");\n",
     file = "main_bin.js",
 )
+
+zip_file_test_library(
+    name = "main_with_error_lib",
+    srcs = ["main_with_error.js.zip"],
+    suppress = [
+        "JSC_UNDEFINED_VARIABLE",
+        "JSC_UNKNOWN_EXPR_TYPE",
+    ],
+)
+
+closure_js_binary(
+    name = "main_with_error_bin",
+    deps = [":main_with_error_lib"],
+)
+
+file_test(
+    name = "zip_files_areSuppressable",
+    content = "iDontExist();\n",
+    file = "main_with_error_bin.js",
+)

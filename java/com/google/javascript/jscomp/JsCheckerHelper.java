@@ -35,7 +35,7 @@ final class JsCheckerHelper {
 
   static Optional<String> convertPathToModuleName(String path, Iterable<String> roots) {
     checkArgument(!path.startsWith("/"));
-    if (!path.endsWith(".js")) {
+    if (!path.endsWith(".js") && !path.endsWith(".zip")) {
       return Optional.absent();
     }
     String module = path;
@@ -45,7 +45,9 @@ final class JsCheckerHelper {
         break;
       }
     }
-    return Optional.of("/" + module);
+
+    String moduleOrZipName = module.split("!")[0];
+    return Optional.of("/" + moduleOrZipName);
   }
 
   static String normalizeClosureNamespace(String namespace) {
