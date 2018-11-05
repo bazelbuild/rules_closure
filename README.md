@@ -382,7 +382,7 @@ closure_js_binary(
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_test")
-closure_js_test(name, srcs, data, deps, css, html, language, pedantic, suppress,
+closure_js_test(name, srcs, data, deps, css, html, language, suppress,
                 compilation_level, entry_points, defs)
 ```
 
@@ -443,8 +443,6 @@ This rule can be referenced as though it were the following:
 - **compilation_level:** Passed to [closure_js_binary]. Setting this to
   `"WHITESPACE_ONLY"` will cause tests to run significantly faster (at the
   expense of type checking.)
-
-- **pedantic:** Passed to [closure_js_binary].
 
 - **suppress:** Passed to [closure_js_library].
 
