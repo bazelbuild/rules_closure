@@ -248,7 +248,7 @@ This rule can be referenced as though it were the following:
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_binary")
-closure_js_binary(name, deps, css, pedantic, debug, language, entry_points,
+closure_js_binary(name, deps, css, debug, language, entry_points,
                   dependency_mode, compilation_level, formatting,
                   output_wrapper, property_renaming_report, defs)
 ```
@@ -293,19 +293,6 @@ This rule can be referenced as though it were the following:
   This attribute is required if any of JavaScript or template sources depend on
   a [closure_css_library]. This rule will check that all the referenced CSS
   libraries are present in the CSS binary.
-
-- **pedantic:** (Boolean; optional; default is `False`) Setting this flag to
-  `True` will turn on every single warning, and treat warnings as errors. Your
-  reward is that type-based optimizations becomes enabled.
-
-  This flag is recommended for greenfield projects, however *caveat emptor*
-  applies. Some of the checks that get enabled aren't yet mature. The Closure
-  Compiler might do something crazy like generate synthetic code that doesn't
-  validate. If that happens, please file an [issue][compiler-issue].
-
-  One benefit of pedantic mode is null safety. **ProTip:** The Closure Compiler
-  will take into consideration `goog.asserts.assert` statements and conditionals
-  like `if (foo != null)`.
 
 - **debug:** (Boolean; optional; default is `False`) Enables debug mode. Many
   types of properties and variable names will be renamed to include `$`
