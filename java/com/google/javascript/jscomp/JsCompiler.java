@@ -202,10 +202,14 @@ public final class JsCompiler implements CommandLineProgram {
       if (jsOutputFile != null) {
         Files.write(jsOutputFile, EMPTY_BYTE_ARRAY);
       }
-      if (createSourceMap != null) {
-        Files.write(createSourceMap, EMPTY_BYTE_ARRAY);
-      }
     }
+
+    // Make sure a source map is always created since Bazel expect that but JsCompiler
+    // may not emit sometimes (e.g compiler_level=BUNLDE)
+    if (createSourceMap != null && !Files.exists(createSourceMap)) {
+      Files.write(createSourceMap, EMPTY_BYTE_ARRAY);
+    }
+
     if (!failed && expectFailure) {
       System.err.println("ERROR: Expected failure but didn't fail.");
     }
