@@ -77,6 +77,7 @@ def closure_js_test(
             deps = [":%s_bin" % shard],
             html = html,
             visibility = visibility,
+            tags = tags,
             **kwargs
             tags = tags,
         )
