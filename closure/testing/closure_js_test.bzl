@@ -79,7 +79,6 @@ def closure_js_test(
             visibility = visibility,
             tags = tags,
             **kwargs
-            tags = tags,
         )
 
     if len(srcs) > 1:
