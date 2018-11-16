@@ -19,7 +19,6 @@ licenses(["notice"])  # Apache 2.0
 java_library(
     name = "server",
     srcs = glob(["*.java"]),
-    resources = ["invisible_college.ansi"],
     visibility = ["//:__subpackages__"],
     deps = [
         ":build_info_java_proto",

@@ -147,9 +147,7 @@ public final class WebfilesServer implements Runnable {
       }
       logger.info(
           String.format(
-              "\n%s\n%sClosure Rules %s%s%s\n%sListening on: %shttp://%s/%s\n\n",
-              Resources.toString(
-                  getResource(WebfilesServer.class, "invisible_college.ansi"), UTF_8),
+              "\n%sClosure Rules %s%s%s\n%sListening on: %shttp://%s/%s\n\n",
               BLUE,
               BOLD,
               WebfilesServer.class.getSimpleName(),
