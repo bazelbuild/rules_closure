@@ -51,6 +51,13 @@ file_test(
     file = "hello_bin.js.map",
 )
 
+# Make sure bazel doesn't complain about some outputs not created.
+closure_js_binary(
+    name = "hello_bin_bundle",
+    deps = [":hello_lib"],
+	compilation_level = "BUNDLE",
+)
+
 closure_js_binary(
     name = "hello_wrap_bin",
     language = "ECMASCRIPT3",

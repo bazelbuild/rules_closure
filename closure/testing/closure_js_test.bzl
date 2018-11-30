@@ -32,6 +32,7 @@ def closure_js_test(
         language = None,
         suppress = None,
         visibility = None,
+        tags = [],
         **kwargs):
     if not srcs:
         fail("closure_js_test rules can not have an empty 'srcs' list")
@@ -53,6 +54,7 @@ def closure_js_test(
             suppress = suppress,
             visibility = visibility,
             testonly = True,
+            tags = tags,
         )
 
         closure_js_binary(
@@ -66,6 +68,7 @@ def closure_js_test(
             formatting = "PRETTY_PRINT",
             visibility = visibility,
             testonly = True,
+            tags = tags,
         )
 
         phantomjs_test(
@@ -74,6 +77,7 @@ def closure_js_test(
             deps = [":%s_bin" % shard],
             html = html,
             visibility = visibility,
+            tags = tags,
             **kwargs
         )
 
@@ -81,6 +85,7 @@ def closure_js_test(
         native.test_suite(
             name = name,
             tests = [":" + shard for shard, _ in work],
+            tags = tags,
         )
 
 def _make_suffix(path):
