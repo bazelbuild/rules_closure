@@ -16,6 +16,9 @@ licenses(["notice"])  # Apache 2.0
 
 load("//closure/private:lines_sorted_test.bzl", "lines_sorted_test")
 
+# TODO(davido): Remove when the problem fixed in protobuf upstream
+exports_files(["patch_protobuf.patch"])
+
 lines_sorted_test(
     name = "repositories_defs_sorted_test",
     cmd = "sed '1,/BEGIN_DECLARATIONS/ d' $< | grep ^def >$@",
