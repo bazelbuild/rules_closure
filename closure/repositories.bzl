@@ -55,6 +55,7 @@ def closure_repositories(
         omit_com_squareup_javapoet = False,
         omit_fonts_noto_hinted_deb = False,
         omit_fonts_noto_mono_deb = False,
+        omit_io_angular_clutz=False,
         omit_javax_annotation_jsr250_api = False,
         omit_javax_inject = False,
         omit_libexpat_amd64_deb = False,
@@ -140,6 +141,8 @@ def closure_repositories(
         fonts_noto_hinted_deb()
     if not omit_fonts_noto_mono_deb:
         fonts_noto_mono_deb()
+    if not omit_io_angular_clutz:
+        io_angular_clutz()
     if not omit_javax_annotation_jsr250_api:
         javax_annotation_jsr250_api()
     if not omit_javax_inject:
@@ -693,7 +696,7 @@ def com_google_protobuf_js():
         ],
         sha256 = "2244b0308846bb22b4ff0bcc675e99290ff9f1115553ae9671eba1030af31bc0",
         strip_prefix = "protobuf-3.6.1.2/js",
-        patches = ["//closure:patch_protobuf.patch"],
+        patches = ["@io_bazel_rules_closure//closure:patch_protobuf.patch"],
         patch_args = ["-p1"],
         build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
     )
@@ -795,6 +798,18 @@ def fonts_noto_mono_deb():
         ],
         sha256 = "71ff715cf50a74a8cc11b02e7c906b69a242d3d677e739e0b2d18cd23b7de375",
     )
+
+def io_angular_clutz():
+  http_archive(
+    name = "io_angular_clutz",
+    build_file = str(Label("//third_party/clutz:clutz.BUILD")),
+    sha256 = "7a5c785dbcc3ae0daa1fcf4507de6a23bbecdb2bf80460651e4c2b88c1ad7582",
+    strip_prefix = "clutz-7f1a3ee9ad9f85a9056084dc039496bbd35e11f6",
+    urls = [
+        "https://mirror.bazel.build/github.com/angular/clutz/archive/7f1a3ee9ad9f85a9056084dc039496bbd35e11f6.tar.gz",  # 2017-11-02
+        "https://github.com/angular/clutz/archive/7f1a3ee9ad9f85a9056084dc039496bbd35e11f6.tar.gz",
+    ],
+  )
 
 def javax_annotation_jsr250_api():
     java_import_external(
