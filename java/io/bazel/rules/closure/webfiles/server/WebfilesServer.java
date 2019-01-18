@@ -15,6 +15,7 @@
 package io.bazel.rules.closure.webfiles.server;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.io.Resources.getResource;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -58,9 +59,13 @@ public final class WebfilesServer implements Runnable {
 
   private static final Logger logger = Logger.getLogger(WebfilesServer.class.getName());
 
-  private static final String BLUE = "\u001b[34m";
-  private static final String BOLD = "\u001b[1m";
-  private static final String RESET = "\u001b[0m";
+  private static final boolean WANT_COLOR =
+      System.getenv("NO_COLOR") == null &&
+      nullToEmpty(System.getenv("TERM")).contains("xterm");
+
+  private static final String BLUE = WANT_COLOR ? "\u001b[34m" : "";
+  private static final String BOLD = WANT_COLOR ? "\u001b[1m" : "";
+  private static final String RESET = WANT_COLOR ? "\u001b[0m" : "";
 
   public static void main(String[] args) throws Exception {
     ExecutorService executor = Executors.newCachedThreadPool();
