@@ -675,26 +675,25 @@ def com_google_jsinterop_annotations():
     )
 
 def com_google_protobuf():
-    # Note: Protobuf 3.6.0+ is going to use C++11
     http_archive(
         name = "com_google_protobuf",
-        strip_prefix = "protobuf-3.5.1",
-        sha256 = "826425182ee43990731217b917c5c3ea7190cfda141af4869e6d4ad9085a740f",
+        strip_prefix = "protobuf-3.6.1.3",
+        sha256 = "73fdad358857e120fd0fa19e071a96e15c0f23bb25f85d3f7009abfd4f264a2a",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.5.1.tar.gz",
-            "https://github.com/google/protobuf/archive/v3.5.1.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.6.1.3.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.6.1.3.tar.gz",
         ],
     )
 
 def com_google_protobuf_js():
     http_archive(
         name = "com_google_protobuf_js",
+        strip_prefix = "protobuf-3.6.1.3/js",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.5.1.tar.gz",
-            "https://github.com/google/protobuf/archive/v3.5.1.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.6.1.3.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.6.1.3.tar.gz",
         ],
-        sha256 = "826425182ee43990731217b917c5c3ea7190cfda141af4869e6d4ad9085a740f",
-        strip_prefix = "protobuf-3.5.1/js",
+        sha256 = "73fdad358857e120fd0fa19e071a96e15c0f23bb25f85d3f7009abfd4f264a2a",
         build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
     )
 
@@ -888,10 +887,10 @@ def org_jsoup():
         name = "org_jsoup",
         licenses = ["notice"],  # The MIT License
         jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/org/jsoup/jsoup/1.10.2/jsoup-1.10.2.jar",
-            "https://repo1.maven.org/maven2/org/jsoup/jsoup/1.10.2/jsoup-1.10.2.jar",
+            "https://mirror.bazel.build/repo1.maven.org/maven2/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar",
+            "https://repo1.maven.org/maven2/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar",
         ],
-        jar_sha256 = "6ebe6abd7775c10a49407ae22db45c840cd2cdaf715866a5b0b5af70941c3f4a",
+        jar_sha256 = "df2c71a4240ecbdae7cdcd1667bcf0d747e4e3dcefe8161e787adcff7e5f2fa0",
     )
 
 def org_ow2_asm():

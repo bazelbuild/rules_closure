@@ -279,7 +279,7 @@ public final class Html5Printer {
 
   private static boolean startsWithWhitespace(Node child) {
     if (child instanceof TextNode) {
-      String firstText = ((TextNode) child).text;
+      String firstText = ((TextNode) child).text();
       if (!firstText.isEmpty() && CharMatcher.whitespace().matches(firstText.charAt(0))) {
         return true;
       }
