@@ -17,7 +17,7 @@
 def _impl(ctx):
     if ctx.file.golden == ctx.file.actual:
         fail("GOLDEN and ACTUAL should be different files")
-    ctx.file_action(
+    ctx.actions.write(
         output = ctx.outputs.executable,
         content = "\n".join([
             "#!/bin/bash",
@@ -42,7 +42,7 @@ def _impl(ctx):
             "  exit 1",
             "fi",
         ]),
-        executable = True,
+        is_executable = True,
     )
     return struct(runfiles = ctx.runfiles([
         ctx.file.golden,

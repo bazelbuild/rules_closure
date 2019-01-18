@@ -22,14 +22,14 @@ def _strip_prefix(prefix, string):
 def _success_target(ctx, msg):
     exe = ctx.outputs.executable
     dat = ctx.new_file(ctx.configuration.genfiles_dir, exe, ".dat")
-    ctx.file_action(
+    ctx.actions.write(
         output = dat,
         content = msg,
     )
-    ctx.file_action(
+    ctx.actions.write(
         output = exe,
         content = "cat " + dat.path + " ; echo",
-        executable = True,
+        is_executable = True,
     )
     return struct(runfiles = ctx.runfiles([exe, dat]))
 
@@ -65,9 +65,9 @@ def _impl(ctx):
                 "if ! grep %s %s ; then echo 'bad %s:' ; cat %s ; echo ; exit 1 ; fi" %
                 (repr(regexp), file_.short_path, k, file_.short_path),
             ]
-            ctx.file_action(output = file_, content = v)
+            ctx.actions.write(output = file_, content = v)
         script = "\n".join(commands + ["true"])
-        ctx.file_action(output = exe, content = script, executable = True)
+        ctx.actions.write(output = exe, content = script, is_executable = True)
         return struct(runfiles = ctx.runfiles([exe] + files))
     else:
         return _success_target(ctx, "success")

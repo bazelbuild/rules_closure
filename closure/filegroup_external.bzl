@@ -28,11 +28,11 @@ def _filegroup_external(ctx):
         basename = ""
         for url in urls:
             basename = url[url.rindex("/") + 1:] or basename
-            if url in downloaded:
+            if url in downloaded.to_list():
                 fail("url specified multiple times: " + url)
             downloaded += [url]
         basename = _get_match(ctx.attr.rename, urls) or basename
-        if basename in basenames:
+        if basename in basenames.to_list():
             fail("filegroup path collision: " + basename)
         basenames += [basename]
         if extract:

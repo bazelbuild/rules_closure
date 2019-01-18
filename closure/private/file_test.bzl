@@ -25,15 +25,15 @@ def _impl(ctx):
     if content and matches != -1:
         fail("matches only makes sense with regexp")
     if not regexp:
-        dat = ctx.new_file(ctx.configuration.genfiles_dir, exe, ".dat")
-        ctx.file_action(
+        dat = ctx.actions.declare_file(exe.basename + ".dat")
+        ctx.actions.write(
             output = dat,
             content = content,
         )
-        ctx.file_action(
+        ctx.actions.write(
             output = exe,
             content = "diff -u %s %s" % (dat.short_path, file_.short_path),
-            executable = True,
+            is_executable = True,
         )
         return struct(runfiles = ctx.runfiles([exe, dat, file_]))
     if matches != -1:
@@ -46,10 +46,10 @@ def _impl(ctx):
         script = "grep %s %s" % (repr(regexp), file_.short_path)
     if ctx.attr.invert:
         script = "! " + script
-    ctx.file_action(
+    ctx.actions.write(
         output = exe,
         content = script,
-        executable = True,
+        is_executable = True,
     )
     return struct(runfiles = ctx.runfiles([exe, file_]))
 

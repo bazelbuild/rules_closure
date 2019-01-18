@@ -55,7 +55,7 @@ def _closure_css_binary(ctx):
         else:
             args += ["--rename", "CLOSURE"]
     else:
-        ctx.file_action(
+        ctx.actions.write(
             output = ctx.outputs.js,
             content = "// closure_css_binary target had renaming = false\n",
         )

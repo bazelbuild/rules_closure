@@ -20,7 +20,6 @@
 load(
     "//closure/private:defs.bzl",
     "HTML_FILE_TYPE",
-    "JS_FILE_TYPE",
     "collect_runfiles",
     "long_path",
     "unfurl",
@@ -43,9 +42,9 @@ def _impl(ctx):
         ctx.attr.harness.closure_js_binary.bin.short_path,
         ctx.file.html.short_path,
     ]
-    args += [long_path(ctx, src) for src in srcs]
-    ctx.file_action(
-        executable = True,
+    args += [long_path(ctx, src) for src in srcs.to_list()]
+    ctx.actions.write(
+        is_executable = True,
         output = ctx.outputs.executable,
         content = " \\\n  ".join(args),
     )

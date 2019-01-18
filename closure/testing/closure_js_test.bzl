@@ -16,7 +16,6 @@
 
 load("//closure/compiler:closure_js_binary.bzl", "closure_js_binary")
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
-load("//closure/private:defs.bzl", "JS_LANGUAGE_DEFAULT")
 load("//closure/testing:phantomjs_test.bzl", "phantomjs_test")
 
 def closure_js_test(

@@ -252,7 +252,7 @@ def _closure_js_library_impl(
             fail(("ES6 namespace '%s' already defined by a dependency. Check the " +
                   "deps transitively. Remember that namespaces are relative to the " +
                   "root of the repository unless includes=[...] is used") % module)
-    if len(modules) != len(depset(modules)):
+    if len(modules) != len(depset(modules).to_list()):
         fail("Intrarule namespace collision detected")
 
     # Give JsChecker the ClosureJsLibrary protobufs outputted by direct children.

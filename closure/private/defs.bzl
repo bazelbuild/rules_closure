@@ -166,10 +166,10 @@ def find_js_module_roots(srcs, workspace_name, label, includes):
     new_bazel_version = Label("@foo//bar").workspace_root.startswith("../")
     if workspace_name != "__main__":
         if new_bazel_version:
-            roots += ["%s" % root for root in roots]
+            roots += ["%s" % root for root in roots.to_list()]
             roots += ["../%s" % workspace_name]
         else:
-            roots += ["%s/external/%s" % (root, workspace_name) for root in roots]
+            roots += ["%s/external/%s" % (root, workspace_name) for root in roots.to_list()]
             roots += ["external/%s" % workspace_name]
     if includes:
         for f in srcs:
@@ -188,7 +188,7 @@ def find_js_module_roots(srcs, workspace_name, label, includes):
                         break
                 if not found:
                     fail("No srcs found beginning with '%s/'" % include)
-            for root in roots:
+            for root in roots.to_list():
                 magic_roots.append("%s/%s" % (root, prefix))
         roots += magic_roots
     return roots

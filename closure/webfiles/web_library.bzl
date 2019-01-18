@@ -77,11 +77,8 @@ def _web_library(ctx):
             webpath = webpath,
         ))
     webpaths += [depset(new_webpaths)]
-    manifest = ctx.new_file(
-        ctx.configuration.bin_dir,
-        "%s.pbtxt" % ctx.label.name,
-    )
-    ctx.file_action(
+    manifest = ctx.actions.declare_file("%s.pbtxt" % ctx.label.name)
+    ctx.actions.write(
         output = manifest,
         content = struct(
             label = str(ctx.label),
@@ -132,19 +129,16 @@ def _web_library(ctx):
     params = struct(
         label = str(ctx.label),
         bind = "[::]:6006",
-        manifest = [long_path(ctx, man) for man in manifests],
+        manifest = [long_path(ctx, man) for man in manifests.to_list()],
         external_asset = [
             struct(webpath = k, path = v)
             for k, v in ctx.attr.external_assets.items()
         ],
     )
-    params_file = ctx.new_file(
-        ctx.configuration.bin_dir,
-        "%s_server_params.pbtxt" % ctx.label.name,
-    )
-    ctx.file_action(output = params_file, content = params.to_proto())
-    ctx.file_action(
-        executable = True,
+    params_file = ctx.actions.declare_file("%s_server_params.pbtxt" % ctx.label.name)
+    ctx.actions.write(output = params_file, content = params.to_proto())
+    ctx.actions.write(
+        is_executable = True,
         output = ctx.outputs.executable,
         content = "#!/bin/sh\nexec %s %s \"$@\"" % (
             ctx.executable._WebfilesServer.short_path,
