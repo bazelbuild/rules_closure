@@ -52,9 +52,6 @@ Closure Rules bundles the following tools and makes them "just work."
 - [Protocol Buffers]: Google's language-neutral, platform-neutral, extensible
   mechanism for serializing structured data. This is used instead of untyped
   JSON.
-- [Incremental DOM][Incremental DOM] (experimental): Google's in-place DOM
-  diffing library. This optional backend for Closure Templates builds DOM trees
-  and updates them in-place when data changes.
 
 ### Mailing Lists
 
@@ -248,7 +245,7 @@ This rule can be referenced as though it were the following:
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_binary")
-closure_js_binary(name, deps, css, pedantic, debug, language, entry_points,
+closure_js_binary(name, deps, css, debug, language, entry_points,
                   dependency_mode, compilation_level, formatting,
                   output_wrapper, property_renaming_report, defs)
 ```
@@ -293,19 +290,6 @@ This rule can be referenced as though it were the following:
   This attribute is required if any of JavaScript or template sources depend on
   a [closure_css_library]. This rule will check that all the referenced CSS
   libraries are present in the CSS binary.
-
-- **pedantic:** (Boolean; optional; default is `False`) Setting this flag to
-  `True` will turn on every single warning, and treat warnings as errors. Your
-  reward is that type-based optimizations becomes enabled.
-
-  This flag is recommended for greenfield projects, however *caveat emptor*
-  applies. Some of the checks that get enabled aren't yet mature. The Closure
-  Compiler might do something crazy like generate synthetic code that doesn't
-  validate. If that happens, please file an [issue][compiler-issue].
-
-  One benefit of pedantic mode is null safety. **ProTip:** The Closure Compiler
-  will take into consideration `goog.asserts.assert` statements and conditionals
-  like `if (foo != null)`.
 
 - **debug:** (Boolean; optional; default is `False`) Enables debug mode. Many
   types of properties and variable names will be renamed to include `$`
@@ -395,7 +379,7 @@ closure_js_binary(
 
 ```python
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_test")
-closure_js_test(name, srcs, data, deps, css, html, language, pedantic, suppress,
+closure_js_test(name, srcs, data, deps, css, html, language, suppress,
                 compilation_level, entry_points, defs)
 ```
 
@@ -456,8 +440,6 @@ This rule can be referenced as though it were the following:
 - **compilation_level:** Passed to [closure_js_binary]. Setting this to
   `"WHITESPACE_ONLY"` will cause tests to run significantly faster (at the
   expense of type checking.)
-
-- **pedantic:** Passed to [closure_js_binary].
 
 - **suppress:** Passed to [closure_js_library].
 
@@ -569,7 +551,7 @@ closure_js_template_library(name, srcs, data, deps, globals, plugin_modules,
                             should_generate_js_doc,
                             should_provide_require_soy_namespaces,
                             should_generate_soy_msg_defs,
-                            soy_msgs_are_external, incremental_dom)
+                            soy_msgs_are_external)
 ```
 
 Compiles Closure templates to JavaScript source files.
@@ -586,7 +568,6 @@ For additional help on using some of these attributes, please see the output of
 the following:
 
     bazel run @io_bazel_rules_closure//third_party/java/soy:SoyToJsSrcCompiler -- --help
-    bazel run @io_bazel_rules_closure//third_party/java/soy:SoyToIncrementalDomSrcCompiler -- --help
 
 #### Implicit Output Targets
 
@@ -633,35 +614,16 @@ This rule can be referenced as though it were the following:
   verbatim to the SoyToJsSrcCompiler above.
 
 - **should_generate_js_doc:** (Boolean; optional; default is `True`) Passed
-  along verbatim to the SoyToJsSrcCompiler above. Does not apply when using
-  Incremental DOM.
+  along verbatim to the SoyToJsSrcCompiler above.
 
 - **should_provide_require_soy_namespaces:** (Boolean; optional; default is
-  `True`) Passed along verbatim to the SoyToJsSrcCompiler above. Does not apply
-  when using Incremental DOM.
+  `True`) Passed along verbatim to the SoyToJsSrcCompiler above.
 
 - **should_generate_soy_msg_defs:** (Boolean; optional; default is `False`)
-  Passed along verbatim to the SoyToJsSrcCompiler above.  Does not apply when
-  using Incremental DOM.
+  Passed along verbatim to the SoyToJsSrcCompiler above.
 
 - **soy_msgs_are_external:** (Boolean; optional; default is `False`) Passed
-  along verbatim to the SoyToJsSrcCompiler above. Does not apply when using
-  Incremental DOM.
-
-- **incremental_dom:** (Boolean; optional; default is `False`;
-  [example][idom-example]; **experimental**) Generate [Incremental DOM]
-  compatible templates.
-
-  Incremental DOM is a different algorithm for rendering templates. It updates
-  DOM elements in-place, rather than destroying and recreating them. This makes
-  a tradeoff of less memory for more CPU. It also carries practical benefits;
-  for example, the entire page could re-rendered and an input field would not
-  lose its focus.
-
-  Google is already using this feature for multiple production services. However
-  it is marked experimental because it's a relatively recent development. The
-  web frameworks team at Google is still battle testing this library internally.
-
+  along verbatim to the SoyToJsSrcCompiler above.
 
 ## closure\_java\_template\_library
 
@@ -993,7 +955,6 @@ This rule can be referenced as though it were the following:
 [Exports and Entry Points]: https://github.com/bazelbuild/rules_closure/blob/master/closure/compiler/test/exports_and_entry_points/BUILD
 [Google JavaScript Style Guide]: https://google.github.io/styleguide/jsguide.html
 [Google coding conventions]: https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/GoogleCodingConvention.java
-[Incremental DOM]: https://github.com/google/incremental-dom/
 [Name]: https://docs.bazel.build/versions/master/build-ref.html#name
 [PhantomJS]: http://phantomjs.org/
 [ProcessEs6Modules]: https://github.com/google/closure-compiler/blob/1281ed9ded137eaf578bb65a588850bf13f38aa4/src/com/google/javascript/jscomp/ProcessEs6Modules.java
