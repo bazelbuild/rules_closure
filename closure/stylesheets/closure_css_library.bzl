@@ -30,14 +30,15 @@ def _closure_css_library(ctx):
         exports = unfurl(ctx.attr.exports),
         closure_js_library = struct(),
         closure_css_library = struct(
-            srcs = css.srcs + ctx.files.srcs,
-            labels = css.labels + [ctx.label],
+            srcs = depset(ctx.files.srcs, transitive = [css.srcs]),
+            labels = depset([ctx.label], transitive = [css.labels]),
             orientation = ctx.attr.orientation,
         ),
         runfiles = ctx.runfiles(
             files = ctx.files.srcs + ctx.files.data,
-            transitive_files = (collect_runfiles(deps) |
-                                collect_runfiles(ctx.attr.data)),
+            transitive_files = depset(
+                transitive = [collect_runfiles(deps), collect_runfiles(ctx.attr.data)],
+            ),
         ),
     )
 

@@ -42,10 +42,10 @@ def _web_library(ctx):
 
     # process what came before
     deps = unfurl(ctx.attr.deps, provider = "webfiles")
-    webpaths = depset()
+    webpaths = []
     manifests = depset(order = "postorder")
     for dep in deps:
-        webpaths += dep.webfiles.webpaths
+        webpaths.append(dep.webfiles.webpaths)
         manifests += dep.webfiles.manifests
 
     # process what comes now
@@ -76,7 +76,7 @@ def _web_library(ctx):
             longpath = long_path(ctx, src),
             webpath = webpath,
         ))
-    webpaths += new_webpaths
+    webpaths += [depset(new_webpaths)]
     manifest = ctx.new_file(
         ctx.configuration.bin_dir,
         "%s.pbtxt" % ctx.label.name,
@@ -163,7 +163,7 @@ def _web_library(ctx):
         webfiles = struct(
             manifest = manifest,
             manifests = manifests,
-            webpaths = webpaths,
+            webpaths = depset(transitive = webpaths),
             dummy = ctx.outputs.dummy,
         ),
         runfiles = ctx.runfiles(

@@ -19,7 +19,9 @@ import static com.google.common.base.Strings.nullToEmpty;
 /** Bazel error prefixes. */
 public final class Prefixes {
 
-  private static final boolean WANT_COLOR = nullToEmpty(System.getenv("TERM")).contains("xterm");
+  private static final boolean WANT_COLOR =
+      System.getenv("NO_COLOR") == null &&
+      nullToEmpty(System.getenv("TERM")).contains("xterm");
 
   private static final String RESET = WANT_COLOR ? "\u001b[0m" : "";
   private static final String BOLD = WANT_COLOR ? "\u001b[1m" : "";
