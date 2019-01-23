@@ -63,7 +63,7 @@ def _generate_closure_js(target, ctx):
 
     # Add include paths for all proto files,
     # to avoid copying/linking the files for every target.
-    protos = target.proto.transitive_imports
+    protos = target[ProtoInfo].transitive_imports
     args = ["-I%s" % p for p in _proto_include_paths(protos)]
 
     out_options = ",".join(js_out_options)
@@ -71,7 +71,7 @@ def _generate_closure_js(target, ctx):
     args += ["--js_out=%s:%s" % (out_options, out_path)]
 
     # Add paths of protos we generate files for.
-    args += [file.path for file in target.proto.direct_sources]
+    args += [file.path for file in target[ProtoInfo].direct_sources]
 
     ctx.actions.run(
         inputs = protos,
@@ -145,7 +145,7 @@ closure_proto_library = rule(
     attrs = {
         "deps": attr.label_list(
             mandatory = True,
-            providers = ["proto"],
+            providers = [ProtoInfo],
             aspects = [closure_proto_aspect],
         ),
     },
