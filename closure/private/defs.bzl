@@ -160,7 +160,7 @@ def find_js_module_roots(srcs, workspace_name, label, includes):
     relative to the root of a monolithic Bazel repository. Also, unlike the C++
     rules, there is no penalty for using includes in JavaScript compilation.
     """
-    roots = depset([f.root.path for f in srcs if f.root.path])
+    roots = [f.root.path for f in srcs if f.root.path]
 
     # Bazel started prefixing external repo paths with ../
     new_bazel_version = Label("@foo//bar").workspace_root.startswith("../")
@@ -191,7 +191,7 @@ def find_js_module_roots(srcs, workspace_name, label, includes):
             for root in roots.to_list():
                 magic_roots.append("%s/%s" % (root, prefix))
         roots += magic_roots
-    return roots
+    return depset(roots)
 
 def sort_roots(roots):
     """Sorts roots with the most labels first."""
