@@ -169,7 +169,7 @@ def find_js_module_roots(srcs, workspace_name, label, includes):
             roots += ["%s" % root for root in roots.to_list()]
             roots += ["../%s" % workspace_name]
         else:
-            roots += ["%s/external/%s" % (root, workspace_name) for root in roots.to_list()]
+            roots += ["%s/external/%s" % (root, workspace_name) for root in roots]
             roots += ["external/%s" % workspace_name]
     if includes:
         for f in srcs:
