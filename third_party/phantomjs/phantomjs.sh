@@ -29,6 +29,8 @@ export LD_LIBRARY_PATH="${RUNFILES}/third_party/freetype/k8:${LD_LIBRARY_PATH}"
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/expat/k8:${LD_LIBRARY_PATH}"
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/png/k8:${LD_LIBRARY_PATH}"
 
+export OPENSSL_CONF=/etc/ssl/
+
 export FONTCONFIG_PATH="${RUNFILES}/third_party/fontconfig"
 export XDG_DATA_HOME="${RUNFILES}"
 export XDG_CACHE_HOME="$(mktemp -d "${TMPDIR:-/tmp}/fontcache.XXXXXXXXXX")"
