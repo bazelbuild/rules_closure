@@ -19,6 +19,7 @@ licenses(["notice"])  # Apache 2.0
 filegroup(
     name = "com_google_template_soy_jssrc",
     srcs = [
+        "checks.js",
         "jspbconversions.js",
         "soydata_converters.js",
         "soyutils_usegoog.js",

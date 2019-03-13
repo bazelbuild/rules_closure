@@ -701,10 +701,10 @@ def com_google_template_soy():
         name = "com_google_template_soy",
         licenses = ["notice"],  # Apache 2.0
         jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2018-03-14/soy-2018-03-14.jar",
-            "https://repo1.maven.org/maven2/com/google/template/soy/2018-03-14/soy-2018-03-14.jar",
+            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2019-03-11/soy-2019-03-11.jar",
+            "https://repo1.maven.org/maven2/com/google/template/soy/2019-03-11/soy-2019-03-11.jar",
         ],
-        jar_sha256 = "449664a12ae7f94d6ef72a0271edfe21fe6605fa749b152fce45eccb3e4d09b1",
+        jar_sha256 = "ceb0e78cf1cadefa17493bbd0a913314558e34dd30e4d7d92e406f69c2670725",
         deps = [
             "@args4j",
             "@com_google_code_findbugs_jsr305",
@@ -742,10 +742,10 @@ def com_google_template_soy():
 def com_google_template_soy_jssrc():
     http_archive(
         name = "com_google_template_soy_jssrc",
-        sha256 = "c76ab4cb6e46a7c76336640b3c40d6897b420209a6c0905cdcd32533dda8126a",
+        sha256 = "188a28d3935b0661631bdb518a97d03edd4a597a13a09dd3d92a138c09b59780",
         urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2018-03-14/soy-2018-03-14-jssrc_js.jar",
-            "https://repo1.maven.org/maven2/com/google/template/soy/2018-03-14/soy-2018-03-14-jssrc_js.jar",
+            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2019-03-11/soy-2019-03-11-jssrc_js.jar",
+            "https://repo1.maven.org/maven2/com/google/template/soy/2019-03-11/soy-2019-03-11-jssrc_js.jar",
         ],
         build_file = str(Label("//closure/templates:soy_jssrc.BUILD")),
         type = "zip",

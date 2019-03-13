@@ -26,8 +26,6 @@ def _impl(ctx):
             ctx.configuration.genfiles_dir.path]
     if ctx.attr.soy_msgs_are_external:
         args += ["--googMsgsAreExternal"]
-    if ctx.attr.should_provide_require_soy_namespaces:
-        args += ["--shouldProvideRequireSoyNamespaces"]
     if ctx.attr.should_generate_soy_msg_defs:
         args += ["--shouldGenerateGoogMsgDefs"]
     if ctx.attr.plugin_modules:
@@ -37,7 +35,7 @@ def _impl(ctx):
         args.append("--srcs=" + f.path)
         inputs.append(f)
     if ctx.file.globals:
-        args += ["--compileTimeGlobalsFile=%s" % ctx.file.globals.path]
+        args += ["--compileTimeGlobalsFile", ctx.file.globals.path]
         inputs.append(ctx.file.globals)
     for dep in unfurl(ctx.attr.deps, provider = "closure_js_library"):
         for f in dep.closure_js_library.descriptors.to_list():
