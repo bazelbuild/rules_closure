@@ -40,7 +40,7 @@ final class JsCompilerRunner extends CommandLineRunner {
   int go() throws IOException {
     try {
       return doRun();
-    } catch (AbstractCommandLineRunner.FlagUsageException e) {
+    } catch (FlagUsageException e) {
       System.err.println(e.getMessage());
       System.exit(1);
       return 1;

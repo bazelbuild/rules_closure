@@ -128,8 +128,10 @@ def _closure_js_library_impl(
             "missingOverride",
             "reportUnknownTypes",
             "strictCheckTypes",
+            "strictModuleChecks",
             "superfluousSuppress",
             "unnecessaryEscape",
+            "underscore",
         ]
 
     # TODO(yannic): Always use |actions.declare_file()|.

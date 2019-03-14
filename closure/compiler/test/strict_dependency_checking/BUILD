@@ -167,6 +167,7 @@ closure_js_library(
 closure_js_library(
     name = "es6_b",
     srcs = ["es6_b.js"],
+    suppress = ["moduleLoad"],
     deps = [":es6_a"],
 )
 
@@ -247,6 +248,7 @@ genrule(
 closure_js_library(
     name = "es6_g2",
     srcs = ["es6_g2.js"],
+    suppress = ["moduleLoad"],
     deps = ["es6_g"],
 )
 
@@ -270,6 +272,7 @@ closure_js_library(
         "es6_d.js",
         "subdir/es6_e.js",
     ],
+    suppress = ["moduleLoad"],
     tags = ["manual"],
     deps = [":es6_a"],
 )

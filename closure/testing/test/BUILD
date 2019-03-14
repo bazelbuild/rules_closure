@@ -75,6 +75,8 @@ closure_js_test(
     name = "arithmetic_es6module_test",
     timeout = "short",
     srcs = ["arithmetic_es6module_test.js"],
+    entry_points = ["closure/testing/test/arithmetic_es6module_test.js"],
+    suppress = ["moduleLoad"],
     deps = [
         ":arithmetic_es6module_lib",
         "//closure/library:testing",

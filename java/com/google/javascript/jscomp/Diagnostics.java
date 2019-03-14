@@ -58,8 +58,17 @@ final class Diagnostics {
           "setTestOnly",
           "strictDependencies",
           "strictMissingRequire",
+          "strictModuleChecks",
           "superfluousSuppress",
+          "underscore",
           "useOfGoogBase");
+
+  /** Diagnostic groups both {@link JsChecker} and {@link JsCompiler} will check. */
+  static final ImmutableSet<String> JSCHECKER_EXTRA_ERRORS =
+      ImmutableSet.of(
+          // Even though we're not running the typechecker, enable the checkTypes DiagnosticGroup,
+          // since it contains some warnings we do want to report, such as JSDoc parse warnings.
+          "checkTypes");
 
   /** Legal values for a {@code @suppress {foo}} JSDoc tag. */
   // Keep in sync with com/google/javascript/jscomp/parsing/ParserConfig.properties
@@ -109,13 +118,6 @@ final class Diagnostics {
           "uselessCode",
           "visibility",
           "with");
-
-  /** Diagnostic groups both {@link JsChecker} and {@link JsCompiler} will check. */
-  static final ImmutableSet<String> JSCHECKER_EXTRA_ERRORS =
-      ImmutableSet.of(
-          // Even though we're not running the typechecker, enable the checkTypes DiagnosticGroup,
-          // since it contains some warnings we do want to report, such as JSDoc parse warnings.
-          "checkTypes");
 
   /** Checks to suppress if closure_js_library convention is not GOOGLE. */
   static final ImmutableSet<DiagnosticType> GOOGLE_LINTER_CHECKS =
@@ -189,7 +191,7 @@ final class Diagnostics {
 
   private static ImmutableMap<String, DiagnosticType> initDiagnosticTypes() {
     Map<String, DiagnosticType> builder = new HashMap<>();
-    for (DiagnosticGroup group : GROUPS.getRegisteredGroups().values()) {
+    for (DiagnosticGroup group : DiagnosticGroups.getRegisteredGroups().values()) {
       for (DiagnosticType type : group.getTypes()) {
         builder.put(type.key, type);
       }
@@ -199,7 +201,8 @@ final class Diagnostics {
 
   private static ImmutableMultimap<DiagnosticType, String> initDiagnosticGroups() {
     Multimap<DiagnosticType, String> builder = HashMultimap.create();
-    for (Map.Entry<String, DiagnosticGroup> group : GROUPS.getRegisteredGroups().entrySet()) {
+    for (Map.Entry<String, DiagnosticGroup> group :
+        DiagnosticGroups.getRegisteredGroups().entrySet()) {
       for (DiagnosticType type : group.getValue().getTypes()) {
         builder.put(type, group.getKey());
       }
