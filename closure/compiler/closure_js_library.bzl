@@ -220,7 +220,11 @@ def _closure_js_library_impl(
     # paths might contain weird bazel-out/blah/external/ prefixes. These paths
     # are by no means canonical and can change for a particular file based on
     # where the ctx.action is located.
-    for f in srcs:
+    # TODO(davido): Find out how to avoid that hack
+    srcs_it = srcs
+    if type(srcs) == "depset":
+        srcs_it = srcs.to_list()
+    for f in srcs_it:
         args.append("--src")
         args.append(f.path)
         inputs.append(f)
@@ -240,15 +244,19 @@ def _closure_js_library_impl(
     # We keep track of ES6 module names so we can guarantee that no namespace
     # collisions exist for any particular transitive closure. By making it
     # canonical, we can use it to propagate suppressions up to closure_js_binary.
+    # TODO(davido): Find out how to avoid that hack
+    srcs_it = srcs
+    if type(srcs) == "depset":
+        srcs_it = srcs.to_list()
     modules = [
         convert_path_to_es6_module_name(
             f.path if not f.is_directory else f.path + "/*.js",
             js_module_roots,
         )
-        for f in srcs
+        for f in srcs_it
     ]
     for module in modules:
-        if module in js.modules:
+        if module in js.modules.to_list():
             fail(("ES6 namespace '%s' already defined by a dependency. Check the " +
                   "deps transitively. Remember that namespaces are relative to the " +
                   "root of the repository unless includes=[...] is used") % module)

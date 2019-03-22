@@ -64,7 +64,7 @@ def _closure_css_binary(ctx):
     if ctx.attr.vendor:
         args += ["--vendor", ctx.attr.vendor]
     args += ctx.attr.defs
-    for f in css.srcs:
+    for f in css.srcs.to_list():
         args.append(f.path)
         inputs.append(f)
     ctx.actions.run(
@@ -73,7 +73,7 @@ def _closure_css_binary(ctx):
         arguments = args,
         executable = ctx.executable._compiler,
         progress_message = "Compiling %d stylesheets to %s" % (
-            len(css.srcs),
+            len(css.srcs.to_list()),
             ctx.outputs.bin.short_path,
         ),
     )

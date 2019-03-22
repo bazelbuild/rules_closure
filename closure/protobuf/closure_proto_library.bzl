@@ -43,7 +43,7 @@ def _proto_include_path(proto):
     return path
 
 def _proto_include_paths(protos):
-    return depset([_proto_include_path(proto) for proto in protos])
+    return depset([_proto_include_path(proto) for proto in protos.to_list()])
 
 def _generate_closure_js_progress_message(name):
     # TODO(yannic): Add a better message?
@@ -64,7 +64,7 @@ def _generate_closure_js(target, ctx):
     # Add include paths for all proto files,
     # to avoid copying/linking the files for every target.
     protos = target[ProtoInfo].transitive_imports
-    args = ["-I%s" % p for p in _proto_include_paths(protos)]
+    args = ["-I%s" % p for p in _proto_include_paths(protos).to_list()]
 
     out_options = ",".join(js_out_options)
     out_path = "/".join(js.path.split("/")[:-1])

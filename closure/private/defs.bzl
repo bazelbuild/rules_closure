@@ -160,7 +160,11 @@ def find_js_module_roots(srcs, workspace_name, label, includes):
     relative to the root of a monolithic Bazel repository. Also, unlike the C++
     rules, there is no penalty for using includes in JavaScript compilation.
     """
-    roots = [f.root.path for f in srcs if f.root.path]
+    # TODO(davido): Find out how to avoid that hack
+    srcs_it = srcs
+    if type(srcs) == "depset":
+        srcs_it = srcs.to_list()
+    roots = [f.root.path for f in srcs_it if f.root.path]
 
     # Bazel started prefixing external repo paths with ../
     new_bazel_version = Label("@foo//bar").workspace_root.startswith("../")
@@ -195,7 +199,7 @@ def find_js_module_roots(srcs, workspace_name, label, includes):
 
 def sort_roots(roots):
     """Sorts roots with the most labels first."""
-    return [r for _, r in sorted([(-len(r.split("/")), r) for r in roots])]
+    return [r for _, r in sorted([(-len(r.split("/")), r) for r in roots.to_list()])]
 
 def convert_path_to_es6_module_name(path, roots):
     """Equivalent to JsCheckerHelper#convertPathToModuleName."""
@@ -209,12 +213,16 @@ def convert_path_to_es6_module_name(path, roots):
 
 def make_jschecker_progress_message(srcs, label):
     if srcs:
-        return "Checking %d JS files in %s" % (len(srcs), label)
+        # TODO(davido): Find out how to avoid that hack
+        srcs_it = srcs
+        if type(srcs) == "depset":
+            srcs_it = srcs.to_list()
+        return "Checking %d JS files in %s" % (len(srcs_it), label)
     else:
         return "Checking %s" % (label)
 
 def difference(a, b):
-    return [i for i in a if i not in b]
+    return [i for i in a.to_list() if i not in b.to_list()]
 
 def long_path(ctx, file_):
     """Returns short_path relative to parent directory."""
@@ -253,10 +261,14 @@ def library_level_checks(
         output.path,
     ]
     inputs = []
-    for f in ijs_deps:
+    for f in ijs_deps.to_list():
         args.append("--externs=%s" % f.path)
         inputs.append(f)
-    for f in srcs:
+    # TODO(davido): Find out how to avoid that hack
+    srcs_it = srcs
+    if type(srcs) == "depset":
+        srcs_it = srcs.to_list()
+    for f in srcs_it:
         args.append("--js=%s" % f.path)
         inputs.append(f)
     for s in suppress:

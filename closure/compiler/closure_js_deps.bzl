@@ -32,7 +32,7 @@ def _impl(ctx):
 
     # XXX: Other files in same directory will get schlepped in w/o sandboxing.
     ctx.actions.run(
-        inputs = list(js.srcs),
+        inputs = list(js.srcs.to_list()),
         outputs = outputs,
         arguments = (["--output_file=%s" % ctx.outputs.out.path] +
                      [
@@ -46,13 +46,13 @@ def _impl(ctx):
                                      src.dirname if not src.is_directory else src.path,
                                      long_path(ctx, src) if not src.is_directory else (src.path + "/null.js"),
                                  )
-                                 for src in js.srcs
+                                 for src in js.srcs.to_list()
                              ],
                          )
                      ]),
         executable = ctx.executable._depswriter,
         progress_message = "Calculating %d JavaScript deps to %s" % (
-            len(js.srcs),
+            len(js.srcs.to_list()),
             ctx.outputs.out.short_path,
         ),
     )

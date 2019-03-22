@@ -39,7 +39,7 @@ def _impl(ctx):
     for flag in ctx.attr.defs:
         if not flag.startswith("--") or (" " in flag and "=" not in flag):
             fail("Please use --flag=value syntax for defs")
-    if ctx.attr.language not in JS_LANGUAGES:
+    if ctx.attr.language not in JS_LANGUAGES.to_list():
         fail("Unknown language %s try one of these: %s" % (
             ctx.attr.language,
             ", ".join(JS_LANGUAGES),
@@ -93,7 +93,7 @@ def _impl(ctx):
 
     # These ClosureJsLibrary protocol buffers contain information about which
     # errors should be suppressed in which files.
-    for info in js.infos:
+    for info in js.infos.to_list():
         args.append("--info")
         args.append(info.path)
         inputs.append(info)
@@ -205,7 +205,7 @@ def _impl(ctx):
     all_args.add_all(args)
 
     # We shall now pass all transitive sources, including externs files.
-    for src in js.srcs:
+    for src in js.srcs.to_list():
         inputs.append(src)
         if src.path.endswith(".zip"):
             all_args.add("--jszip")
@@ -236,7 +236,7 @@ def _impl(ctx):
         mnemonic = "Closure",
         execution_requirements = {"supports-workers": "1"},
         progress_message = "Compiling %d JavaScript files to %s" % (
-            len(js.srcs),
+            len(js.srcs.to_list()),
             ctx.outputs.bin.short_path,
         ),
     )

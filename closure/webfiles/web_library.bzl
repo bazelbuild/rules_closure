@@ -103,7 +103,7 @@ def _web_library(ctx):
     inputs.extend(ctx.files.srcs)
     for dep in deps:
         inputs.append(dep.webfiles.dummy)
-        for f in dep.files:
+        for f in dep.files.to_list():
             inputs.append(f)
         direct_manifests += [dep.webfiles.manifest]
         inputs.append(dep.webfiles.manifest)
