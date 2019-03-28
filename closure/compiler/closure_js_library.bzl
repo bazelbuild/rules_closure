@@ -45,7 +45,8 @@ def create_closure_js_library(
         deps = [],
         exports = [],
         suppress = [],
-        lenient = False):
+        lenient = False,
+        convention = "CLOSURE"):
     """ Returns closure_js_library metadata with provided attributes.
 
     Note that the returned struct is not a proper provider since existing contract
@@ -86,6 +87,7 @@ def create_closure_js_library(
         exports = exports,
         suppress = suppress,
         lenient = lenient,
+        convention = convention,
         testonly = testonly,
         closure_library_base = ctx.files._closure_library_base,
         closure_worker = ctx.executable._ClosureWorker,
@@ -100,12 +102,12 @@ def _closure_js_library_impl(
         testonly,
         suppress,
         lenient,
+        convention,
         closure_library_base,
         closure_worker,
         includes = (),
         exports = depset(),
         internal_descriptors = depset(),
-        convention = "CLOSURE",
         no_closure_library = False,
         internal_expect_failure = False,
 
@@ -402,12 +404,12 @@ def _closure_js_library(ctx):
         ctx.attr.testonly,
         ctx.attr.suppress,
         ctx.attr.lenient,
+        ctx.attr.convention,
         ctx.files._closure_library_base,
         ctx.executable._ClosureWorker,
         getattr(ctx.attr, "includes", []),
         ctx.attr.exports,
         ctx.files.internal_descriptors,
-        ctx.attr.convention,
         ctx.attr.no_closure_library,
         ctx.attr.internal_expect_failure,
 
