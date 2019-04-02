@@ -34,6 +34,7 @@ export OPENSSL_CONF=/etc/ssl/
 export FONTCONFIG_PATH="${RUNFILES}/third_party/fontconfig"
 export XDG_DATA_HOME="${RUNFILES}"
 export XDG_CACHE_HOME="$(mktemp -d "${TMPDIR:-/tmp}/fontcache.XXXXXXXXXX")"
+export OPENSSL_CONF="${RUNFILES}/third_party/openssl/openssl.cnf"
 
 "${RUNFILES}/third_party/phantomjs/bin/phantomjs" "$@"
 rc="$?"

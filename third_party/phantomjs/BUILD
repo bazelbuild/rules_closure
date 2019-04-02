@@ -26,6 +26,7 @@ sh_binary(
         "//third_party/fontconfig:config",
         "//third_party/fontconfig:libfontconfig_k8",
         "//third_party/freetype:libfreetype_k8",
+        "//third_party/openssl:files",
         "//third_party/png:libpng_k8",
     ],
 )
