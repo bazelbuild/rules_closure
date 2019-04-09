@@ -245,7 +245,7 @@ def library_level_checks(
         executable,
         output,
         suppress = [],
-        lenient = False):
+        internal_expect_failure = False):
     args = [
         "JsCompiler",
         "--checks_only",
@@ -274,8 +274,9 @@ def library_level_checks(
     for s in suppress:
         args.append("--suppress")
         args.append(s)
-    if lenient:
-        args.append("--lenient")
+    if internal_expect_failure:
+        args.append("--expect_failure")
+
     actions.run(
         inputs = inputs,
         outputs = [output],
