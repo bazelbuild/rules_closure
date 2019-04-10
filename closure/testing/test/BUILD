@@ -83,6 +83,23 @@ closure_js_test(
     ],
 )
 
+closure_js_library(
+    name = "lenient_lib",
+    srcs = ["lenient.js"],
+    lenient = True,
+)
+
+closure_js_test(
+    name = "lenient_test",
+    srcs = ["lenient_test.js"],
+    lenient = True,
+    deps = [
+        ":lenient_lib",
+        "//closure/library:testing",
+    ],
+    entry_points = ['rules_closure.LenientTest'],
+)
+
 closure_js_test(
     name = "dict_entry_point_test",
     srcs = ["dict_entry_point_test.js"],
