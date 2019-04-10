@@ -69,22 +69,23 @@ def collect_js(
         no_closure_library = False,
         css = None):
     """Aggregates transitive JavaScript source files from unfurled deps."""
-    srcs = depset()
-    ijs_files = depset()
-    infos = depset()
-    modules = depset()
-    descriptors = depset()
-    stylesheets = depset()
-    js_module_roots = depset()
+    srcs = []
+    direct_srcs = []
+    ijs_files = []
+    infos = []
+    modules = []
+    descriptors = []
+    stylesheets = []
+    js_module_roots = []
     has_closure_library = False
     for dep in deps:
-        srcs += getattr(dep.closure_js_library, "srcs", [])
-        ijs_files += getattr(dep.closure_js_library, "ijs_files", [])
-        infos += getattr(dep.closure_js_library, "infos", [])
-        modules += getattr(dep.closure_js_library, "modules", [])
-        descriptors += getattr(dep.closure_js_library, "descriptors", [])
-        stylesheets += getattr(dep.closure_js_library, "stylesheets", [])
-        js_module_roots += getattr(dep.closure_js_library, "js_module_roots", [])
+        srcs += [getattr(dep.closure_js_library, "srcs", depset())]
+        ijs_files += [getattr(dep.closure_js_library, "ijs_files", depset())]
+        infos += [getattr(dep.closure_js_library, "infos", depset())]
+        modules += [getattr(dep.closure_js_library, "modules", depset())]
+        descriptors += [getattr(dep.closure_js_library, "descriptors", depset())]
+        stylesheets += [getattr(dep.closure_js_library, "stylesheets", depset())]
+        js_module_roots += [getattr(dep.closure_js_library, "js_module_roots", depset())]
         has_closure_library = (
             has_closure_library or
             getattr(dep.closure_js_library, "has_closure_library", False)
@@ -94,21 +95,19 @@ def collect_js(
             fail("no_closure_library can't be used when Closure Library is " +
                  "already part of the transitive closure")
     elif has_direct_srcs and not has_closure_library:
-        srcs = depset(closure_library_base, transitive = [srcs])
+        direct_srcs += closure_library_base
         has_closure_library = True
     if css:
-        srcs = depset(
-            closure_library_base + [css.closure_css_binary.renaming_map],
-            transitive = [srcs],
-        )
+        direct_srcs += closure_library_base + [css.closure_css_binary.renaming_map]
+
     return struct(
-        srcs = srcs,
-        js_module_roots = js_module_roots,
-        ijs_files = ijs_files,
-        infos = infos,
-        modules = modules,
-        descriptors = descriptors,
-        stylesheets = stylesheets,
+        srcs = depset(direct_srcs, transitive = srcs),
+        js_module_roots = depset(transitive = js_module_roots),
+        ijs_files = depset(transitive = ijs_files),
+        infos = depset(transitive = infos),
+        modules = depset(transitive = modules),
+        descriptors = depset(transitive = descriptors),
+        stylesheets = depset(transitive = stylesheets),
         has_closure_library = has_closure_library,
     )
 
@@ -160,6 +159,7 @@ def find_js_module_roots(srcs, workspace_name, label, includes):
     relative to the root of a monolithic Bazel repository. Also, unlike the C++
     rules, there is no penalty for using includes in JavaScript compilation.
     """
+
     # TODO(davido): Find out how to avoid that hack
     srcs_it = srcs
     if type(srcs) == "depset":
@@ -264,6 +264,7 @@ def library_level_checks(
     for f in ijs_deps.to_list():
         args.append("--externs=%s" % f.path)
         inputs.append(f)
+
     # TODO(davido): Find out how to avoid that hack
     srcs_it = srcs
     if type(srcs) == "depset":

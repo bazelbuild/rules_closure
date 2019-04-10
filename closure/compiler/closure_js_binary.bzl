@@ -112,14 +112,17 @@ def _impl(ctx):
     # except unlike C++ there's no I/O operation penalty to using them since all
     # source paths that exist are being passed as flags.
     js_module_roots = sort_roots(
-        find_js_module_roots(
-            [ctx.outputs.bin],
-            ctx.workspace_name,
-            ctx.label,
-            getattr(ctx.attr, "includes", []),
-        ) +
-        js.js_module_roots,
+        depset(transitive = [
+            find_js_module_roots(
+                [ctx.outputs.bin],
+                ctx.workspace_name,
+                ctx.label,
+                getattr(ctx.attr, "includes", []),
+            ),
+            js.js_module_roots,
+        ]),
     )
+
     for root in js_module_roots:
         args.append("--js_module_root")
         args.append(root)
