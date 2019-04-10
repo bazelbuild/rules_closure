@@ -443,7 +443,7 @@ This rule can be referenced as though it were the following:
 
 - **suppress:** Passed to [closure_js_library].
 
-- **entry_points:** Passed to [closure_js_binary].
+- **entry_points:** If a dict, the source file is looked up for the value to pass to [closure_js_binary].  Otherwise, passed directly to [closure_js_binary].
 
 - **defs:** Passed to [closure_js_binary].
 
@@ -551,6 +551,7 @@ closure_js_template_library(name, srcs, data, deps, globals, plugin_modules,
                             should_generate_js_doc,
                             should_provide_require_soy_namespaces,
                             should_generate_soy_msg_defs,
+                            bidi_global_dir,
                             soy_msgs_are_external)
 ```
 
@@ -621,6 +622,10 @@ This rule can be referenced as though it were the following:
 
 - **should_generate_soy_msg_defs:** (Boolean; optional; default is `False`)
   Passed along verbatim to the SoyToJsSrcCompiler above.
+
+- **bidi_global_dir:** (Integer; optional; default is `1`)
+  Passed along verbatim to the SoyToJsSrcCompiler above.
+  Valid values are 1 (LTR) or -1 (RTL).
 
 - **soy_msgs_are_external:** (Boolean; optional; default is `False`) Passed
   along verbatim to the SoyToJsSrcCompiler above.
