@@ -303,7 +303,7 @@ def _closure_js_library_impl(
             "%s_typecheck" % label.name,
         ),
         suppress = suppress,
-        lenient = lenient,
+        internal_expect_failure = internal_expect_failure,
     )
 
     if type(internal_descriptors) == "list":

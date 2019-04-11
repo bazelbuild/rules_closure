@@ -84,7 +84,6 @@ def _impl(ctx):
         "--generate_exports",
         "--process_closure_primitives",
         "--define=goog.json.USE_NATIVE_JSON",
-        "--define=goog.soy.REQUIRE_STRICT_AUTOESCAPE",
         "--hide_warnings_for=closure/goog/base.js",
     ]
 

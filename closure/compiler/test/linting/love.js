@@ -23,7 +23,7 @@ goog.provide('Love');
  * @constructor
  * @final
  */
-function Love(a, b) {
+Love = function (a, b) {
 
   /**
    * @private {number}
