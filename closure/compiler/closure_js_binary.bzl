@@ -258,9 +258,11 @@ def _impl(ctx):
         ),
         runfiles = ctx.runfiles(
             files = files + ctx.files.data,
-            transitive_files = (collect_runfiles(deps) |
-                                collect_runfiles([ctx.attr.css]) |
-                                collect_runfiles(ctx.attr.data)),
+            transitive_files = depset(transitive = [
+                collect_runfiles(deps),
+                collect_runfiles([ctx.attr.css]),
+                collect_runfiles(ctx.attr.data),
+            ]),
         ),
     )
 
