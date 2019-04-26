@@ -21,8 +21,8 @@ load("//closure/private:platform_http_file.bzl", "platform_http_file")
 def closure_repositories(
         omit_aopalliance = False,
         omit_args4j = False,
-        omit_clang = False,
         omit_bazel_skylib = False,
+        omit_clang = False,
         omit_com_google_auto_common = False,
         omit_com_google_auto_factory = False,
         omit_com_google_auto_value = False,
@@ -77,10 +77,10 @@ def closure_repositories(
         aopalliance()
     if not omit_args4j:
         args4j()
-    if not omit_clang:
-        clang()
     if not omit_bazel_skylib:
         bazel_skylib()
+    if not omit_clang:
+        clang()
     if not omit_com_google_auto_common:
         com_google_auto_common()
     if not omit_com_google_auto_factory:
@@ -199,6 +199,14 @@ def args4j():
         licenses = ["notice"],  # MIT License
     )
 
+def bazel_skylib():
+    http_archive(
+        name = "bazel_skylib",
+        sha256 = "bbccf674aa441c266df9894182d80de104cabd19be98be002f6d478aaa31574d",
+        strip_prefix = "bazel-skylib-2169ae1c374aab4a09aa90e65efe1a3aad4e279b",
+        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/2169ae1c374aab4a09aa90e65efe1a3aad4e279b.tar.gz"],
+    )
+
 def clang():
     platform_http_file(
         name = "clang",
@@ -212,14 +220,6 @@ def clang():
             "http://llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-apple-darwin.tar.xz",
         ],
         macos_sha256 = "e5a961e04b0e1738bbb5b824886a34932dc13b0af699d1fe16519d814d7b776f",
-    )
-
-def bazel_skylib():
-    http_archive(
-        name = "bazel_skylib",
-        sha256 = "bbccf674aa441c266df9894182d80de104cabd19be98be002f6d478aaa31574d",
-        strip_prefix = "bazel-skylib-2169ae1c374aab4a09aa90e65efe1a3aad4e279b",
-        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/2169ae1c374aab4a09aa90e65efe1a3aad4e279b.tar.gz"],
     )
 
 def com_google_auto_common():
