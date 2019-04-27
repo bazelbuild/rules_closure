@@ -83,26 +83,26 @@ closure_js_test(
     ],
 )
 
-genrule(
-    name = "fontdemo",
-    srcs = [
-        "screenshot.js",
-        "fontdemo.html",
-    ],
-    outs = ["fontdemo-generated.png"],
-    cmd = "$(location //third_party/phantomjs) $(SRCS) $@",
-    # TODO(user): Remove local = 1 when ariya/phantomjs#13876 is fixed.
-    local = 1,
-    tags = ["requires-network"],
-    tools = ["//third_party/phantomjs"],
-)
-
 # This test shows how to write tests to verify rendered output from phantomjs.
 # However, you shouln't do this because the output image depends on a lot of
 # external factors like operating system, GPU, ..., and therefore has a
 # very hight chance of being flaky.
 # https://github.com/bazelbuild/rules_closure/issues/247
 # https://github.com/bazelbuild/rules_closure/pull/186#issuecomment-279115018
+#
+# genrule(
+#     name = "fontdemo",
+#     srcs = [
+#         "screenshot.js",
+#         "fontdemo.html",
+#     ],
+#     outs = ["fontdemo-generated.png"],
+#     cmd = "$(location //third_party/phantomjs) $(SRCS) $@",
+#     # TODO(user): Remove local = 1 when ariya/phantomjs#13876 is fixed.
+#     local = 1,
+#     tags = ["requires-network"],
+#     tools = ["//third_party/phantomjs"],
+# )
 #
 # files_equal_test(
 #     name = "noto_fonts_render_as_expected",
