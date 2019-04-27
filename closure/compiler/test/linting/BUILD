@@ -50,3 +50,22 @@ file_test(
     file = "superfluousSuppress-stderr.txt",
     regexp = "superfluous suppress code",
 )
+
+closure_js_library(
+    name = "lenient_love",
+    srcs = ["love.js"],
+    lenient = True,
+)
+
+file_test(
+    name = "lenient_no_warnings",
+    file = "lenient_love-stderr.txt",
+    content = "",
+)
+
+file_test(
+    name = "lenient_no_type_check_errors",
+    # This is a dummy file to trigger per library type check
+    file = "lenient_love_typecheck",
+    content = "",
+)

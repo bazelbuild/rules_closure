@@ -83,6 +83,34 @@ closure_js_test(
     ],
 )
 
+closure_js_library(
+    name = "lenient_lib",
+    srcs = ["lenient.js"],
+    lenient = True,
+)
+
+closure_js_test(
+    name = "lenient_test",
+    srcs = ["lenient_test.js"],
+    lenient = True,
+    deps = [
+        ":lenient_lib",
+        "//closure/library:testing",
+    ],
+    entry_points = ['rules_closure.LenientTest'],
+)
+
+closure_js_test(
+    name = "dict_entry_point_test",
+    srcs = ["dict_entry_point_test.js"],
+    entry_points = {
+        "dict_entry_point_test.js": ["rules_closure.DictEntryPointTest"],
+    },
+    deps = [
+        "//closure/library:testing",
+    ],
+)
+
 # This test shows how to write tests to verify rendered output from phantomjs.
 # However, you shouln't do this because the output image depends on a lot of
 # external factors like operating system, GPU, ..., and therefore has a

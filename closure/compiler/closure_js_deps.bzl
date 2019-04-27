@@ -60,9 +60,10 @@ def _impl(ctx):
         files = depset(outputs),
         runfiles = ctx.runfiles(
             files = outputs + ctx.files.data,
-            transitive_files = (depset(ctx.files._closure_library_base) |
-                                collect_runfiles(deps) |
-                                collect_runfiles(ctx.attr.data)),
+            transitive_files = depset(
+                ctx.files._closure_library_base,
+                transitive = [collect_runfiles(deps), collect_runfiles(ctx.attr.data)],
+            ),
         ),
     )
 

@@ -26,10 +26,10 @@ def _impl(ctx):
             ctx.configuration.genfiles_dir.path]
     if ctx.attr.soy_msgs_are_external:
         args += ["--googMsgsAreExternal"]
-    if ctx.attr.should_provide_require_soy_namespaces:
-        args += ["--shouldProvideRequireSoyNamespaces"]
     if ctx.attr.should_generate_soy_msg_defs:
         args += ["--shouldGenerateGoogMsgDefs"]
+    if ctx.attr.bidi_global_dir:
+        args += ["--bidiGlobalDir=%s" % ctx.attr.bidi_global_dir]
     if ctx.attr.plugin_modules:
         args += ["--pluginModules=%s" % ",".join(ctx.attr.plugin_modules)]
     inputs = []
@@ -37,7 +37,7 @@ def _impl(ctx):
         args.append("--srcs=" + f.path)
         inputs.append(f)
     if ctx.file.globals:
-        args += ["--compileTimeGlobalsFile=%s" % ctx.file.globals.path]
+        args += ["--compileTimeGlobalsFile", ctx.file.globals.path]
         inputs.append(ctx.file.globals)
     for dep in unfurl(ctx.attr.deps, provider = "closure_js_library"):
         for f in dep.closure_js_library.descriptors.to_list():
@@ -68,6 +68,7 @@ _closure_js_template_library = rule(
         "plugin_modules": attr.label_list(),
         "should_provide_require_soy_namespaces": attr.bool(default = True),
         "should_generate_soy_msg_defs": attr.bool(),
+        "bidi_global_dir": attr.int(default = 1, values = [1, -1]),
         "soy_msgs_are_external": attr.bool(),
         "compiler": attr.label(cfg = "host", executable = True, mandatory = True),
     },
@@ -83,6 +84,7 @@ def closure_js_template_library(
         plugin_modules = None,
         should_provide_require_soy_namespaces = None,
         should_generate_soy_msg_defs = None,
+        bidi_global_dir = None,
         soy_msgs_are_external = None,
         **kwargs):
     compiler = str(Label(_SOYTOJSSRCCOMPILER))
@@ -98,6 +100,7 @@ def closure_js_template_library(
         plugin_modules = plugin_modules,
         should_provide_require_soy_namespaces = should_provide_require_soy_namespaces,
         should_generate_soy_msg_defs = should_generate_soy_msg_defs,
+        bidi_global_dir = bidi_global_dir,
         soy_msgs_are_external = soy_msgs_are_external,
         compiler = compiler,
     )

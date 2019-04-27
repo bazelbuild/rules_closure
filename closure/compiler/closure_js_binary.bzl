@@ -84,7 +84,6 @@ def _impl(ctx):
         "--generate_exports",
         "--process_closure_primitives",
         "--define=goog.json.USE_NATIVE_JSON",
-        "--define=goog.soy.REQUIRE_STRICT_AUTOESCAPE",
         "--hide_warnings_for=closure/goog/base.js",
     ]
 
@@ -112,14 +111,17 @@ def _impl(ctx):
     # except unlike C++ there's no I/O operation penalty to using them since all
     # source paths that exist are being passed as flags.
     js_module_roots = sort_roots(
-        find_js_module_roots(
-            [ctx.outputs.bin],
-            ctx.workspace_name,
-            ctx.label,
-            getattr(ctx.attr, "includes", []),
-        ) +
-        js.js_module_roots,
+        depset(transitive = [
+            find_js_module_roots(
+                [ctx.outputs.bin],
+                ctx.workspace_name,
+                ctx.label,
+                getattr(ctx.attr, "includes", []),
+            ),
+            js.js_module_roots,
+        ]),
     )
+
     for root in js_module_roots:
         args.append("--js_module_root")
         args.append(root)
@@ -255,9 +257,11 @@ def _impl(ctx):
         ),
         runfiles = ctx.runfiles(
             files = files + ctx.files.data,
-            transitive_files = (collect_runfiles(deps) |
-                                collect_runfiles([ctx.attr.css]) |
-                                collect_runfiles(ctx.attr.data)),
+            transitive_files = depset(transitive = [
+                collect_runfiles(deps),
+                collect_runfiles([ctx.attr.css]),
+                collect_runfiles(ctx.attr.data),
+            ]),
         ),
     )
 

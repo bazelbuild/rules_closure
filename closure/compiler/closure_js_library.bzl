@@ -249,9 +249,6 @@ def _closure_js_library_impl(
     # collisions exist for any particular transitive closure. By making it
     # canonical, we can use it to propagate suppressions up to closure_js_binary.
     # TODO(davido): Find out how to avoid that hack
-    srcs_it = srcs
-    if type(srcs) == "depset":
-        srcs_it = srcs.to_list()
     modules = [
         convert_path_to_es6_module_name(
             f.path if not f.is_directory else f.path + "/*.js",
@@ -306,8 +303,11 @@ def _closure_js_library_impl(
             "%s_typecheck" % label.name,
         ),
         suppress = suppress,
-        lenient = lenient,
+        internal_expect_failure = internal_expect_failure,
     )
+
+    if type(internal_descriptors) == "list":
+        internal_descriptors = depset(internal_descriptors)
 
     # We now export providers to any parent Target. This is considered a public
     # interface because other Skylark rules can be designed to do things with
@@ -343,12 +343,12 @@ def _closure_js_library_impl(
             # NestedSet<File> of all info files in the transitive closure. This
             # is used by JsCompiler to apply error suppression on a file-by-file
             # basis.
-            infos = js.infos + [info_file],
+            infos = depset([info_file], transitive = [js.infos]),
             ijs = ijs_file,
-            ijs_files = js.ijs_files + [ijs_file],
+            ijs_files = depset([ijs_file], transitive = [js.ijs_files]),
             # NestedSet<File> of all JavaScript source File artifacts in the
             # transitive closure. These files MUST be JavaScript.
-            srcs = js.srcs + srcs,
+            srcs = depset(srcs_it, transitive = [js.srcs]),
             # NestedSet<String> of all execroot path prefixes in the transitive
             # closure. For very simple projects, it will be empty. It is useful
             # for getting rid of Bazel generated directories, workspace names,
@@ -356,22 +356,22 @@ def _closure_js_library_impl(
             # generated roots, external repository roots, and includes
             # prefixes. This is passed to JSCompiler via the --js_module_root
             # flag. See find_js_module_roots() in defs.bzl.
-            js_module_roots = js.js_module_roots + js_module_roots,
+            js_module_roots = depset(js_module_roots, transitive = [js.js_module_roots]),
             # NestedSet<String> of all ES6 module name strings in the transitive
             # closure. These are generated from the source file path relative to
             # the longest matching root prefix. It is used to guarantee that
             # within any given transitive closure, no namespace collisions
             # exist. These MUST NOT begin with "/" or ".", or contain "..".
-            modules = js.modules + modules,
+            modules = depset(modules, transitive = [js.modules]),
             # NestedSet<File> of all protobuf definitions in the transitive
             # closure. It is used so Closure Templates can have information about
             # the structure of protobufs so they can be easily rendered in .soy
             # files with type safety. See closure_js_template_library.bzl.
-            descriptors = js.descriptors + internal_descriptors,
+            descriptors = depset(transitive = [js.descriptors, internal_descriptors]),
             # NestedSet<Label> of all closure_css_library rules in the transitive
             # closure. This is used by closure_js_binary can guarantee the
             # completeness of goog.getCssName() substitutions.
-            stylesheets = js.stylesheets + stylesheets,
+            stylesheets = depset(stylesheets, transitive = [js.stylesheets]),
             # Boolean indicating indicating if Closure Library's base.js is part
             # of the srcs subprovider. This field exists for optimization.
             has_closure_library = js.has_closure_library,
@@ -427,14 +427,13 @@ def _closure_js_library(ctx):
         # The usual suspects are exported as runfiles, in addition to raw source.
         runfiles = ctx.runfiles(
             files = srcs + ctx.files.data,
-            transitive_files = (depset([] if ctx.attr.no_closure_library else ctx.files._closure_library_base) |
-                                collect_runfiles(
-                                    unfurl(
-                                        ctx.attr.deps,
-                                        provider = "closure_js_library",
-                                    ),
-                                ) |
-                                collect_runfiles(ctx.attr.data)),
+            transitive_files = depset(
+                [] if ctx.attr.no_closure_library else ctx.files._closure_library_base,
+                transitive = [
+                    collect_runfiles(unfurl(ctx.attr.deps, provider = "closure_js_library")),
+                    collect_runfiles(ctx.attr.data),
+                ],
+            ),
         ),
     )
 

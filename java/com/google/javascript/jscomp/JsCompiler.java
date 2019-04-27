@@ -94,6 +94,7 @@ public final class JsCompiler implements CommandLineProgram {
     boolean expectFailure = false;
     boolean expectWarnings = false;
     boolean exportTestFunctions = false;
+    boolean checksOnly = false;
 
     // Compiler flags we want to read.
     Path jsOutputFile = null;
@@ -129,6 +130,9 @@ public final class JsCompiler implements CommandLineProgram {
           break;
         case "--js_output_file":
           jsOutputFile = Paths.get(iargs.peek());
+          break;
+        case "--checks_only":
+          checksOnly = true;
           break;
         case "--create_source_map":
           createSourceMap = Paths.get(iargs.peek());
@@ -197,7 +201,7 @@ public final class JsCompiler implements CommandLineProgram {
     if (outputErrors != null) {
       Files.write(outputErrors, errorManager.stderr, UTF_8);
     }
-    if (failed && expectFailure) {
+    if ((failed && expectFailure) || checksOnly) {
       // If we don't return nonzero, Bazel expects us to create every output file.
       if (jsOutputFile != null) {
         Files.write(jsOutputFile, EMPTY_BYTE_ARRAY);

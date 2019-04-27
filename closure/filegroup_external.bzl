@@ -30,11 +30,11 @@ def _filegroup_external(ctx):
             basename = url[url.rindex("/") + 1:] or basename
             if url in downloaded.to_list():
                 fail("url specified multiple times: " + url)
-            downloaded += [url]
+            downloaded = depset([url], transitive = [downloaded])
         basename = _get_match(ctx.attr.rename, urls) or basename
         if basename in basenames.to_list():
             fail("filegroup path collision: " + basename)
-        basenames += [basename]
+        basenames = depset([basename], transitive = [basenames])
         if extract:
             inferred_srcs = None
             ctx.download_and_extract(
@@ -46,7 +46,7 @@ def _filegroup_external(ctx):
             )
         else:
             if inferred_srcs != None:
-                inferred_srcs += [basename]
+                inferred_srcs = depset([basename], transitive = [inferred_srcs])
             ctx.download(
                 urls,
                 basename,
@@ -80,9 +80,9 @@ def _filegroup_external(ctx):
         lines.append("        ],")
         lines.append("    ),")
     else:
-        lines.append("    srcs = %s," % _repr_list(srcs))
+        lines.append("    srcs = %s," % _repr_list(srcs.to_list()))
     if data:
-        lines.append("    data = %s," % _repr_list(data))
+        lines.append("    data = %s," % _repr_list(data.to_list()))
     if ctx.attr.path:
         lines.append("    path = %s," % repr(ctx.attr.path))
     if ctx.attr.visibility:
