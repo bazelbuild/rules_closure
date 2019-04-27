@@ -89,10 +89,10 @@ java_import_external(
 
 java_import_external(
     name = "com_google_truth",
-    jar_sha256 = "25ce04464511d4a7c05e1034477900a897228cba2f86110d2ed49c956d9a82af",
+    jar_sha256 = "dd652bdf0c4427c59848ac0340fd6b6d20c2cbfaa3c569a8366604dbcda5214c",
     jar_urls = [
-        "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/truth/truth/0.39/truth-0.39.jar",
-        "https://repo1.maven.org/maven2/com/google/truth/truth/0.39/truth-0.39.jar",
+        "http://maven.ibiblio.org/maven2/com/google/truth/truth/0.42/truth-0.42.jar",
+        "http://repo1.maven.org/maven2/com/google/truth/truth/0.42/truth-0.42.jar",
     ],
     licenses = ["notice"],  # Apache 2.0
     testonly_ = 1,

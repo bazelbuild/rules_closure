@@ -15,6 +15,7 @@
 package io.bazel.rules.closure.worker.testing;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.truth.Fact.simpleFact;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.truth.FailureMetadata;
@@ -79,7 +80,7 @@ public abstract class ProgramResult {
     @Override
     public FailedChain failed() {
       if (actual().failed()) {
-        fail("is a failure");
+        failWithActual(simpleFact("expected to be a failure"));
       }
       return this;
     }
@@ -98,7 +99,10 @@ public abstract class ProgramResult {
       if (actual().warnings().isEmpty()) {
         fail("contained warnings");
       }
-      Truth.assertThat(actual().warnings()).containsExactly(Arrays.asList(warnings)).inOrder();
+      check("warnings()")
+               .that(actual().warnings())
+               .containsExactly(Arrays.asList(warnings))
+               .inOrder();
       return this;
     }
 
@@ -115,7 +119,10 @@ public abstract class ProgramResult {
       if (actual().warnings().isEmpty()) {
         fail("contained warnings");
       }
-      Truth.assertThat(actual().warnings()).containsExactly(Arrays.asList(warnings)).inOrder();
+      check("warnings()")
+                .that(actual().warnings())
+                .containsExactly(Arrays.asList(warnings))
+                .inOrder();
     }
   }
 
