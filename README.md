@@ -70,6 +70,8 @@ First you must [install Bazel]. Then you add the following to your `WORKSPACE`
 file:
 
 ```python
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 http_archive(
     name = "io_bazel_rules_closure",
     sha256 = "a80acb69c63d5f6437b099c111480a4493bad4592015af2127a2f49fb7512d8d",

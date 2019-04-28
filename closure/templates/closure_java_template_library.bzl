@@ -83,6 +83,7 @@ def closure_java_template_library(
         exports = [str(Label(_SOY_LIBRARY))],
         deps = [
             "@com_google_guava",
+            "@javax_annotation_jsr250_api",
             str(Label(_SOY_LIBRARY)),
         ] if java_srcs else None,  # b/13630760
         resources = srcs + extra_srcs,
