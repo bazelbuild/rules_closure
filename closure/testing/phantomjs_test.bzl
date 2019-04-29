@@ -29,14 +29,17 @@ def _impl(ctx):
     if not ctx.attr.deps:
         fail("phantomjs_rule needs at least one dep")
     files = [ctx.outputs.executable]
-    srcs = depset()
+    srcs = []
+    direct_srcs = []
     deps = unfurl(ctx.attr.deps, provider = "closure_js_library")
     deps.append(ctx.attr.runner)
     for dep in deps:
         if hasattr(dep, "closure_js_binary"):
-            srcs += [dep.closure_js_binary.bin]
+            direct_srcs += [dep.closure_js_binary.bin]
         else:
-            srcs += dep.closure_js_library.srcs
+            srcs += [dep.closure_js_library.srcs]
+    srcs = depset(direct_srcs, transitive = srcs)
+
     args = [
         "#!/bin/sh\nexec " + ctx.executable._phantomjs.short_path,
         ctx.attr.harness.closure_js_binary.bin.short_path,
@@ -52,13 +55,15 @@ def _impl(ctx):
         files = depset(files),
         runfiles = ctx.runfiles(
             files = files + ctx.attr.data + [ctx.file.html],
-            transitive_files = (collect_runfiles(deps) |
-                                collect_runfiles(ctx.attr.data) |
-                                collect_runfiles([
-                                    ctx.attr._phantomjs,
-                                    ctx.attr.runner,
-                                    ctx.attr.harness,
-                                ])),
+            transitive_files = depset(transitive = [
+                collect_runfiles(deps),
+                collect_runfiles(ctx.attr.data),
+                collect_runfiles([
+                    ctx.attr._phantomjs,
+                    ctx.attr.runner,
+                    ctx.attr.harness,
+                ]),
+            ]),
         ),
     )
 

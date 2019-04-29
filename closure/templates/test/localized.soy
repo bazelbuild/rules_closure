@@ -12,40 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('Love');
-
-
-
-/**
- * Love.
- * @param {number} a
- * @param {number} b
- * @constructor
- * @final
- */
-Love = function (a, b) {
-
-  /**
-   * @private {number}
-   */
-  this.a_ = a;
-
-  /**
-   * Oops I forgot to mark this private, despite the underscore.
-   * @type {number}
-   */
-  this.b_ = b;
-}
+{namespace io.bazel.rules.closure.soy.greeter}
 
 
 /**
- * Sum.
- * @return {number}
+ * Greets a person.
  */
-Love.prototype.result = function() {
-  return this.a_ + this.b_;
-};
-
-
-// I'm not documented!
-Love.prototype.mystery = function() {};
+{template .greetLocalized}
+  {@param name: string}
+  <p>
+    {msg desc="salutation"}Hello <b>{$name}</b>!{/msg}
+{/template}

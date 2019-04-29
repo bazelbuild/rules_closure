@@ -29,6 +29,7 @@ def closure_js_test(
         entry_points = None,
         html = None,
         language = None,
+        lenient = False,
         suppress = None,
         visibility = None,
         tags = [],
@@ -50,11 +51,17 @@ def closure_js_test(
             srcs = sauce,
             data = data,
             deps = deps,
+            lenient = lenient,
             suppress = suppress,
             visibility = visibility,
             testonly = True,
             tags = tags,
         )
+
+        if type(entry_points) == type({}):
+            ep = entry_points.get(sauce[0])
+        else:
+            ep = entry_points
 
         closure_js_binary(
             name = "%s_bin" % shard,
@@ -63,7 +70,7 @@ def closure_js_test(
             css = css,
             debug = True,
             defs = defs,
-            entry_points = entry_points,
+            entry_points = ep,
             formatting = "PRETTY_PRINT",
             visibility = visibility,
             testonly = True,

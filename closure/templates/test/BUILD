@@ -35,6 +35,28 @@ closure_js_template_library(
 )
 
 closure_js_template_library(
+    name = "localized_soy",
+    srcs = ["localized.soy"],
+    should_generate_soy_msg_defs = True,
+)
+
+file_test(
+    name = "localized_test",
+    size = "small",
+    file = ":localized.soy.js",
+    regexp = "goog.getMsg('Hello",
+)
+
+
+file_test(
+    name = "nonlocalized_test",
+    size = "small",
+    file = ":greeter.soy.js",
+    regexp = "goog.getMsg",
+    invert = True,
+)
+
+closure_js_template_library(
     name = "greeter_proto_soy",
     srcs = ["greeter_proto.soy"],
     deps = [":person_proto"],
