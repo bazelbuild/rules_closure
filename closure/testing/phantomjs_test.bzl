@@ -67,7 +67,7 @@ def _impl(ctx):
         ),
     )
 
-_phantomjs_test = rule(
+phantomjs_test = rule(
     test = True,
     implementation = _impl,
     attrs = {
@@ -89,12 +89,3 @@ _phantomjs_test = rule(
         ),
     },
 )
-
-# Workaround https://github.com/ariya/phantomjs/issues/13876 by setting
-# phantomjs_test to local.
-# TODO(user): Remove when https://github.com/ariya/phantomjs/issues/13876
-# is fixed.
-def phantomjs_test(**kwargs):
-    tags = kwargs.pop("tags", [])
-    tags = ["local"] + tags
-    _phantomjs_test(tags = tags, **kwargs)
