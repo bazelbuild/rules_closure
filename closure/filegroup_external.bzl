@@ -129,22 +129,22 @@ def _get_downloads(ctx):
             ctx.attr.sha256_urls_extract_windows,
         )
     else:
-        arch = _linux_arch_value(ctx) 
+        arch = _linux_arch_value(ctx)
         if (arch == "ppc64le" and
             (ctx.attr.sha256_urls_ppc64le or
              ctx.attr.sha256_urls_extract_ppc64le)):
-          return _merge(
-              ctx.attr.sha256_urls_ppc64le,
-              ctx.attr.sha256_urls_extract_ppc64le,
-          )
+            return _merge(
+                ctx.attr.sha256_urls_ppc64le,
+                ctx.attr.sha256_urls_extract_ppc64le,
+            )
         elif (ctx.attr.sha256_urls or
               ctx.attr.sha256_urls_extract):
-          return _merge(
-              ctx.attr.sha256_urls,
-              ctx.attr.sha256_urls_extract,
-          )
+            return _merge(
+                ctx.attr.sha256_urls,
+                ctx.attr.sha256_urls_extract,
+            )
         else:
-          fail("No URLs are available for downloading %s" % ctx.name)
+            fail("No URLs are available for downloading %s" % ctx.name)
 
 def _merge(file_urls, archive_urls):
     result = []

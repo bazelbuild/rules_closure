@@ -54,8 +54,8 @@ file_test(
 # Make sure bazel doesn't complain about some outputs not created.
 closure_js_binary(
     name = "hello_bin_bundle",
+    compilation_level = "BUNDLE",
     deps = [":hello_lib"],
-	compilation_level = "BUNDLE",
 )
 
 closure_js_binary(

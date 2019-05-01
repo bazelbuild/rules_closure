@@ -92,12 +92,12 @@ closure_js_library(
 closure_js_test(
     name = "lenient_test",
     srcs = ["lenient_test.js"],
+    entry_points = ["rules_closure.LenientTest"],
     lenient = True,
     deps = [
         ":lenient_lib",
         "//closure/library:testing",
     ],
-    entry_points = ['rules_closure.LenientTest'],
 )
 
 closure_js_test(

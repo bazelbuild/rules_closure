@@ -47,13 +47,12 @@ file_test(
     regexp = "goog.getMsg('Hello",
 )
 
-
 file_test(
     name = "nonlocalized_test",
     size = "small",
     file = ":greeter.soy.js",
-    regexp = "goog.getMsg",
     invert = True,
+    regexp = "goog.getMsg",
 )
 
 closure_js_template_library(
