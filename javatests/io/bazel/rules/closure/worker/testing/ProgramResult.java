@@ -88,7 +88,7 @@ public abstract class ProgramResult {
     @Override
     public WarningsChain succeeded() {
       if (actual().failed() || !actual().errors().isEmpty()) {
-        fail("was a successful web action invocation");
+        failWithActual(simpleFact("expected to be a successful web action invocation"));
       }
       return this;
     }
@@ -96,33 +96,25 @@ public abstract class ProgramResult {
     @Override
     public WarningsChain withErrors(String... warnings) {
       checkArgument(warnings.length > 0);
-      if (actual().warnings().isEmpty()) {
-        fail("contained warnings");
-      }
       check("warnings()")
-               .that(actual().warnings())
-               .containsExactly(Arrays.asList(warnings))
-               .inOrder();
+          .that(actual().warnings())
+          .containsExactly(Arrays.asList(warnings))
+          .inOrder();
       return this;
     }
 
     @Override
     public void withoutWarnings() {
-      if (!actual().warnings().isEmpty()) {
-        fail("had an empty output without warnings");
-      }
+      check("warnings()").that(actual().warnings()).isEmpty();
     }
 
     @Override
     public void withWarnings(String... warnings) {
       checkArgument(warnings.length > 0);
-      if (actual().warnings().isEmpty()) {
-        fail("contained warnings");
-      }
       check("warnings()")
-                .that(actual().warnings())
-                .containsExactly(Arrays.asList(warnings))
-                .inOrder();
+          .that(actual().warnings())
+          .containsExactly(Arrays.asList(warnings))
+          .inOrder();
     }
   }
 
