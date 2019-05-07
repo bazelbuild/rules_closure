@@ -73,13 +73,16 @@ public abstract class ProgramResult {
       extends Subject<ProgramResultSubject, ProgramResult>
       implements ResultChain, WarningsChain, FailedChain {
 
+    private final ProgramResult actual;
+
     private ProgramResultSubject(FailureMetadata failureMetadata, ProgramResult subject) {
       super(failureMetadata, subject);
+      this.actual = subject;
     }
 
     @Override
     public FailedChain failed() {
-      if (actual().failed()) {
+      if (actual.failed()) {
         failWithActual(simpleFact("expected to be a failure"));
       }
       return this;
@@ -87,7 +90,7 @@ public abstract class ProgramResult {
 
     @Override
     public WarningsChain succeeded() {
-      if (actual().failed() || !actual().errors().isEmpty()) {
+      if (actual.failed() || !actual.errors().isEmpty()) {
         failWithActual(simpleFact("expected to be a successful web action invocation"));
       }
       return this;
@@ -97,7 +100,7 @@ public abstract class ProgramResult {
     public WarningsChain withErrors(String... warnings) {
       checkArgument(warnings.length > 0);
       check("warnings()")
-          .that(actual().warnings())
+          .that(actual.warnings())
           .containsExactly(Arrays.asList(warnings))
           .inOrder();
       return this;
@@ -105,14 +108,14 @@ public abstract class ProgramResult {
 
     @Override
     public void withoutWarnings() {
-      check("warnings()").that(actual().warnings()).isEmpty();
+      check("warnings()").that(actual.warnings()).isEmpty();
     }
 
     @Override
     public void withWarnings(String... warnings) {
       checkArgument(warnings.length > 0);
       check("warnings()")
-          .that(actual().warnings())
+          .that(actual.warnings())
           .containsExactly(Arrays.asList(warnings))
           .inOrder();
     }
