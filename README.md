@@ -654,7 +654,7 @@ The documentation on using Closure Templates can be found
 For additional help on using some of these attributes, please see the output of
 the following:
 
-    bazel run @io_bazel_rules_closure//third_party/java/soy:SoyParseInfoGenerator -- --help
+    bazel run @com_google_template_soy//:SoyParseInfoGenerator -- --help
 
 #### Implicit Output Targets
 
