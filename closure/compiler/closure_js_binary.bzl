@@ -42,7 +42,7 @@ def _impl(ctx):
     if ctx.attr.language not in JS_LANGUAGES.to_list():
         fail("Unknown language %s try one of these: %s" % (
             ctx.attr.language,
-            ", ".join(JS_LANGUAGES),
+            ", ".join(JS_LANGUAGES.to_list()),
         ))
 
     deps = unfurl(ctx.attr.deps, provider = "closure_js_library")
