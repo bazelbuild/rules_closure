@@ -216,6 +216,7 @@ public class WebfilesValidator {
         || uri.contains("//")
         || uri.startsWith("data:")
         || uri.startsWith("javascript:")
+        || uri.startsWith("mailto:")
         || uri.equals("about:blank")
         // The following are intended to filter out URLs with Polymer variables.
         || (uri.contains("[[") && uri.contains("]]"))

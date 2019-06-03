@@ -206,6 +206,22 @@ public class WebfilesValidatorTest {
   }
 
   @Test
+  public void mailtoUris_getIgnored() throws Exception {
+    save(fs.getPath("/fs/path/index.html"), "<a href=\"mailto:xxx@yyy.com\">email us</a>\n");
+    assertThat(
+            validator.validate(
+                Webfiles.newBuilder()
+                    .addSrc(WebfilesSource.newBuilder()
+                        .setPath("/fs/path/index.html")
+                        .setWebpath("/web/path/index.html")
+                        .build())
+                    .build(),
+                ImmutableList.<Webfiles>of(),
+                Suppliers.ofInstance(ImmutableList.<Webfiles>of())))
+        .isEmpty();
+  }
+
+  @Test
   public void cssUrls_areRecognized() throws Exception {
     save(fs.getPath("/fs/path/index.html"), "<link rel=\"stylesheet\" href=\"index.css\">");
     save(fs.getPath("/fs/path/index.css"), "body { background: url(hello.jpg); }");
