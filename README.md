@@ -551,10 +551,10 @@ This rule can be referenced as though it were the following:
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_template_library")
 closure_js_template_library(name, srcs, data, deps, globals, plugin_modules,
                             should_generate_js_doc,
-                            should_provide_require_soy_namespaces,
                             should_generate_soy_msg_defs,
                             bidi_global_dir,
-                            soy_msgs_are_external)
+                            soy_msgs_are_external,
+                            defs)
 ```
 
 Compiles Closure templates to JavaScript source files.
@@ -619,9 +619,6 @@ This rule can be referenced as though it were the following:
 - **should_generate_js_doc:** (Boolean; optional; default is `True`) Passed
   along verbatim to the SoyToJsSrcCompiler above.
 
-- **should_provide_require_soy_namespaces:** (Boolean; optional; default is
-  `True`) Passed along verbatim to the SoyToJsSrcCompiler above.
-
 - **should_generate_soy_msg_defs:** (Boolean; optional; default is `False`)
   Passed along verbatim to the SoyToJsSrcCompiler above.
 
@@ -631,6 +628,9 @@ This rule can be referenced as though it were the following:
 
 - **soy_msgs_are_external:** (Boolean; optional; default is `False`) Passed
   along verbatim to the SoyToJsSrcCompiler above.
+
+- **defs:** (List of strings; optional) Passed along verbatim to the
+  SoyToJsSrcCompiler above.
 
 ## closure\_java\_template\_library
 

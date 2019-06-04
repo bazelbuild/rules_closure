@@ -32,6 +32,10 @@ def _impl(ctx):
         args += ["--bidiGlobalDir=%s" % ctx.attr.bidi_global_dir]
     if ctx.attr.plugin_modules:
         args += ["--pluginModules=%s" % ",".join(ctx.attr.plugin_modules)]
+    for arg in ctx.attr.defs:
+        if not arg.startswith("--") or (" " in arg and "=" not in arg):
+            fail("Please use --flag=value syntax for defs")
+        args += [arg]
     inputs = []
     for f in ctx.files.srcs:
         args.append("--srcs=" + f.path)
@@ -66,11 +70,11 @@ _closure_js_template_library = rule(
         "outputs": attr.output_list(),
         "globals": attr.label(allow_single_file = True),
         "plugin_modules": attr.label_list(),
-        "should_provide_require_soy_namespaces": attr.bool(default = True),
         "should_generate_soy_msg_defs": attr.bool(),
         "bidi_global_dir": attr.int(default = 1, values = [1, -1]),
         "soy_msgs_are_external": attr.bool(),
         "compiler": attr.label(cfg = "host", executable = True, mandatory = True),
+        "defs": attr.string_list(),
     },
 )
 
@@ -82,10 +86,10 @@ def closure_js_template_library(
         testonly = None,
         globals = None,
         plugin_modules = None,
-        should_provide_require_soy_namespaces = None,
         should_generate_soy_msg_defs = None,
         bidi_global_dir = None,
         soy_msgs_are_external = None,
+        defs = [],
         **kwargs):
     compiler = str(Label(_SOYTOJSSRCCOMPILER))
     js_srcs = [src + ".js" for src in srcs]
@@ -98,11 +102,11 @@ def closure_js_template_library(
         visibility = ["//visibility:private"],
         globals = globals,
         plugin_modules = plugin_modules,
-        should_provide_require_soy_namespaces = should_provide_require_soy_namespaces,
         should_generate_soy_msg_defs = should_generate_soy_msg_defs,
         bidi_global_dir = bidi_global_dir,
         soy_msgs_are_external = soy_msgs_are_external,
         compiler = compiler,
+        defs = defs,
     )
 
     deps = deps + [

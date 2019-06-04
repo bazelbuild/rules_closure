@@ -57,6 +57,21 @@ file_test(
 )
 
 closure_js_template_library(
+    name = "localized_using_defs_soy",
+    srcs = ["defs.soy"],
+    defs = [
+        "--shouldGenerateGoogMsgDefs=true",
+    ],
+)
+
+file_test(
+    name = "localized_using_defs_test",
+    size = "small",
+    file = ":defs.soy.js",
+    regexp = "goog.getMsg('Hello",
+)
+
+closure_js_template_library(
     name = "greeter_proto_soy",
     srcs = ["greeter_proto.soy"],
     deps = [":person_proto"],
