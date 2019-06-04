@@ -635,14 +635,16 @@ def com_google_java_format():
     )
 
 def com_google_javascript_closure_compiler():
+    version = "v20190528"
+    jar = "closure-compiler-unshaded-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
         licenses = ["reciprocal"],  # MPL v1.1 (Rhino AST), Apache 2.0 (JSCompiler)
         jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20190325/closure-compiler-unshaded-v20190325.jar",
-            "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/v20190325/closure-compiler-unshaded-v20190325.jar",
+            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
+            "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
         ],
-        jar_sha256 = "ae9ed32b24f59a4d412efb7196618c592cb23469d81103a4bec3c7cdd81dfe67",
+        jar_sha256 = "5e8262a9208e3acf22cf1109928355e6d6c0b4bfe44fbf42e3ef537084353fe5",
         deps = [
             "@com_google_code_gson",
             "@com_google_guava",
@@ -659,6 +661,15 @@ def com_google_javascript_closure_compiler():
             "        \"@args4j\",",
             "    ],",
             ")",
+            "",
+            "genrule(",
+            "    name = \"externs\",",
+            "    srcs = [\"%s\"]," % jar,
+            "    outs = [\"externs.zip\"],",
+            "    tools = [\"@bazel_tools//tools/jdk:jar\"],",
+            "    cmd = \"$(location @bazel_tools//tools/jdk:jar) -xf $(location :%s) externs.zip; mv externs.zip $@\"," % jar,
+            ")",
+            "",
         ]),
     )
 
