@@ -26,7 +26,6 @@ import com.google.common.jimfs.Jimfs;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.truth.BooleanSubject;
-import com.google.common.truth.DefaultSubject;
 import com.google.common.truth.IterableSubject;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
@@ -62,7 +61,7 @@ public class WebpathTest {
   }
 
   // Workaround fact that Path interface matches multiple assertThat() method overloads.
-  private static Subject<DefaultSubject, Object> assertThat(Object subject) {
+  private static Subject assertThat(Object subject) {
     return Truth.assertThat(subject);
   }
 
