@@ -704,7 +704,7 @@ def com_google_protobuf():
         strip_prefix = "protobuf-3.8.0",
         sha256 = "03d2e5ef101aee4c2f6ddcf145d2a04926b9c19e7086944df3842b1b8502b783",
         urls = [
-           # "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.7.1.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.8.0.tar.gz",
             "https://github.com/protocolbuffers/protobuf/archive/v3.8.0.tar.gz",
         ],
     )
@@ -714,7 +714,7 @@ def com_google_protobuf_js():
         name = "com_google_protobuf_js",
         strip_prefix = "protobuf-3.8.0/js",
         urls = [
-          #  "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.7.1.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.8.0.tar.gz",
             "https://github.com/protocolbuffers/protobuf/archive/v3.8.0.tar.gz",
         ],
         sha256 = "03d2e5ef101aee4c2f6ddcf145d2a04926b9c19e7086944df3842b1b8502b783",
