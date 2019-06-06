@@ -701,23 +701,23 @@ def com_google_jsinterop_annotations():
 def com_google_protobuf():
     http_archive(
         name = "com_google_protobuf",
-        strip_prefix = "protobuf-3.7.1",
-        sha256 = "f1748989842b46fa208b2a6e4e2785133cfcc3e4d43c17fecb023733f0f5443f",
+        strip_prefix = "protobuf-3.8.0",
+        sha256 = "03d2e5ef101aee4c2f6ddcf145d2a04926b9c19e7086944df3842b1b8502b783",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.7.1.tar.gz",
-            "https://github.com/protocolbuffers/protobuf/archive/v3.7.1.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.8.0.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.8.0.tar.gz",
         ],
     )
 
 def com_google_protobuf_js():
     http_archive(
         name = "com_google_protobuf_js",
-        strip_prefix = "protobuf-3.7.1/js",
+        strip_prefix = "protobuf-3.8.0/js",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.7.1.tar.gz",
-            "https://github.com/protocolbuffers/protobuf/archive/v3.7.1.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.8.0.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.8.0.tar.gz",
         ],
-        sha256 = "f1748989842b46fa208b2a6e4e2785133cfcc3e4d43c17fecb023733f0f5443f",
+        sha256 = "03d2e5ef101aee4c2f6ddcf145d2a04926b9c19e7086944df3842b1b8502b783",
         build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
     )
 
@@ -999,14 +999,9 @@ def phantomjs():
 
 def zlib():
     http_archive(
-        name = "net_zlib",
+        name = "zlib",
         build_file = "@io_bazel_rules_closure//:third_party/zlib.BUILD",
         sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
         strip_prefix = "zlib-1.2.11",
         urls = ["https://zlib.net/zlib-1.2.11.tar.gz"],
-    )
-
-    native.bind(
-        name = "zlib",
-        actual = "@net_zlib//:zlib",
     )
