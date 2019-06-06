@@ -69,8 +69,7 @@ public abstract class ProgramResult {
     WarningsChain withErrors(String... warnings);
   }
 
-  private static final class ProgramResultSubject
-      extends Subject<ProgramResultSubject, ProgramResult>
+  private static final class ProgramResultSubject extends Subject
       implements ResultChain, WarningsChain, FailedChain {
 
     private final ProgramResult actual;
