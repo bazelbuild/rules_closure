@@ -12,27 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.module('io.bazel.rules.closure.protobuf.BazTest');
-goog.setTestOnly('io.bazel.rules.closure.protobuf.BazTest');
+syntax = "proto3";
 
-const Baz = goog.require('io.bazel.rules.closure.protobuf.Baz');
-const Foo = goog.require('io.bazel.rules.closure.protobuf.Foo');
-const testSuite = goog.require('goog.testing.testSuite');
+package io.bazel.rules.closure.protobuf.foo;
 
-
-
-class BazTest {
-  /** @return {void} */
-  testField() {
-    const baz = new Baz('value');
-    assertEquals('value', baz.field());
-  }
-
-
-  /** @return {void} */
-  testFooField() {
-    const foo = new Foo('value');
-    assertEquals('value', foo.field());
-  }
+message AddPrefix {
+  string foo = 1;
 }
-testSuite(new BazTest());

@@ -36,3 +36,11 @@ closure_js_library(
         "//closure/library/string",
     ],
 )
+
+closure_js_library(
+    name = "runtime",
+    exports = [
+        ":jspb",
+        "//closure/library/array",
+    ],
+)

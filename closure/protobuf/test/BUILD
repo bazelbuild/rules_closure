@@ -19,6 +19,90 @@ licenses(["notice"])  # Apache 2.0
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 load("//closure/protobuf:closure_proto_library.bzl", "closure_proto_library")
 load("//closure/testing:closure_js_test.bzl", "closure_js_test")
+load("@build_bazel_rules_proto//proto:proto_library.bzl", "proto_library")
+
+# TODO(yannic): Add test for attr `proto_source_root`.
+
+proto_library(
+    name = "add_prefix_proto",
+    srcs = [
+        "add_prefix.proto",
+    ],
+    import_prefix = "foo",
+)
+
+closure_proto_library(
+    name = "add_prefix_closure_proto",
+    deps = [
+        ":add_prefix_proto",
+    ],
+)
+
+proto_library(
+    name = "add_and_strip_prefix_proto",
+    srcs = [
+        "import_prefix/add_and_strip_prefix.proto",
+    ],
+    import_prefix = "bar",
+    strip_import_prefix = "import_prefix",
+)
+
+closure_proto_library(
+    name = "add_and_strip_prefix_closure_proto",
+    deps = [
+        ":add_and_strip_prefix_proto",
+    ],
+)
+
+proto_library(
+    name = "no_prefix_proto",
+    srcs = [
+        "no_prefix.proto",
+    ],
+)
+
+closure_proto_library(
+    name = "no_prefix_closure_proto",
+    deps = [
+        ":no_prefix_proto",
+    ],
+)
+
+proto_library(
+    name = "strip_prefix_proto",
+    srcs = [
+        "import_prefix/strip_prefix.proto",
+    ],
+    strip_import_prefix = "import_prefix",
+)
+
+closure_proto_library(
+    name = "strip_prefix_closure_proto",
+    deps = [
+        ":strip_prefix_proto",
+    ],
+)
+
+proto_library(
+    name = "import_all_proto",
+    srcs = [
+        "import_all.proto",
+    ],
+    deps = [
+        ":add_and_strip_prefix_proto",
+        ":add_prefix_proto",
+        ":no_prefix_proto",
+        ":strip_prefix_proto",
+    ],
+)
+
+closure_proto_library(
+    name = "import_all_closure_proto",
+    tags = ["manual"],
+    deps = [
+        ":import_all_proto",
+    ],
+)
 
 proto_library(
     name = "foo_proto",
@@ -51,7 +135,8 @@ closure_js_test(
     ],
     deps = [
         ":foo",
-        "//closure/library:testing",
+        ":import_all_closure_proto",
+        "//closure/library/testing:testsuite",
     ],
 )
 
@@ -94,6 +179,6 @@ closure_js_test(
     deps = [
         ":baz",
         ":foo",
-        "//closure/library:testing",
+        "//closure/library/testing:testsuite",
     ],
 )

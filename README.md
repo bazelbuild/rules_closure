@@ -85,6 +85,10 @@ http_archive(
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_repositories")
 
 closure_repositories()
+
+load("@io_bazel_rules_closure//closure:defs.bzl", "closure_register_toolchains")
+
+closure_register_toolchains()
 ```
 
 You are not required to install the Closure Tools, PhantomJS, or anything else

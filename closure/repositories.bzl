@@ -22,6 +22,7 @@ def closure_repositories(
         omit_aopalliance = False,
         omit_args4j = False,
         omit_bazel_skylib = False,
+        omit_build_bazel_rules_proto = False,
         omit_clang = False,
         omit_com_google_auto_common = False,
         omit_com_google_auto_factory = False,
@@ -79,6 +80,8 @@ def closure_repositories(
         args4j()
     if not omit_bazel_skylib:
         bazel_skylib()
+    if not omit_build_bazel_rules_proto:
+        build_bazel_rules_proto()
     if not omit_clang:
         clang()
     if not omit_com_google_auto_common:
@@ -205,6 +208,14 @@ def bazel_skylib():
         sha256 = "bbccf674aa441c266df9894182d80de104cabd19be98be002f6d478aaa31574d",
         strip_prefix = "bazel-skylib-2169ae1c374aab4a09aa90e65efe1a3aad4e279b",
         urls = ["https://github.com/bazelbuild/bazel-skylib/archive/2169ae1c374aab4a09aa90e65efe1a3aad4e279b.tar.gz"],
+    )
+
+def build_bazel_rules_proto():
+    http_archive(
+        name = "build_bazel_rules_proto",
+        sha256 = "26ef80422c978cd0590734c103bc66dae6932989542845efb365fcc48b6d810f",
+        strip_prefix = "rules_proto-6b247dbf28aa3b6f485047c938731ec8c2453a83",
+        urls = ["https://github.com/Yannic/rules_proto/archive/6b247dbf28aa3b6f485047c938731ec8c2453a83.tar.gz"],
     )
 
 def clang():

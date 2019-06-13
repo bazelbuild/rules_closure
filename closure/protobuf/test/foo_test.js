@@ -16,18 +16,21 @@ goog.module('io.bazel.rules.closure.protobuf.FooTest');
 goog.setTestOnly('io.bazel.rules.closure.protobuf.FooTest');
 
 const Foo = goog.require('io.bazel.rules.closure.protobuf.Foo');
+const ImportAll = goog.require('proto.io.bazel.rules.closure.protobuf.ImportAll');
 const testSuite = goog.require('goog.testing.testSuite');
 
 
 
 class FooTest {
-  /**
-   * @return {void}
-   * @suppress {visibility}
-   */
+  /** @return {void} */
   testField() {
     const foo = new Foo('value');
     assertEquals('value', foo.field());
+  }
+
+  /** @return {void} */
+  testImportAll() {
+    assertNotNull(new ImportAll());
   }
 }
 testSuite(new FooTest());
