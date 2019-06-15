@@ -570,7 +570,7 @@ The documentation on using Closure Templates can be found
 For additional help on using some of these attributes, please see the output of
 the following:
 
-    bazel run @io_bazel_rules_closure//third_party/java/soy:SoyToJsSrcCompiler -- --help
+    bazel run @com_google_template_soy//:SoyToJsSrcCompiler -- --help
 
 #### Implicit Output Targets
 
@@ -867,7 +867,7 @@ This rule can be referenced as though it were the following:
 
 - **defs:** (List of strings; optional) Specifies additional flags to be passed
   to the Closure Stylesheets compiler. To see what flags are available, run:
-  `bazel run @io_bazel_rules_closure//third_party/java/csscomp:ClosureCommandLineCompiler`
+  `bazel run @com_google_closure_stylesheets//:ClosureCommandLineCompiler -- --help`
 
 
 ## closure\_js\_proto\_library
