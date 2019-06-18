@@ -21,8 +21,6 @@ load("//closure/protobuf:closure_proto_library.bzl", "closure_proto_library")
 load("//closure/testing:closure_js_test.bzl", "closure_js_test")
 load("@build_bazel_rules_proto//proto:proto_library.bzl", "proto_library")
 
-# TODO(yannic): Add test for attr `proto_source_root`.
-
 proto_library(
     name = "add_prefix_proto",
     srcs = [
