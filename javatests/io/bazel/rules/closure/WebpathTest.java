@@ -26,7 +26,6 @@ import com.google.common.jimfs.Jimfs;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.truth.BooleanSubject;
-import com.google.common.truth.DefaultSubject;
 import com.google.common.truth.IterableSubject;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
@@ -62,7 +61,7 @@ public class WebpathTest {
   }
 
   // Workaround fact that Path interface matches multiple assertThat() method overloads.
-  private static Subject<DefaultSubject, Object> assertThat(Object subject) {
+  private static Subject assertThat(Object subject) {
     return Truth.assertThat(subject);
   }
 
@@ -179,15 +178,15 @@ public class WebpathTest {
   @Test
   public void testNormalize_outputIsEqual_newObjectIsntCreated() {
     Webpath path = wp("/hi/there");
-    assertThat(path.normalize()).isSameAs(path);
+    assertThat(path.normalize()).isSameInstanceAs(path);
     path = wp("/hi/there/");
-    assertThat(path.normalize()).isSameAs(path);
+    assertThat(path.normalize()).isSameInstanceAs(path);
     path = wp("../");
-    assertThat(path.normalize()).isSameAs(path);
+    assertThat(path.normalize()).isSameInstanceAs(path);
     path = wp("../..");
-    assertThat(path.normalize()).isSameAs(path);
+    assertThat(path.normalize()).isSameInstanceAs(path);
     path = wp("./");
-    assertThat(path.normalize()).isSameAs(path);
+    assertThat(path.normalize()).isSameInstanceAs(path);
   }
 
   @Test
@@ -211,8 +210,8 @@ public class WebpathTest {
   @Test
   public void testResolve_sameObjectOptimization() {
     Webpath path = wp("/hi/there");
-    assertThat(path.resolve(wp(""))).isSameAs(path);
-    assertThat(wp("hello").resolve(path)).isSameAs(path);
+    assertThat(path.resolve(wp(""))).isSameInstanceAs(path);
+    assertThat(wp("hello").resolve(path)).isSameInstanceAs(path);
   }
 
   @Test
@@ -641,14 +640,14 @@ public class WebpathTest {
   @Test
   public void testInterner_producesIdenticalInstances() throws Exception {
     WebpathInterner interner = new WebpathInterner();
-    assertThat(interner.get("foo")).isSameAs(interner.get("foo"));
+    assertThat(interner.get("foo")).isSameInstanceAs(interner.get("foo"));
   }
 
   @Test
   public void testInterner_supportsFunctionalProgramming_forGreatJustice() throws Exception {
     WebpathInterner interner = new WebpathInterner();
     List<Webpath> dubs = Lists.transform(ImmutableList.of("foo", "foo"), interner);
-    assertThat(dubs.get(0)).isSameAs(dubs.get(1));
+    assertThat(dubs.get(0)).isSameInstanceAs(dubs.get(1));
   }
 
   @Test

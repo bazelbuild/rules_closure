@@ -431,6 +431,7 @@ closure_js_library(
         "//closure/library/net:eventtype",
         "//closure/library/net:httpstatus",
         "//closure/library/net:xmlhttp",
+        "//closure/library/object",
         "//closure/library/string",
         "//closure/library/structs",
         "//closure/library/structs:map",

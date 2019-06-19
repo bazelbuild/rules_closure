@@ -7,7 +7,7 @@ load("//closure:repositories.bzl", "closure_repositories")
 closure_repositories()
 
 http_archive(
-    name = "net_zlib",
+    name = "zlib",
     build_file = "//:third_party/zlib.BUILD",
     sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
     strip_prefix = "zlib-1.2.11",
@@ -89,18 +89,13 @@ java_import_external(
 
 java_import_external(
     name = "com_google_truth",
-    jar_sha256 = "dd652bdf0c4427c59848ac0340fd6b6d20c2cbfaa3c569a8366604dbcda5214c",
+    jar_sha256 = "0f7dced2a16e55a77e44fc3ff9c5be98d4bf4bb30abc18d78ffd735df950a69f",
     jar_urls = [
-        "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/truth/truth/0.42/truth-0.42.jar",
-        "http://repo1.maven.org/maven2/com/google/truth/truth/0.42/truth-0.42.jar",
-        "http://maven.ibiblio.org/maven2/com/google/truth/truth/0.42/truth-0.42.jar",
+        "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/truth/truth/0.45/truth-0.45.jar",
+        "http://repo1.maven.org/maven2/com/google/truth/truth/0.45/truth-0.45.jar",
+        "http://maven.ibiblio.org/maven2/com/google/truth/truth/0.45/truth-0.45.jar",
     ],
     licenses = ["notice"],  # Apache 2.0
     testonly_ = 1,
     deps = ["@com_google_guava"],
-)
-
-bind(
-    name = "zlib",
-    actual = "@net_zlib//:zlib",
 )

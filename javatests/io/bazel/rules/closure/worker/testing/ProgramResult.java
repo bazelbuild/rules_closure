@@ -69,17 +69,19 @@ public abstract class ProgramResult {
     WarningsChain withErrors(String... warnings);
   }
 
-  private static final class ProgramResultSubject
-      extends Subject<ProgramResultSubject, ProgramResult>
+  private static final class ProgramResultSubject extends Subject
       implements ResultChain, WarningsChain, FailedChain {
+
+    private final ProgramResult actual;
 
     private ProgramResultSubject(FailureMetadata failureMetadata, ProgramResult subject) {
       super(failureMetadata, subject);
+      this.actual = subject;
     }
 
     @Override
     public FailedChain failed() {
-      if (actual().failed()) {
+      if (actual.failed()) {
         failWithActual(simpleFact("expected to be a failure"));
       }
       return this;
@@ -87,8 +89,8 @@ public abstract class ProgramResult {
 
     @Override
     public WarningsChain succeeded() {
-      if (actual().failed() || !actual().errors().isEmpty()) {
-        fail("was a successful web action invocation");
+      if (actual.failed() || !actual.errors().isEmpty()) {
+        failWithActual(simpleFact("expected to be a successful web action invocation"));
       }
       return this;
     }
@@ -96,33 +98,25 @@ public abstract class ProgramResult {
     @Override
     public WarningsChain withErrors(String... warnings) {
       checkArgument(warnings.length > 0);
-      if (actual().warnings().isEmpty()) {
-        fail("contained warnings");
-      }
       check("warnings()")
-               .that(actual().warnings())
-               .containsExactly(Arrays.asList(warnings))
-               .inOrder();
+          .that(actual.warnings())
+          .containsExactly(Arrays.asList(warnings))
+          .inOrder();
       return this;
     }
 
     @Override
     public void withoutWarnings() {
-      if (!actual().warnings().isEmpty()) {
-        fail("had an empty output without warnings");
-      }
+      check("warnings()").that(actual.warnings()).isEmpty();
     }
 
     @Override
     public void withWarnings(String... warnings) {
       checkArgument(warnings.length > 0);
-      if (actual().warnings().isEmpty()) {
-        fail("contained warnings");
-      }
       check("warnings()")
-                .that(actual().warnings())
-                .containsExactly(Arrays.asList(warnings))
-                .inOrder();
+          .that(actual.warnings())
+          .containsExactly(Arrays.asList(warnings))
+          .inOrder();
     }
   }
 

@@ -37,6 +37,9 @@ closure_js_library(
         ":numberformatsymbolsext",
         ":ordinalrules",
         ":pluralrules",
+        ":relativedatetimeformat",
+        ":relativedatetimesymbols",
+        ":relativedatetimesymbolsext",
         ":timezone",
         ":uchar",
         ":ucharnames",
@@ -276,6 +279,30 @@ closure_js_library(
     name = "pluralrules",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/i18n/pluralrules.js"],
     lenient = True,
+)
+
+closure_js_library(
+    name = "relativedatetimeformat",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/i18n/relativedatetimeformat.js"],
+    lenient = True,
+    deps = [
+        "//closure/library/asserts",
+        "//closure/library/i18n:messageformat",
+        "//closure/library/i18n:relativedatetimesymbols",
+    ],
+)
+
+closure_js_library(
+    name = "relativedatetimesymbols",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/i18n/relativedatetimesymbols.js"],
+    lenient = True,
+)
+
+closure_js_library(
+    name = "relativedatetimesymbolsext",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/i18n/relativedatetimesymbolsext.js"],
+    lenient = True,
+    deps = ["//closure/library/i18n:relativedatetimesymbols"],
 )
 
 closure_js_library(

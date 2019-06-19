@@ -99,7 +99,6 @@ closure_js_library(
         "//closure/library/db:index",
         "//closure/library/db:keyrange",
         "//closure/library/debug",
-        "//closure/library/events",
         "//third_party/closure/library/mochikit/async:deferred",
     ],
 )

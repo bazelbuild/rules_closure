@@ -11,6 +11,7 @@ closure_js_library(
     exports = [
         ":hybrid",
         ":json",
+        ":jsonable",
         ":nativejsonprocessor",
         ":processor",
     ],
@@ -29,6 +30,12 @@ closure_js_library(
 closure_js_library(
     name = "json",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/json/json.js"],
+    lenient = True,
+)
+
+closure_js_library(
+    name = "jsonable",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/json/jsonable.js"],
     lenient = True,
 )
 

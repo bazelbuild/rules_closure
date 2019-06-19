@@ -121,6 +121,7 @@ closure_js_library(
         "//closure/library/asserts",
         "//closure/library/debug:tracer",
         "//closure/library/disposable",
+        "//closure/library/disposable:idisposable",
         "//closure/library/loader:abstractmodulemanager",
         "//closure/library/loader:activemodulemanager",
         "//closure/library/log",

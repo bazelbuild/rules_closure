@@ -221,10 +221,7 @@ closure_js_library(
     name = "fullscreen",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/dom/fullscreen.js"],
     lenient = True,
-    deps = [
-        "//closure/library/dom",
-        "//closure/library/useragent",
-    ],
+    deps = ["//closure/library/dom"],
 )
 
 closure_js_library(
@@ -335,8 +332,9 @@ closure_js_library(
         "//closure/library/html:safestyle",
         "//closure/library/html:safeurl",
         "//closure/library/html:trustedresourceurl",
-        "//closure/library/string",
+        "//closure/library/html:uncheckedconversions",
         "//closure/library/string:const",
+        "//closure/library/string:internal",
     ],
 )
 

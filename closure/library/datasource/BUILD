@@ -86,9 +86,7 @@ closure_js_library(
         "//closure/library/dom",
         "//closure/library/dom:safe",
         "//closure/library/dom:tagname",
-        "//closure/library/html:legacyconversions",
         "//closure/library/log",
-        "//closure/library/uri",
     ],
 )
 

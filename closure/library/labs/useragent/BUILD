@@ -26,7 +26,7 @@ closure_js_library(
         "//closure/library/array",
         "//closure/library/labs/useragent:util",
         "//closure/library/object",
-        "//closure/library/string",
+        "//closure/library/string:internal",
     ],
 )
 
@@ -69,7 +69,7 @@ closure_js_library(
     name = "util",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/labs/useragent/util.js"],
     lenient = True,
-    deps = ["//closure/library/string"],
+    deps = ["//closure/library/string:internal"],
 )
 
 closure_js_library(

@@ -21,6 +21,7 @@ closure_js_library(
         ":silverlight",
         ":textextractor",
         ":trustedresourceurl",
+        ":trustedtypes",
         ":uncheckedconversions",
         ":utils",
         "//closure/library/html/sanitizer:all_js",
@@ -75,11 +76,12 @@ closure_js_library(
         "//closure/library/html:safestylesheet",
         "//closure/library/html:safeurl",
         "//closure/library/html:trustedresourceurl",
+        "//closure/library/html:trustedtypes",
         "//closure/library/i18n:bidi",
         "//closure/library/labs/useragent:browser",
         "//closure/library/object",
-        "//closure/library/string",
         "//closure/library/string:const",
+        "//closure/library/string:internal",
         "//closure/library/string:typedstring",
     ],
 )
@@ -102,6 +104,7 @@ closure_js_library(
     lenient = True,
     deps = [
         "//closure/library/asserts",
+        "//closure/library/html:trustedtypes",
         "//closure/library/string:const",
         "//closure/library/string:typedstring",
     ],
@@ -115,8 +118,8 @@ closure_js_library(
         "//closure/library/array",
         "//closure/library/asserts",
         "//closure/library/html:safeurl",
-        "//closure/library/string",
         "//closure/library/string:const",
+        "//closure/library/string:internal",
         "//closure/library/string:typedstring",
     ],
 )
@@ -130,8 +133,8 @@ closure_js_library(
         "//closure/library/asserts",
         "//closure/library/html:safestyle",
         "//closure/library/object",
-        "//closure/library/string",
         "//closure/library/string:const",
+        "//closure/library/string:internal",
         "//closure/library/string:typedstring",
     ],
 )
@@ -144,9 +147,10 @@ closure_js_library(
         "//closure/library/asserts",
         "//closure/library/fs:url",
         "//closure/library/html:trustedresourceurl",
+        "//closure/library/html:trustedtypes",
         "//closure/library/i18n:bidi",
-        "//closure/library/string",
         "//closure/library/string:const",
+        "//closure/library/string:internal",
         "//closure/library/string:typedstring",
     ],
 )
@@ -198,10 +202,17 @@ closure_js_library(
     lenient = True,
     deps = [
         "//closure/library/asserts",
+        "//closure/library/html:trustedtypes",
         "//closure/library/i18n:bidi",
         "//closure/library/string:const",
         "//closure/library/string:typedstring",
     ],
+)
+
+closure_js_library(
+    name = "trustedtypes",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/html/trustedtypes.js"],
+    lenient = True,
 )
 
 closure_js_library(
@@ -216,8 +227,8 @@ closure_js_library(
         "//closure/library/html:safestylesheet",
         "//closure/library/html:safeurl",
         "//closure/library/html:trustedresourceurl",
-        "//closure/library/string",
         "//closure/library/string:const",
+        "//closure/library/string:internal",
     ],
 )
 

@@ -25,6 +25,7 @@ closure_js_library(
     deps = [
         "//closure/library/events:eventhandler",
         "//closure/library/events:eventtype",
+        "//closure/library/html:safeurl",
         "//closure/library/net:eventtype",
         "//closure/library/promise",
         "//closure/library/useragent",

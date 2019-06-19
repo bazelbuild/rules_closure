@@ -8,11 +8,11 @@ load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
     name = "all_js",
-    exports = [":htmlparser"],
+    exports = [":iterables"],
 )
 
 closure_js_library(
-    name = "htmlparser",
-    srcs = ["@com_google_javascript_closure_library//:third_party/closure/goog/caja/string/html/htmlparser.js"],
+    name = "iterables",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/labs/collections/iterables.js"],
     lenient = True,
 )

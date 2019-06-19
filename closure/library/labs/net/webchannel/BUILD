@@ -157,6 +157,7 @@ closure_js_library(
         "//closure/library/labs/net:webchanneltransport",
         "//closure/library/labs/net/webchannel:channelrequest",
         "//closure/library/labs/net/webchannel:webchannelbase",
+        "//closure/library/labs/net/webchannel:wire",
         "//closure/library/log",
         "//closure/library/object",
         "//closure/library/string",

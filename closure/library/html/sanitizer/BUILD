@@ -10,6 +10,7 @@ closure_js_library(
     name = "all_js",
     exports = [
         ":attributewhitelist",
+        ":csspropertysanitizer",
         ":csssanitizer",
         ":elementweakmap",
         ":htmlsanitizer",
@@ -28,6 +29,18 @@ closure_js_library(
 )
 
 closure_js_library(
+    name = "csspropertysanitizer",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/html/sanitizer/csspropertysanitizer.js"],
+    lenient = True,
+    deps = [
+        "//closure/library/asserts",
+        "//closure/library/html:safeurl",
+        "//closure/library/object",
+        "//closure/library/string",
+    ],
+)
+
+closure_js_library(
     name = "csssanitizer",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/html/sanitizer/csssanitizer.js"],
     lenient = True,
@@ -40,6 +53,7 @@ closure_js_library(
         "//closure/library/html:safestylesheet",
         "//closure/library/html:safeurl",
         "//closure/library/html:uncheckedconversions",
+        "//closure/library/html/sanitizer:csspropertysanitizer",
         "//closure/library/html/sanitizer:noclobber",
         "//closure/library/object",
         "//closure/library/string",
