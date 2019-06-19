@@ -214,3 +214,26 @@ file_test(
     file = "extern_bad_bin-stderr.txt",
     regexp = "actual parameter 1 of omg.im_an_extern does not match formal parameter",
 )
+
+# TEST: closure_js_library targets from exports should be provided when used in
+# a data attr.
+
+closure_js_library(
+    name = "external",
+    srcs = ["external.js"],
+    data = ["external2.js"],
+)
+
+closure_js_library(
+    name = "exports_data",
+    exports = [":external"],
+)
+
+sh_test(
+    name = "exports_data_test",
+    srcs = ["exports_data_test.sh"],
+    data = [
+        # including external.js / external2.js through a rollup target via exports should work.
+        ":exports_data",
+    ],
+)
