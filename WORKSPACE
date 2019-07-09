@@ -72,19 +72,58 @@ java_import_external(
 )
 
 java_import_external(
-    name = "org_mockito_all",
-    jar_sha256 = "d1a7a7ef14b3db5c0fc3e0a63a81b374b510afe85add9f7984b97911f4c70605",
+    name = "org_mockito_core",
+    jar_sha256 = "ae2efd8f05ceda5ed9c802a43265a95adfa885ca5535a8476a7aaa0b15b95abb",
     jar_urls = [
-        "https://mirror.bazel.build/repo1.maven.org/maven2/org/mockito/mockito-all/1.10.19/mockito-all-1.10.19.jar",
-        "https://repo1.maven.org/maven2/org/mockito/mockito-all/1.10.19/mockito-all-1.10.19.jar",
-        "http://maven.ibiblio.org/maven2/org/mockito/mockito-all/1.10.19/mockito-all-1.10.19.jar",
+        "https://mirror.bazel.build/repo1.maven.org/maven2/org/mockito/mockito-core/3.0.0/mockito-core-3.0.0.jar",
+        "https://repo1.maven.org/maven2/org/mockito/mockito-core/3.0.0/mockito-core-3.0.0.jar",
+        "http://maven.ibiblio.org/maven2/org/mockito/mockito-core/3.0.0/mockito-core-3.0.0.jar",
     ],
     licenses = ["notice"],  # MIT
     testonly_ = 1,
     deps = [
         "@junit",
+        "@net_bytebuddy",
+        "@net_bytebuddy_agent",
         "@org_hamcrest_core",
+        "@org_objenesis",
     ],
+)
+
+java_import_external(
+    name = "org_objenesis",
+    jar_sha256 = "7a8ff780b9ff48415d7c705f60030b0acaa616e7f823c98eede3b63508d4e984",
+    jar_urls = [
+        "https://mirror.bazel.build/repo1.maven.org/maven2/org/objenesis/objenesis/3.0.1/objenesis-3.0.1.jar",
+        "https://repo1.maven.org/maven2/org/objenesis/objenesis/3.0.1/objenesis-3.0.1.jar",
+        "http://maven.ibiblio.org/maven2/org/objenesis/objenesis/3.0.1/objenesis-3.0.1.jar",
+    ],
+    licenses = ["notice"],  # Apache
+    testonly_ = 1,
+)
+
+java_import_external(
+    name = "net_bytebuddy",
+    jar_sha256 = "f568c036adcef282798ed0e4e02d176a919cf900b0a9bb5e26cbace0d8a8246c",
+    jar_urls = [
+        "https://mirror.bazel.build/repo1.maven.org/maven2/net/bytebuddy/byte-buddy/1.9.14/byte-buddy-1.9.14.jar",
+        "https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy/1.9.14/byte-buddy-1.9.14.jar",
+        "http://maven.ibiblio.org/maven2/net/bytebuddy/byte-buddy/1.9.14/byte-buddy-1.9.14.jar",
+    ],
+    licenses = ["notice"],  # Apache
+    testonly_ = 1,
+)
+
+java_import_external(
+    name = "net_bytebuddy_agent",
+    jar_sha256 = "938a0df38cbc3e91334c383869aeb8436288efafa9f763f75fda51d7d8a703db",
+    jar_urls = [
+        "https://mirror.bazel.build/repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent/1.9.14/byte-buddy-agent-1.9.14.jar",
+        "https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent/1.9.14/byte-buddy-agent-1.9.14.jar",
+        "http://maven.ibiblio.org/maven2/net/bytebuddy/byte-buddy-agent/1.9.14/byte-buddy-agent-1.9.14.jar",
+    ],
+    licenses = ["notice"],  # Apache
+    testonly_ = 1,
 )
 
 java_import_external(

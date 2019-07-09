@@ -28,6 +28,6 @@ java_test(
         "@com_google_jimfs",
         "@com_google_truth",
         "@junit",
-        "@org_mockito_all",
+        "@org_mockito_core",
     ],
 )
