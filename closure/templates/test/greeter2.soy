@@ -1,4 +1,4 @@
-// Copyright 2016 The Closure Rules Authors. All rights reserved.
+// Copyright 2019 The Closure Rules Authors. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-{namespace io.bazel.rules.closure.soy.protoGreeter}
+{namespace io.bazel.rules.closure.soy.greeter2}
 
 
 /**
  * Greets a person.
  */
 {template .greet}
-  {@param person: io.bazel.rules.closure.soy.Person}
+  {@param name: string}
 
   {call io.bazel.rules.closure.soy.greeter.greet}
     {param name kind="text"}
-      {$person.name}
+      {$name}
     {/param}
   {/call}
 {/template}

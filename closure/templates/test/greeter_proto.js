@@ -15,7 +15,7 @@
 goog.provide('io.bazel.rules.closure.GreeterProto');
 
 goog.require('goog.soy');
-goog.require('io.bazel.rules.closure.soy.greeter');
+goog.require('io.bazel.rules.closure.soy.protoGreeter');
 goog.require('proto.io.bazel.rules.closure.soy.Person');
 
 
@@ -45,6 +45,6 @@ io.bazel.rules.closure.GreeterProto.prototype.greet = function() {
   person.setName(this.name_);
 
   goog.soy.renderElement(goog.global.document.body,
-                         io.bazel.rules.closure.soy.greeter.greet,
+                         io.bazel.rules.closure.soy.protoGreeter.greet,
                          {person: person});
 };
