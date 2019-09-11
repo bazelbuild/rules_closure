@@ -65,8 +65,8 @@ final class JsCheckerErrorFormatter extends AbstractMessageFormatter {
 
   private String format(JSError error, boolean warning) {
     SourceExcerptProvider source = getSource();
-    String sourceName = error.sourceName;
-    int lineNumber = error.lineNumber;
+    String sourceName = error.getSourceName();
+    int lineNumber = error.getLineNumber();
     int charno = error.getCharno();
 
     // Format the non-reverse-mapped position.
@@ -75,8 +75,10 @@ final class JsCheckerErrorFormatter extends AbstractMessageFormatter {
     String nonMappedPosition = formatPosition(sourceName, lineNumber);
 
     // Check if we can reverse-map the source.
-    OriginalMapping mapping = source == null ? null : source.getSourceMapping(
-        error.sourceName, error.lineNumber, error.getCharno());
+    OriginalMapping mapping =
+        source == null
+            ? null
+            : source.getSourceMapping(error.getSourceName(), error.getLineNumber(), error.getCharno());
     if (mapping == null) {
       boldLine.append(nonMappedPosition);
     } else {
@@ -96,7 +98,7 @@ final class JsCheckerErrorFormatter extends AbstractMessageFormatter {
 
     boldLine.append(getLevelName(warning ? CheckLevel.WARNING : CheckLevel.ERROR));
     boldLine.append(" - ");
-    boldLine.append(error.description);
+    boldLine.append(error.getDescription());
 
     b.append(maybeEmbolden(boldLine.toString()));
 
@@ -122,7 +124,7 @@ final class JsCheckerErrorFormatter extends AbstractMessageFormatter {
     }
 
     // Help the user know how to suppress this warning.
-    String module = convertPathToModuleName(nullToEmpty(error.sourceName), roots).or("");
+    String module = convertPathToModuleName(nullToEmpty(error.getSourceName()), roots).or("");
     String label = labels.get(module);
     if (label == null) {
       if (colorize) {

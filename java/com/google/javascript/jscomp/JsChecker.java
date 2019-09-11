@@ -242,7 +242,7 @@ public final class JsChecker {
             }
             // Ignore linter warnings on generated sources.
             if (groupNames.contains("lintChecks")
-                && JsCheckerHelper.isGeneratedPath(error.sourceName)) {
+                && JsCheckerHelper.isGeneratedPath(error.getSourceName())) {
               return CheckLevel.OFF;
             }
             return null;
