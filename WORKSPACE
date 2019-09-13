@@ -138,3 +138,16 @@ java_import_external(
     testonly_ = 1,
     deps = ["@com_google_guava"],
 )
+
+http_archive(
+    name = "bazel_toolchains",
+    sha256 = "1411f2648185b0e7d8c2bb88b25cc8f2c477cc4223133461652ddce2b3154ac4",
+    strip_prefix = "bazel-toolchains-0.29.3",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-toolchains/archive/0.29.3.tar.gz",
+        "https://github.com/bazelbuild/bazel-toolchains/archive/0.29.3.tar.gz",
+    ],
+)
+
+load("@bazel_toolchains//rules:rbe_repo.bzl", "rbe_autoconfig")
+rbe_autoconfig(name = "buildkite_config")
