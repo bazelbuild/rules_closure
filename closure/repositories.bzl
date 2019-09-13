@@ -637,7 +637,7 @@ def com_google_java_format():
     )
 
 def com_google_javascript_closure_compiler():
-    version = "v20190819"
+    version = "v20190909"
     jar = "closure-compiler-unshaded-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
@@ -646,7 +646,7 @@ def com_google_javascript_closure_compiler():
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
             "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
         ],
-        jar_sha256 = "d8e74a9b26ada0bd190c7946fcdbcc2e342c5144d7fe37a9278688ff3a36241d",
+        jar_sha256 = "9d8ba854b02ad713a50b9fc0dc0a82ac5fcdf980ef624f3354b6e43a0ac968d9",
         deps = [
             "@com_google_code_gson",
             "@com_google_guava",
@@ -680,11 +680,11 @@ def com_google_javascript_closure_library():
     http_archive(
         name = "com_google_javascript_closure_library",
         urls = [
-            "https://mirror.bazel.build/github.com/google/closure-library/archive/v20190415.tar.gz",
-            "https://github.com/google/closure-library/archive/v20190415.tar.gz",
+            "https://mirror.bazel.build/github.com/google/closure-library/archive/v20190729.tar.gz",
+            "https://github.com/google/closure-library/archive/v20190729.tar.gz",
         ],
-        sha256 = "b92f9c2b81adeb06b16e0a5d748baf115eeb58884fe864bec3fe8e23a7cf7d14",
-        strip_prefix = "closure-library-20190415",
+        sha256 = "8e8a57146510d27f63f750533d274a5d7654df155491629d6585233a631f5590",
+        strip_prefix = "closure-library-20190729",
         build_file = str(Label("//closure/library:closure_library.BUILD")),
     )
 
@@ -728,10 +728,10 @@ def com_google_template_soy():
         name = "com_google_template_soy",
         licenses = ["notice"],  # Apache 2.0
         jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2019-03-11/soy-2019-03-11.jar",
-            "https://repo1.maven.org/maven2/com/google/template/soy/2019-03-11/soy-2019-03-11.jar",
+            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2019-07-14/soy-2019-07-14.jar",
+            "https://repo1.maven.org/maven2/com/google/template/soy/2019-07-14/soy-2019-07-14.jar",
         ],
-        jar_sha256 = "ceb0e78cf1cadefa17493bbd0a913314558e34dd30e4d7d92e406f69c2670725",
+        jar_sha256 = "981d9f6180b40eb340f53d20aa1af630139ea079f95a3441265e87d8c850a527",
         deps = [
             "@args4j",
             "@com_google_code_findbugs_jsr305",
@@ -769,10 +769,10 @@ def com_google_template_soy():
 def com_google_template_soy_jssrc():
     http_archive(
         name = "com_google_template_soy_jssrc",
-        sha256 = "188a28d3935b0661631bdb518a97d03edd4a597a13a09dd3d92a138c09b59780",
+        sha256 = "626a79fcbfdf1a15d42e27955130a4498e38fbed44996cc37072f3fcde9b5ffc",
         urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2019-03-11/soy-2019-03-11-jssrc_js.jar",
-            "https://repo1.maven.org/maven2/com/google/template/soy/2019-03-11/soy-2019-03-11-jssrc_js.jar",
+            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2019-07-14/soy-2019-07-14-jssrc_js.jar",
+            "https://repo1.maven.org/maven2/com/google/template/soy/2019-07-14/soy-2019-07-14-jssrc_js.jar",
         ],
         build_file = str(Label("//closure/templates:soy_jssrc.BUILD")),
         type = "zip",

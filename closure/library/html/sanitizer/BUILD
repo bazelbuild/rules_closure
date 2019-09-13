@@ -47,6 +47,7 @@ closure_js_library(
     deps = [
         "//closure/library/array",
         "//closure/library/dom",
+        "//closure/library/dom:safe",
         "//closure/library/dom:tagname",
         "//closure/library/html:cssspecificity",
         "//closure/library/html:safestyle",
@@ -57,6 +58,7 @@ closure_js_library(
         "//closure/library/html/sanitizer:noclobber",
         "//closure/library/object",
         "//closure/library/string",
+        "//closure/library/string:const",
         "//closure/library/useragent",
         "//closure/library/useragent:product",
     ],
@@ -93,7 +95,6 @@ closure_js_library(
         "//closure/library/object",
         "//closure/library/string",
         "//closure/library/string:const",
-        "//closure/library/useragent",
     ],
 )
 
@@ -115,10 +116,13 @@ closure_js_library(
     deps = [
         "//closure/library/dom",
         "//closure/library/dom:nodetype",
+        "//closure/library/dom:safe",
         "//closure/library/dom:tagname",
+        "//closure/library/html:uncheckedconversions",
         "//closure/library/html/sanitizer:elementweakmap",
         "//closure/library/html/sanitizer:noclobber",
         "//closure/library/log",
+        "//closure/library/string:const",
         "//closure/library/useragent",
     ],
 )

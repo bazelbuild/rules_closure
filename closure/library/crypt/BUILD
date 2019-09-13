@@ -144,6 +144,7 @@ closure_js_library(
         "//closure/library/crypt",
         "//closure/library/dom",
         "//closure/library/dom:tagname",
+        "//closure/library/reflect",
         "//closure/library/testing:asserts",
         "//closure/library/testing:performancetable",
         "//closure/library/testing:pseudorandom",

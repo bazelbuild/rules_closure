@@ -74,10 +74,14 @@ closure_js_library(
     lenient = True,
     deps = [
         "//closure/library/debug:entrypointregistry",
+        "//closure/library/dom:safe",
         "//closure/library/dom:tagname",
         "//closure/library/functions",
+        "//closure/library/html:safehtml",
+        "//closure/library/html:trustedresourceurl",
         "//closure/library/labs/useragent:browser",
         "//closure/library/labs/useragent:engine",
+        "//closure/library/string:const",
     ],
 )
 
