@@ -18,7 +18,7 @@ package com.google.javascript.jscomp;
 
 import com.google.common.collect.ImmutableList;
 import com.google.javascript.jscomp.NodeTraversal.Callback;
-import com.google.javascript.jscomp.PassFactory.HotSwapPassFactory;
+import com.google.javascript.jscomp.PassFactory;
 import com.google.javascript.jscomp.ijs.ConvertToTypedInterface;
 import com.google.javascript.jscomp.lint.CheckDuplicateCase;
 import com.google.javascript.jscomp.lint.CheckEmptyStatements;
@@ -38,21 +38,24 @@ import java.util.List;
 final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
 
   private final JsCheckerState state;
+  private final ImmutableList<PassFactory> checks;
 
   JsCheckerPassConfig(JsCheckerState state, CompilerOptions options) {
     super(new DefaultPassConfig(options));
     this.state = state;
+    this.checks =
+        ImmutableList.of(
+            gatherModuleMetadataPass(),
+            earlyLintChecks(),
+            scopedAliases(),
+            closureRewriteClass(),
+            lateLintChecks(),
+            ijsGeneration());
   }
 
   @Override
   protected List<PassFactory> getChecks() {
-    return ImmutableList.of(
-        gatherModuleMetadataPass,
-        earlyLintChecks,
-        scopedAliases,
-        closureRewriteClass,
-        lateLintChecks,
-        ijsGeneration);
+    return checks;
   }
 
   @Override
@@ -60,108 +63,89 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
     return ImmutableList.of();
   }
 
-  private final HotSwapPassFactory gatherModuleMetadataPass =
-      new HotSwapPassFactory("gather module metadata") {
-        @Override
-        protected HotSwapCompilerPass create(AbstractCompiler compiler) {
-          return new GatherModuleMetadata(
-              compiler,
-              compiler.getOptions().getProcessCommonJSModules(),
-              compiler.getOptions().getModuleResolutionMode());
-        }
+  private PassFactory gatherModuleMetadataPass() {
+    return PassFactory.builderForHotSwap()
+        .setName("gather module metadata")
+        .setInternalFactory(
+            (compiler) ->
+                new GatherModuleMetadata(
+                    compiler,
+                    compiler.getOptions().getProcessCommonJSModules(),
+                    compiler.getOptions().getModuleResolutionMode()))
+        .setFeatureSet(FeatureSet.latest().withoutTypes())
+        .build();
+  }
 
-        @Override
-        protected FeatureSet featureSet() {
-          return FeatureSet.latest().withoutTypes();
-        }
-      };
+  private PassFactory earlyLintChecks() {
+    return PassFactory.builder()
+        .setName("earlyLintChecks")
+        .setInternalFactory(
+            (compiler) ->
+                new CombinedCompilerPass(
+                    compiler,
+                    ImmutableList.<Callback>of(
+                        new CheckDuplicateCase(compiler),
+                        new CheckEmptyStatements(compiler),
+                        new CheckEnums(compiler),
+                        new CheckJSDocStyle(compiler),
+                        new CheckJSDoc(compiler),
+                        new CheckMissingSemicolon(compiler),
+                        new CheckSuper(compiler),
+                        new CheckPrimitiveAsObject(compiler),
+                        new CheckProvidesSorted(CheckProvidesSorted.Mode.COLLECT_AND_REPORT),
+                        new CheckRequiresSorted(CheckRequiresSorted.Mode.COLLECT_AND_REPORT),
+                        new CheckMissingAndExtraRequires(
+                            compiler, CheckMissingAndExtraRequires.Mode.SINGLE_FILE),
+                        new CheckUnusedLabels(compiler),
+                        new CheckUselessBlocks(compiler),
+                        new ClosureCheckModule(compiler, compiler.getModuleMetadataMap()),
+                        new CheckSetTestOnly(state, compiler),
+                        new CheckStrictDeps.FirstPass(state, compiler))))
+        .setFeatureSet(FeatureSet.latest().withoutTypes())
+        .build();
+  }
 
-  private final PassFactory earlyLintChecks =
-      new PassFactory("earlyLintChecks", true) {
-        @Override
-        protected CompilerPass create(AbstractCompiler compiler) {
-          return new CombinedCompilerPass(
-              compiler,
-              ImmutableList.<Callback>of(
-                  new CheckDuplicateCase(compiler),
-                  new CheckEmptyStatements(compiler),
-                  new CheckEnums(compiler),
-                  new CheckJSDocStyle(compiler),
-                  new CheckJSDoc(compiler),
-                  new CheckMissingSemicolon(compiler),
-                  new CheckSuper(compiler),
-                  new CheckPrimitiveAsObject(compiler),
-                  new CheckProvidesSorted(CheckProvidesSorted.Mode.COLLECT_AND_REPORT),
-                  new CheckRequiresSorted(CheckRequiresSorted.Mode.COLLECT_AND_REPORT),
-                  new CheckMissingAndExtraRequires(
-                      compiler, CheckMissingAndExtraRequires.Mode.SINGLE_FILE),
-                  new CheckUnusedLabels(compiler),
-                  new CheckUselessBlocks(compiler),
-                  new ClosureCheckModule(compiler, compiler.getModuleMetadataMap()),
-                  new CheckSetTestOnly(state, compiler),
-                  new CheckStrictDeps.FirstPass(state, compiler)));
-        }
+  private PassFactory scopedAliases() {
+    return PassFactory.builder()
+        .setName("scopedAliases")
+        .setInternalFactory(
+            (compiler) ->
+                new ScopedAliases(
+                    compiler,
+                    /*preprocessorSymbolTable=*/null,
+                    compiler.getOptions().getAliasTransformationHandler()))
+        .setFeatureSet(FeatureSet.latest().withoutTypes())
+        .build();
+  }
 
-        @Override
-        protected FeatureSet featureSet() {
-          return FeatureSet.latest().withoutTypes();
-        }
-      };
+  private PassFactory closureRewriteClass() {
+    return PassFactory.builder()
+        .setName("closureRewriteClass")
+        .setInternalFactory((compiler) -> new ClosureRewriteClass(compiler))
+        .setFeatureSet(FeatureSet.latest().withoutTypes())
+        .build();
+  }
 
-  private final PassFactory scopedAliases =
-      new PassFactory("scopedAliases", true) {
-        @Override
-        protected HotSwapCompilerPass create(AbstractCompiler compiler) {
-          return new ScopedAliases(compiler, null, options.getAliasTransformationHandler());
-        }
+  private PassFactory lateLintChecks() {
+    return PassFactory.builder()
+        .setName("lateLintChecks")
+        .setInternalFactory(
+            (compiler) ->
+                new CombinedCompilerPass(
+                  compiler,
+                  ImmutableList.<Callback>of(
+                      new CheckInterfaces(compiler),
+                      new CheckPrototypeProperties(compiler),
+                      new CheckStrictDeps.SecondPass(state, compiler))))
+        .setFeatureSet(FeatureSet.latest().withoutTypes())
+        .build();
+  }
 
-        @Override
-        protected FeatureSet featureSet() {
-          return FeatureSet.latest().withoutTypes();
-        }
-      };
-
-  private final PassFactory closureRewriteClass =
-      new PassFactory("closureRewriteClass", true) {
-        @Override
-        protected HotSwapCompilerPass create(AbstractCompiler compiler) {
-          return new ClosureRewriteClass(compiler);
-        }
-
-        @Override
-        protected FeatureSet featureSet() {
-          return FeatureSet.latest().withoutTypes();
-        }
-      };
-
-  private final PassFactory lateLintChecks =
-      new PassFactory("lateLintChecks", true) {
-        @Override
-        protected CompilerPass create(AbstractCompiler compiler) {
-          return new CombinedCompilerPass(
-              compiler,
-              ImmutableList.<Callback>of(
-                  new CheckInterfaces(compiler),
-                  new CheckPrototypeProperties(compiler),
-                  new CheckStrictDeps.SecondPass(state, compiler)));
-        }
-
-        @Override
-        protected FeatureSet featureSet() {
-          return FeatureSet.latest().withoutTypes();
-        }
-      };
-
-  private final PassFactory ijsGeneration =
-      new PassFactory("ijsGeneration", true) {
-        @Override
-        protected CompilerPass create(AbstractCompiler compiler) {
-          return new ConvertToTypedInterface(compiler);
-        }
-
-        @Override
-        protected FeatureSet featureSet() {
-          return FeatureSet.latest().withoutTypes();
-        }
-      };
+  private PassFactory ijsGeneration() {
+    return PassFactory.builder()
+        .setName("ijsGeneration")
+        .setInternalFactory((compiler) -> new ConvertToTypedInterface(compiler))
+        .setFeatureSet(FeatureSet.latest().withoutTypes())
+        .build();
+  }
 }
