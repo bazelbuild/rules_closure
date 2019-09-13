@@ -211,6 +211,7 @@ closure_js_library(
     lenient = True,
     deps = [
         "//closure/library/dom:inputtype",
+        "//closure/library/dom:safe",
         "//closure/library/dom:tagname",
         "//closure/library/structs:map",
         "//closure/library/window",
@@ -482,6 +483,8 @@ closure_js_library(
     deps = [
         "//closure/library/dom",
         "//closure/library/dom:nodetype",
+        "//closure/library/dom:safe",
+        "//closure/library/html:legacyconversions",
         "//closure/library/useragent",
     ],
 )

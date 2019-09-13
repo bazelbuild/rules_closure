@@ -23,6 +23,7 @@ closure_js_library(
     srcs = ["@com_google_javascript_closure_library//:closure/goog/labs/net/image.js"],
     lenient = True,
     deps = [
+        "//closure/library/dom:safe",
         "//closure/library/events:eventhandler",
         "//closure/library/events:eventtype",
         "//closure/library/html:safeurl",
