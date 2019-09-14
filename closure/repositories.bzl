@@ -18,7 +18,30 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file"
 load("//closure/private:java_import_external.bzl", "java_import_external")
 load("//closure/private:platform_http_file.bzl", "platform_http_file")
 
-def closure_repositories(
+_ERROR_CLOSURE_REPOSITORIES_IS_DEPRECATED = """
+closure_repositories() is deprecated.
+
+Please add the following to your workspace instead:
+
+  load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
+  rules_closure_dependencies()
+  rules_closure_toolchains()
+""".strip()
+
+def closure_repositories(**kargs):
+    """Legacy macro to import dependencies for Closure Rules."""
+
+    print(_ERROR_CLOSURE_REPOSITORIES_IS_DEPRECATED)
+    rules_closure_dependencies(**kargs)
+
+def rules_closure_toolchains():
+    """An utility method to load all Closure toolchains.
+
+    It doesn't do anything at the moment.
+    """
+    pass
+
+def rules_closure_dependencies(
         omit_aopalliance = False,
         omit_args4j = False,
         omit_bazel_skylib = False,
