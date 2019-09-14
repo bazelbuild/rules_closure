@@ -759,6 +759,7 @@ def com_google_template_soy():
              ")\n") % (name, name)
             for name in (
                 "SoyParseInfoGenerator",
+                "SoyHeaderCompiler",
                 "SoyToJbcSrcCompiler",
                 "SoyToJsSrcCompiler",
                 "SoyToPySrcCompiler",
