@@ -49,6 +49,6 @@ closure_js_template_library = _closure_js_template_library
 closure_js_test = _closure_js_test
 phantomjs_test = _phantomjs_test
 filegroup_external = _filegroup_external
-closure_repositories = _closure_repositories
+closure_repositories = _closure_repositories  # TODO(yannic): Remove on 2019-11-01.
 web_library = _web_library
 web_library_external = _web_library_external
