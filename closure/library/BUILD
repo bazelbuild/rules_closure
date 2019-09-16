@@ -57,6 +57,7 @@ closure_js_library(
         "//closure/library/spell:all_js",
         "//closure/library/stats:all_js",
         "//closure/library/storage:all_js",
+        "//closure/library/streams:all_js",
         "//closure/library/string:all_js",
         "//closure/library/structs:all_js",
         "//closure/library/style:all_js",

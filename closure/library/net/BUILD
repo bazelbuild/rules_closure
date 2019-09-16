@@ -92,6 +92,7 @@ closure_js_library(
     srcs = ["@com_google_javascript_closure_library//:closure/goog/net/bulkloader.js"],
     lenient = True,
     deps = [
+        "//closure/library/events:event",
         "//closure/library/events:eventhandler",
         "//closure/library/events:eventtarget",
         "//closure/library/log",
@@ -257,6 +258,8 @@ closure_js_library(
         "//closure/library/events:event",
         "//closure/library/events:eventtarget",
         "//closure/library/events:eventtype",
+        "//closure/library/html:legacyconversions",
+        "//closure/library/html:safeurl",
         "//closure/library/html:uncheckedconversions",
         "//closure/library/json",
         "//closure/library/log",
@@ -375,6 +378,7 @@ closure_js_library(
     srcs = ["@com_google_javascript_closure_library//:closure/goog/net/networktester.js"],
     lenient = True,
     deps = [
+        "//closure/library/dom:safe",
         "//closure/library/log",
         "//closure/library/timer",
         "//closure/library/uri",
@@ -386,6 +390,7 @@ closure_js_library(
     srcs = ["@com_google_javascript_closure_library//:closure/goog/net/tmpnetwork.js"],
     lenient = True,
     deps = [
+        "//closure/library/dom:safe",
         "//closure/library/net:channeldebug",
         "//closure/library/uri",
     ],

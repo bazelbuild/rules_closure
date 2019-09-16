@@ -30,6 +30,7 @@ closure_js_library(
         ":datetimesymbols",
         ":datetimesymbolsext",
         ":graphemebreak",
+        ":localefeature",
         ":messageformat",
         ":mime",
         ":numberformat",
@@ -215,6 +216,12 @@ closure_js_library(
         "//closure/library/i18n:uchar",
         "//closure/library/structs:inversionmap",
     ],
+)
+
+closure_js_library(
+    name = "localefeature",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/i18n/localefeature.js"],
+    lenient = True,
 )
 
 closure_js_library(
