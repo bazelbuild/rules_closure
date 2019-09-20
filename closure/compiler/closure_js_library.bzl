@@ -110,6 +110,7 @@ def _closure_js_library_impl(
         internal_descriptors = depset(),
         no_closure_library = False,
         internal_expect_failure = False,
+        fake_base_ijs = [],
 
         # These file definitions for our outputs are deprecated,
         # and will be replaced with |actions.declare_file()| soon.
@@ -304,6 +305,7 @@ def _closure_js_library_impl(
         ),
         suppress = suppress,
         internal_expect_failure = internal_expect_failure,
+        fake_base_ijs = fake_base_ijs,
     )
 
     if type(internal_descriptors) == "list":
@@ -412,6 +414,7 @@ def _closure_js_library(ctx):
         ctx.files.internal_descriptors,
         ctx.attr.no_closure_library,
         ctx.attr.internal_expect_failure,
+        ctx.files._fake_base_ijs,
 
         # Deprecated output files.
         ctx.outputs.info,

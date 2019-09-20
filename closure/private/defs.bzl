@@ -46,6 +46,11 @@ CLOSURE_LIBRARY_BASE_ATTR = attr.label(
     allow_files = True,
 )
 
+FAKE_BASE_IJS_ATTR = attr.label(
+    default = Label("//closure/private:base.js.i.js"),
+    allow_single_file = True,
+)
+
 CLOSURE_WORKER_ATTR = attr.label(
     default = Label("//java/io/bazel/rules/closure:ClosureWorker"),
     executable = True,
@@ -53,6 +58,7 @@ CLOSURE_WORKER_ATTR = attr.label(
 )
 
 CLOSURE_JS_TOOLCHAIN_ATTRS = {
+    "_fake_base_ijs": FAKE_BASE_IJS_ATTR,
     "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
     "_ClosureWorker": CLOSURE_WORKER_ATTR,
 }
@@ -255,7 +261,8 @@ def library_level_checks(
         executable,
         output,
         suppress = [],
-        internal_expect_failure = False):
+        internal_expect_failure = False,
+        fake_base_ijs = []):
     args = [
         "JsCompiler",
         "--checks_only",
@@ -271,7 +278,7 @@ def library_level_checks(
         output.path,
     ]
     inputs = []
-    for f in ijs_deps.to_list():
+    for f in fake_base_ijs + ijs_deps.to_list():
         args.append("--externs=%s" % f.path)
         inputs.append(f)
 
