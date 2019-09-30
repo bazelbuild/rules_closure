@@ -17,7 +17,6 @@
 load(
     "//closure/private:defs.bzl",
     "CLOSURE_JS_TOOLCHAIN_ATTRS",
-    "CLOSURE_LIBRARY_BASE_ATTR",
     "JS_LANGUAGES",
     "JS_LANGUAGE_IN",
     "JS_LANGUAGE_OUT_DEFAULT",
