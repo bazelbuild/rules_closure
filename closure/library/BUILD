@@ -194,6 +194,16 @@ filegroup(
 )
 
 closure_js_library(
+    name = "base_lib",
+    srcs = [
+        "@com_google_javascript_closure_library//:closure/goog/base.js",
+        "@com_google_javascript_closure_library//:closure/goog/transitionalforwarddeclarations.js",
+    ],
+    # Prevent circular dependencies
+    closure_library_base = [],
+)
+
+closure_js_library(
     name = "deps",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/deps.js"],
     lenient = True,

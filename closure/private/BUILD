@@ -16,6 +16,8 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # Apache 2.0
 
+exports_files(["unusable_type.js"])
+
 sh_binary(
     name = "gensrcjar",
     srcs = ["gensrcjar.sh"],

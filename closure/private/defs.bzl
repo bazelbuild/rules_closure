@@ -41,15 +41,19 @@ JS_LANGUAGES = depset([
     "NO_TRANSPILE",
 ])
 
-CLOSURE_LIBRARY_BASE_ATTR = attr.label(
-    default = Label("//closure/library:base"),
-    allow_files = True,
+CLOSURE_LIBRARY_BASE_ATTR = attr.label_list(
+    default = [Label("//closure/library:base_lib")],
 )
 
 CLOSURE_WORKER_ATTR = attr.label(
     default = Label("//java/io/bazel/rules/closure:ClosureWorker"),
     executable = True,
     cfg = "host",
+)
+
+UNUSABLE_TYPE_DEFINITION = attr.label(
+    default = Label("//closure/private:unusable_type.js"),
+    allow_single_file = True,
 )
 
 CLOSURE_JS_TOOLCHAIN_ATTRS = {
@@ -74,7 +78,7 @@ def unfurl(deps, provider = ""):
 
 def collect_js(
         deps,
-        closure_library_base = None,
+        closure_library_base,
         has_direct_srcs = False,
         no_closure_library = False,
         css = None):
@@ -105,10 +109,18 @@ def collect_js(
             fail("no_closure_library can't be used when Closure Library is " +
                  "already part of the transitive closure")
     elif has_direct_srcs and not has_closure_library:
-        direct_srcs += closure_library_base
         has_closure_library = True
+        for lib in closure_library_base:
+            ijs_files += [getattr(lib.closure_js_library, "ijs_files", depset())]
+            lib_srcs = getattr(lib.closure_js_library, "srcs", None)
+            if lib_srcs:
+                direct_srcs += lib_srcs.to_list()
     if css:
-        direct_srcs += closure_library_base + [css.closure_css_binary.renaming_map]
+        direct_srcs += [css.closure_css_binary.renaming_map]
+        for lib in closure_library_base:
+            lib_srcs = getattr(lib.closure_js_library, "srcs", None)
+            if lib_srcs:
+                direct_srcs += lib_srcs.to_list()
 
     return struct(
         srcs = depset(direct_srcs, transitive = srcs),
@@ -255,7 +267,8 @@ def library_level_checks(
         executable,
         output,
         suppress = [],
-        internal_expect_failure = False):
+        internal_expect_failure = False,
+        unusable_type_definition = []):
     args = [
         "JsCompiler",
         "--checks_only",
@@ -271,7 +284,7 @@ def library_level_checks(
         output.path,
     ]
     inputs = []
-    for f in ijs_deps.to_list():
+    for f in ijs_deps.to_list() + unusable_type_definition:
         args.append("--externs=%s" % f.path)
         inputs.append(f)
 

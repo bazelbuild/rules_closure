@@ -17,6 +17,7 @@
 load(
     "//closure/private:defs.bzl",
     "CLOSURE_JS_TOOLCHAIN_ATTRS",
+    "CLOSURE_LIBRARY_BASE_ATTR",
     "JS_LANGUAGES",
     "JS_LANGUAGE_IN",
     "JS_LANGUAGE_OUT_DEFAULT",
@@ -46,7 +47,7 @@ def _impl(ctx):
         ))
 
     deps = unfurl(ctx.attr.deps, provider = "closure_js_library")
-    js = collect_js(deps, ctx.files._closure_library_base, css = ctx.attr.css)
+    js = collect_js(deps, ctx.attr._closure_library_base, css = ctx.attr.css)
     if not js.srcs:
         fail("There are no JS source files in the transitive closure")
 
