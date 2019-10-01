@@ -51,6 +51,7 @@ CLOSURE_WORKER_ATTR = attr.label(
     cfg = "host",
 )
 
+# Necessary for checking ijs files
 UNUSABLE_TYPE_DEFINITION = attr.label(
     default = Label("//closure/private:unusable_type.js"),
     allow_single_file = True,
@@ -59,6 +60,7 @@ UNUSABLE_TYPE_DEFINITION = attr.label(
 CLOSURE_JS_TOOLCHAIN_ATTRS = {
     "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
     "_ClosureWorker": CLOSURE_WORKER_ATTR,
+    "_unusable_type_definition": UNUSABLE_TYPE_DEFINITION,
 }
 
 def get_jsfile_path(f):
@@ -78,7 +80,7 @@ def unfurl(deps, provider = ""):
 
 def collect_js(
         deps,
-        closure_library_base,
+        closure_library_base = [],
         has_direct_srcs = False,
         no_closure_library = False,
         css = None):
@@ -110,17 +112,16 @@ def collect_js(
                  "already part of the transitive closure")
     elif has_direct_srcs and not has_closure_library:
         has_closure_library = True
-        for lib in closure_library_base:
-            ijs_files += [getattr(lib.closure_js_library, "ijs_files", depset())]
-            lib_srcs = getattr(lib.closure_js_library, "srcs", None)
-            if lib_srcs:
-                direct_srcs += lib_srcs.to_list()
+        if len(closure_library_base) > 0:
+            base = closure_library_base[0].closure_js_library
+            ijs_files += [getattr(base, "ijs_files")]
+            direct_srcs += getattr(base, "srcs").to_list()
+
     if css:
         direct_srcs += [css.closure_css_binary.renaming_map]
-        for lib in closure_library_base:
-            lib_srcs = getattr(lib.closure_js_library, "srcs", None)
-            if lib_srcs:
-                direct_srcs += lib_srcs.to_list()
+        if len(closure_library_base) > 0:
+            base = closure_library_base[0]
+            direct_srcs += getattr(base, "srcs", depset()).to_list()
 
     return struct(
         srcs = depset(direct_srcs, transitive = srcs),
@@ -266,9 +267,9 @@ def library_level_checks(
         srcs,
         executable,
         output,
+        unusable_type_definition,
         suppress = [],
-        internal_expect_failure = False,
-        unusable_type_definition = []):
+        internal_expect_failure = False):
     args = [
         "JsCompiler",
         "--checks_only",

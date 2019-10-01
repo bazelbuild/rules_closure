@@ -16,11 +16,9 @@
 
 load(
     "//closure/private:defs.bzl",
-    "CLOSURE_LIBRARY_BASE_ATTR",
-    "CLOSURE_WORKER_ATTR",
+    "CLOSURE_JS_TOOLCHAIN_ATTRS",
     "JS_FILE_TYPE",
     "JS_LANGUAGE_IN",
-    "UNUSABLE_TYPE_DEFINITION",
     "collect_js",
     "collect_runfiles",
     "convert_path_to_es6_module_name",
@@ -74,8 +72,14 @@ def create_closure_js_library(
       A closure_js_library metadata struct with exports and closure_js_library attribute
     """
 
-    if not hasattr(ctx.files, "_ClosureWorker") or not hasattr(ctx.attr, "_closure_library_base"):
+    if (
+        not hasattr(ctx.files, "_ClosureWorker") or
+        not hasattr(ctx.attr, "_closure_library_base") or
+        not hasattr(ctx.files, "_unusable_type_definition")
+    ):
         fail("Closure toolchain undefined; rule should include CLOSURE_JS_TOOLCHAIN_ATTRS")
+    elif len(getattr(ctx.attr, "_closure_library_base")) > 1:
+        fail("_closure_library_base attr must contain exactly zero or one target")
 
     # testonly exist for all rules but if it is an aspect it need to accessed over ctx.rule.
     testonly = ctx.attr.testonly if hasattr(ctx.attr, "testonly") else ctx.rule.attr.testonly
@@ -93,6 +97,7 @@ def create_closure_js_library(
         testonly = testonly,
         closure_library_base = ctx.attr._closure_library_base,
         closure_worker = ctx.executable._ClosureWorker,
+        unusable_type_definition = ctx.files._unusable_type_definition,
     )
 
 def _closure_js_library_impl(
@@ -162,12 +167,7 @@ def _closure_js_library_impl(
 
     # Collect all the transitive stuff the child rules have propagated. Bazel has
     # a special nested set data structure that makes this efficient.
-    js = collect_js(
-        deps,
-        closure_library_base,
-        bool(srcs),
-        no_closure_library,
-    )
+    js = collect_js(deps, closure_library_base, bool(srcs), no_closure_library)
 
     # If closure_js_library depends on closure_css_library, that means
     # goog.getCssName() is being used in srcs to reference CSS names in the
@@ -414,7 +414,7 @@ def _closure_js_library(ctx):
         ctx.attr.suppress,
         ctx.attr.lenient,
         ctx.attr.convention,
-        ctx.attr.closure_library_base,
+        ctx.attr._closure_library_base,
         ctx.executable._ClosureWorker,
         ctx.files._unusable_type_definition,
         getattr(ctx.attr, "includes", []),
@@ -432,7 +432,7 @@ def _closure_js_library(ctx):
 
     closure_library_srcs = []
     if not ctx.attr.no_closure_library:
-        for lib in ctx.attr.closure_library_base:
+        for lib in ctx.attr._closure_library_base:
             closure_library_srcs += getattr(lib.closure_js_library, "srcs", depset()).to_list()
 
     return struct(
@@ -455,7 +455,7 @@ def _closure_js_library(ctx):
 
 closure_js_library = rule(
     implementation = _closure_js_library,
-    attrs = {
+    attrs = dict({
         "convention": attr.string(
             default = "CLOSURE",
             # TODO(yannic): Define valid values.
@@ -483,10 +483,7 @@ closure_js_library = rule(
         # internal only
         "internal_descriptors": attr.label_list(allow_files = True),
         "internal_expect_failure": attr.bool(default = False),
-        "closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
-        "_unusable_type_definition": UNUSABLE_TYPE_DEFINITION,
-        "_ClosureWorker": CLOSURE_WORKER_ATTR,
-    },
+    }, **CLOSURE_JS_TOOLCHAIN_ATTRS),
     # TODO(yannic): Deprecate.
     #     https://docs.bazel.build/versions/master/skylark/lib/globals.html#rule.outputs
     outputs = {

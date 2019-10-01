@@ -25,7 +25,7 @@ load(
 
 def _impl(ctx):
     deps = unfurl(ctx.attr.deps, provider = "closure_js_library")
-    js = collect_js(deps, [])
+    js = collect_js(deps)
     base_srcs = ctx.attr._closure_library_base[0].closure_js_library.srcs.to_list()
     closure_root = _dirname(long_path(ctx, base_srcs[0]))
     closure_rel = "/".join([".." for _ in range(len(closure_root.split("/")))])
