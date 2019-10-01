@@ -6,7 +6,6 @@ licenses(["notice"])
 
 load("//closure:defs.bzl", "closure_css_library")
 load("//closure:defs.bzl", "closure_js_library")
-load("//closure/compiler:closure_base_js_library.bzl", "closure_base_js_library")
 
 closure_js_library(
     name = "library",
@@ -188,14 +187,6 @@ closure_js_library(
 
 filegroup(
     name = "base",
-    srcs = [
-        "@com_google_javascript_closure_library//:closure/goog/base.js",
-        "@com_google_javascript_closure_library//:closure/goog/transitionalforwarddeclarations.js",
-    ],
-)
-
-closure_base_js_library(
-    name = "base_lib",
     srcs = [
         "@com_google_javascript_closure_library//:closure/goog/base.js",
         "@com_google_javascript_closure_library//:closure/goog/transitionalforwarddeclarations.js",

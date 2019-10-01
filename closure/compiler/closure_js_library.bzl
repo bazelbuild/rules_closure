@@ -424,16 +424,16 @@ def _closure_js_library(ctx):
         ctx.attr.internal_expect_failure,
 
         # Deprecated output files.
-        deprecated_info_file = ctx.outputs.info,
-        deprecated_stderr_file = ctx.outputs.stderr,
-        deprecated_ijs_file = ctx.outputs.ijs,
-        deprecated_typecheck_file = ctx.outputs.typecheck,
+        ctx.outputs.info,
+        ctx.outputs.stderr,
+        ctx.outputs.ijs,
+        ctx.outputs.typecheck,
     )
 
     closure_library_srcs = []
     if not ctx.attr.no_closure_library:
-        for lib in ctx.attr._closure_library_base:
-            closure_library_srcs += getattr(lib.closure_js_library, "srcs", depset()).to_list()
+        base = ctx.attr._closure_library_base[0]
+        closure_library_srcs += getattr(base.closure_js_library, "srcs", depset()).to_list()
 
     return struct(
         files = depset(),

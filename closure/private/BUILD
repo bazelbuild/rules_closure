@@ -18,7 +18,17 @@ licenses(["notice"])  # Apache 2.0
 
 exports_files(["unusable_type.js"])
 
+load("//closure/compiler:closure_base_js_library.bzl", "closure_base_js_library")
+
 sh_binary(
     name = "gensrcjar",
     srcs = ["gensrcjar.sh"],
+)
+
+closure_base_js_library(
+    name = "base_lib",
+    srcs = [
+        "@com_google_javascript_closure_library//:closure/goog/base.js",
+        "@com_google_javascript_closure_library//:closure/goog/transitionalforwarddeclarations.js",
+    ],
 )

@@ -42,7 +42,7 @@ JS_LANGUAGES = depset([
 ])
 
 CLOSURE_LIBRARY_BASE_ATTR = attr.label_list(
-    default = [Label("//closure/library:base_lib")],
+    default = [Label("//closure/private:base_lib")],
 )
 
 CLOSURE_WORKER_ATTR = attr.label(
