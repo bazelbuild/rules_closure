@@ -44,7 +44,4 @@ closure_base_js_library = rule(
         ),
         "_unusable_type_definition": UNUSABLE_TYPE_DEFINITION,
     },
-    outputs = {
-        "ijs": "%{name}.i.js",
-    },
 )
