@@ -78,7 +78,7 @@ def _closure_css_binary(ctx):
         ),
     )
     return struct(
-        files = depset(files),
+        files = depset(outputs),
         closure_css_binary = struct(
             bin = ctx.outputs.bin,
             map = ctx.outputs.map,
