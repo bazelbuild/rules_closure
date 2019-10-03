@@ -72,22 +72,11 @@ def create_closure_js_library(
       A closure_js_library metadata struct with exports and closure_js_library attribute
     """
 
-    if (
-        not hasattr(ctx.files, "_ClosureWorker") or
-        not hasattr(ctx.attr, "_closure_library_base") or
-        not hasattr(ctx.files, "_unusable_type_definition")
-    ):
-        fail("Closure toolchain undefined; rule should include CLOSURE_JS_TOOLCHAIN_ATTRS")
-    elif len(getattr(ctx.attr, "_closure_library_base")) > 1:
-        fail("_closure_library_base attr must contain exactly zero or one target")
-
     # testonly exist for all rules but if it is an aspect it need to accessed over ctx.rule.
     testonly = ctx.attr.testonly if hasattr(ctx.attr, "testonly") else ctx.rule.attr.testonly
 
     return _closure_js_library_impl(
-        ctx.actions,
-        ctx.label,
-        ctx.workspace_name,
+        ctx,
         srcs = srcs,
         deps = deps,
         exports = exports,
@@ -95,24 +84,16 @@ def create_closure_js_library(
         lenient = lenient,
         convention = convention,
         testonly = testonly,
-        closure_library_base = ctx.attr._closure_library_base,
-        closure_worker = ctx.executable._ClosureWorker,
-        unusable_type_definition = ctx.files._unusable_type_definition,
     )
 
 def _closure_js_library_impl(
-        actions,
-        label,
-        workspace_name,
+        ctx,
         srcs,
         deps,
         testonly,
         suppress,
         lenient,
         convention,
-        closure_library_base,
-        closure_worker,
-        unusable_type_definition = [],
         includes = (),
         exports = depset(),
         internal_descriptors = depset(),
@@ -127,6 +108,20 @@ def _closure_js_library_impl(
         deprecated_typecheck_file = None):
     # TODO(yannic): Figure out how to modify |find_js_module_roots|
     # so that we won't need |workspace_name| anymore.
+
+    if (
+        not hasattr(ctx.files, "_ClosureWorker") or
+        not hasattr(ctx.attr, "_closure_library_base") or
+        not hasattr(ctx.files, "_unusable_type_definition")
+    ):
+        fail("Closure toolchain undefined; rule should include CLOSURE_JS_TOOLCHAIN_ATTRS")
+
+    closure_library_base = ctx.attr._closure_library_base
+    closure_worker = ctx.executable._ClosureWorker
+    unusable_type_definition = ctx.files._unusable_type_definition
+    actions = ctx.actions
+    label = ctx.label
+    workspace_name = ctx.workspace_name
 
     if lenient:
         suppress = suppress + [
@@ -161,13 +156,16 @@ def _closure_js_library_impl(
         "%s.i.js" % label.name,
     )
 
+    if not no_closure_library:
+        deps = deps + closure_library_base
+
     # Create a list of direct children of this rule. If any direct dependencies
     # have the exports attribute, those labels become direct dependencies here.
     deps = unfurl(deps, provider = "closure_js_library")
 
     # Collect all the transitive stuff the child rules have propagated. Bazel has
     # a special nested set data structure that makes this efficient.
-    js = collect_js(deps, closure_library_base, bool(srcs), no_closure_library)
+    js = collect_js(deps, bool(srcs), no_closure_library)
 
     # If closure_js_library depends on closure_css_library, that means
     # goog.getCssName() is being used in srcs to reference CSS names in the
@@ -405,18 +403,13 @@ def _closure_js_library(ctx):
         srcs = ctx.files.externs + srcs
 
     library = _closure_js_library_impl(
-        ctx.actions,
-        ctx.label,
-        ctx.workspace_name,
+        ctx,
         srcs,
         ctx.attr.deps,
         ctx.attr.testonly,
         ctx.attr.suppress,
         ctx.attr.lenient,
         ctx.attr.convention,
-        ctx.attr._closure_library_base,
-        ctx.executable._ClosureWorker,
-        ctx.files._unusable_type_definition,
         getattr(ctx.attr, "includes", []),
         ctx.attr.exports,
         ctx.files.internal_descriptors,
@@ -430,11 +423,6 @@ def _closure_js_library(ctx):
         ctx.outputs.typecheck,
     )
 
-    closure_library_srcs = []
-    if not ctx.attr.no_closure_library:
-        base = ctx.attr._closure_library_base[0]
-        closure_library_srcs += getattr(base.closure_js_library, "srcs", depset()).to_list()
-
     return struct(
         files = depset(),
         exports = library.exports,
@@ -443,7 +431,6 @@ def _closure_js_library(ctx):
         runfiles = ctx.runfiles(
             files = srcs + ctx.files.data,
             transitive_files = depset(
-                closure_library_srcs,
                 transitive = [
                     collect_runfiles(unfurl(ctx.attr.deps, provider = "closure_js_library")),
                     collect_runfiles(ctx.attr.data),

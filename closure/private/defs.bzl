@@ -80,7 +80,6 @@ def unfurl(deps, provider = ""):
 
 def collect_js(
         deps,
-        closure_library_base = [],
         has_direct_srcs = False,
         no_closure_library = False,
         css = None):
@@ -110,18 +109,11 @@ def collect_js(
         if has_closure_library:
             fail("no_closure_library can't be used when Closure Library is " +
                  "already part of the transitive closure")
-    elif has_direct_srcs and not has_closure_library:
+    elif has_direct_srcs:
         has_closure_library = True
-        if len(closure_library_base) > 0:
-            base = closure_library_base[0].closure_js_library
-            ijs_files += [getattr(base, "ijs_files")]
-            direct_srcs += getattr(base, "srcs").to_list()
 
     if css:
         direct_srcs += [css.closure_css_binary.renaming_map]
-        if len(closure_library_base) > 0:
-            base = closure_library_base[0]
-            direct_srcs += getattr(base, "srcs", depset()).to_list()
 
     return struct(
         srcs = depset(direct_srcs, transitive = srcs),

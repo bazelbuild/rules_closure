@@ -21,16 +21,8 @@ def _closure_base_js_library(ctx):
     if not ctx.files.srcs:
         fail("Must provide sources")
 
-    srcs = ctx.files.srcs
+    return create_closure_js_library(ctx, ctx.files.srcs)
 
-    library = create_closure_js_library(
-        ctx,
-        srcs = srcs,
-    )
-
-    return struct(
-        closure_js_library = library.closure_js_library,
-    )
 
 # Only usable to create a closure js library for base.js
 closure_base_js_library = rule(
@@ -39,9 +31,7 @@ closure_base_js_library = rule(
         "srcs": attr.label_list(allow_files = JS_FILE_TYPE),
         "_ClosureWorker": CLOSURE_WORKER_ATTR,
         # Leave empty to avoid circular dependencies
-        "_closure_library_base": attr.label_list(
-            default = [],
-        ),
+        "_closure_library_base": attr.label_list(default = []),
         "_unusable_type_definition": UNUSABLE_TYPE_DEFINITION,
     },
 )
