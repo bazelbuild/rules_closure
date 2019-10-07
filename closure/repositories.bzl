@@ -738,6 +738,10 @@ def com_google_jsinterop_annotations():
 def com_google_protobuf():
     http_archive(
         name = "com_google_protobuf",
+        patches = [
+            "@io_bazel_rules_closure//closure:protobuf_drop_java_7_compatibility.patch",
+        ],
+        patch_args = ["-p1"],
         strip_prefix = "protobuf-3.10.0",
         sha256 = "758249b537abba2f21ebc2d02555bf080917f0f2f88f4cbe2903e0e28c4187ed",
         urls = [
