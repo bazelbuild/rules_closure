@@ -16,8 +16,8 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # Apache 2.0
 
-load("//closure:defs.bzl", "closure_js_library")
-load("//closure:defs.bzl", "closure_js_proto_library")
+load("@rules_java//java:defs.bzl", "java_library")
+load("//closure:defs.bzl", "closure_js_library", "closure_js_proto_library")
 
 java_library(
     name = "templates",

@@ -15,6 +15,8 @@
 """Utilities for compiling Closure Templates to Java.
 """
 
+load("@rules_java//java:defs.bzl", "java_library")
+
 _SOY_COMPILER_BIN = "@com_google_template_soy//:SoyParseInfoGenerator"
 _SOY_LIBRARY = "@com_google_template_soy//:com_google_template_soy"
 
@@ -77,7 +79,7 @@ def closure_java_template_library(
 
     # Now, wrap them in a Java library, and expose the Soy files as resources.
     java_srcs = outs + extra_outs
-    native.java_library(
+    java_library(
         name = name,
         srcs = java_srcs or None,
         exports = [str(Label(_SOY_LIBRARY))],

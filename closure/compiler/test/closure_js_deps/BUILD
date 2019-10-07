@@ -17,9 +17,7 @@ package(default_testonly = True)
 licenses(["notice"])  # Apache 2.0
 
 load("//closure/private:file_test.bzl", "file_test")
-load("//closure:defs.bzl", "closure_js_binary")
-load("//closure:defs.bzl", "closure_js_deps")
-load("//closure:defs.bzl", "closure_js_library")
+load("//closure:defs.bzl", "closure_js_binary", "closure_js_deps", "closure_js_library")
 
 # This package tests the behavior of closure_js_deps. This package also tests
 # the behavior runfiles with regard to closure_js_library, closure_js_binary,

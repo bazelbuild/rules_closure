@@ -92,6 +92,10 @@ def rules_closure_dependencies(
         omit_org_ow2_asm_tree = False,
         omit_org_ow2_asm_util = False,
         omit_phantomjs = False,
+        omit_rules_cc = False,
+        omit_rules_java = False,
+        omit_rules_proto = False,
+        omit_rules_python = False,
         omit_zlib = False):
     """Imports dependencies for Closure Rules."""
     if omit_com_google_protobuf_java:
@@ -194,6 +198,14 @@ def rules_closure_dependencies(
         org_ow2_asm_util()
     if not omit_phantomjs:
         phantomjs()
+    if not omit_rules_cc:
+        rules_cc()
+    if not omit_rules_java:
+        rules_java()
+    if not omit_rules_proto:
+        rules_proto()
+    if not omit_rules_python:
+        rules_python()
     if not omit_zlib:
         zlib()
 
@@ -726,23 +738,23 @@ def com_google_jsinterop_annotations():
 def com_google_protobuf():
     http_archive(
         name = "com_google_protobuf",
-        strip_prefix = "protobuf-3.9.0",
-        sha256 = "2ee9dcec820352671eb83e081295ba43f7a4157181dad549024d7070d079cf65",
+        strip_prefix = "protobuf-3.10.0",
+        sha256 = "758249b537abba2f21ebc2d02555bf080917f0f2f88f4cbe2903e0e28c4187ed",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.9.0.tar.gz",
-            "https://github.com/protocolbuffers/protobuf/archive/v3.9.0.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.10.0.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.10.0.tar.gz",
         ],
     )
 
 def com_google_protobuf_js():
     http_archive(
         name = "com_google_protobuf_js",
-        strip_prefix = "protobuf-3.9.0/js",
+        strip_prefix = "protobuf-3.10.0/js",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.9.0.tar.gz",
-            "https://github.com/protocolbuffers/protobuf/archive/v3.9.0.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.10.0.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.10.0.tar.gz",
         ],
-        sha256 = "2ee9dcec820352671eb83e081295ba43f7a4157181dad549024d7070d079cf65",
+        sha256 = "758249b537abba2f21ebc2d02555bf080917f0f2f88f4cbe2903e0e28c4187ed",
         build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
     )
 
@@ -1022,10 +1034,42 @@ def phantomjs():
         macos_sha256 = "538cf488219ab27e309eafc629e2bcee9976990fe90b1ec334f541779150f8c1",
     )
 
+def rules_cc():
+    http_archive(
+        name = "rules_cc",
+        sha256 = "29daf0159f0cf552fcff60b49d8bcd4f08f08506d2da6e41b07058ec50cfeaec",
+        strip_prefix = "rules_cc-b7fe9697c0c76ab2fd431a891dbb9a6a32ed7c3e",
+        urls = ["https://github.com/bazelbuild/rules_cc/archive/b7fe9697c0c76ab2fd431a891dbb9a6a32ed7c3e.tar.gz"],
+    )
+
+def rules_java():
+    http_archive(
+        name = "rules_java",
+        sha256 = "f5a3e477e579231fca27bf202bb0e8fbe4fc6339d63b38ccb87c2760b533d1c3",
+        strip_prefix = "rules_java-981f06c3d2bd10225e85209904090eb7b5fb26bd",
+        urls = ["https://github.com/bazelbuild/rules_java/archive/981f06c3d2bd10225e85209904090eb7b5fb26bd.tar.gz"],
+    )
+
+def rules_proto():
+    http_archive(
+        name = "rules_proto",
+        sha256 = "602e7161d9195e50246177e7c55b2f39950a9cf7366f74ed5f22fd45750cd208",
+        strip_prefix = "rules_proto-97d8af4dc474595af3900dd85cb3a29ad28cc313",
+        urls = ["https://github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz"],
+    )
+
+def rules_python():
+    http_archive(
+        name = "rules_python",
+        sha256 = "e5470e92a18aa51830db99a4d9c492cc613761d5bdb7131c04bd92b9834380f6",
+        strip_prefix = "rules_python-4b84ad270387a7c439ebdccfd530e2339601ef27",
+        urls = ["https://github.com/bazelbuild/rules_python/archive/4b84ad270387a7c439ebdccfd530e2339601ef27.tar.gz"],
+    )
+
 def zlib():
     http_archive(
         name = "zlib",
-        build_file = "@io_bazel_rules_closure//:third_party/zlib.BUILD",
+        build_file = "@com_google_protobuf//:third_party/zlib.BUILD",
         sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
         strip_prefix = "zlib-1.2.11",
         urls = ["https://zlib.net/zlib-1.2.11.tar.gz"],
