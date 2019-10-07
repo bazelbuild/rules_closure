@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("//closure/compiler:closure_base_js_library.bzl", "closure_base_js_library")
+
 package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # Apache 2.0
 
 exports_files(["unusable_type.js"])
-
-load("//closure/compiler:closure_base_js_library.bzl", "closure_base_js_library")
 
 sh_binary(
     name = "gensrcjar",

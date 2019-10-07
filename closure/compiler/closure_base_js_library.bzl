@@ -1,4 +1,4 @@
-# Copyright 2016 The Closure Rules Authors. All rights reserved.
+# Copyright 2019 The Closure Rules Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ def _closure_base_js_library(ctx):
         fail("Must provide sources")
 
     return create_closure_js_library(ctx, ctx.files.srcs)
-
 
 # Only usable to create a closure js library for base.js
 closure_base_js_library = rule(
