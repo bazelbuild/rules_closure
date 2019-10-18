@@ -70,7 +70,8 @@ abstract class CheckStrictDeps
       Node parameter = n.getLastChild();
       if (parameter.isString()
           && (callee.matchesQualifiedName("goog.provide")
-              || callee.matchesQualifiedName("goog.module"))) {
+              || callee.matchesQualifiedName("goog.module")
+              || callee.matchesQualifiedName("goog.declareModuleId"))) {
         String namespace = JsCheckerHelper.normalizeClosureNamespace(parameter.getString());
         if (!state.mysterySources.contains(t.getSourceName())) {
           if (!state.provides.add(namespace)) {
@@ -80,8 +81,14 @@ abstract class CheckStrictDeps
               && state.redeclaredProvides.add(namespace)) {
             t.report(parameter, REDECLARED_PROVIDES, state.label);
           }
-          // Since this file uses Google namespaces, it can no longer be loaded as an ES6 module.
-          state.provides.removeAll(convertPathToModuleName(t.getSourceName(), state.roots).asSet());
+          if (!callee.matchesQualifiedName("goog.declareModuleId")) {
+            // This file uses `goog.{provide,module}`, so it can no longer be an ES6 module.
+            // For migration, ES6 modules can call `goog.declareModuleId` to allow them to be
+            // imported by `goog.require` (if they are `goog.module`s).
+            // https://github.com/google/closure-compiler/wiki/Migrating-from-goog.modules-to-ES6-modules
+            state.provides.removeAll(
+                convertPathToModuleName(t.getSourceName(), state.roots).asSet());
+          }
         } else {
           state.provided.add(namespace);
           state.provided.removeAll(convertPathToModuleName(t.getSourceName(), state.roots).asSet());
