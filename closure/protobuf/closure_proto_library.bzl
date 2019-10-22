@@ -15,6 +15,7 @@
 """Utilities for building JavaScript Protocol Buffers.
 """
 
+load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 load("//closure/compiler:closure_js_library.bzl", "create_closure_js_library")
 load("//closure/private:defs.bzl", "CLOSURE_JS_TOOLCHAIN_ATTRS", "unfurl")
 

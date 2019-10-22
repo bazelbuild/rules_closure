@@ -82,11 +82,11 @@ final class JsCompilerWarnings extends WarningsGuard {
     }
 
     // Some errors are independent of code, e.g. flag misuse.
-    if (error.sourceName == null) {
+    if (error.getSourceName() == null) {
       return CheckLevel.ERROR;
     }
 
-    for (String module : convertPathToModuleName(error.sourceName, roots).asSet()) {
+    for (String module : convertPathToModuleName(error.getSourceName(), roots).asSet()) {
       if (legacyModules.contains(module)) {
         // Ignore it entirely if it's very noisy.
         if (Diagnostics.IGNORE_FOR_LEGACY.contains(error.getType())) {
