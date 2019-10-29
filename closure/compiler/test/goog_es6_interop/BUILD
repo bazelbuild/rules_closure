@@ -31,7 +31,8 @@ closure_js_library(
     srcs = [
         "person_factory.js",
     ],
-    # This is an existing bug in `JsChecker`, `JsCompiler` works fine.
+    # TODO(yannic): Remove this suppression when
+    #     `bazelbuild/rules_closure#436` is fixed.
     suppress = ["moduleLoad"],
     deps = [
         ":person",
