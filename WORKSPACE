@@ -1,7 +1,7 @@
 workspace(name = "io_bazel_rules_closure")
 
+load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("//closure/private:java_import_external.bzl", "java_import_external")
 
 load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
 rules_closure_dependencies()
