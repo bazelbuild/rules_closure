@@ -75,7 +75,6 @@ final class Diagnostics {
   private static final ImmutableSet<String> LEGAL_JSDOC_SUPPRESSIONS =
       ImmutableSet.of(
           "accessControls",
-          "ambiguousFunctionDecl",
           "checkDebuggerStatement",
           "checkRegExp",
           "checkTypes",
