@@ -101,8 +101,6 @@ final class Diagnostics {
           "missingProvide",
           "missingRequire",
           "missingReturn",
-          "newCheckTypes",
-          "newCheckTypesAllChecks",
           "nonStandardJsDocs",
           "reportUnknownTypes",
           "strictModuleDepCheck",
