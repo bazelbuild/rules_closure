@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -11,6 +12,9 @@ closure_js_library(
     exports = [
         ":defines",
         ":full",
+        ":full_impl",
+        ":full_native_impl",
+        ":full_types",
         ":lite",
         ":lite_impl",
         ":lite_native_impl",
@@ -29,11 +33,40 @@ closure_js_library(
     srcs = ["@com_google_javascript_closure_library//:closure/goog/streams/full.js"],
     lenient = True,
     deps = [
+        "//closure/library/streams:defines",
+        "//closure/library/streams:full_impl",
+        "//closure/library/streams:full_native_impl",
+        "//closure/library/streams:full_types",
+    ],
+)
+
+closure_js_library(
+    name = "full_impl",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/streams/full_impl.js"],
+    lenient = True,
+    deps = [
         "//closure/library/asserts",
         "//closure/library/promise:nativeresolver",
+        "//closure/library/streams:full_types",
         "//closure/library/streams:lite_impl",
-        "//closure/library/streams:lite_types",
     ],
+)
+
+closure_js_library(
+    name = "full_native_impl",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/streams/full_native_impl.js"],
+    lenient = True,
+    deps = [
+        "//closure/library/streams:full_types",
+        "//closure/library/streams:lite_native_impl",
+    ],
+)
+
+closure_js_library(
+    name = "full_types",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/streams/full_types.js"],
+    lenient = True,
+    deps = ["//closure/library/streams:lite_types"],
 )
 
 closure_js_library(

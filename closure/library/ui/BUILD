@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -1275,6 +1276,7 @@ closure_js_library(
         "//closure/library/events:keycodes",
         "//closure/library/events:keyhandler",
         "//closure/library/math:box",
+        "//closure/library/math:coordinate",
         "//closure/library/math:rect",
         "//closure/library/positioning",
         "//closure/library/positioning:menuanchoredposition",
@@ -1288,6 +1290,7 @@ closure_js_library(
         "//closure/library/ui:menuitem",
         "//closure/library/ui:menurenderer",
         "//closure/library/ui:registry",
+        "//closure/library/ui:submenu",
         "//closure/library/useragent",
         "//closure/library/useragent:product",
     ],
@@ -1589,7 +1592,7 @@ closure_js_library(
     deps = [
         "//closure/library/events:eventtype",
         "//closure/library/positioning",
-        "//closure/library/positioning:anchoredposition",
+        "//closure/library/positioning:anchoredviewportposition",
         "//closure/library/style",
         "//closure/library/ui:component",
         "//closure/library/ui:datepicker",

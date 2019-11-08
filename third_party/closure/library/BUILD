@@ -4,16 +4,12 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
     name = "all_js",
-    exports = [
-        "//third_party/closure/library/dojo/dom:all_js",
-        "//third_party/closure/library/loremipsum/text:all_js",
-        "//third_party/closure/library/mochikit/async:all_js",
-        "//third_party/closure/library/svgpan:all_js",
-    ],
+    exports = ["//third_party/closure/library/mochikit/async:all_js"],
 )
 
 closure_js_library(
