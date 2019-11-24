@@ -33,6 +33,19 @@ load(
     "closure_js_aspect",
 )
 
+def _warn_for_dependency_mode(old_mode, new_mode):
+    print(("dependency_mode=%s is deprecated and will be removed soon; " +
+          "prefer to use its equivalent %s") % (old_mode, new_mode))
+
+def _get_dependency_mode_flag(attr):
+    if attr == "LOOSE":
+        _warn_for_dependency_mode("LOOSE", "PRUNE_LEGACY")
+        return "PRUNE_LEGACY"
+    if attr == "STRICT":
+        _warn_for_dependency_mode("STRICT", "PRUNE")
+        return "PRUNE"
+    return attr
+
 def _impl(ctx):
     if not ctx.attr.deps:
         fail("closure_js_binary rules can not have an empty 'deps' list")
@@ -78,7 +91,7 @@ def _impl(ctx):
         "--compilation_level",
         ctx.attr.compilation_level,
         "--dependency_mode",
-        ctx.attr.dependency_mode,
+        _get_dependency_mode_flag(ctx.attr.dependency_mode),
         "--warning_level",
         ctx.attr.warning_level,
         "--generate_exports",
@@ -284,7 +297,18 @@ closure_js_binary = rule(
         "css": attr.label(providers = ["closure_css_binary"]),
         "debug": attr.bool(default = False),
         "defs": attr.string_list(),
-        "dependency_mode": attr.string(default = "LOOSE"),
+        # TODO(tjgq): Remove the deprecated STRICT/LOOSE in favor of PRUNE/PRUNE_LEGACY.
+        "dependency_mode": attr.string(
+            default = "LOOSE",
+            values = [
+                "NONE",
+                "SORT_ONLY",
+                "LOOSE",
+                "STRICT",
+                "PRUNE",
+                "PRUNE_LEGACY",
+            ],
+        ),
         "deps": attr.label_list(
             aspects = [closure_js_aspect],
             providers = ["closure_js_library"],
