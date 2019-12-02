@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -145,7 +146,10 @@ closure_js_library(
     name = "cookies",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/net/cookies.js"],
     lenient = True,
-    deps = ["//closure/library/string"],
+    deps = [
+        "//closure/library/asserts",
+        "//closure/library/string",
+    ],
 )
 
 closure_js_library(
