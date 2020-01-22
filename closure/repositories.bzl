@@ -675,7 +675,7 @@ def com_google_java_format():
     )
 
 def com_google_javascript_closure_compiler():
-    version = "v20191027"
+    version = "v20200112"
     jar = "closure-compiler-unshaded-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
