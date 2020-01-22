@@ -60,8 +60,7 @@ final class Diagnostics {
           "strictMissingRequire",
           "strictModuleChecks",
           "superfluousSuppress",
-          "underscore",
-          "useOfGoogBase");
+          "underscore");
 
   /** Diagnostic groups both {@link JsChecker} and {@link JsCompiler} will check. */
   static final ImmutableSet<String> JSCHECKER_EXTRA_ERRORS =
