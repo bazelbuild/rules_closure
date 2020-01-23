@@ -26,6 +26,7 @@ closure_js_library(
         "lintChecks",
         "reportUnknownTypes",
         "strictCheckTypes",
+        "deprecated",
     ],
     deps = [
         "//closure/library/array",

@@ -1,0 +1,3 @@
+# Matches the codeowners of bazelbuild/rules_nodejs
+# Eventually we hope to reconcile the two repositories
+* @alexeagle @soldair @gregmagolan

@@ -74,44 +74,44 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "io_bazel_rules_closure",
-    sha256 = "a80acb69c63d5f6437b099c111480a4493bad4592015af2127a2f49fb7512d8d",
-    strip_prefix = "rules_closure-0.7.0",
+    sha256 = "7d206c2383811f378a5ef03f4aacbcf5f47fd8650f6abbc3fa89f3a27dd8b176",
+    strip_prefix = "rules_closure-0.10.0",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_closure/archive/0.7.0.tar.gz",
-        "https://github.com/bazelbuild/rules_closure/archive/0.7.0.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_closure/archive/0.10.0.tar.gz",
+        "https://github.com/bazelbuild/rules_closure/archive/0.10.0.tar.gz",
     ],
 )
 
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_repositories")
-
-closure_repositories()
+load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
+rules_closure_dependencies()
+rules_closure_toolchains()
 ```
 
 You are not required to install the Closure Tools, PhantomJS, or anything else
 for that matter; they will be fetched automatically by Bazel.
 
+> :bangbang: Release 0.10.x will be the last to support loading dependencies though
+> `closure_repositories()`.
+
 ### Overriding Dependency Versions
 
-When you call `closure_repositories()` in your `WORKSPACE` file, it causes a
+When you call `rules_closure_dependencies()` in your `WORKSPACE` file, it causes a
 few dozen external dependencies to be added to your project, e.g. Guava, Guice,
 JSR305, etc. You might need to customize this behavior.
 
 To override the version of any dependency, modify your `WORKSPACE` file to pass
-`omit_<dependency_name>=True` to `closure_repositories()`. Next define your
+`omit_<dependency_name>=True` to `rules_closure_dependencies()`. Next define your
 custom dependency version. A full list of dependencies is available from
 [repositories.bzl]. For example, to override the version of Guava:
 
 ```python
-load(
-    "@io_bazel_rules_closure//closure:defs.bzl",
-    "closure_repositories",
-    "java_import_external",
-)
-
-closure_repositories(
+load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
+rules_closure_dependencies(
     omit_com_google_guava=True,
 )
+rules_closure_toolchains()
 
+load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 java_import_external(
     name = "com_google_guava",
     licenses = ["notice"],  # Apache 2.0
