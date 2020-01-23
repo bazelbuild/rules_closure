@@ -89,7 +89,6 @@ closure_js_library(
         "//closure/library/storage/mechanism:iterablemechanismtester",
         "//closure/library/storage/mechanism:mechanismseparationtester",
         "//closure/library/storage/mechanism:mechanismsharingtester",
-        "//closure/library/storage/mechanism:mechanismtestdefinition",
         "//closure/library/storage/mechanism:mechanismtester",
         "//closure/library/style:stylescrollbartester",
         "//closure/library/testing:assertionfailure",
