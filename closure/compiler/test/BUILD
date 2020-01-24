@@ -22,6 +22,7 @@ load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
 closure_js_library(
     name = "hello_lib",
     srcs = ["hello.js"],
+    no_closure_library = True,
 )
 
 closure_js_binary(
