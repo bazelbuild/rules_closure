@@ -158,7 +158,10 @@ def collect_runfiles(targets):
         if hasattr(target, "data_runfiles"):
             data.append(target.data_runfiles.files)
         if hasattr(target, "default_runfiles"):
-            data.append(target.default_runfiles.files)
+            data += target.default_runfiles.files
+        if hasattr(target, "closure_js_aspect") and hasattr(target, "typescript"):
+            if hasattr(target.typescript, "transitive_es6_sources"):
+                data += target.typescript.transitive_es6_sources
     return depset(transitive = data)
 
 def find_js_module_roots(srcs, workspace_name, label, includes):

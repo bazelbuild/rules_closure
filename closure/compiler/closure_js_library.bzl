@@ -386,12 +386,12 @@ def _closure_js_library_impl(
     )
 
 def _closure_js_library(ctx):
-    if not ctx.files.srcs and not ctx.files.externs and not ctx.attr.exports:
-        fail("Either 'srcs' or 'exports' must be specified")
+    if not ctx.files.srcs and not ctx.files.externs and not ctx.attr.exports and not ctx.attr.ts_lib:
+        fail("Either 'srcs', 'exports', or 'ts_lib' must be specified")
     if not ctx.files.srcs and ctx.attr.deps:
         fail("'srcs' must be set when using 'deps', otherwise consider 'exports'")
-    if not ctx.files.srcs and (ctx.attr.suppress or ctx.attr.lenient):
-        fail("'srcs' must be set when using 'suppress' or 'lenient'")
+    if not (ctx.files.srcs or ctx.attr.ts_lib) and (ctx.attr.suppress or ctx.attr.lenient):
+        fail("Either 'srcs' or 'ts_lib' must be set when using 'suppress' or 'lenient'")
     if ctx.attr.language:
         print("The closure_js_library 'language' attribute is now removed and " +
               "is always set to " + JS_LANGUAGE_IN)
@@ -402,12 +402,24 @@ def _closure_js_library(ctx):
         print("closure_js_library 'externs' is deprecated; just use 'srcs'")
         srcs = ctx.files.externs + srcs
 
+    deps = ctx.attr.deps
+    suppress = ctx.attr.suppress
+
+    # Wrapper around a ts_library. It's  like creating a closure_js_library with 
+    # the runtime_deps of the ts_library, and the srcs are the tsickle outputs from 
+    # the ts_library.
+    if ctx.attr.ts_lib:
+        srcs = srcs + ctx.attr.ts_lib.typescript.transitive_es6_sources.to_list()
+        # Note that we need to modify deps before calling unfurl below for exports to work.
+        deps = deps + ctx.attr.ts_lib.typescript.runtime_deps.to_list()
+        suppress = suppress + ["checkTypes", "strictCheckTypes", "reportUnknownTypes", "analyzerChecks", "JSC_EXTRA_REQUIRE_WARNING"]
+
     library = _closure_js_library_impl(
         ctx,
         srcs,
-        ctx.attr.deps,
+        deps,
         ctx.attr.testonly,
-        ctx.attr.suppress,
+        suppress,
         ctx.attr.lenient,
         ctx.attr.convention,
         getattr(ctx.attr, "includes", []),
@@ -430,13 +442,14 @@ def _closure_js_library(ctx):
         # The usual suspects are exported as runfiles, in addition to raw source.
         runfiles = ctx.runfiles(
             files = srcs + ctx.files.data,
-            transitive_files = depset(
-                transitive = [
-                    collect_runfiles(unfurl(ctx.attr.deps, provider = "closure_js_library")),
-                    collect_runfiles(ctx.attr.data),
-                    collect_runfiles(library.exports),
-                ],
-            ),
+            transitive_files = (depset([] if ctx.attr.no_closure_library else ctx.files._closure_library_base) |
+                                collect_runfiles(
+                                    unfurl(
+                                        deps+ctx.attr.exports,
+                                        provider = "closure_js_library",
+                                    ),
+                                ) |
+                                collect_runfiles(ctx.attr.data)),
         ),
     )
 
@@ -462,6 +475,9 @@ closure_js_library = rule(
         "srcs": attr.label_list(allow_files = JS_FILE_TYPE),
         "suppress": attr.string_list(),
         "lenient": attr.bool(),
+        "ts_lib": attr.label(
+            providers = ["typescript"],
+        ),
 
         # deprecated
         "externs": attr.label_list(allow_files = JS_FILE_TYPE),
