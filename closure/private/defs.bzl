@@ -28,12 +28,21 @@ JS_LANGUAGES = depset([
     "ECMASCRIPT3",
     "ECMASCRIPT5",
     "ECMASCRIPT5_STRICT",
+    "ECMASCRIPT6",
+    "ECMASCRIPT6_STRICT",
+    "ECMASCRIPT6_TYPED",
     "ECMASCRIPT_2015",
+    "ECMASCRIPT_2016",
+    "ECMASCRIPT_2017",
+    "ECMASCRIPT_2018",
+    "ECMASCRIPT_2019",
+    "ECMASCRIPT_NEXT",
+    "STABLE",
+    "NO_TRANSPILE",
 ])
 
-CLOSURE_LIBRARY_BASE_ATTR = attr.label(
-    default = Label("//closure/library:base"),
-    allow_files = True,
+CLOSURE_LIBRARY_BASE_ATTR = attr.label_list(
+    default = [Label("//closure/private:base_lib")],
 )
 
 CLOSURE_WORKER_ATTR = attr.label(
@@ -42,9 +51,16 @@ CLOSURE_WORKER_ATTR = attr.label(
     cfg = "host",
 )
 
+# Necessary for checking ijs files
+UNUSABLE_TYPE_DEFINITION = attr.label(
+    default = Label("//closure/private:unusable_type.js"),
+    allow_single_file = True,
+)
+
 CLOSURE_JS_TOOLCHAIN_ATTRS = {
     "_closure_library_base": CLOSURE_LIBRARY_BASE_ATTR,
     "_ClosureWorker": CLOSURE_WORKER_ATTR,
+    "_unusable_type_definition": UNUSABLE_TYPE_DEFINITION,
 }
 
 def get_jsfile_path(f):
@@ -64,7 +80,6 @@ def unfurl(deps, provider = ""):
 
 def collect_js(
         deps,
-        closure_library_base = None,
         has_direct_srcs = False,
         no_closure_library = False,
         css = None):
@@ -94,11 +109,11 @@ def collect_js(
         if has_closure_library:
             fail("no_closure_library can't be used when Closure Library is " +
                  "already part of the transitive closure")
-    elif has_direct_srcs and not has_closure_library:
-        direct_srcs += closure_library_base
+    elif has_direct_srcs:
         has_closure_library = True
+
     if css:
-        direct_srcs += closure_library_base + [css.closure_css_binary.renaming_map]
+        direct_srcs += [css.closure_css_binary.renaming_map]
 
     return struct(
         srcs = depset(direct_srcs, transitive = srcs),
@@ -244,6 +259,7 @@ def library_level_checks(
         srcs,
         executable,
         output,
+        unusable_type_definition,
         suppress = [],
         internal_expect_failure = False):
     args = [
@@ -261,7 +277,7 @@ def library_level_checks(
         output.path,
     ]
     inputs = []
-    for f in ijs_deps.to_list():
+    for f in ijs_deps.to_list() + unusable_type_definition:
         args.append("--externs=%s" % f.path)
         inputs.append(f)
 

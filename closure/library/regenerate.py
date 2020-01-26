@@ -241,6 +241,10 @@ def main(basejs, outdir):
     else:
       builds[build].insert(
           0, 'load("//closure:defs.bzl", "closure_js_library")')
+
+    builds[build].insert(
+        0, 'load("@rules_python//python:defs.bzl", "py_binary")')
+
     builds[build].insert(0, 'licenses(["notice"])')
     builds[build].insert(
         0, 'package(default_visibility = ["//visibility:public"])')

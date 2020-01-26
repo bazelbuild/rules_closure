@@ -75,7 +75,6 @@ final class Diagnostics {
   private static final ImmutableSet<String> LEGAL_JSDOC_SUPPRESSIONS =
       ImmutableSet.of(
           "accessControls",
-          "ambiguousFunctionDecl",
           "checkDebuggerStatement",
           "checkRegExp",
           "checkTypes",
@@ -88,7 +87,6 @@ final class Diagnostics {
           "es5Strict",
           "externsValidation",
           "extraRequire",
-          "fileoverviewTags",
           "globalThis",
           "invalidCasts",
           "lateProvide",
@@ -101,8 +99,6 @@ final class Diagnostics {
           "missingProvide",
           "missingRequire",
           "missingReturn",
-          "newCheckTypes",
-          "newCheckTypesAllChecks",
           "nonStandardJsDocs",
           "reportUnknownTypes",
           "strictModuleDepCheck",

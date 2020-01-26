@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -71,6 +72,7 @@ closure_js_library(
         ":imagelessmenubuttonrenderer",
         ":inputdatepicker",
         ":itemevent",
+        ":keyboardeventdata",
         ":keyboardshortcuthandler",
         ":labelinput",
         ":linkbuttonrenderer",
@@ -120,6 +122,7 @@ closure_js_library(
         ":splitpane",
         ":submenu",
         ":submenurenderer",
+        ":synthetickeyboardevent",
         ":tab",
         ":tabbar",
         ":tabbarrenderer",
@@ -794,6 +797,7 @@ closure_js_library(
         "//closure/library/events:event",
         "//closure/library/events:eventtype",
         "//closure/library/events:keycodes",
+        "//closure/library/events:keys",
         "//closure/library/fx:dragger",
         "//closure/library/html:safehtml",
         "//closure/library/math:rect",
@@ -1135,6 +1139,16 @@ closure_js_library(
 )
 
 closure_js_library(
+    name = "keyboardeventdata",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/ui/keyboardeventdata.js"],
+    lenient = True,
+    deps = [
+        "//closure/library/asserts",
+        "//closure/library/events:browserevent",
+    ],
+)
+
+closure_js_library(
     name = "keyboardshortcuthandler",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/ui/keyboardshortcuthandler.js"],
     lenient = True,
@@ -1150,6 +1164,8 @@ closure_js_library(
         "//closure/library/events:keynames",
         "//closure/library/events:keys",
         "//closure/library/object",
+        "//closure/library/ui:keyboardeventdata",
+        "//closure/library/ui:synthetickeyboardevent",
         "//closure/library/useragent",
     ],
 )
@@ -1260,6 +1276,7 @@ closure_js_library(
         "//closure/library/events:keycodes",
         "//closure/library/events:keyhandler",
         "//closure/library/math:box",
+        "//closure/library/math:coordinate",
         "//closure/library/math:rect",
         "//closure/library/positioning",
         "//closure/library/positioning:menuanchoredposition",
@@ -1273,6 +1290,7 @@ closure_js_library(
         "//closure/library/ui:menuitem",
         "//closure/library/ui:menurenderer",
         "//closure/library/ui:registry",
+        "//closure/library/ui:submenu",
         "//closure/library/useragent",
         "//closure/library/useragent:product",
     ],
@@ -1485,6 +1503,7 @@ closure_js_library(
         "//closure/library/asserts",
         "//closure/library/dom",
         "//closure/library/dom:classlist",
+        "//closure/library/dom:dataset",
         "//closure/library/dom:nodeiterator",
         "//closure/library/dom:nodetype",
         "//closure/library/dom:tagname",
@@ -1573,7 +1592,7 @@ closure_js_library(
     deps = [
         "//closure/library/events:eventtype",
         "//closure/library/positioning",
-        "//closure/library/positioning:anchoredposition",
+        "//closure/library/positioning:anchoredviewportposition",
         "//closure/library/style",
         "//closure/library/ui:component",
         "//closure/library/ui:datepicker",
@@ -1930,6 +1949,16 @@ closure_js_library(
         "//closure/library/style",
         "//closure/library/ui:menu",
         "//closure/library/ui:menuitemrenderer",
+    ],
+)
+
+closure_js_library(
+    name = "synthetickeyboardevent",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/ui/synthetickeyboardevent.js"],
+    lenient = True,
+    deps = [
+        "//closure/library/events:event",
+        "//closure/library/ui:keyboardeventdata",
     ],
 )
 

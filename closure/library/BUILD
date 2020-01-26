@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_css_library")
 load("//closure:defs.bzl", "closure_js_library")
 
@@ -14,6 +15,7 @@ closure_js_library(
         "//closure/library/array:all_js",
         "//closure/library/asserts:all_js",
         "//closure/library/async:all_js",
+        "//closure/library/collections:all_js",
         "//closure/library/color:all_js",
         "//closure/library/crypt:all_js",
         "//closure/library/cssom:all_js",
@@ -56,6 +58,7 @@ closure_js_library(
         "//closure/library/spell:all_js",
         "//closure/library/stats:all_js",
         "//closure/library/storage:all_js",
+        "//closure/library/streams:all_js",
         "//closure/library/string:all_js",
         "//closure/library/structs:all_js",
         "//closure/library/style:all_js",
@@ -159,6 +162,13 @@ closure_js_library(
         "//closure/library/tweak:testhelpers",
         "//closure/library/useragent:useragenttestutil",
     ],
+)
+
+closure_js_library(
+    name = "goog",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/goog.js"],
+    lenient = True,
+    no_closure_library = True,
 )
 
 closure_js_library(

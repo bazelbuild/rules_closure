@@ -14,6 +14,8 @@
 
 licenses(["notice"])  # Apache 2.0
 
+load("@rules_java//java:defs.bzl", "java_test")
+
 java_test(
     name = "ServerTestSuite",
     size = "small",
@@ -31,6 +33,6 @@ java_test(
         "@com_google_jimfs",
         "@com_google_truth",
         "@junit",
-        "@org_mockito_all",
+        "@org_mockito_core",
     ],
 )

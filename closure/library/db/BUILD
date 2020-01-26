@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -99,7 +100,6 @@ closure_js_library(
         "//closure/library/db:index",
         "//closure/library/db:keyrange",
         "//closure/library/debug",
-        "//closure/library/events",
         "//third_party/closure/library/mochikit/async:deferred",
     ],
 )

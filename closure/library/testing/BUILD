@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -201,7 +202,9 @@ closure_js_library(
     lenient = True,
     deps = [
         "//closure/library/array",
+        "//closure/library/asserts",
         "//closure/library/structs:map",
+        "//closure/library/structs:set",
         "//closure/library/testing:mock",
     ],
 )
@@ -213,7 +216,10 @@ closure_js_library(
     lenient = True,
     deps = [
         "//closure/library/array",
+        "//closure/library/asserts",
         "//closure/library/object",
+        "//closure/library/promise",
+        "//closure/library/promise:resolver",
         "//closure/library/testing:jsunitexception",
         "//closure/library/testing:mockinterface",
         "//closure/library/testing:mockmatchers",
@@ -257,6 +263,7 @@ closure_js_library(
     lenient = True,
     deps = [
         "//closure/library/array",
+        "//closure/library/promise",
         "//closure/library/testing:functionmock",
         "//closure/library/testing:loosemock",
         "//closure/library/testing:strictmock",
@@ -268,6 +275,7 @@ closure_js_library(
     testonly = True,
     srcs = ["@com_google_javascript_closure_library//:closure/goog/testing/mockinterface.js"],
     lenient = True,
+    deps = ["//closure/library/promise"],
 )
 
 closure_js_library(
@@ -384,7 +392,6 @@ closure_js_library(
     lenient = True,
     deps = [
         "//closure/library/asserts",
-        "//closure/library/testing:objectpropertystring",
         "//closure/library/useragent",
     ],
 )
@@ -402,7 +409,11 @@ closure_js_library(
     testonly = True,
     srcs = ["@com_google_javascript_closure_library//:closure/goog/testing/recordfunction.js"],
     lenient = True,
-    deps = ["//closure/library/testing:asserts"],
+    deps = [
+        "//closure/library/promise",
+        "//closure/library/promise:resolver",
+        "//closure/library/testing:asserts",
+    ],
 )
 
 closure_js_library(
@@ -437,6 +448,8 @@ closure_js_library(
     lenient = True,
     deps = [
         "//closure/library/array",
+        "//closure/library/asserts",
+        "//closure/library/structs:set",
         "//closure/library/testing:mock",
     ],
 )

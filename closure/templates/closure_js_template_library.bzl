@@ -18,6 +18,7 @@
 load("//closure/compiler:closure_js_aspect.bzl", "closure_js_aspect")
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 load("//closure/private:defs.bzl", "SOY_FILE_TYPE", "unfurl")
+load("//closure/templates:closure_templates_plugin.bzl", "SoyPluginInfo")
 
 _SOYTOJSSRCCOMPILER = "@com_google_template_soy//:SoyToJsSrcCompiler"
 
@@ -30,8 +31,15 @@ def _impl(ctx):
         args += ["--shouldGenerateGoogMsgDefs"]
     if ctx.attr.bidi_global_dir:
         args += ["--bidiGlobalDir=%s" % ctx.attr.bidi_global_dir]
-    if ctx.attr.plugin_modules:
-        args += ["--pluginModules=%s" % ",".join(ctx.attr.plugin_modules)]
+    if ctx.attr.plugins:
+        args += ["--pluginModules=%s" % ",".join([
+            m[SoyPluginInfo].generator.module
+            for m in ctx.attr.plugins
+        ])]
+    for arg in ctx.attr.defs:
+        if not arg.startswith("--") or (" " in arg and "=" not in arg):
+            fail("Please use --flag=value syntax for defs")
+        args += [arg]
     inputs = []
     for f in ctx.files.srcs:
         args.append("--srcs=" + f.path)
@@ -43,6 +51,16 @@ def _impl(ctx):
         for f in dep.closure_js_library.descriptors.to_list():
             args += ["--protoFileDescriptors=%s" % f.path]
             inputs.append(f)
+
+    plugin_transitive_deps = depset(
+        transitive = [m[SoyPluginInfo].generator.runtime.transitive_runtime_deps for m in ctx.attr.plugins],
+    ).to_list()
+    inputs.extend(plugin_transitive_deps)
+    plugin_classpath = [dep.path for dep in plugin_transitive_deps]
+    if len(plugin_classpath) > 0:
+        args.insert(0, "--main_advice_classpath=" +
+                       ctx.configuration.host_path_separator.join(plugin_classpath))
+
     ctx.actions.run(
         inputs = inputs,
         outputs = ctx.outputs.outputs,
@@ -65,12 +83,14 @@ _closure_js_template_library = rule(
         ),
         "outputs": attr.output_list(),
         "globals": attr.label(allow_single_file = True),
-        "plugin_modules": attr.label_list(),
-        "should_provide_require_soy_namespaces": attr.bool(default = True),
+        "plugins": attr.label_list(
+            providers = [SoyPluginInfo],
+        ),
         "should_generate_soy_msg_defs": attr.bool(),
         "bidi_global_dir": attr.int(default = 1, values = [1, -1]),
         "soy_msgs_are_external": attr.bool(),
         "compiler": attr.label(cfg = "host", executable = True, mandatory = True),
+        "defs": attr.string_list(),
     },
 )
 
@@ -81,11 +101,11 @@ def closure_js_template_library(
         suppress = [],
         testonly = None,
         globals = None,
-        plugin_modules = None,
-        should_provide_require_soy_namespaces = None,
+        plugins = None,
         should_generate_soy_msg_defs = None,
         bidi_global_dir = None,
         soy_msgs_are_external = None,
+        defs = [],
         **kwargs):
     compiler = str(Label(_SOYTOJSSRCCOMPILER))
     js_srcs = [src + ".js" for src in srcs]
@@ -97,12 +117,12 @@ def closure_js_template_library(
         testonly = testonly,
         visibility = ["//visibility:private"],
         globals = globals,
-        plugin_modules = plugin_modules,
-        should_provide_require_soy_namespaces = should_provide_require_soy_namespaces,
+        plugins = plugins,
         should_generate_soy_msg_defs = should_generate_soy_msg_defs,
         bidi_global_dir = bidi_global_dir,
         soy_msgs_are_external = soy_msgs_are_external,
         compiler = compiler,
+        defs = defs,
     )
 
     deps = deps + [
@@ -135,6 +155,7 @@ def closure_js_template_library(
         testonly = testonly,
         suppress = suppress + [
             "analyzerChecks",
+            "deprecated",
             "reportUnknownTypes",
             "strictCheckTypes",
             "unusedLocalVariables",

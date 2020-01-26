@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -94,11 +95,15 @@ closure_js_library(
     lenient = True,
     deps = [
         "//closure/library/array",
+        "//closure/library/asserts",
+        "//closure/library/dom",
+        "//closure/library/dom:safe",
         "//closure/library/events",
         "//closure/library/events:event",
         "//closure/library/events:eventhandler",
         "//closure/library/events:eventid",
         "//closure/library/events:eventtarget",
+        "//closure/library/functions",
         "//closure/library/html:trustedresourceurl",
         "//closure/library/labs/useragent:browser",
         "//closure/library/log",
@@ -121,6 +126,7 @@ closure_js_library(
         "//closure/library/asserts",
         "//closure/library/debug:tracer",
         "//closure/library/disposable",
+        "//closure/library/disposable:idisposable",
         "//closure/library/loader:abstractmodulemanager",
         "//closure/library/loader:activemodulemanager",
         "//closure/library/log",

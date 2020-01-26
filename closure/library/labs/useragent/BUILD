@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -12,6 +13,7 @@ closure_js_library(
         ":browser",
         ":device",
         ":engine",
+        ":extra",
         ":platform",
         ":util",
         ":verifier",
@@ -26,7 +28,7 @@ closure_js_library(
         "//closure/library/array",
         "//closure/library/labs/useragent:util",
         "//closure/library/object",
-        "//closure/library/string",
+        "//closure/library/string:internal",
     ],
 )
 
@@ -45,6 +47,16 @@ closure_js_library(
         "//closure/library/array",
         "//closure/library/labs/useragent:util",
         "//closure/library/string",
+    ],
+)
+
+closure_js_library(
+    name = "extra",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/labs/useragent/extra.js"],
+    lenient = True,
+    deps = [
+        "//closure/library/labs/useragent:browser",
+        "//closure/library/labs/useragent:platform",
     ],
 )
 
@@ -69,7 +81,7 @@ closure_js_library(
     name = "util",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/labs/useragent/util.js"],
     lenient = True,
-    deps = ["//closure/library/string"],
+    deps = ["//closure/library/string:internal"],
 )
 
 closure_js_library(

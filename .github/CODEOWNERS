@@ -1,0 +1,4 @@
+# Matches the codeowners of bazelbuild/rules_nodejs
+# Eventually we hope to reconcile the two repositories
+# Also use the GitHub team from this repo
+* @alexeagle @soldair @gregmagolan @bazelbuild/rules_closure_collaborators

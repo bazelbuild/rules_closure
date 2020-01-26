@@ -59,13 +59,13 @@ closure_js_library(
 
 file_test(
     name = "lenient_no_warnings",
-    file = "lenient_love-stderr.txt",
     content = "",
+    file = "lenient_love-stderr.txt",
 )
 
 file_test(
     name = "lenient_no_type_check_errors",
+    content = "",
     # This is a dummy file to trigger per library type check
     file = "lenient_love_typecheck",
-    content = "",
 )

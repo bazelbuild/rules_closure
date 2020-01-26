@@ -16,7 +16,7 @@ package io.bazel.rules.closure.webfiles;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.matches;
@@ -41,7 +41,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
+import org.mockito.ArgumentMatchers;
 
 /** Unit tests for {@link WebfilesValidatorProgram}. */
 @RunWith(JUnit4.class)
@@ -74,14 +74,15 @@ public class WebfilesValidatorProgramTest {
     save(fs.getPath("/a.pbtxt"), "label: \"@oh//my:goth\"\n");
     when(validator.validate(
             any(Webfiles.class),
-            Mockito.<Iterable<Webfiles>>any(),
-            Mockito.<Supplier<Iterable<Webfiles>>>any()))
+            ArgumentMatchers.<Iterable<Webfiles>>any(),
+            ArgumentMatchers.<Supplier<Iterable<Webfiles>>>any()))
         .thenReturn(ArrayListMultimap.<String, String>create());
     assertThat(program.apply(ImmutableList.of("--target", "/a.pbtxt"))).isEqualTo(0);
-    verify(validator).validate(
-        eq(Webfiles.newBuilder().setLabel("@oh//my:goth").build()),
-        eq(ImmutableList.<Webfiles>of()),
-        Mockito.<Supplier<Iterable<Webfiles>>>any());
+    verify(validator)
+        .validate(
+            eq(Webfiles.newBuilder().setLabel("@oh//my:goth").build()),
+            eq(ImmutableList.<Webfiles>of()),
+            ArgumentMatchers.<Supplier<Iterable<Webfiles>>>any());
   }
 
   @Test
@@ -89,14 +90,15 @@ public class WebfilesValidatorProgramTest {
     save(fs.getPath("/a.pbtxt"), "label: \"@oh//my:goth\"\n");
     when(validator.validate(
             any(Webfiles.class),
-            Mockito.<Iterable<Webfiles>>any(),
-            Mockito.<Supplier<Iterable<Webfiles>>>any()))
+            ArgumentMatchers.<Iterable<Webfiles>>any(),
+            ArgumentMatchers.<Supplier<Iterable<Webfiles>>>any()))
         .thenReturn(ArrayListMultimap.create(ImmutableMultimap.of("navi", "hey listen")));
     assertThat(program.apply(ImmutableList.of("--target", "/a.pbtxt"))).isEqualTo(1);
-    verify(validator).validate(
-        eq(Webfiles.newBuilder().setLabel("@oh//my:goth").build()),
-        eq(ImmutableList.<Webfiles>of()),
-        Mockito.<Supplier<Iterable<Webfiles>>>any());
+    verify(validator)
+        .validate(
+            eq(Webfiles.newBuilder().setLabel("@oh//my:goth").build()),
+            eq(ImmutableList.<Webfiles>of()),
+            ArgumentMatchers.<Supplier<Iterable<Webfiles>>>any());
     verify(output).println(matches(".*ERROR.*hey listen"));
     verify(output).printf(matches(".*suppress.*"), matches(".*NOTE.*"), eq("navi"));
   }
@@ -106,8 +108,8 @@ public class WebfilesValidatorProgramTest {
     save(fs.getPath("/a.pbtxt"), "label: \"@oh//my:goth\"\n");
     when(validator.validate(
             any(Webfiles.class),
-            Mockito.<Iterable<Webfiles>>any(),
-            Mockito.<Supplier<Iterable<Webfiles>>>any()))
+            ArgumentMatchers.<Iterable<Webfiles>>any(),
+            ArgumentMatchers.<Supplier<Iterable<Webfiles>>>any()))
         .thenReturn(ArrayListMultimap.create(ImmutableMultimap.of("navi", "hey listen")));
     assertThat(
             program.apply(
@@ -115,10 +117,11 @@ public class WebfilesValidatorProgramTest {
                     "--target", "/a.pbtxt",
                     "--suppress", "navi")))
         .isEqualTo(0);
-    verify(validator).validate(
-        eq(Webfiles.newBuilder().setLabel("@oh//my:goth").build()),
-        eq(ImmutableList.<Webfiles>of()),
-        Mockito.<Supplier<Iterable<Webfiles>>>any());
+    verify(validator)
+        .validate(
+            eq(Webfiles.newBuilder().setLabel("@oh//my:goth").build()),
+            eq(ImmutableList.<Webfiles>of()),
+            ArgumentMatchers.<Supplier<Iterable<Webfiles>>>any());
     verify(output).println(matches(".*WARNING.*hey listen"));
   }
 

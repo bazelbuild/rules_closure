@@ -4,12 +4,14 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
     name = "all_js",
     exports = [
         ":const",
+        ":internal",
         ":linkify",
         ":newlines",
         ":parser",
@@ -30,6 +32,12 @@ closure_js_library(
         "//closure/library/asserts",
         "//closure/library/string:typedstring",
     ],
+)
+
+closure_js_library(
+    name = "internal",
+    srcs = ["@com_google_javascript_closure_library//:closure/goog/string/internal.js"],
+    lenient = True,
 )
 
 closure_js_library(
@@ -69,6 +77,12 @@ closure_js_library(
     name = "string",
     srcs = ["@com_google_javascript_closure_library//:closure/goog/string/string.js"],
     lenient = True,
+    deps = [
+        "//closure/library/dom:safe",
+        "//closure/library/html:uncheckedconversions",
+        "//closure/library/string:const",
+        "//closure/library/string:internal",
+    ],
 )
 
 closure_js_library(

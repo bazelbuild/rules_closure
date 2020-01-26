@@ -16,9 +16,7 @@ package(default_testonly = True)
 
 licenses(["notice"])  # Apache 2.0
 
-load("//closure:defs.bzl", "closure_js_library")
-load("//closure:defs.bzl", "closure_js_test")
-load("//closure:defs.bzl", "files_equal_test")
+load("//closure:defs.bzl", "closure_js_library", "closure_js_test")
 
 closure_js_library(
     name = "arithmetic_lib",
@@ -92,12 +90,12 @@ closure_js_library(
 closure_js_test(
     name = "lenient_test",
     srcs = ["lenient_test.js"],
+    entry_points = ["rules_closure.LenientTest"],
     lenient = True,
     deps = [
         ":lenient_lib",
         "//closure/library:testing",
     ],
-    entry_points = ['rules_closure.LenientTest'],
 )
 
 closure_js_test(

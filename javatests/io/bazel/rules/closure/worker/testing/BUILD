@@ -14,6 +14,8 @@
 
 licenses(["notice"])  # Apache 2.0
 
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "testing",
     testonly = 1,

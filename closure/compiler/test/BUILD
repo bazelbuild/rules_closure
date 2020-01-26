@@ -17,13 +17,12 @@ package(default_testonly = True)
 licenses(["notice"])  # Apache 2.0
 
 load("//closure/private:file_test.bzl", "file_test")
-load("//closure/private:rule_test.bzl", "rule_test")
-load("//closure:defs.bzl", "closure_js_binary")
-load("//closure:defs.bzl", "closure_js_library")
+load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
 
 closure_js_library(
     name = "hello_lib",
     srcs = ["hello.js"],
+    no_closure_library = True,
 )
 
 closure_js_binary(
@@ -54,8 +53,8 @@ file_test(
 # Make sure bazel doesn't complain about some outputs not created.
 closure_js_binary(
     name = "hello_bin_bundle",
+    compilation_level = "BUNDLE",
     deps = [":hello_lib"],
-	compilation_level = "BUNDLE",
 )
 
 closure_js_binary(
@@ -213,4 +212,27 @@ file_test(
     name = "externTypeError_failsToCompile",
     file = "extern_bad_bin-stderr.txt",
     regexp = "actual parameter 1 of omg.im_an_extern does not match formal parameter",
+)
+
+# TEST: closure_js_library targets from exports should be provided when used in
+# a data attr.
+
+closure_js_library(
+    name = "external",
+    srcs = ["external.js"],
+    data = ["external2.js"],
+)
+
+closure_js_library(
+    name = "exports_data",
+    exports = [":external"],
+)
+
+sh_test(
+    name = "exports_data_test",
+    srcs = ["exports_data_test.sh"],
+    data = [
+        # including external.js / external2.js through a rollup target via exports should work.
+        ":exports_data",
+    ],
 )

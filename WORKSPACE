@@ -1,18 +1,11 @@
 workspace(name = "io_bazel_rules_closure")
 
+load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("//closure/private:java_import_external.bzl", "java_import_external")
-load("//closure:repositories.bzl", "closure_repositories")
 
-closure_repositories()
-
-http_archive(
-    name = "net_zlib",
-    build_file = "//:third_party/zlib.BUILD",
-    sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
-    strip_prefix = "zlib-1.2.11",
-    urls = ["https://zlib.net/zlib-1.2.11.tar.gz"],
-)
+load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
+rules_closure_dependencies()
+rules_closure_toolchains()
 
 http_archive(
     name = "bazel_skylib",
@@ -72,35 +65,69 @@ java_import_external(
 )
 
 java_import_external(
-    name = "org_mockito_all",
-    jar_sha256 = "d1a7a7ef14b3db5c0fc3e0a63a81b374b510afe85add9f7984b97911f4c70605",
+    name = "org_mockito_core",
+    jar_sha256 = "ae2efd8f05ceda5ed9c802a43265a95adfa885ca5535a8476a7aaa0b15b95abb",
     jar_urls = [
-        "https://mirror.bazel.build/repo1.maven.org/maven2/org/mockito/mockito-all/1.10.19/mockito-all-1.10.19.jar",
-        "https://repo1.maven.org/maven2/org/mockito/mockito-all/1.10.19/mockito-all-1.10.19.jar",
-        "http://maven.ibiblio.org/maven2/org/mockito/mockito-all/1.10.19/mockito-all-1.10.19.jar",
+        "https://mirror.bazel.build/repo1.maven.org/maven2/org/mockito/mockito-core/3.0.0/mockito-core-3.0.0.jar",
+        "https://repo1.maven.org/maven2/org/mockito/mockito-core/3.0.0/mockito-core-3.0.0.jar",
+        "http://maven.ibiblio.org/maven2/org/mockito/mockito-core/3.0.0/mockito-core-3.0.0.jar",
     ],
     licenses = ["notice"],  # MIT
     testonly_ = 1,
     deps = [
         "@junit",
+        "@net_bytebuddy",
+        "@net_bytebuddy_agent",
         "@org_hamcrest_core",
+        "@org_objenesis",
     ],
 )
 
 java_import_external(
-    name = "com_google_truth",
-    jar_sha256 = "a9e6796786c9c77a5fe19b08e72fe0a620d53166df423d8861af9ebef4dc4247",
+    name = "org_objenesis",
+    jar_sha256 = "7a8ff780b9ff48415d7c705f60030b0acaa616e7f823c98eede3b63508d4e984",
     jar_urls = [
-        "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/truth/truth/0.44/truth-0.44.jar",
-        "http://repo1.maven.org/maven2/com/google/truth/truth/0.44/truth-0.44.jar",
-        "http://maven.ibiblio.org/maven2/com/google/truth/truth/0.44/truth-0.44.jar",
+        "https://mirror.bazel.build/repo1.maven.org/maven2/org/objenesis/objenesis/3.0.1/objenesis-3.0.1.jar",
+        "https://repo1.maven.org/maven2/org/objenesis/objenesis/3.0.1/objenesis-3.0.1.jar",
+        "http://maven.ibiblio.org/maven2/org/objenesis/objenesis/3.0.1/objenesis-3.0.1.jar",
+    ],
+    licenses = ["notice"],  # Apache
+    testonly_ = 1,
+)
+
+java_import_external(
+    name = "net_bytebuddy",
+    jar_sha256 = "f568c036adcef282798ed0e4e02d176a919cf900b0a9bb5e26cbace0d8a8246c",
+    jar_urls = [
+        "https://mirror.bazel.build/repo1.maven.org/maven2/net/bytebuddy/byte-buddy/1.9.14/byte-buddy-1.9.14.jar",
+        "https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy/1.9.14/byte-buddy-1.9.14.jar",
+        "http://maven.ibiblio.org/maven2/net/bytebuddy/byte-buddy/1.9.14/byte-buddy-1.9.14.jar",
+    ],
+    licenses = ["notice"],  # Apache
+    testonly_ = 1,
+)
+
+java_import_external(
+    name = "net_bytebuddy_agent",
+    jar_sha256 = "938a0df38cbc3e91334c383869aeb8436288efafa9f763f75fda51d7d8a703db",
+    jar_urls = [
+        "https://mirror.bazel.build/repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent/1.9.14/byte-buddy-agent-1.9.14.jar",
+        "https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent/1.9.14/byte-buddy-agent-1.9.14.jar",
+        "http://maven.ibiblio.org/maven2/net/bytebuddy/byte-buddy-agent/1.9.14/byte-buddy-agent-1.9.14.jar",
+    ],
+    licenses = ["notice"],  # Apache
+    testonly_ = 1,
+)
+
+java_import_external(
+    name = "com_google_truth",
+    jar_sha256 = "0f7dced2a16e55a77e44fc3ff9c5be98d4bf4bb30abc18d78ffd735df950a69f",
+    jar_urls = [
+        "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/truth/truth/0.45/truth-0.45.jar",
+        "http://repo1.maven.org/maven2/com/google/truth/truth/0.45/truth-0.45.jar",
+        "http://maven.ibiblio.org/maven2/com/google/truth/truth/0.45/truth-0.45.jar",
     ],
     licenses = ["notice"],  # Apache 2.0
     testonly_ = 1,
     deps = ["@com_google_guava"],
-)
-
-bind(
-    name = "zlib",
-    actual = "@net_zlib//:zlib",
 )

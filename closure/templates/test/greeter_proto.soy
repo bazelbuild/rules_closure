@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-{namespace io.bazel.rules.closure.soy.greeter}
+{namespace io.bazel.rules.closure.soy.protoGreeter}
 
 
 /**
@@ -20,6 +20,10 @@
  */
 {template .greet}
   {@param person: io.bazel.rules.closure.soy.Person}
-  <p>
-    Hello <b>{$person.name}</b>!
+
+  {call io.bazel.rules.closure.soy.greeter.greet}
+    {param name kind="text"}
+      {$person.name}
+    {/param}
+  {/call}
 {/template}

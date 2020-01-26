@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -56,8 +57,7 @@ closure_js_library(
         "//closure/library/dom:nodetype",
         "//closure/library/dom:safe",
         "//closure/library/dom:tagname",
-        "//closure/library/html:legacyconversions",
+        "//closure/library/html:safehtml",
         "//closure/library/soy:data",
-        "//closure/library/string",
     ],
 )

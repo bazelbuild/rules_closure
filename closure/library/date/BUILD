@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -14,7 +15,6 @@ closure_js_library(
         ":daterange",
         ":duration",
         ":relative",
-        ":relativewithplurals",
         ":utcdatetime",
     ],
 )
@@ -64,16 +64,7 @@ closure_js_library(
     deps = [
         "//closure/library/i18n:datetimeformat",
         "//closure/library/i18n:datetimepatterns",
-    ],
-)
-
-closure_js_library(
-    name = "relativewithplurals",
-    srcs = ["@com_google_javascript_closure_library//:closure/goog/date/relativewithplurals.js"],
-    lenient = True,
-    deps = [
-        "//closure/library/date:relative",
-        "//closure/library/i18n:messageformat",
+        "//closure/library/i18n:relativedatetimeformat",
     ],
 )
 

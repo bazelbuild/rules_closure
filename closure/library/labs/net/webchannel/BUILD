@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
@@ -120,7 +121,6 @@ closure_js_library(
         "//closure/library/array",
         "//closure/library/asserts",
         "//closure/library/async:run",
-        "//closure/library/debug:formatter",
         "//closure/library/json",
         "//closure/library/labs/net:webchannel",
         "//closure/library/labs/net/webchannel:basetestchannel",
@@ -133,14 +133,12 @@ closure_js_library(
         "//closure/library/labs/net/webchannel:webchanneldebug",
         "//closure/library/labs/net/webchannel:wire",
         "//closure/library/labs/net/webchannel:wirev8",
-        "//closure/library/log",
         "//closure/library/net:xhrio",
         "//closure/library/net:xmlhttpfactory",
         "//closure/library/net/rpc:httpcors",
         "//closure/library/object",
         "//closure/library/string",
         "//closure/library/structs",
-        "//closure/library/structs:circularbuffer",
         "//closure/library/uri",
     ],
 )
@@ -157,6 +155,7 @@ closure_js_library(
         "//closure/library/labs/net:webchanneltransport",
         "//closure/library/labs/net/webchannel:channelrequest",
         "//closure/library/labs/net/webchannel:webchannelbase",
+        "//closure/library/labs/net/webchannel:wire",
         "//closure/library/log",
         "//closure/library/object",
         "//closure/library/string",
