@@ -16,9 +16,6 @@ package test;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
-import com.google.template.soy.data.SoyValue;
-import com.google.template.soy.data.restricted.StringData;
-import com.google.template.soy.exprtree.Operator;
 import com.google.template.soy.jssrc.restricted.JsExpr;
 import com.google.template.soy.jssrc.restricted.SoyJsSrcFunction;
 import com.google.template.soy.shared.restricted.SoyFunction;
@@ -55,7 +52,7 @@ public class ExampleModule extends AbstractModule {
     public JsExpr computeForJsSrc(List<JsExpr> args) {
       JsExpr arg = args.get(0);
       String exprText = "(" + arg.getText() + ").toLowerCase()";
-      return new JsExpr(exprText, Operator.NOT_EQUAL.getPrecedence());
+      return new JsExpr(exprText, Integer.MAX_VALUE);
     }
   }
 }
