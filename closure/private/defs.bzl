@@ -76,6 +76,13 @@ def unfurl(deps, provider = ""):
             for edep in dep.exports:
                 if not provider or hasattr(edep, provider):
                     res.append(edep)
+                # NOTE: This is really bad, but now that Closure Library uses
+                # an extra level of indirection, we kind of need it until
+                # somebody fixes it the right way.
+                if hasattr(edep, "exports"):
+                    for eedep in edep.exports:
+                        if not provider or hasattr(eedep, provider):
+                            res.append(eedep)
     return res
 
 def collect_js(
