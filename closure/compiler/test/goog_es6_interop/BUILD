@@ -50,6 +50,6 @@ closure_js_test(
     ],
     deps = [
         ":person_factory",
-        "//closure/library:testing",
+        "//closure/library/testing:testsuite",
     ],
 )

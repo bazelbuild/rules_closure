@@ -36,7 +36,6 @@ closure_js_test(
 closure_js_library(
     name = "arithmetic_module_lib",
     srcs = ["arithmetic_module.js"],
-    deps = ["//closure/library"],
 )
 
 closure_js_test(
@@ -77,7 +76,8 @@ closure_js_test(
     suppress = ["moduleLoad"],
     deps = [
         ":arithmetic_es6module_lib",
-        "//closure/library:testing",
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:jsunit",
     ],
 )
 
@@ -94,7 +94,8 @@ closure_js_test(
     lenient = True,
     deps = [
         ":lenient_lib",
-        "//closure/library:testing",
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:testsuite",
     ],
 )
 
@@ -105,7 +106,7 @@ closure_js_test(
         "dict_entry_point_test.js": ["rules_closure.DictEntryPointTest"],
     },
     deps = [
-        "//closure/library:testing",
+        "//closure/library/testing:testsuite",
     ],
 )
 
