@@ -52,7 +52,7 @@ closure_js_test(
     ],
     deps = [
         ":foo",
-        "//closure/library:testing",
+        "//closure/library/testing:testsuite",
     ],
 )
 
@@ -95,6 +95,6 @@ closure_js_test(
     deps = [
         ":baz",
         ":foo",
-        "//closure/library:testing",
+        "//closure/library/testing:testsuite",
     ],
 )

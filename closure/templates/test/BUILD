@@ -191,7 +191,9 @@ closure_js_test(
     srcs = ["globals_test.js"],
     deps = [
         ":globals_soy",
-        "//closure/library",
-        "//closure/library:testing",
+        "//closure/library/soy",
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:jsunit",
+        "//closure/library/testing:testsuite",
     ],
 )

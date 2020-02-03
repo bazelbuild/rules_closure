@@ -30,7 +30,6 @@ closure_js_library(
     srcs = ["example.js"],
     deps = [
         ":example_proto",
-        "//closure/library",
     ],
 )
 
@@ -40,6 +39,7 @@ closure_js_test(
     srcs = ["example_test.js"],
     deps = [
         ":example_lib",
-        "//closure/library:testing",
+        "//closure/library/testing:asserts",
+        "//closure/library/testing:jsunit",
     ],
 )
