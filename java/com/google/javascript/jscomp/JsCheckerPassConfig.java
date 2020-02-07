@@ -94,8 +94,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                         new CheckPrimitiveAsObject(compiler),
                         new CheckProvidesSorted(CheckProvidesSorted.Mode.COLLECT_AND_REPORT),
                         new CheckRequiresSorted(CheckRequiresSorted.Mode.COLLECT_AND_REPORT),
-                        new CheckMissingAndExtraRequires(
-                            compiler, CheckMissingAndExtraRequires.Mode.SINGLE_FILE),
                         new CheckUnusedLabels(compiler),
                         new CheckUselessBlocks(compiler),
                         new ClosureCheckModule(compiler, compiler.getModuleMetadataMap()),
