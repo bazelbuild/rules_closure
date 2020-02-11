@@ -77,7 +77,7 @@ file_test(
 file_test(
     name = "googDomDependency_includesClosureLibraryStuffInDepsFile",
     file = "goblin_deps.js",
-    regexp = "^goog.addDependency('\\./dom/dom\\.js', \\['goog\\.dom'",
+    regexp = "^goog.addDependency('.*/dom/dom\\.js', \\['goog\\.dom'",
 )
 
 file_test(
