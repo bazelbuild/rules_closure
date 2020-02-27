@@ -43,7 +43,10 @@ closure_js_library(
     name = "hyperion_lib",
     srcs = ["hyperion.js"],
     data = ["data1.txt"],
-    suppress = ["lintChecks"],  # use of goog.provide
+    suppress = [
+        "lintChecks",
+        "superfluousSuppress",
+    ],  # use of goog.provide
     deps = [":external_library"],
 )
 
@@ -95,7 +98,10 @@ closure_js_library(
     name = "hyperion2_lib",
     srcs = ["hyperion2.js"],
     data = ["data2.txt"],
-    suppress = ["lintChecks"],  # use of goog.provide
+    suppress = [
+        "lintChecks",
+        "superfluousSuppress",
+    ],  # use of goog.provide
     deps = [":hyperion_lib"],
 )
 
