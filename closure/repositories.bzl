@@ -16,6 +16,7 @@
 
 load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+load("//closure/private:closure_library_repository.bzl", "closure_library_repository")
 load("//closure/private:platform_http_file.bzl", "platform_http_file")
 
 _ERROR_CLOSURE_REPOSITORIES_IS_DEPRECATED = """
@@ -715,15 +716,14 @@ def com_google_javascript_closure_compiler():
 
 def com_google_javascript_closure_library():
     # After updating: bazel run //closure/library:regenerate -- "$PWD"
-    http_archive(
+    closure_library_repository(
         name = "com_google_javascript_closure_library",
+        sha256 = "d21fdefb72d88a1aa629279c53a95fdd4d5632d0e5b13e6b591b177d25bde337",
+        strip_prefix = "closure-library-20191027",
         urls = [
             "https://mirror.bazel.build/github.com/google/closure-library/archive/v20191027.tar.gz",
             "https://github.com/google/closure-library/archive/v20191027.tar.gz",
         ],
-        sha256 = "d21fdefb72d88a1aa629279c53a95fdd4d5632d0e5b13e6b591b177d25bde337",
-        strip_prefix = "closure-library-20191027",
-        build_file = str(Label("//closure/library:closure_library.BUILD")),
     )
 
 def com_google_jsinterop_annotations():
