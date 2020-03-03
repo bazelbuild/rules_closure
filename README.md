@@ -90,9 +90,6 @@ rules_closure_toolchains()
 You are not required to install the Closure Tools, PhantomJS, or anything else
 for that matter; they will be fetched automatically by Bazel.
 
-> :bangbang: Release 0.10.x will be the last to support loading dependencies though
-> `closure_repositories()`.
-
 ### Overriding Dependency Versions
 
 When you call `rules_closure_dependencies()` in your `WORKSPACE` file, it causes a

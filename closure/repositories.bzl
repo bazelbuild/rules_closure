@@ -18,22 +18,6 @@ load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 load("//closure/private:platform_http_file.bzl", "platform_http_file")
 
-_ERROR_CLOSURE_REPOSITORIES_IS_DEPRECATED = """
-closure_repositories() is deprecated.
-
-Please add the following to your workspace instead:
-
-  load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
-  rules_closure_dependencies()
-  rules_closure_toolchains()
-""".strip()
-
-def closure_repositories(**kargs):
-    """Legacy macro to import dependencies for Closure Rules."""
-
-    print(_ERROR_CLOSURE_REPOSITORIES_IS_DEPRECATED)
-    rules_closure_dependencies(**kargs)
-
 def rules_closure_toolchains():
     """An utility method to load all Closure toolchains.
 
@@ -70,7 +54,6 @@ def rules_closure_dependencies(
         omit_com_google_javascript_closure_library = False,
         omit_com_google_jsinterop_annotations = False,
         omit_com_google_protobuf = False,
-        omit_com_google_protobuf_java = False,
         omit_com_google_protobuf_js = False,
         omit_com_google_template_soy = False,
         omit_com_google_template_soy_jssrc = False,
@@ -98,8 +81,6 @@ def rules_closure_dependencies(
         omit_rules_python = False,
         omit_zlib = False):
     """Imports dependencies for Closure Rules."""
-    if omit_com_google_protobuf_java:
-        fail("omit_com_google_protobuf_java no longer supported and must be not be passed to closure_repositories()")
     if not omit_aopalliance:
         aopalliance()
     if not omit_args4j:
