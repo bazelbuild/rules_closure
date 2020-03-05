@@ -33,16 +33,28 @@ load(
     "closure_js_aspect",
 )
 
-def _warn_for_dependency_mode(old_mode, new_mode):
-    print(("dependency_mode=%s is deprecated and will be removed soon; " +
-          "prefer to use its equivalent %s") % (old_mode, new_mode))
+_dependency_mode_warning = '\n'.join([
+  "{target}: dependency_mode={old_mode} is deprecated and will be " +
+      "removed soon; prefer to use its equivalent {new_mode}.",
+  "",
+  "  ** You can use the following buildozer command:",
+  "buildozer 'set dependency_mode \"{new_mode}\"' {target}",
+])
 
-def _get_dependency_mode_flag(attr):
+def _get_dependency_mode_flag(target, attr):
     if attr == "LOOSE":
-        _warn_for_dependency_mode("LOOSE", "PRUNE_LEGACY")
+        print(_dependency_mode_warning.format(
+            target = str(target),
+            old_mode = "LOOSE",
+            new_mode = "PRUNE_LEGACY",
+        ))
         return "PRUNE_LEGACY"
     if attr == "STRICT":
-        _warn_for_dependency_mode("STRICT", "PRUNE")
+        print(_dependency_mode_warning.format(
+            target = str(target),
+            old_mode = "STRICT",
+            new_mode = "PRUNE",
+        ))
         return "PRUNE"
     return attr
 
@@ -91,7 +103,7 @@ def _impl(ctx):
         "--compilation_level",
         ctx.attr.compilation_level,
         "--dependency_mode",
-        _get_dependency_mode_flag(ctx.attr.dependency_mode),
+        _get_dependency_mode_flag(ctx.label, ctx.attr.dependency_mode),
         "--warning_level",
         ctx.attr.warning_level,
         "--generate_exports",
@@ -299,7 +311,7 @@ closure_js_binary = rule(
         "defs": attr.string_list(),
         # TODO(tjgq): Remove the deprecated STRICT/LOOSE in favor of PRUNE/PRUNE_LEGACY.
         "dependency_mode": attr.string(
-            default = "LOOSE",
+            default = "PRUNE_LEGACY",
             values = [
                 "NONE",
                 "SORT_ONLY",
