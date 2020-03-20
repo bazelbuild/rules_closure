@@ -69,7 +69,7 @@ notes.
 First you must [install Bazel]. Then you add the following to your `WORKSPACE`
 file:
 
-```python
+```starlark
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
@@ -104,7 +104,7 @@ To override the version of any dependency, modify your `WORKSPACE` file to pass
 custom dependency version. A full list of dependencies is available from
 [repositories.bzl]. For example, to override the version of Guava:
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
 rules_closure_dependencies(
     omit_com_google_guava=True,
@@ -144,7 +144,7 @@ Please see the test directories within this project for concrete examples of usa
 
 ## closure\_js\_library
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
 closure_js_library(name, srcs, data, deps, exports, suppress, convention,
                    no_closure_library)
@@ -245,7 +245,7 @@ This rule can be referenced as though it were the following:
 
 ## closure\_js\_binary
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_binary")
 closure_js_binary(name, deps, css, debug, language, entry_points,
                   dependency_mode, compilation_level, formatting,
@@ -367,7 +367,7 @@ When compiling AngularJS applications, you need to pass custom flags to the
 Closure Compiler. This can be accomplished by adding the following to your
 [closure_js_binary] rule:
 
-```python
+```starlark
 closure_js_binary(
     # ...
     defs = [
@@ -379,7 +379,7 @@ closure_js_binary(
 
 ## closure\_js\_test
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_test")
 closure_js_test(name, srcs, data, deps, css, html, language, suppress,
                 compilation_level, entry_points, defs)
@@ -452,7 +452,7 @@ This rule can be referenced as though it were the following:
 
 ## phantomjs\_test
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "phantomjs_test")
 phantomjs_test(name, data, deps, html, harness, runner)
 ```
@@ -500,7 +500,7 @@ This rule can be referenced as though it were the following:
 
 ## closure\_js\_deps
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_deps")
 closure_js_deps(name, deps)
 ```
@@ -547,7 +547,7 @@ This rule can be referenced as though it were the following:
 
 ## closure\_js\_template\_library
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_template_library")
 closure_js_template_library(name, srcs, data, deps, globals, plugin_modules,
                             should_generate_js_doc,
@@ -634,7 +634,7 @@ This rule can be referenced as though it were the following:
 
 ## closure\_java\_template\_library
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_java_template_library")
 closure_java_template_library(name, srcs, data, deps, java_package)
 ```
@@ -699,7 +699,7 @@ TODO
 
 ## closure\_css\_library
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_css_library")
 closure_css_library(name, srcs, data, deps)
 ```
@@ -763,7 +763,7 @@ This rule can be referenced as though it were the following:
 
 ## closure\_css\_binary
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_css_binary")
 closure_css_binary(name, deps, renaming, debug, defs)
 ```
@@ -872,7 +872,7 @@ This rule can be referenced as though it were the following:
 
 ## closure\_js\_proto\_library
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_proto_library")
 closure_js_proto_library(name, srcs, add_require_for_enums, binary,
                          import_style)
@@ -929,7 +929,7 @@ This rule can be referenced as though it were the following:
 
 ## closure\_proto\_library
 
-```python
+```starlark
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_proto_library")
 closure_proto_library(name, deps)
 ```
