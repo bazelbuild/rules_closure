@@ -95,8 +95,8 @@ def _closure_js_library_impl(
         lenient,
         convention,
         includes = (),
-        exports = depset(),
-        internal_descriptors = depset(),
+        exports = [],
+        internal_descriptors = [],
         no_closure_library = False,
         internal_expect_failure = False,
 
@@ -313,9 +313,6 @@ def _closure_js_library_impl(
         unusable_type_definition = unusable_type_definition,
     )
 
-    if type(internal_descriptors) == "list":
-        internal_descriptors = depset(internal_descriptors)
-
     # We now export providers to any parent Target. This is considered a public
     # interface because other Skylark rules can be designed to do things with
     # this data. Other Skylark rules can even export their own provider with the
@@ -374,7 +371,7 @@ def _closure_js_library_impl(
             # closure. It is used so Closure Templates can have information about
             # the structure of protobufs so they can be easily rendered in .soy
             # files with type safety. See closure_js_template_library.bzl.
-            descriptors = depset(transitive = [js.descriptors, internal_descriptors]),
+            descriptors = depset(internal_descriptors, transitive = [js.descriptors]),
             # NestedSet<Label> of all closure_css_library rules in the transitive
             # closure. This is used by closure_js_binary can guarantee the
             # completeness of goog.getCssName() substitutions.
