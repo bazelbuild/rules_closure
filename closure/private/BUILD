@@ -29,6 +29,5 @@ closure_base_js_library(
     name = "base_lib",
     srcs = [
         "@com_google_javascript_closure_library//:closure/goog/base.js",
-        "@com_google_javascript_closure_library//:closure/goog/transitionalforwarddeclarations.js",
     ],
 )
