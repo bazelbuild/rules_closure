@@ -105,7 +105,19 @@ final class JsCompilerWarnings extends WarningsGuard {
       }
     }
 
-    // Otherwise let other guards have a chance.
-    return null;
+    switch (error.getDefaultLevel()) {
+      case OFF:
+        /**
+         * Treat any user invisible diagnostics as safe by default.
+         *
+         * <p>This lets new diagnostics be added to JSCompiler without immediately being errors,
+         * whcih is useful for staged rollouts.
+         */
+        return CheckLevel.OFF;
+
+      default:
+        // Treat any user visible diagnostic as an error by default.
+        return CheckLevel.ERROR;
+    }
   }
 }
