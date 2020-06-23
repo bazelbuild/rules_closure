@@ -25,29 +25,20 @@ load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
 closure_js_library(
     name = "a",
     srcs = ["a.js"],
-    suppress = [
-        "lintChecks",
-        "superfluousSuppress",
-    ],  # use of goog.provide
+    suppress = ["useOfGoogProvide"],
 )
 
 closure_js_library(
     name = "b",
     srcs = ["b.js"],
-    suppress = [
-        "lintChecks",
-        "superfluousSuppress",
-    ],  # use of goog.provide
+    suppress = ["useOfGoogProvide"],
     deps = [":a"],
 )
 
 closure_js_library(
     name = "c",
     srcs = ["c.js"],
-    suppress = [
-        "lintChecks",
-        "superfluousSuppress",
-    ],  # use of goog.provide
+    suppress = ["useOfGoogProvide"],
     deps = [
         ":a",
         ":b",
@@ -58,10 +49,7 @@ closure_js_library(
     name = "t",
     testonly = True,
     srcs = ["t.js"],
-    suppress = [
-        "lintChecks",
-        "superfluousSuppress",
-    ],  # use of goog.provide
+    suppress = ["useOfGoogProvide"],
 )
 
 file_test(
@@ -111,10 +99,7 @@ file_test(
 closure_js_library(
     name = "b2",
     srcs = ["b.js"],
-    suppress = [
-        "lintChecks",
-        "superfluousSuppress",
-    ],  # use of goog.provide
+    suppress = ["useOfGoogProvide"],
     exports = [":a"],
     deps = [":a"],
 )
@@ -122,10 +107,7 @@ closure_js_library(
 closure_js_library(
     name = "exportMadeTransitiveDepDirect",
     srcs = ["c.js"],
-    suppress = [
-        "lintChecks",
-        "superfluousSuppress",
-    ],  # use of goog.provide
+    suppress = ["useOfGoogProvide"],
     deps = [":b2"],  # but if :b exports :a, then we're ok
 )
 
@@ -235,10 +217,7 @@ closure_js_library(
         "a.js",
         "es6_a.js",
     ],
-    suppress = [
-        "lintChecks",
-        "superfluousSuppress",
-    ],  # use of goog.provide
+    suppress = ["useOfGoogProvide"],
 )
 
 file_test(

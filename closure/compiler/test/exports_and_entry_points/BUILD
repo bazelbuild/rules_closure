@@ -83,10 +83,7 @@ file_test(
 closure_js_library(
     name = "library_goog_lib",
     srcs = ["library_goog.js"],
-    suppress = [
-        "lintChecks",
-        "superfluousSuppress",
-    ],  # use of goog.provide
+    suppress = ["useOfGoogProvide"],
 )
 
 closure_js_binary(

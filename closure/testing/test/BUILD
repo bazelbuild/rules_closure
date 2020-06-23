@@ -21,10 +21,7 @@ load("//closure:defs.bzl", "closure_js_library", "closure_js_test")
 closure_js_library(
     name = "arithmetic_lib",
     srcs = ["arithmetic.js"],
-    suppress = [
-        "lintChecks",
-        "superfluousSuppress",
-    ],  # use of goog.provide
+    suppress = ["useOfGoogProvide"],
 )
 
 closure_js_test(
