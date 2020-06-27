@@ -16,6 +16,7 @@ package(default_testonly = True)
 
 licenses(["notice"])  # Apache 2.0
 
+load("//closure/private:expected_output_test.bzl", "closure_js_binary_output_test")
 load("//closure/private:file_test.bzl", "file_test")
 load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
 
@@ -149,7 +150,7 @@ file_test(
 
 closure_js_library(
     name = "setTestOnlyInLibraryWithoutTestOnly",
-    testonly = False,  # <-- oops I forgot this line
+    testonly = False,
     srcs = ["t.js"],
     internal_expect_failure = True,
     tags = ["manual"],
@@ -266,10 +267,10 @@ closure_js_binary(
     deps = [":es6_g2"],
 )
 
-file_test(
+closure_js_binary_output_test(
     name = "es6ModulesWithRootPaths_compileCorrectlyWhenReferencedWithoutRootPrefix",
-    content = "console.log(\"hi\");\n",
-    file = "es6_g2_bin.js",
+    expected_output = "golden/es6_modules_with_root_paths_compile_correctly_when_referenced_without_root_prefix.js",
+    target = ":es6_g2_bin",
 )
 
 closure_js_library(
@@ -291,8 +292,8 @@ closure_js_binary(
     deps = [":es6_relative_imports_lib"],
 )
 
-file_test(
+closure_js_binary_output_test(
     name = "es6RelativeImports_workCorrectly",
-    content = "console.log(\"a\");\n",
-    file = "es6_relative_imports_bin.js",
+    expected_output = "golden/es6_relative_imports_work_correctly.js",
+    target = ":es6_relative_imports_bin",
 )

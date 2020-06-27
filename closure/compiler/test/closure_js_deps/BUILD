@@ -157,5 +157,5 @@ genrule(
 file_test(
     name = "srcsReferencingJsBinary_getsJsBinaryAndMapNotData",
     file = "hyperion2_bin_srcs.txt",
-    regexp = "^.*/closure/compiler/test/closure_js_deps/hyperion2_bin.js .*/closure/compiler/test/closure_js_deps/hyperion2_bin.js.map$",
+    regexp = "^.*/closure/compiler/test/closure_js_deps/hyperion2_bin.js .*/closure/compiler/test/closure_js_deps/hyperion2_bin.js.map .*/closure/compiler/test/closure_js_deps/hyperion2_bin.property_renaming_report.txt$",
 )

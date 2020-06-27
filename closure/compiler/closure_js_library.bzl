@@ -104,7 +104,6 @@ def _closure_js_library_impl(
         # and will be replaced with |actions.declare_file()| soon.
         deprecated_info_file = None,
         deprecated_stderr_file = None,
-        deprecated_ijs_file = None,
         deprecated_typecheck_file = None):
     # TODO(yannic): Figure out how to modify |find_js_module_roots|
     # so that we won't need |workspace_name| anymore.
@@ -150,11 +149,8 @@ def _closure_js_library_impl(
         deprecated_stderr_file,
         "%s-stderr.txt" % label.name,
     )
-    ijs_file = _maybe_declare_file(
-        actions,
-        deprecated_ijs_file,
-        "%s.i.js" % label.name,
-    )
+
+    ijs_file = ctx.actions.declare_file("{}.i.js".format(label.name))
 
     if not no_closure_library:
         deps = deps + closure_library_base
@@ -403,24 +399,23 @@ def _closure_js_library(ctx):
         srcs = ctx.files.externs + srcs
 
     library = _closure_js_library_impl(
-        ctx,
-        srcs,
-        ctx.attr.deps,
-        ctx.attr.testonly,
-        ctx.attr.suppress,
-        ctx.attr.lenient,
-        ctx.attr.convention,
-        getattr(ctx.attr, "includes", []),
-        ctx.attr.exports,
-        ctx.files.internal_descriptors,
-        ctx.attr.no_closure_library,
-        ctx.attr.internal_expect_failure,
+        ctx = ctx,
+        srcs = srcs,
+        deps = ctx.attr.deps,
+        testonly = ctx.attr.testonly,
+        suppress = ctx.attr.suppress,
+        lenient = ctx.attr.lenient,
+        convention = ctx.attr.convention,
+        includes = getattr(ctx.attr, "includes", []),
+        exports = ctx.attr.exports,
+        internal_descriptors = ctx.files.internal_descriptors,
+        no_closure_library = ctx.attr.no_closure_library,
+        internal_expect_failure = ctx.attr.internal_expect_failure,
 
         # Deprecated output files.
-        ctx.outputs.info,
-        ctx.outputs.stderr,
-        ctx.outputs.ijs,
-        ctx.outputs.typecheck,
+        deprecated_info_file = ctx.outputs.info,
+        deprecated_stderr_file = ctx.outputs.stderr,
+        deprecated_typecheck_file = ctx.outputs.typecheck,
     )
 
     return struct(
@@ -476,7 +471,6 @@ closure_js_library = rule(
     outputs = {
         "info": "%{name}.pbtxt",
         "stderr": "%{name}-stderr.txt",
-        "ijs": "%{name}.i.js",
         "typecheck": "%{name}_typecheck",  # dummy output file
     },
 )

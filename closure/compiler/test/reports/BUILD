@@ -16,7 +16,7 @@ package(default_testonly = True)
 
 licenses(["notice"])  # Apache 2.0
 
-load("//closure/private:file_test.bzl", "file_test")
+load("//closure/private:expected_output_test.bzl", "closure_js_binary_output_test", "closure_js_binary_property_renaming_report_test")
 load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
 
 # Property renaming reports are rarely used. But they can be used to minify
@@ -33,14 +33,14 @@ closure_js_binary(
     deps = [":property_lib"],
 )
 
-file_test(
+closure_js_binary_output_test(
     name = "propertyWithoutQuotes_getsRenamed",
-    content = "console.log({a:\"world\"});\n",
-    file = "property_bin.js",
+    expected_output = "golden/property_without_quotes_gets_renamed.js",
+    target = ":property_bin",
 )
 
-file_test(
+closure_js_binary_property_renaming_report_test(
     name = "propertyRenamingReportDef_createsAdditionalOutputFile",
-    content = "hello:a\n",
-    file = "property_bin_renaming_report.txt",
+    expected_output = "golden/property_renaming_report.txt",
+    target = ":property_bin",
 )
