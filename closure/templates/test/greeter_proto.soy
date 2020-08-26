@@ -14,12 +14,13 @@
 
 {namespace io.bazel.rules.closure.soy.protoGreeter}
 
+import {Person} from 'closure/templates/test/person.proto';
 
 /**
  * Greets a person.
  */
 {template .greet}
-  {@param person: io.bazel.rules.closure.soy.Person}
+  {@param person: Person}
 
   {call io.bazel.rules.closure.soy.greeter.greet}
     {param name kind="text"}
