@@ -143,7 +143,7 @@ abstract class CheckStrictDeps
     private void checkNamespaceIsProvided(NodeTraversal t, Node n, String namespace) {
       if (namespace.startsWith("/") || namespace.startsWith(".")) {
         // TODO(jart): Unify path resolution with ModuleLoader.
-        Webpath me = Webpath.get(t.getSourceName());
+        Webpath me = Webpath.get(convertPathToModuleName(t.getSourceName(), state.roots).or(t.getSourceName()));
         if (!me.isAbsolute()) {
           me = Webpath.get("/").resolve(me);
         }
