@@ -100,7 +100,7 @@ public abstract class ProgramResult {
       checkArgument(warnings.length > 0);
       check("warnings()")
           .that(actual.warnings())
-          .containsExactly(Arrays.asList(warnings))
+          .containsExactlyElementsIn(warnings)
           .inOrder();
       return this;
     }
@@ -115,7 +115,7 @@ public abstract class ProgramResult {
       checkArgument(warnings.length > 0);
       check("warnings()")
           .that(actual.warnings())
-          .containsExactly(Arrays.asList(warnings))
+          .containsExactlyElementsIn(warnings)
           .inOrder();
     }
   }
