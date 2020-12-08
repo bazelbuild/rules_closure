@@ -16,7 +16,7 @@ package(default_testonly = True)
 
 licenses(["notice"])  # Apache 2.0
 
-load("//closure/private:file_test.bzl", "file_test")
+load("//closure/private:expected_output_test.bzl", "closure_js_binary_output_test")
 load("//closure:defs.bzl", "closure_js_binary")
 load(":zip_file_test_library.bzl", "zip_file_test_library")
 
@@ -30,10 +30,10 @@ closure_js_binary(
     deps = [":main_lib"],
 )
 
-file_test(
+closure_js_binary_output_test(
     name = "zip_files_worksCorrectly",
-    content = "console.log(\"hi from zip\");\n",
-    file = "main_bin.js",
+    expected_output = "golden/zip_files_works_correctly.js",
+    target = ":main_bin",
 )
 
 zip_file_test_library(
@@ -50,8 +50,8 @@ closure_js_binary(
     deps = [":main_with_error_lib"],
 )
 
-file_test(
+closure_js_binary_output_test(
     name = "zip_files_areSuppressable",
-    content = "iDontExist();\n",
-    file = "main_with_error_bin.js",
+    expected_output = "golden/zip_files_are_suppressable.js",
+    target = ":main_with_error_bin",
 )

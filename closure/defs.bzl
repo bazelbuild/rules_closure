@@ -13,7 +13,7 @@
 # limitations under the License.
 
 load("//closure/compiler:closure_js_aspect.bzl", _closure_js_aspect = "closure_js_aspect")
-load("//closure/compiler:closure_js_binary.bzl", _closure_js_binary = "closure_js_binary")
+load("//closure/compiler:closure_js_binary.bzl", _closure_js_binary = "closure_js_binary", _JavaScriptBinaryInfo = "JavaScriptBinaryInfo")
 load("//closure/compiler:closure_js_deps.bzl", _closure_js_deps = "closure_js_deps")
 load("//closure/compiler:closure_js_library.bzl", _closure_js_library = "closure_js_library", _create_closure_js_library = "create_closure_js_library")
 load("//closure/private:defs.bzl", _CLOSURE_JS_TOOLCHAIN_ATTRS = "CLOSURE_JS_TOOLCHAIN_ATTRS")
@@ -30,6 +30,8 @@ load("//closure/testing:phantomjs_test.bzl", _phantomjs_test = "phantomjs_test")
 load("//closure:filegroup_external.bzl", _filegroup_external = "filegroup_external")
 load("//closure:webfiles/web_library.bzl", _web_library = "web_library")
 load("//closure:webfiles/web_library_external.bzl", _web_library_external = "web_library_external")
+
+JavaScriptBinaryInfo = _JavaScriptBinaryInfo
 
 closure_js_aspect = _closure_js_aspect
 closure_js_binary = _closure_js_binary

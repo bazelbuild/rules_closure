@@ -16,8 +16,8 @@ package(default_testonly = True)
 
 licenses(["notice"])  # Apache 2.0
 
-load("//closure/private:file_test.bzl", "file_test")
-load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
+load("//closure/private:expected_output_test.bzl", "closure_js_binary_output_test")
+load("//closure:defs.bzl", "closure_js_binary", "closure_js_library", "closure_js_test")
 
 ################################################################################
 # Assume we want to write a JavaScript program (not a library) that we compile
@@ -39,10 +39,10 @@ closure_js_binary(
     deps = [":program_lib"],
 )
 
-file_test(
+closure_js_binary_output_test(
     name = "fileWithoutNamespacesExportsOrEntryPoints_producesBinaryThatExecutesCodeInGlobalNamespace",
-    content = "console.log(\"hi\");\n",
-    file = "program_bin.js",
+    expected_output = "golden/file_without_namespaces_exports_or_entry_points_produces_binary_that_executes_code_in_global_namespace.js",
+    target = ":program_bin",
 )
 
 ################################################################################
@@ -59,15 +59,19 @@ closure_js_library(
     srcs = ["library.js"],
 )
 
-closure_js_binary(
-    name = "library_bin",
-    deps = [":library_lib"],
-)
-
-file_test(
+closure_js_test(
     name = "es6_exportedFunction_willGoInBinary",
-    file = "library_bin.js",
-    regexp = "iWillGoIntoTheBinary",
+    srcs = [
+        "es6_exported_function_will_go_in_binary_test.js",
+    ],
+    entry_points = [
+        "/closure/compiler/test/exports_and_entry_points/es6_exported_function_will_go_in_binary_test.js",
+        "/closure/compiler/test/exports_and_entry_points/library.js",
+    ],
+    deps = [
+        ":library_lib",
+        "//closure/library/testing:testsuite",
+    ],
 )
 
 ################################################################################
@@ -86,16 +90,19 @@ closure_js_library(
     suppress = ["useOfGoogProvide"],
 )
 
-closure_js_binary(
-    name = "library_goog_bin",
-    entry_points = ["goog:io.bazel.rules.closure.iWillGoIntoTheBinary"],
-    deps = [":library_goog_lib"],
-)
-
-file_test(
+closure_js_test(
     name = "goog_exportedFunction_willGoInBinary",
-    file = "library_goog_bin.js",
-    regexp = "iWillGoIntoTheBinary",
+    srcs = [
+        "goog_exported_function_will_go_in_binary_test.js",
+    ],
+    entry_points = [
+        "/closure/compiler/test/exports_and_entry_points/goog_exported_function_will_go_in_binary_test.js",
+        "/closure/compiler/test/exports_and_entry_points/library_goog.js",
+    ],
+    deps = [
+        ":library_goog_lib",
+        "//closure/library/testing:testsuite",
+    ],
 )
 
 ################################################################################
@@ -113,10 +120,10 @@ closure_js_binary(
     ],
 )
 
-file_test(
+closure_js_binary_output_test(
     name = "strictModeGlobalCodeNotListedInEntryPoints_codeGoesPoof",
-    content = "\n",
-    file = "program_strict_bin.js",
+    expected_output = "golden/strict_mode_global_code_not_listed_in_entry_points_code_goes_poof.js",
+    target = ":program_strict_bin",
 )
 
 closure_js_binary(
@@ -129,8 +136,8 @@ closure_js_binary(
     ],
 )
 
-file_test(
+closure_js_binary_output_test(
     name = "strictModeGlobalCodeIsListedInEntryPoints_codeShowsUp",
-    content = "console.log(\"hi\");\n",
-    file = "program_strict_bin2.js",
+    expected_output = "golden/strict_mode_global_code_is_listed_in_entry_points_code_shows_up.js",
+    target = ":program_strict_bin2",
 )

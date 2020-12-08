@@ -16,6 +16,7 @@ package(default_testonly = True)
 
 licenses(["notice"])  # Apache 2.0
 
+load("//closure/private:expected_output_test.bzl", "closure_js_binary_output_test")
 load("//closure/private:file_test.bzl", "file_test")
 load("//closure:defs.bzl", "closure_css_binary", "closure_css_library", "closure_js_binary", "closure_js_library")
 
@@ -103,10 +104,10 @@ closure_js_binary(
     deps = [":rename_lib"],
 )
 
-file_test(
+closure_js_binary_output_test(
     name = "jsBinaryReferencesCssBinary_googGetCssNameCallsGetRewritten",
-    content = "console.log(\"a-b\");\n",
-    file = "rename_bin.js",
+    expected_output = "golden/js_binary_references_css_binary_goog_get_css_name_calls_get_rewritten.js",
+    target = ":rename_bin",
 )
 
 closure_css_binary(

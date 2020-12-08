@@ -33,6 +33,23 @@ load(
     "closure_js_aspect",
 )
 
+JavaScriptBinaryInfo = provider(
+    doc = "Encapsulates information provided by `closure_js_binary`.",
+    fields = {
+        "output": """
+Primary output file.
+""".strip(),
+        "sourcemap": """
+The sourcemap file.
+""".strip(),
+        "property_renaming_report": """
+File containing a serialized version of the property renaming map.
+
+If `compilation_level` is not `ADVANCED`, this is an empty file.
+""".strip(),
+    },
+)
+
 _dependency_mode_warning = '\n'.join([
   "{target}: dependency_mode={old_mode} is deprecated and will be " +
       "removed soon; prefer to use its equivalent {new_mode}.",
@@ -77,11 +94,19 @@ def _impl(ctx):
 
     _validate_css_graph(ctx, js)
 
+    output = ctx.actions.declare_file("{}.js".format(ctx.attr.name))
+    sourcemap = ctx.actions.declare_file("{}.js.map".format(ctx.attr.name))
+
+    if ctx.outputs.property_renaming_report:
+        property_renaming_report = ctx.outputs.property_renaming_report
+    else:
+        property_renaming_report = ctx.actions.declare_file("{}.property_renaming_report.txt".format(ctx.attr.name))
+
     # This is the list of files we'll be generating.
-    outputs = [ctx.outputs.bin, ctx.outputs.map, ctx.outputs.stderr]
+    outputs = [output, sourcemap, ctx.outputs.stderr]
 
     # This is the subset of that list we'll report to parent rules.
-    files = [ctx.outputs.bin, ctx.outputs.map]
+    files = [output, sourcemap]
 
     # JsCompiler is thin veneer over the Closure compiler. It's configured with a
     # superset of its flags. It introduces a private testing API, allows per-file
@@ -91,9 +116,9 @@ def _impl(ctx):
     args = [
         "JsCompiler",
         "--js_output_file",
-        ctx.outputs.bin.path,
+        output.path,
         "--create_source_map",
-        ctx.outputs.map.path,
+        sourcemap.path,
         "--output_errors",
         ctx.outputs.stderr.path,
         "--language_in",
@@ -138,7 +163,7 @@ def _impl(ctx):
     js_module_roots = sort_roots(
         depset(transitive = [
             find_js_module_roots(
-                [ctx.outputs.bin],
+                [output],
                 ctx.workspace_name,
                 ctx.label,
                 getattr(ctx.attr, "includes", []),
@@ -155,7 +180,7 @@ def _impl(ctx):
     # stored within the same directory as the compiled JS binary; therefore, the
     # JSON sourcemap file should cite that file as relative to itself.
     args.append("--source_map_location_mapping")
-    args.append("%s|%s" % (ctx.outputs.bin.path, ctx.outputs.bin.basename))
+    args.append("%s|%s" % (output.path, output.basename))
 
     # By default we're going to include the raw sources in the .js.map file. This
     # can be disabled with the nodefs attribute.
@@ -205,12 +230,16 @@ def _impl(ctx):
         if ctx.attr.output_wrapper == "(function(){%output%}).call(this);":
             args.append("--assume_function_wrapper")
 
-    if ctx.outputs.property_renaming_report:
-        report = ctx.outputs.property_renaming_report
-        files.append(report)
-        outputs.append(report)
+    if  ("ADVANCED" == ctx.attr.compilation_level) and (not ctx.attr.internal_expect_failure):
+        files.append(property_renaming_report)
+        outputs.append(property_renaming_report)
         args.append("--property_renaming_report")
-        args.append(report.path)
+        args.append(property_renaming_report.path)
+    else:
+        ctx.actions.write(
+            output = property_renaming_report,
+            content = "",
+        )
 
     # All sources must conform to these protos.
     for config in ctx.files.conformance:
@@ -268,7 +297,7 @@ def _impl(ctx):
         execution_requirements = {"supports-workers": "1"},
         progress_message = "Compiling %d JavaScript files to %s" % (
             len(js.srcs.to_list()),
-            ctx.outputs.bin.short_path,
+            output.short_path,
         ),
     )
 
@@ -280,8 +309,8 @@ def _impl(ctx):
         files = depset(files),
         closure_js_library = js,
         closure_js_binary = struct(
-            bin = ctx.outputs.bin,
-            map = ctx.outputs.map,
+            bin = output,
+            map = sourcemap,
             language = ctx.attr.language,
         ),
         runfiles = ctx.runfiles(
@@ -292,6 +321,17 @@ def _impl(ctx):
                 collect_runfiles(ctx.attr.data),
             ]),
         ),
+
+        # Modern-stype providers.
+        #
+        # TODO(yannic): Remove legacy providers.
+        providers = [
+            JavaScriptBinaryInfo(
+                output = output,
+                sourcemap = sourcemap,
+                property_renaming_report = property_renaming_report,
+            ),
+        ],
     )
 
 def _validate_css_graph(ctx, js):
@@ -345,8 +385,6 @@ closure_js_binary = rule(
         "internal_expect_warnings": attr.bool(default = False),
     }, **CLOSURE_JS_TOOLCHAIN_ATTRS),
     outputs = {
-        "bin": "%{name}.js",
-        "map": "%{name}.js.map",
         "stderr": "%{name}-stderr.txt",
     },
 )
