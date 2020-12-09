@@ -248,3 +248,27 @@ sh_test(
         ":exports_data",
     ],
 )
+
+# TEST: ES6 module can import another via a workspace-relative extensionless import path.
+
+closure_js_library(
+    name = "es6module1",
+    srcs = ["es6module1.js"],
+    no_closure_library = True,
+)
+
+closure_js_library(
+    name = "es6module2",
+    srcs = ["es6module2.js"],
+    #    suppress = ["moduleLoad"],
+    no_closure_library = True,
+    deps = [":es6module1"],
+)
+
+closure_js_binary(
+    name = "es6module_bin",
+    compilation_level = "ADVANCED",
+    entry_points = ["/closure/compiler/test/es6module2"],
+    language = "ECMASCRIPT5",
+    deps = [":es6module2"],
+)
