@@ -35,12 +35,12 @@ closure_js_binary(
 
 file_test(
     name = "propertyWithoutQuotes_getsRenamed",
-    content = "console.log({a:\"world\"});\n",
+    regexp = r'console.log({\w:"world"});',
     file = "property_bin.js",
 )
 
 file_test(
     name = "propertyRenamingReportDef_createsAdditionalOutputFile",
-    content = "hello:a\n",
+    regexp = "hello:\\w",
     file = "property_bin_renaming_report.txt",
 )
