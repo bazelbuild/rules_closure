@@ -57,7 +57,6 @@ final class Diagnostics {
           "nonStandardJsDocs",
           "setTestOnly",
           "strictDependencies",
-          "strictMissingRequire",
           "strictModuleChecks",
           "superfluousSuppress",
           "underscore");
