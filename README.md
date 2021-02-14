@@ -329,7 +329,7 @@ This rule can be referenced as though it were the following:
 
   - `WHITESPACE_ONLY`: Tells the Closure Compiler to strip whitespace and
     comments. Transpilation between languages will still work. Type checking
-    becomes disabled. No symbols will not be renamed. Nothing will be inlined.
+    becomes disabled. No symbols will be renamed. Nothing will be inlined.
     Dependency statements will not be removed. **ProTip:** If you're using the
     Closure Library, you'll need to look into the `CLOSURE_NO_DEPS` and
     `goog.ENABLE_DEBUG_LOADER` options in order to execute the compiled output.)
