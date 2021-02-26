@@ -9,9 +9,9 @@ rules_closure_toolchains()
 
 http_archive(
     name = "bazel_skylib",
-    sha256 = "bbccf674aa441c266df9894182d80de104cabd19be98be002f6d478aaa31574d",
-    strip_prefix = "bazel-skylib-2169ae1c374aab4a09aa90e65efe1a3aad4e279b",
-    urls = ["https://github.com/bazelbuild/bazel-skylib/archive/2169ae1c374aab4a09aa90e65efe1a3aad4e279b.tar.gz"],
+    sha256 = "7ac0fa88c0c4ad6f5b9ffb5e09ef81e235492c873659e6bb99efb89d11246bcb",
+    strip_prefix = "bazel-skylib-1.0.3",
+    urls = ["https://github.com/bazelbuild/bazel-skylib/archive/1.0.3.tar.gz"],
 )
 
 java_import_external(
