@@ -38,15 +38,7 @@ file_test(
 
 file_test(
     name = "sourcemap_doesntContainWeirdBazelDirectories",
-    content = ("{\n" +
-               "\"version\":3,\n" +
-               "\"file\":\"hello_bin.js\",\n" +
-               "\"lineCount\":1,\n" +
-               "\"mappings\":\"AAgBAA,OAAA,CAAUC,GAAV,CAAgB,aAAhB;\",\n" +
-               "\"sources\":[\"/closure/compiler/test/hello.js\"],\n" +
-               "\"sourcesContent\":[\"// Copyright 2016 The Closure Rules Authors. All rights reserved.\\n//\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\");\\n// you may not use this file except in compliance with the License.\\n// You may obtain a copy of the License at\\n//\\n//    http://www.apache.org/licenses/LICENSE-2.0\\n//\\n// Unless required by applicable law or agreed to in writing, software\\n// distributed under the License is distributed on an \\\"AS IS\\\" BASIS,\\n// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\\n// See the License for the specific language governing permissions and\\n// limitations under the License.\\n\\n// hello world\\n\\nconsole . log ( 'hello world' ) ;\\n\"],\n" +
-               "\"names\":[\"console\",\"log\"]\n" +
-               "}\n"),
+    regexp = r""""sources":\["/closure/compiler/test/hello.js"\]""",
     file = "hello_bin.js.map",
 )
 
@@ -72,15 +64,7 @@ file_test(
 
 file_test(
     name = "sourcemapWithWrapper_hasDifferentMappingCodes",
-    content = "{\n" +
-              "\"version\":3,\n" +
-              "\"file\":\"hello_wrap_bin.js\",\n" +
-              "\"lineCount\":1,\n" +
-              "\"mappings\":\"A,YAgBAA,OAAA,CAAUC,GAAV,CAAgB,aAAhB;\",\n" +
-              "\"sources\":[\"/closure/compiler/test/hello.js\"],\n" +
-              "\"sourcesContent\":[\"// Copyright 2016 The Closure Rules Authors. All rights reserved.\\n//\\n// Licensed under the Apache License, Version 2.0 (the \\\"License\\\");\\n// you may not use this file except in compliance with the License.\\n// You may obtain a copy of the License at\\n//\\n//    http://www.apache.org/licenses/LICENSE-2.0\\n//\\n// Unless required by applicable law or agreed to in writing, software\\n// distributed under the License is distributed on an \\\"AS IS\\\" BASIS,\\n// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\\n// See the License for the specific language governing permissions and\\n// limitations under the License.\\n\\n// hello world\\n\\nconsole . log ( 'hello world' ) ;\\n\"],\n" +
-              "\"names\":[\"console\",\"log\"]\n" +
-              "}\n",
+    regexp = r""""mappings":"[A-Za-z,]\+;",""",
     file = "hello_wrap_bin.js.map",
 )
 
