@@ -38,7 +38,7 @@ file_test(
 
 file_test(
     name = "sourcemap_doesntContainWeirdBazelDirectories",
-    regexp = r""""sources":\["/closure/compiler/test/hello.js"\]""",
+    regexp = r'"sources":\["/closure/compiler/test/hello.js"\]',
     file = "hello_bin.js.map",
 )
 
@@ -64,7 +64,7 @@ file_test(
 
 file_test(
     name = "sourcemapWithWrapper_hasDifferentMappingCodes",
-    regexp = r""""mappings":"[A-Za-z,]\+;",""",
+    regexp = r'"mappings":"[A-Za-z,]\+;",',
     file = "hello_wrap_bin.js.map",
 )
 
