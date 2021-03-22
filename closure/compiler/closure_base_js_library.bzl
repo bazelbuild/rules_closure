@@ -14,7 +14,7 @@
 
 """Internal-only build definition for a Closure JS library containing Closure base."""
 
-load("//closure:defs.bzl", "create_closure_js_library")
+load("//closure/compiler:closure_js_library.bzl", "create_closure_js_library")
 load("//closure/private:defs.bzl", "CLOSURE_WORKER_ATTR", "JS_FILE_TYPE", "UNUSABLE_TYPE_DEFINITION")
 
 def _closure_base_js_library(ctx):

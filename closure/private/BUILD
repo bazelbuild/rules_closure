@@ -13,6 +13,7 @@
 # limitations under the License.
 
 load("//closure/compiler:closure_base_js_library.bzl", "closure_base_js_library")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -30,4 +31,14 @@ closure_base_js_library(
     srcs = [
         "@com_google_javascript_closure_library//:closure/goog/base.js",
     ],
+)
+
+bzl_library(
+    name = "defs_bzl",
+    srcs = ["defs.bzl"],
+)
+
+bzl_library(
+    name = "files_equal_test_bzl",
+    srcs = ["files_equal_test.bzl"],
 )

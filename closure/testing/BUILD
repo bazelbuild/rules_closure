@@ -20,6 +20,7 @@ package(
 licenses(["notice"])  # Apache 2.0
 
 load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
 exports_files(["empty.html"])
 
@@ -41,3 +42,21 @@ closure_js_binary(
     defs = ["--env=CUSTOM"],
     deps = [":phantomjs_harness"],
 )
+
+bzl_library(
+    name = "phantomjs_test_bzl",
+    srcs = ["phantomjs_test.bzl"],
+    deps = [
+        "//closure/compiler:compiler_bzl",
+    ],
+)
+
+bzl_library(
+    name = "closure_js_test_bzl",
+    srcs = ["closure_js_test.bzl"],
+    deps = [
+        ":phantomjs_test_bzl",
+        "//closure/compiler:compiler_bzl",
+    ],
+)
+

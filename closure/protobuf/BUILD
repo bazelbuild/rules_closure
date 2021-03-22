@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
 package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # Apache 2.0
@@ -35,5 +37,21 @@ closure_js_library(
         "//closure/library/crypt:base64",
         "//closure/library/object",
         "//closure/library/string",
+    ],
+)
+
+bzl_library(
+    name = "closure_js_proto_library_bzl",
+    srcs = ["closure_js_proto_library.bzl"],
+    deps = [
+        "//closure/compiler:compiler_bzl",
+    ],
+)
+
+bzl_library(
+    name = "closure_proto_library_bzl",
+    srcs = ["closure_proto_library.bzl"],
+    deps = [
+        "//closure/compiler:compiler_bzl",
     ],
 )
