@@ -17,8 +17,17 @@ package(default_visibility = ["//visibility:public"])
 licenses(["notice"])  # Apache 2.0
 
 load("@rules_java//java:defs.bzl", "java_library")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
 java_library(
     name = "compiler",
     exports = ["@com_google_javascript_closure_compiler"],
+)
+
+bzl_library(
+    name = "compiler_bzl",
+    srcs = glob(["*.bzl"]),
+    deps = [
+        "//closure/private:defs_bzl",
+    ],
 )
