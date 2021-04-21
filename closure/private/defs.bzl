@@ -64,7 +64,13 @@ CLOSURE_JS_TOOLCHAIN_ATTRS = {
 }
 
 def get_jsfile_path(f):
-    return f.path
+    """Returns the file path for a JavaScript file, otherwise None.
+
+       This may be used to exclude non-JavaScript files inside tree artifacts
+       expanded by Args#add_all.
+    """
+    # TODO(tjgq): Remove .zip once J2CL is switched to tree artifacts.
+    return f.path if f.extension in ["js", "zip"] else None
 
 def unfurl(deps, provider = ""):
     """Returns deps as well as deps exported by parent rules."""

@@ -58,6 +58,14 @@ def _get_dependency_mode_flag(target, attr):
         return "PRUNE"
     return attr
 
+def _get_src_path(f):
+    path = get_jsfile_path(f)
+    if path != None:
+        if f.extension == "zip":
+            return ["--jszip", path]
+        return path
+    return None
+
 def _impl(ctx):
     if not ctx.attr.deps:
         fail("closure_js_binary rules can not have an empty 'deps' list")
@@ -236,15 +244,11 @@ def _impl(ctx):
     all_args.add_all(args)
 
     # We shall now pass all transitive sources, including externs files.
-    for src in js.srcs.to_list():
-        inputs.append(src)
-        if src.path.endswith(".zip"):
-            all_args.add("--jszip")
-        all_args.add_all(
-            [src],
-            map_each = get_jsfile_path,
-            expand_directories = True,
-        )
+    all_args.add_all(
+        js.srcs,
+        map_each = _get_src_path,
+        expand_directories = True,
+    )
 
     # As a matter of policy, we don't add attributes to this rule just because we
     # can. We only add attributes when the Skylark code adds value beyond merely
