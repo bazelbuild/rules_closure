@@ -249,6 +249,7 @@ def _impl(ctx):
         map_each = _get_src_path,
         expand_directories = True,
     )
+    inputs.extend(js.srcs.to_list())
 
     # As a matter of policy, we don't add attributes to this rule just because we
     # can. We only add attributes when the Skylark code adds value beyond merely
