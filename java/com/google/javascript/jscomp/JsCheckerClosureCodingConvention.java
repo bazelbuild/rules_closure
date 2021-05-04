@@ -23,9 +23,4 @@ final class JsCheckerClosureCodingConvention extends CodingConventions.Proxy {
   JsCheckerClosureCodingConvention() {
     super(new ClosureCodingConvention());
   }
-
-  @Override
-  public boolean isPrivate(String name) {
-    return name.endsWith("_");
-  }
 }
