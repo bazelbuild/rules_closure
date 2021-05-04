@@ -26,12 +26,6 @@ closure_js_library(
 )
 
 file_test(
-    name = "memberWithUnderscoreButNoPrivateMarker_causesError",
-    file = "love-stderr.txt",
-    regexp = "JSC_MUST_BE_PRIVATE",
-)
-
-file_test(
     name = "methodMissingJsdoc_causesError",
     file = "love-stderr.txt",
     regexp = "JSC_MISSING_JSDOC",
