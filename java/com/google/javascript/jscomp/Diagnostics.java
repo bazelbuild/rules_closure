@@ -126,8 +126,6 @@ final class Diagnostics {
   static final ImmutableSet<DiagnosticType> CLOSURE_LINTER_CHECKS =
       new ImmutableSet.Builder<DiagnosticType>()
           .addAll(GOOGLE_LINTER_CHECKS)
-          .add(CheckJSDocStyle.MUST_BE_PRIVATE)
-          .add(CheckJSDocStyle.MUST_HAVE_TRAILING_UNDERSCORE)
           .add(ClosureCheckModule.LET_GOOG_REQUIRE)
           .add(ClosureRewriteModule.USELESS_USE_STRICT_DIRECTIVE)
           .add(ImplicitNullabilityCheck.IMPLICITLY_NULLABLE_JSDOC)
