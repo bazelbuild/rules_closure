@@ -23,7 +23,7 @@ import com.google.javascript.rhino.Node;
 import io.bazel.rules.closure.Webpath;
 
 abstract class CheckStrictDeps
-    extends AbstractShallowCallback implements HotSwapCompilerPass {
+    extends AbstractShallowCallback implements CompilerPass {
 
   public static final DiagnosticType DUPLICATE_PROVIDES =
       DiagnosticType.error(
@@ -45,11 +45,6 @@ abstract class CheckStrictDeps
   @Override
   public final void process(Node externs, Node root) {
     NodeTraversal.traverse(compiler, root, this);
-  }
-
-  @Override
-  public final void hotSwapScript(Node scriptRoot, Node originalRoot) {
-    NodeTraversal.traverse(compiler, scriptRoot, this);
   }
 
   static final class FirstPass extends CheckStrictDeps {

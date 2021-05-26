@@ -64,7 +64,7 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
   }
 
   private PassFactory gatherModuleMetadataPass() {
-    return PassFactory.builderForHotSwap()
+    return PassFactory.builder()
         .setName("gather module metadata")
         .setInternalFactory(
             (compiler) ->

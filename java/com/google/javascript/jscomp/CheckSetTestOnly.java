@@ -20,7 +20,7 @@ import com.google.javascript.jscomp.NodeTraversal.AbstractShallowCallback;
 import com.google.javascript.rhino.Node;
 
 final class CheckSetTestOnly
-    extends AbstractShallowCallback implements HotSwapCompilerPass {
+    extends AbstractShallowCallback implements CompilerPass {
 
   public static final DiagnosticType INVALID_SETTESTONLY =
       DiagnosticType.error(
@@ -38,11 +38,6 @@ final class CheckSetTestOnly
   @Override
   public final void process(Node externs, Node root) {
     NodeTraversal.traverse(compiler, root, this);
-  }
-
-  @Override
-  public final void hotSwapScript(Node scriptRoot, Node originalRoot) {
-    NodeTraversal.traverse(compiler, scriptRoot, this);
   }
 
   @Override
