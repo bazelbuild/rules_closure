@@ -23,6 +23,10 @@ load(
     "unfurl",
 )
 
+_ERROR_CLOSURE_JS_DEPS_IS_DEPRECATED = """
+closure_js_deps() and deps.js files are deprecated. Please remove your closure_js_deps rules and, if needed, use the google-closure-deps npm module with bazelbuild/rules_nodejs to generate deps.js files.
+""".strip()
+
 def _impl(ctx):
     deps = unfurl(ctx.attr.deps, provider = "closure_js_library")
     js = collect_js(deps)
@@ -30,6 +34,8 @@ def _impl(ctx):
     closure_root = _dirname(long_path(ctx, base_srcs[0]))
     closure_rel = "/".join([".." for _ in range(len(closure_root.split("/")))])
     outputs = [ctx.outputs.out]
+
+    print(_ERROR_CLOSURE_JS_DEPS_IS_DEPRECATED)
 
     # XXX: Other files in same directory will get schlepped in w/o sandboxing.
     ctx.actions.run(
