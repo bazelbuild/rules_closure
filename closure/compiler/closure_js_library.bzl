@@ -126,7 +126,6 @@ def _closure_js_library_impl(
     if lenient:
         suppress = suppress + [
             "analyzerChecks",
-            "analyzerChecksInternal",
             "deprecated",
             "legacyGoogScopeRequire",
             "lintChecks",
