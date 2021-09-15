@@ -568,8 +568,8 @@ def com_google_errorprone_javac_shaded():
     )
 
 def com_google_guava():
-    version = "25.1"
-    sha256 = "6db0c3a244c397429c2e362ea2837c3622d5b68bb95105d37c21c36e5bc70abf"
+    version = "30.1.1"
+    sha256 = "44ce229ce26d880bf3afc362bbfcec34d7e6903d195bbb1db9f3b6e0d9834f06"
 
     java_import_external(
         name = "com_google_guava",
