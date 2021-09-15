@@ -579,12 +579,26 @@ def com_google_guava():
             "https://repo1.maven.org/maven2/com/google/guava/guava/%s-jre/guava-%s-jre.jar" % (version, version),
         ],
         jar_sha256 = sha256,
+        deps = [
+            "@com_google_guava_failure_access",
+        ],
         exports = [
             "@com_google_code_findbugs_jsr305",
             "@com_google_errorprone_error_prone_annotations",
         ],
     )
 
+    # This is part of guava but is split out from core to allow android to pull this part independenty.
+    java_import_external(
+        name = "com_google_guava_failure_access",
+        licenses = ["notice"],  # Apache 2.0
+        jar_urls = [
+            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
+            "https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar"
+        ],
+        jar_sha256 = "a171ee4c734dd2da837e4b16be9df4661afab72a41adaf31eb84dfdaf936ca26",
+    )
+    
 def com_google_inject_extensions_guice_assistedinject():
     java_import_external(
         name = "com_google_inject_extensions_guice_assistedinject",
