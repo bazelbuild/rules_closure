@@ -185,19 +185,16 @@ def _closure_js_library_impl(
     # the abstract syntax tree, such as provided namespaces. This information is
     # propagated up to parent rules for strict dependency checking. It's also
     # used by the Closure Compiler when producing the final JS binary.
-    args = [
-        "JsChecker",
-        "--label",
-        str(label),
-        "--output",
-        info_file.path,
-        "--output_errors",
-        stderr_file.path,
-        "--output_ijs_file",
-        ijs_file.path,
-        "--convention",
-        convention,
-    ]
+    args = ctx.actions.args()
+    args.use_param_file("@@%s", use_always = True)
+    args.set_param_file_format("multiline")
+
+    args.add("JsChecker")
+    args.add("--label", str(label))
+    args.add("--output", info_file)
+    args.add("--output_errors", stderr_file)
+    args.add("--output_ijs_file", ijs_file)
+    args.add("--convention", convention)
 
     # Because JsChecker is an edge in the build graph, we need to declare all of
     # its input vertices.
@@ -207,20 +204,18 @@ def _closure_js_library_impl(
     # rather than from a meta-system like shell scripts. In order to do that, we
     # need a way to toggle the return status of the process.
     if internal_expect_failure:
-        args.append("--expect_failure")
+        args.add("--expect_failure")
 
     # JsChecker wants to know if this is a testonly rule so it can throw an error
     # if goog.setTestOnly() is used.
     if testonly:
-        args.append("--testonly")
+        args.add("--testonly")
 
     # The suppress attribute is a Closure Rules feature that makes warnings and
     # errors go away. It's a list of strings containing DiagnosticGroup (coarse
     # grained) or DiagnosticType (fine grained) codes. These apply not only to
     # JsChecker, but also propagate up to closure_js_binary.
-    for s in suppress:
-        args.append("--suppress")
-        args.append(s)
+    args.add_all(suppress, before_each = "--suppress")
 
     # Pass source file paths to JsChecker. Under normal circumstances, these
     # paths appear to be relative to the root of the repository. But they're
@@ -229,14 +224,8 @@ def _closure_js_library_impl(
     # paths might contain weird bazel-out/blah/external/ prefixes. These paths
     # are by no means canonical and can change for a particular file based on
     # where the ctx.action is located.
-    # TODO(davido): Find out how to avoid that hack
-    srcs_it = srcs
-    if type(srcs) == "depset":
-        srcs_it = srcs.to_list()
-    for f in srcs_it:
-        args.append("--src")
-        args.append(f.path)
-        inputs.append(f)
+    args.add_all(srcs, before_each = "--src", expand_directories = True)
+    srcs_it = srcs if type(srcs) != "depset" else srcs.to_list()
 
     # In order for JsChecker to turn weird Bazel paths into ES6 module names, we
     # need to give it a list of path prefixes to strip. By default, the ES6
@@ -246,9 +235,7 @@ def _closure_js_library_impl(
     js_module_roots = sort_roots(
         find_js_module_roots(srcs, workspace_name, label, includes),
     )
-    for root in js_module_roots:
-        args.append("--js_module_root")
-        args.append(root)
+    args.add_all(js_module_roots, before_each = "--js_module_root")
 
     # We keep track of ES6 module names so we can guarantee that no namespace
     # collisions exist for any particular transitive closure. By making it
@@ -270,27 +257,21 @@ def _closure_js_library_impl(
         fail("Intrarule namespace collision detected")
 
     # Give JsChecker the ClosureJsLibrary protobufs outputted by direct children.
+    info_files = []
     for dep in deps:
         # Polymorphic rules, e.g. closure_css_library, might not provide this.
         info = getattr(dep.closure_js_library, "info", None)
         if info:
-            args.append("--dep")
-            args.append(info.path)
-            inputs.append(info)
-
-    # The list of flags could potentially be very long. So we're going to write
-    # them all to a file which gets loaded automatically by our BazelWorker
-    # middleware.
-    argfile = create_argfile(actions, label.name, args)
-    inputs.append(argfile)
+            args.add("--dep", info)
+            info_files.append(info)
 
     # Add a JsChecker edge to the build graph. The command itself will only be
     # executed if something that requires its output is executed.
     actions.run(
-        inputs = inputs,
+        inputs = srcs_it + info_files,
         outputs = [info_file, stderr_file, ijs_file],
         executable = closure_worker,
-        arguments = ["@@" + argfile.path],
+        arguments = [args],
         mnemonic = "Closure",
         execution_requirements = {"supports-workers": "1"},
         progress_message = make_jschecker_progress_message(srcs, label),
@@ -479,3 +460,4 @@ closure_js_library = rule(
         "typecheck": "%{name}_typecheck",  # dummy output file
     },
 )
+
