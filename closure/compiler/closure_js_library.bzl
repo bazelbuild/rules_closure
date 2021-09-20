@@ -24,6 +24,7 @@ load(
     "convert_path_to_es6_module_name",
     "create_argfile",
     "find_js_module_roots",
+    "get_jsfile_path",
     "library_level_checks",
     "make_jschecker_progress_message",
     "sort_roots",
@@ -224,7 +225,7 @@ def _closure_js_library_impl(
     # paths might contain weird bazel-out/blah/external/ prefixes. These paths
     # are by no means canonical and can change for a particular file based on
     # where the ctx.action is located.
-    args.add_all(srcs, before_each = "--src", expand_directories = True)
+    args.add_all(srcs, before_each = "--src", expand_directories = True,map_each = get_jsfile_path)
     srcs_it = srcs if type(srcs) != "depset" else srcs.to_list()
 
     # In order for JsChecker to turn weird Bazel paths into ES6 module names, we
