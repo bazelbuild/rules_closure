@@ -22,7 +22,7 @@ JS_LANGUAGE_DEFAULT = "ECMASCRIPT5_STRICT"
 JS_TEST_FILE_TYPE = ["_test.js"]
 SOY_FILE_TYPE = [".soy"]
 
-JS_LANGUAGE_IN = "ECMASCRIPT_2017"
+JS_LANGUAGE_IN = "STABLE"
 JS_LANGUAGE_OUT_DEFAULT = "ECMASCRIPT5"
 JS_LANGUAGES = depset([
     "ECMASCRIPT3",
@@ -276,7 +276,7 @@ def library_level_checks(
         "--jscomp_off",
         "reportUnknownTypes",
         "--language_in",
-        "ECMASCRIPT_2017",
+        "STABLE",
         "--language_out",
         "ECMASCRIPT5",
         "--js_output_file",
