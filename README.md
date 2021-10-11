@@ -4,8 +4,8 @@ JavaScript | Templating | Stylesheets | Miscellaneous
 --- | --- | --- | ---
 [closure_js_library] | [closure_js_template_library] | [closure_css_library] | [closure_js_proto_library]
 [closure_js_binary] | [closure_java_template_library] | [closure_css_binary] | [phantomjs_test]
-[closure_js_deps] | [closure_py_template_library] | | [closure_proto_library] \(Experimental\)
-[closure_js_test] | | | [closure_grpc_web_library] \(Experimental\)
+[closure_js_test] | [closure_py_template_library] | | [closure_proto_library] \(Experimental\)
+| | | | [closure_grpc_web_library] \(Experimental\)
 
 ## Overview
 
@@ -495,53 +495,6 @@ This rule can be referenced as though it were the following:
   to report the result to the `harness`.
 
 
-## closure\_js\_deps
-
-```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_deps")
-closure_js_deps(name, deps)
-```
-
-Generates a dependency file, for an application using the Closure Library.
-
-Generating this file is necessary for running an application in raw sources
-mode, because it tells the Closure Library how to load namespaces from the web
-server that are requested by `goog.require()`.
-
-For example, if you've made your source runfiles available under a protected
-admin-only path named `/filez/`, then raw source mode could be used as follows:
-
-```html
-<script src="/filez/external/closure_library/closure/goog/base.js"></script>
-<script src="/filez/myapp/deps.js"></script>
-<script>goog.require('myapp.main');</script>
-<script>myapp.main();</script>
-```
-
-#### Implicit Output Targets
-
-- *name*.js: A JavaScript source file containing `goog.addDependency()`
-  statements which map Closure Library namespaces to JavaScript source paths.
-  Each path is expressed relative to the location of the Closure Library
-  [base.js] file.
-
-#### Rule Polymorphism
-
-This rule can be referenced as though it were the following:
-
-- [filegroup]: `srcs` will be the deps.js output files and `data` will contain
-  that file in addition to all transitive JS sources and data.
-
-### Arguments
-
-- **name:** ([Name]; required) A unique name for this rule. Convention states
-  that this be `"deps"`.
-
-- **deps:** (List of [labels]; required) List of [closure_js_library] and
-  [closure_js_template_library] targets which define all JavaScript sources in
-  your application.
-
-
 ## closure\_js\_template\_library
 
 ```starlark
@@ -973,7 +926,6 @@ This rule can be referenced as though it were the following:
 [closure_grpc_web_library]: https://github.com/grpc/grpc-web/blob/9b7b2d5411c486aa646ba2491cfd894d5352775b/bazel/closure_grpc_web_library.bzl#L149
 [closure_java_template_library]: #closure_java_template_library
 [closure_js_binary]: #closure_js_binary
-[closure_js_deps]: #closure_js_deps
 [closure_js_library]: #closure_js_library
 [closure_js_proto_library]: #closure_js_proto_library
 [closure_js_template_library]: #closure_js_template_library
