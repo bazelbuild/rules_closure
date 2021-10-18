@@ -722,7 +722,7 @@ def com_google_javascript_closure_library():
         strip_prefix = "closure-library-a3a34924b764bc5c6ae6fa05238f4006d9af3528",
         urls = ["https://github.com/google/closure-library/archive/a3a34924b764bc5c6ae6fa05238f4006d9af3528.tar.gz"],
         patch_args = ["-p1"],
-        patches = [str(Label("//third-party/closure:com_google_javascript_closure_library.suppressions.patch"))],
+        patches = [str(Label("//third_party/closure:com_google_javascript_closure_library.suppressions.patch"))],
     )
 
 def com_google_jsinterop_annotations():
