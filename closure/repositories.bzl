@@ -764,10 +764,10 @@ def com_google_template_soy():
         name = "com_google_template_soy",
         licenses = ["notice"],  # Apache 2.0
         jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2020-08-24/soy-2020-08-24.jar",
-            "https://repo1.maven.org/maven2/com/google/template/soy/2020-08-24/soy-2020-08-24.jar",
+            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2021-02-01/soy-2021-02-01.jar",
+            "https://repo1.maven.org/maven2/com/google/template/soy/2021-02-01/soy-2021-02-01.jar",
         ],
-        jar_sha256 = "60c59b9f5d3074b5b72b18f00efd4c96d10deb0693a16f40ce538657c51f63a4",
+        jar_sha256 = "1b96cc533e8fdfb8c5287df3fb614cb46833b48cd0bc59337751fe3220ddf0b6",
         deps = [
             "@args4j",
             "@com_google_code_findbugs_jsr305",
