@@ -24,7 +24,7 @@ def _collect_includes(srcs):
         if src.startswith("@"):
             include = Label(src).workspace_root
         if include and not include in includes:
-            includes += [include]
+            includes.append(include)
     return includes
 
 def closure_js_proto_library(
@@ -40,17 +40,17 @@ def closure_js_proto_library(
     cmd = ["$(location %s)" % protocbin]
     js_out_options = ["library=%s" % name]
     if add_require_for_enums:
-        js_out_options += ["add_require_for_enums"]
+        js_out_options.append("add_require_for_enums")
     if testonly:
-        js_out_options += ["testonly"]
+        js_out_options.append("testonly")
     if binary:
-        js_out_options += ["binary"]
+        js_out_options.append("binary")
     if import_style:
-        js_out_options += ["import_style=%s" % import_style]
+        js_out_options.append("import_style=%s" % import_style)
 
     cmd += ["-I%s" % i for i in _collect_includes(srcs)]
-    cmd += ["--js_out=%s:$(@D)" % ",".join(js_out_options)]
-    cmd += ["--descriptor_set_out=$(@D)/%s.descriptor" % name]
+    cmd.append("--js_out=%s:$(@D)" % ",".join(js_out_options))
+    cmd.append("--descriptor_set_out=$(@D)/%s.descriptor" % name)
     cmd += ["$(locations " + src + ")" for src in srcs]
 
     native.genrule(
@@ -69,7 +69,7 @@ def closure_js_proto_library(
         srcs = [name + ".js"],
         testonly = testonly,
         deps = [
-            str(Label("//closure/library/array")),
+            str(Label("@com_google_javascript_closure_library//closure/goog/array")),
             str(Label("//closure/protobuf:jspb")),
         ],
         internal_descriptors = [name + ".descriptor"],

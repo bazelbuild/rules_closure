@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("//closure:defs.bzl", "closure_js_library", "closure_js_test")
+
 package(default_testonly = True)
 
 licenses(["notice"])  # Apache 2.0
-
-load("//closure:defs.bzl", "closure_js_library", "closure_js_test")
 
 closure_js_library(
     name = "arithmetic_lib",
@@ -29,8 +29,8 @@ closure_js_test(
     timeout = "short",
     srcs = ["simple_test.js"],
     deps = [
-        "//closure/library/testing:asserts",
-        "//closure/library/testing:jsunit",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:jsunit",
     ],
 )
 
@@ -46,9 +46,9 @@ closure_js_test(
     entry_points = ["goog:arithmetic_module_test"],
     deps = [
         ":arithmetic_module_lib",
-        "//closure/library/testing:asserts",
-        "//closure/library/testing:jsunit",
-        "//closure/library/testing:testsuite",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:jsunit",
+        "@com_google_javascript_closure_library//closure/goog/testing:testsuite",
     ],
 )
 
@@ -58,9 +58,9 @@ closure_js_test(
     srcs = ["arithmetic_scope_test.js"],
     deps = [
         ":arithmetic_lib",
-        "//closure/library/testing:asserts",
-        "//closure/library/testing:jsunit",
-        "//closure/library/testing:testsuite",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:jsunit",
+        "@com_google_javascript_closure_library//closure/goog/testing:testsuite",
     ],
 )
 
@@ -77,8 +77,8 @@ closure_js_test(
     suppress = ["moduleLoad"],
     deps = [
         ":arithmetic_es6module_lib",
-        "//closure/library/testing:asserts",
-        "//closure/library/testing:jsunit",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:jsunit",
     ],
 )
 
@@ -95,8 +95,8 @@ closure_js_test(
     lenient = True,
     deps = [
         ":lenient_lib",
-        "//closure/library/testing:asserts",
-        "//closure/library/testing:testsuite",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:testsuite",
     ],
 )
 
@@ -107,7 +107,7 @@ closure_js_test(
         "dict_entry_point_test.js": ["rules_closure.DictEntryPointTest"],
     },
     deps = [
-        "//closure/library/testing:testsuite",
+        "@com_google_javascript_closure_library//closure/goog/testing:testsuite",
     ],
 )
 

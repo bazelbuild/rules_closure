@@ -69,7 +69,7 @@ def _generate_closure_js(target, ctx):
 
     out_options = ",".join(js_out_options)
     out_path = "/".join(js.path.split("/")[:-1])
-    args += ["--js_out=%s:%s" % (out_options, out_path)]
+    args.append("--js_out=%s:%s" % (out_options, out_path))
 
     # Add paths of protos we generate files for.
     args += [file.path for file in target[ProtoInfo].direct_sources]
@@ -115,7 +115,7 @@ closure_proto_aspect = aspect(
             cfg = "host",
         ),
         "_closure_library": attr.label(
-            default = Label("//closure/library/array"),
+            default = Label("@com_google_javascript_closure_library//closure/goog/array"),
         ),
         "_closure_protobuf_jspb": attr.label(
             default = Label("//closure/protobuf:jspb"),

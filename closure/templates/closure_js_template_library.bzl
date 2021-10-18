@@ -26,20 +26,20 @@ def _impl(ctx):
     args = ["--outputPathFormat=%s/{INPUT_DIRECTORY}/{INPUT_FILE_NAME}.js" %
             ctx.configuration.genfiles_dir.path]
     if ctx.attr.soy_msgs_are_external:
-        args += ["--googMsgsAreExternal"]
+        args.append("--googMsgsAreExternal")
     if ctx.attr.should_generate_soy_msg_defs:
-        args += ["--shouldGenerateGoogMsgDefs"]
+        args.append("--shouldGenerateGoogMsgDefs")
     if ctx.attr.bidi_global_dir:
-        args += ["--bidiGlobalDir=%s" % ctx.attr.bidi_global_dir]
+        args.append("--bidiGlobalDir=%s" % ctx.attr.bidi_global_dir)
     if ctx.attr.plugins:
-        args += ["--pluginModules=%s" % ",".join([
+        args.append("--pluginModules=%s" % ",".join([
             m[SoyPluginInfo].generator.module
             for m in ctx.attr.plugins
-        ])]
+        ]))
     for arg in ctx.attr.defs:
         if not arg.startswith("--") or (" " in arg and "=" not in arg):
             fail("Please use --flag=value syntax for defs")
-        args += [arg]
+        args.append(arg)
     inputs = []
     for f in ctx.files.srcs:
         args.append("--srcs=" + f.path)
@@ -49,7 +49,7 @@ def _impl(ctx):
         inputs.append(ctx.file.globals)
     for dep in unfurl(ctx.attr.deps, provider = "closure_js_library"):
         for f in dep.closure_js_library.descriptors.to_list():
-            args += ["--protoFileDescriptors=%s" % f.path]
+            args.append("--protoFileDescriptors=%s" % f.path)
             inputs.append(f)
 
     plugin_transitive_deps = depset(
@@ -126,25 +126,27 @@ def closure_js_template_library(
     )
 
     deps = deps + [
-        str(Label("//closure/library/array")),
-        str(Label("//closure/library/asserts")),
-        str(Label("//closure/library/debug")),
-        str(Label("//closure/library/format")),
-        str(Label("//closure/library/html:safehtml")),
-        str(Label("//closure/library/html:safescript")),
-        str(Label("//closure/library/html:safestyle")),
-        str(Label("//closure/library/html:safestylesheet")),
-        str(Label("//closure/library/html:safeurl")),
-        str(Label("//closure/library/html:trustedresourceurl")),
-        str(Label("//closure/library/html:uncheckedconversions")),
-        str(Label("//closure/library/i18n:bidi")),
-        str(Label("//closure/library/i18n:bidiformatter")),
-        str(Label("//closure/library/i18n:numberformat")),
-        str(Label("//closure/library/object")),
-        str(Label("//closure/library/soy:all_js")),
-        str(Label("//closure/library/string")),
-        str(Label("//closure/library/string:const")),
-        str(Label("//closure/library/uri")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/array")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/asserts")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/debug")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/format")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/html:safehtml")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/html:safescript")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/html:safestyle")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/html:safestylesheet")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/html:safeurl")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/html:trustedresourceurl")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/html:uncheckedconversions")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/i18n:bidi")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/i18n:bidiformatter")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/i18n:numberformat")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/object")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/soy:data")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/soy:soy")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/soy:renderer")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/string")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/string:const")),
+        str(Label("@com_google_javascript_closure_library//closure/goog/uri")),
         str(Label("//closure/templates:soy_jssrc")),
     ]
 

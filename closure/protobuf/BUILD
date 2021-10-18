@@ -13,12 +13,11 @@
 # limitations under the License.
 
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 
 package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # Apache 2.0
-
-load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 
 closure_js_library(
     name = "jspb",
@@ -31,12 +30,12 @@ closure_js_library(
         "deprecated",
     ],
     deps = [
-        "//closure/library/array",
-        "//closure/library/asserts",
-        "//closure/library/crypt",
-        "//closure/library/crypt:base64",
-        "//closure/library/object",
-        "//closure/library/string",
+        "@com_google_javascript_closure_library//closure/goog/array",
+        "@com_google_javascript_closure_library//closure/goog/asserts",
+        "@com_google_javascript_closure_library//closure/goog/crypt",
+        "@com_google_javascript_closure_library//closure/goog/crypt:base64",
+        "@com_google_javascript_closure_library//closure/goog/object",
+        "@com_google_javascript_closure_library//closure/goog/string",
     ],
 )
 

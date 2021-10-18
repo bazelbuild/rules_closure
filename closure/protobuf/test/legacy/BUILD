@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-package(default_testonly = True)
-
-licenses(["notice"])  # Apache 2.0
-
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 load("//closure/protobuf:closure_js_proto_library.bzl", "closure_js_proto_library")
 load("//closure/testing:closure_js_test.bzl", "closure_js_test")
+
+package(default_testonly = True)
+
+licenses(["notice"])  # Apache 2.0
 
 closure_js_proto_library(
     name = "example_proto",
@@ -40,7 +40,7 @@ closure_js_test(
     srcs = ["example_test.js"],
     deps = [
         ":example_lib",
-        "//closure/library/testing:asserts",
-        "//closure/library/testing:jsunit",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:jsunit",
     ],
 )
