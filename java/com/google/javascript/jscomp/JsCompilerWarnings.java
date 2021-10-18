@@ -57,6 +57,8 @@ final class JsCompilerWarnings extends WarningsGuard {
 
   @Override
   public CheckLevel level(JSError error) {
+    CheckLevel level = CheckLevel.ERROR;
+
     // Closure Rules will always ignore these checks no matter what.
     if (Diagnostics.IGNORE_ALWAYS.contains(error.getType())) {
       return CheckLevel.OFF;
@@ -83,12 +85,6 @@ final class JsCompilerWarnings extends WarningsGuard {
     if (error.getSourceName() == null) {
       return CheckLevel.ERROR;
     }
-    
-    // We provide an escape hatch for situations in which it's not possible (or too burdensome) to
-    // add a suppress code to the closure_js_library() rule responsible for the error.
-    if (globalSuppressions.contains(error.getType())) {
-      return CheckLevel.OFF;
-    }
 
     for (String module : convertPathToModuleName(error.getSourceName(), roots).asSet()) {
       if (legacyModules.contains(module)) {
@@ -97,7 +93,7 @@ final class JsCompilerWarnings extends WarningsGuard {
           return CheckLevel.OFF;
         }
         // Otherwise downgrade to a warning, since it's not easily actionable.
-        return CheckLevel.WARNING;
+        level = CheckLevel.WARNING;
       } else if (suppressions.containsEntry(module, error.getType())) {
         // If a closure_js_library() defined this source file, then check if that library rule
         // defined a suppress code to make this error go away.
@@ -105,19 +101,13 @@ final class JsCompilerWarnings extends WarningsGuard {
       }
     }
 
-    switch (error.getDefaultLevel()) {
-      case OFF:
-        /**
-         * Treat any user invisible diagnostics as safe by default.
-         *
-         * <p>This lets new diagnostics be added to JSCompiler without immediately being errors,
-         * whcih is useful for staged rollouts.
-         */
-        return CheckLevel.OFF;
-
-      default:
-        // Treat any user visible diagnostic as an error by default.
-        return CheckLevel.ERROR;
+    // We provide an escape hatch for situations in which it's not possible (or too burdensome) to
+    // add a suppress code to the closure_js_library() rule responsible for the error.
+    if (globalSuppressions.contains(error.getType())) {
+      return CheckLevel.OFF;
     }
+
+    // Otherwise we'll be cautious and just assume it's bad.
+    return level;
   }
 }
