@@ -750,12 +750,13 @@ def com_google_protobuf():
 def com_google_protobuf_js():
     http_archive(
         name = "com_google_protobuf_js",
-        strip_prefix = "protobuf-3.14.0/js",
-        sha256 = "d0f5f605d0d656007ce6c8b5a82df3037e1d8fe8b121ed42e536f569dec16113",
+        build_file = "@io_bazel_rules_closure//closure/protobuf:protobuf_js.BUILD",
+        sha256 = "9111bf0b542b631165fadbd80aa60e7fb25b25311c532139ed2089d76ddf6dd7",
+        strip_prefix = "protobuf-3.18.1/js",
         urls = [
-            "https://github.com/protocolbuffers/protobuf/archive/v3.14.0.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.18.1.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.18.1.tar.gz",
         ],
-        build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
     )
 
 def com_google_template_soy():
