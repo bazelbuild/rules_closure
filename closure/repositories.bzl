@@ -707,16 +707,22 @@ def com_google_javascript_closure_compiler():
     )
 
 def com_google_javascript_closure_library():
-    # After updating: bazel run //closure/library:regenerate -- "$PWD"
+    # Commit: a3a34924b764bc5c6ae6fa05238f4006d9af3528
+    # Date: 2021-10-15 18:12:02 +0000 UTC
+    # URL: https://github.com/google/closure-library/commit/a3a34924b764bc5c6ae6fa05238f4006d9af3528
+    #
+    # Automated rollback of commit ed3f21737413d5929feb6a8a6631177963aa28a1.
+    #
+    # PiperOrigin-RevId: 403420746
+    # Change-Id: I496ac3bb352412b56caaceedfd9a978bb70c6f2a
+    # Size: 5777218 (5.8 MB)
     http_archive(
         name = "com_google_javascript_closure_library",
-        urls = [
-            "https://mirror.bazel.build/github.com/google/closure-library/archive/v20191027.tar.gz",
-            "https://github.com/google/closure-library/archive/v20191027.tar.gz",
-        ],
-        sha256 = "d21fdefb72d88a1aa629279c53a95fdd4d5632d0e5b13e6b591b177d25bde337",
-        strip_prefix = "closure-library-20191027",
-        build_file = str(Label("//closure/library:closure_library.BUILD")),
+        sha256 = "074a39bd37539ba9e693e6258b690ad56c48e726cae68600c3ce9bdaedb72fa9",
+        strip_prefix = "closure-library-a3a34924b764bc5c6ae6fa05238f4006d9af3528",
+        urls = ["https://github.com/google/closure-library/archive/a3a34924b764bc5c6ae6fa05238f4006d9af3528.tar.gz"],
+        patch_args = ["-p1"],
+        patches = [str(Label("//third-party/closure:com_google_javascript_closure_library.suppressions.patch"))],
     )
 
 def com_google_jsinterop_annotations():
