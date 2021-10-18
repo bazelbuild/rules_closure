@@ -803,15 +803,25 @@ def com_google_template_soy():
     )
 
 def com_google_template_soy_jssrc():
+    # Branch: master
+    # Commit: a407a1986344139e6d2986d9157075764e33cce5
+    # Date: 2020-04-16 22:53:03 +0000 UTC
+    # URL: https://github.com/google/closure-templates/commit/a407a1986344139e6d2986d9157075764e33cce5
+    #
+    # Preserve whether a call command was self closing.
+    #
+    # GITHUB_BREAKING_CHANGES=N/A
+    #
+    # -------------
+    # Created by MOE: https://github.com/google/moe
+    # MOE_MIGRATED_REVID=306937607
+    # Size: 1977208 (2.0 MB)
     http_archive(
         name = "com_google_template_soy_jssrc",
-        sha256 = "626a79fcbfdf1a15d42e27955130a4498e38fbed44996cc37072f3fcde9b5ffc",
-        urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2019-07-14/soy-2019-07-14-jssrc_js.jar",
-            "https://repo1.maven.org/maven2/com/google/template/soy/2019-07-14/soy-2019-07-14-jssrc_js.jar",
-        ],
+        sha256 = "b8863e45841cb89e9c1e29d46eaabfb4599724d85ef081dbb6f9dfc6ffc58c99",
+        strip_prefix = "closure-templates-a1c02e60ae88ed1b7db92722ea25ac7d396514fc/javascript",
+        urls = ["https://github.com/google/closure-templates/archive/a1c02e60ae88ed1b7db92722ea25ac7d396514fc.tar.gz"],
         build_file = str(Label("//closure/templates:soy_jssrc.BUILD")),
-        type = "zip",
     )
 
 def com_ibm_icu_icu4j():

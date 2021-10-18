@@ -22,6 +22,8 @@ filegroup(
         "checks.js",
         "jspbconversions.js",
         "soydata_converters.js",
+        "soyutils_map.js",
+        "soyutils_newmaps.js",
         "soyutils_usegoog.js",
     ],
 )
