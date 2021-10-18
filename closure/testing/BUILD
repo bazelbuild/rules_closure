@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
 package(
     default_testonly = True,
     default_visibility = ["//visibility:public"],
 )
 
 licenses(["notice"])  # Apache 2.0
-
-load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
-load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
 exports_files(["empty.html"])
 
@@ -34,6 +34,7 @@ closure_js_library(
     name = "phantomjs_harness",
     srcs = ["phantomjs_harness.js"],
     no_closure_library = True,
+    suppress = ["JSC_MISSING_REQUIRE_STRICT_WARNING"],
     deps = ["//closure/testing/externs:phantomjs"],
 )
 
@@ -59,4 +60,3 @@ bzl_library(
         "//closure/compiler:compiler_bzl",
     ],
 )
-
