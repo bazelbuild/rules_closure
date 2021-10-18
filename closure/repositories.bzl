@@ -594,11 +594,11 @@ def com_google_guava():
         licenses = ["notice"],  # Apache 2.0
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
-            "https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar"
+            "https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
         ],
         jar_sha256 = "a171ee4c734dd2da837e4b16be9df4661afab72a41adaf31eb84dfdaf936ca26",
     )
-    
+
 def com_google_inject_extensions_guice_assistedinject():
     java_import_external(
         name = "com_google_inject_extensions_guice_assistedinject",
@@ -668,7 +668,7 @@ def com_google_java_format():
     )
 
 def com_google_javascript_closure_compiler():
-    version = "v20200614"
+    version = "v20200830"
     jar = "closure-compiler-unshaded-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
@@ -677,7 +677,7 @@ def com_google_javascript_closure_compiler():
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
             "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
         ],
-        jar_sha256 = "d2ad499608b55c08459de3a722fcf77230773b8a0c1d2809abb5e6fb25571c0f",
+        jar_sha256 = "76e571780ac0db918ed03b5e38ee2f8ee4b02c718c9af6a6ef1b7572bf83f1ce",
         deps = [
             "@com_google_code_gson",
             "@com_google_guava",
