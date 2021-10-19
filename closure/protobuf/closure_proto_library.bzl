@@ -19,33 +19,6 @@ load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 load("//closure/compiler:closure_js_library.bzl", "create_closure_js_library")
 load("//closure/private:defs.bzl", "CLOSURE_JS_TOOLCHAIN_ATTRS", "unfurl")
 
-# This was borrowed from Rules Go, licensed under Apache 2.
-# https://github.com/bazelbuild/rules_go/blob/67f44035d84a352cffb9465159e199066ecb814c/proto/compiler.bzl#L72
-def _proto_path(proto):
-    path = proto.path
-    root = proto.root.path
-    ws = proto.owner.workspace_root
-    if path.startswith(root):
-        path = path[len(root):]
-    if path.startswith("/"):
-        path = path[1:]
-    if path.startswith(ws):
-        path = path[len(ws):]
-    if path.startswith("/"):
-        path = path[1:]
-    return path
-
-def _proto_include_path(proto):
-    path = proto.path[:-len(_proto_path(proto))]
-    if not path:
-        return "."
-    if path.endswith("/"):
-        path = path[:-1]
-    return path
-
-def _proto_include_paths(protos):
-    return depset([_proto_include_path(proto) for proto in protos.to_list()])
-
 def _generate_closure_js_progress_message(name):
     # TODO(yannic): Add a better message?
     return "Generating JavaScript Protocol Buffer %s" % name
@@ -64,8 +37,7 @@ def _generate_closure_js(target, ctx):
 
     # Add include paths for all proto files,
     # to avoid copying/linking the files for every target.
-    protos = target[ProtoInfo].transitive_imports
-    args = ["-I%s" % p for p in _proto_include_paths(protos).to_list()]
+    args = ["-I%s" % p for p in target[ProtoInfo].transitive_proto_path.to_list()]
 
     out_options = ",".join(js_out_options)
     out_path = "/".join(js.path.split("/")[:-1])
@@ -75,7 +47,7 @@ def _generate_closure_js(target, ctx):
     args += [file.path for file in target[ProtoInfo].direct_sources]
 
     ctx.actions.run(
-        inputs = protos,
+        inputs = target[ProtoInfo].transitive_imports,
         outputs = [js],
         executable = ctx.executable._protoc,
         arguments = args,
