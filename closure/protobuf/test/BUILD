@@ -98,3 +98,39 @@ closure_js_test(
         "//closure/library/testing:testsuite",
     ],
 )
+
+proto_library(
+    name = "bat_proto",
+    srcs = ["bat.proto"],
+    deps = ["@com_google_protobuf//:any_proto"],
+)
+
+closure_proto_library(
+    name = "bat_closure_proto",
+    deps = [":bat_proto"],
+)
+
+closure_js_library(
+    name = "bat",
+    srcs = [
+        "bat.js",
+    ],
+    deps = [
+        ":bat_closure_proto",
+    ],
+)
+
+closure_js_test(
+    name = "bat_test",
+    timeout = "short",
+    srcs = [
+        "bat_test.js",
+    ],
+    entry_points = [
+        "goog:io.bazel.rules.closure.protobuf.BatTest",
+    ],
+    deps = [
+        ":bat",
+        "//closure/library/testing:testsuite",
+    ],
+)
