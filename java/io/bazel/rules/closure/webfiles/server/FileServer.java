@@ -82,6 +82,7 @@ class FileServer {
           .put("ttf", MediaType.SFNT)
           .put("txt", MediaType.PLAIN_TEXT_UTF_8)
           .put("vcard", MediaType.VCARD_UTF_8)
+          .put("wasm", MediaType.WASM_APPLICATION)
           .put("webm", MediaType.WEBM_VIDEO)
           .put("webmanifest", MediaType.MANIFEST_JSON_UTF_8)
           .put("webp", MediaType.WEBP)
