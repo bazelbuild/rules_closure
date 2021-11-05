@@ -70,7 +70,8 @@ file_test(
 
 closure_js_binary(
     name = "hello_es5strict_bin",
-    language = "ECMASCRIPT5_STRICT",
+    defs = ["--emit_use_strict=true"],
+    language = "ECMASCRIPT5",
     deps = [":hello_lib"],
 )
 
