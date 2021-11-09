@@ -69,7 +69,7 @@ def closure_js_proto_library(
         srcs = [name + ".js"],
         testonly = testonly,
         deps = [
-            str(Label("//closure/library/array")),
+            str(Label("@com_google_javascript_closure_library//closure/goog/array")),
             str(Label("//closure/protobuf:jspb")),
         ],
         internal_descriptors = [name + ".descriptor"],

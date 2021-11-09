@@ -334,7 +334,7 @@ public final class JsChecker {
     public Integer apply(Iterable<String> args) {
       JsChecker checker = new JsChecker();
       CmdLineParser parser = new CmdLineParser(checker);
-      parser.setUsageWidth(80);
+      parser.getProperties().withAtSyntax(false).withUsageWidth(80);
       try {
         parser.parseArgument(ImmutableList.copyOf(args));
       } catch (CmdLineException e) {

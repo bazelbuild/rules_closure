@@ -130,7 +130,6 @@ Please see the test directories within this project for concrete examples of usa
 
 - [//closure/testing/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/testing/test)
 - [//closure/compiler/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/compiler/test)
-- [//closure/library/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/library/test)
 - [//closure/templates/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/templates/test)
 - [//closure/stylesheets/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/stylesheets/test)
 - [//closure/protobuf/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/protobuf/test)
@@ -425,8 +424,7 @@ This rule can be referenced as though it were the following:
   register test functions.
 
 - **deps:** (List of [labels]; optional) Direct dependency list passed along to
-  [closure_js_library]. This list will almost certainly need
-  `"@io_bazel_rules_closure//closure/library:testing"`.
+  [closure_js_library].
 
 - **data:** (List of [labels]; optional) Passed to [closure_js_library].
 

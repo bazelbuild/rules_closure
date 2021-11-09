@@ -33,7 +33,7 @@ option java_package = "io.bazel.rules.closure.webfiles";
 message WebfileManifestInfo {
 
   // Canonical build target for this rule,
-  // e.g. @io_bazel_rules_closure//closure/library
+  // e.g. @com_google_javascript_closure_library//closure/goog
   string label = 1;
 
   // Map of files outputted by this build rule target in deterministic reverse
@@ -108,7 +108,7 @@ message WebfileInfo {
 message WebRuleInfo {
 
   // Canonical build target for this rule,
-  // e.g. @io_bazel_rules_closure//closure/library
+  // e.g. @com_google_javascript_closure_library//closure/goog
   string label = 1;
 
   // Path of output.pb file to which WebfileManifestInfo is written. This field
@@ -158,7 +158,7 @@ message MultimapInfo {
 message Webfiles {
 
   // Canonical build target for this rule,
-  // e.g. @io_bazel_rules_closure//closure/library
+  // e.g. @com_google_javascript_closure_library//closure/goog
   string label = 1;
 
   // List of srcs associated with webfiles() target.

@@ -20,7 +20,6 @@ load("//closure/private:platform_http_file.bzl", "platform_http_file")
 
 def rules_closure_toolchains():
     """An utility method to load all Closure toolchains.
-
     It doesn't do anything at the moment.
     """
     pass
@@ -269,7 +268,7 @@ def com_google_auto_factory():
         generated_rule_name = "jar",
         extra_build_file_content = "\n".join([
             "java_library(",
-            "    name = \"processor\",",
+            "    nwame = \"processor\",",
             "    exports = [\":jar\"],",
             "    runtime_deps = [",
             "        \"@com_google_auto_common\",",
@@ -594,11 +593,11 @@ def com_google_guava():
         licenses = ["notice"],  # Apache 2.0
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
-            "https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar"
+            "https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
         ],
         jar_sha256 = "a171ee4c734dd2da837e4b16be9df4661afab72a41adaf31eb84dfdaf936ca26",
     )
-    
+
 def com_google_inject_extensions_guice_assistedinject():
     java_import_external(
         name = "com_google_inject_extensions_guice_assistedinject",
@@ -668,16 +667,15 @@ def com_google_java_format():
     )
 
 def com_google_javascript_closure_compiler():
-    version = "v20200614"
+    version = "v20211107"
     jar = "closure-compiler-unshaded-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
         licenses = ["reciprocal"],  # MPL v1.1 (Rhino AST), Apache 2.0 (JSCompiler)
         jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
             "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
         ],
-        jar_sha256 = "d2ad499608b55c08459de3a722fcf77230773b8a0c1d2809abb5e6fb25571c0f",
+        jar_sha256 = "465031d0d7eb73c4f07dd8e2230abf1266e4d89688299e38c20efa2d7bfadc5e",
         deps = [
             "@com_google_code_gson",
             "@com_google_guava",
@@ -707,16 +705,11 @@ def com_google_javascript_closure_compiler():
     )
 
 def com_google_javascript_closure_library():
-    # After updating: bazel run //closure/library:regenerate -- "$PWD"
     http_archive(
-        name = "com_google_javascript_closure_library",
-        urls = [
-            "https://mirror.bazel.build/github.com/google/closure-library/archive/v20191027.tar.gz",
-            "https://github.com/google/closure-library/archive/v20191027.tar.gz",
-        ],
-        sha256 = "d21fdefb72d88a1aa629279c53a95fdd4d5632d0e5b13e6b591b177d25bde337",
-        strip_prefix = "closure-library-20191027",
-        build_file = str(Label("//closure/library:closure_library.BUILD")),
+       name = "com_google_javascript_closure_library",
+       sha256 = "",
+       strip_prefix = "closure-library-57beea47d30d7123dc2268972f20b544e501432b",
+       urls = ["https://github.com/google/closure-library/archive/57beea47d30d7123dc2268972f20b544e501432b.tar.gz"],
     )
 
 def com_google_jsinterop_annotations():
@@ -744,12 +737,13 @@ def com_google_protobuf():
 def com_google_protobuf_js():
     http_archive(
         name = "com_google_protobuf_js",
-        strip_prefix = "protobuf-3.14.0/js",
-        sha256 = "d0f5f605d0d656007ce6c8b5a82df3037e1d8fe8b121ed42e536f569dec16113",
+        build_file = "@io_bazel_rules_closure//closure/protobuf:protobuf_js.BUILD",
+        sha256 = "9111bf0b542b631165fadbd80aa60e7fb25b25311c532139ed2089d76ddf6dd7",
+        strip_prefix = "protobuf-3.18.1/js",
         urls = [
-            "https://github.com/protocolbuffers/protobuf/archive/v3.14.0.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.18.1.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.18.1.tar.gz",
         ],
-        build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
     )
 
 def com_google_template_soy():
@@ -757,10 +751,10 @@ def com_google_template_soy():
         name = "com_google_template_soy",
         licenses = ["notice"],  # Apache 2.0
         jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2020-08-24/soy-2020-08-24.jar",
-            "https://repo1.maven.org/maven2/com/google/template/soy/2020-08-24/soy-2020-08-24.jar",
+            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2021-02-01/soy-2021-02-01.jar",
+            "https://repo1.maven.org/maven2/com/google/template/soy/2021-02-01/soy-2021-02-01.jar",
         ],
-        jar_sha256 = "60c59b9f5d3074b5b72b18f00efd4c96d10deb0693a16f40ce538657c51f63a4",
+        jar_sha256 = "1b96cc533e8fdfb8c5287df3fb614cb46833b48cd0bc59337751fe3220ddf0b6",
         deps = [
             "@args4j",
             "@com_google_code_findbugs_jsr305",
@@ -798,13 +792,10 @@ def com_google_template_soy():
 def com_google_template_soy_jssrc():
     http_archive(
         name = "com_google_template_soy_jssrc",
-        sha256 = "626a79fcbfdf1a15d42e27955130a4498e38fbed44996cc37072f3fcde9b5ffc",
-        urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2019-07-14/soy-2019-07-14-jssrc_js.jar",
-            "https://repo1.maven.org/maven2/com/google/template/soy/2019-07-14/soy-2019-07-14-jssrc_js.jar",
-        ],
+        sha256 = "b8863e45841cb89e9c1e29d46eaabfb4599724d85ef081dbb6f9dfc6ffc58c99",
+        strip_prefix = "closure-templates-a1c02e60ae88ed1b7db92722ea25ac7d396514fc/javascript",
+        urls = ["https://github.com/google/closure-templates/archive/a1c02e60ae88ed1b7db92722ea25ac7d396514fc.tar.gz"],
         build_file = str(Label("//closure/templates:soy_jssrc.BUILD")),
-        type = "zip",
     )
 
 def com_ibm_icu_icu4j():

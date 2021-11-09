@@ -87,7 +87,7 @@ closure_proto_aspect = aspect(
             cfg = "host",
         ),
         "_closure_library": attr.label(
-            default = Label("//closure/library/array"),
+            default = Label("@com_google_javascript_closure_library//closure/goog/array"),
         ),
         "_closure_protobuf_jspb": attr.label(
             default = Label("//closure/protobuf:jspb"),
