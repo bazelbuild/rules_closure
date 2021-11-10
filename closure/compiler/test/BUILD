@@ -38,8 +38,8 @@ file_test(
 
 file_test(
     name = "sourcemap_doesntContainWeirdBazelDirectories",
-    regexp = r'"sources":\["/closure/compiler/test/hello.js"\]',
     file = "hello_bin.js.map",
+    regexp = r'"sources":\["/closure/compiler/test/hello.js"\]',
 )
 
 # Make sure bazel doesn't complain about some outputs not created.
@@ -64,12 +64,13 @@ file_test(
 
 file_test(
     name = "sourcemapWithWrapper_hasDifferentMappingCodes",
-    regexp = r'"mappings":"[A-Za-z,]\+;",',
     file = "hello_wrap_bin.js.map",
+    regexp = r'"mappings":"[A-Za-z,]\+;",',
 )
 
 closure_js_binary(
     name = "hello_es5strict_bin",
+    defs = ["--emit_use_strict=true"],
     language = "ECMASCRIPT5_STRICT",
     deps = [":hello_lib"],
 )
