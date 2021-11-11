@@ -707,7 +707,7 @@ def com_google_javascript_closure_compiler():
 def com_google_javascript_closure_library():
     http_archive(
        name = "com_google_javascript_closure_library",
-       sha256 = "",
+       sha256 = "355e3cb51a498ea083f2bd200cd6b025df7692d0d339a7353ff99faa8d6710b4",
        strip_prefix = "closure-library-57beea47d30d7123dc2268972f20b544e501432b",
        urls = ["https://github.com/google/closure-library/archive/57beea47d30d7123dc2268972f20b544e501432b.tar.gz"],
     )
