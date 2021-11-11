@@ -268,7 +268,7 @@ def com_google_auto_factory():
         generated_rule_name = "jar",
         extra_build_file_content = "\n".join([
             "java_library(",
-            "    nwame = \"processor\",",
+            "    name = \"processor\",",
             "    exports = [\":jar\"],",
             "    runtime_deps = [",
             "        \"@com_google_auto_common\",",
