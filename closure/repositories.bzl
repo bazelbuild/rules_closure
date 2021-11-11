@@ -751,7 +751,6 @@ def com_google_template_soy():
         name = "com_google_template_soy",
         licenses = ["notice"],  # Apache 2.0
         jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/template/soy/2021-02-01/soy-2021-02-01.jar",
             "https://repo1.maven.org/maven2/com/google/template/soy/2021-02-01/soy-2021-02-01.jar",
         ],
         jar_sha256 = "1b96cc533e8fdfb8c5287df3fb614cb46833b48cd0bc59337751fe3220ddf0b6",
