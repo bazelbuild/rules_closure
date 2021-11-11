@@ -43,7 +43,7 @@ def _impl(ctx):
             inputs = [file_],
             outputs = [actual],
             arguments = [file_.path, actual.path],
-            command = "sed -e ':a' -e '$!N' -e '$!ba' -e 's|%s||' -e '$a\\' $1>$2" % _LICENSE,
+            command = "sed -e ':a' -e '$!N' -e '$!ba' -e 's|%s||' $1>$2" % _LICENSE,
         )
 
         ctx.actions.write(
