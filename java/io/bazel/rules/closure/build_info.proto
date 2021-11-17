@@ -26,7 +26,7 @@ option java_package = "io.bazel.rules.closure";
 message ClosureJsLibrary {
 
   // Canonical build target for this rule,
-  // e.g. @io_bazel_rules_closure//closure/library
+  // e.g. @com_google_javascript_closure_library//closure/goog
   string label = 1;
 
   // Indicates if this proto was outputted by a legacy rule, e.g. js_library.

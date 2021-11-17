@@ -32,10 +32,6 @@ def _impl(ctx):
     if content and matches != -1:
         fail("matches only makes sense with regexp")
     if not regexp:
-        # Make sure content ends with new file since sed will always add one in Mac
-        if content and not content.endswith("\n"):
-            content += "\n"
-
         expected = ctx.actions.declare_file(exe.basename + ".expected")
         ctx.actions.write(
             output = expected,
@@ -47,7 +43,7 @@ def _impl(ctx):
             inputs = [file_],
             outputs = [actual],
             arguments = [file_.path, actual.path],
-            command = "sed -e ':a' -e '$!N' -e '$!ba' -e 's|%s||' -e '$a\\' $1>$2" % _LICENSE,
+            command = "sed -e ':a' -e '$!N' -e '$!ba' -e 's|%s||' $1>$2" % _LICENSE,
         )
 
         ctx.actions.write(

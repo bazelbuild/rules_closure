@@ -69,15 +69,15 @@ file_test(
 )
 
 closure_js_binary(
-    name = "hello_es5strict_bin",
-    language = "ECMASCRIPT5_STRICT",
+    name = "hello_strict_bin",
+    defs = ["--emit_use_strict=True"],
     deps = [":hello_lib"],
 )
 
 file_test(
-    name = "strictOutputLanguage_addsUseStrict",
+    name = "emitUseString_addsUseStrict",
     content = "'use strict';console.log(\"hello world\");\n",
-    file = "hello_es5strict_bin.js",
+    file = "hello_strict_bin.js",
 )
 
 closure_js_library(

@@ -48,3 +48,4 @@ function testHtml() {
   assertHTMLEquals('<div id="hello">Hello World!</div>',
                    goog.dom.getRequiredElement('hello').outerHTML);
 }
+

@@ -110,7 +110,7 @@ closure_js_library(
     suppress = ["useOfGoogProvide"],
     deps = [
         ":greeter_soy",
-        "//closure/library/soy",
+        "@com_google_javascript_closure_library//closure/goog/soy",
     ],
 )
 
@@ -121,7 +121,7 @@ closure_js_library(
     deps = [
         ":greeter_proto_soy",
         ":person_proto",
-        "//closure/library/soy",
+        "@com_google_javascript_closure_library//closure/goog/soy",
     ],
 )
 
@@ -131,9 +131,9 @@ closure_js_test(
     srcs = ["greeter_test.js"],
     deps = [
         ":greeter_lib",
-        "//closure/library/asserts",
-        "//closure/library/testing:asserts",
-        "//closure/library/testing:jsunit",
+        "@com_google_javascript_closure_library//closure/goog/asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:jsunit",
     ],
 )
 
@@ -143,9 +143,9 @@ closure_js_test(
     srcs = ["greeter_proto_test.js"],
     deps = [
         ":greeter_proto_lib",
-        "//closure/library/asserts",
-        "//closure/library/testing:asserts",
-        "//closure/library/testing:jsunit",
+        "@com_google_javascript_closure_library//closure/goog/asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:jsunit",
     ],
 )
 
@@ -193,9 +193,9 @@ closure_js_test(
     srcs = ["globals_test.js"],
     deps = [
         ":globals_soy",
-        "//closure/library/soy",
-        "//closure/library/testing:asserts",
-        "//closure/library/testing:jsunit",
-        "//closure/library/testing:testsuite",
+        "@com_google_javascript_closure_library//closure/goog/soy",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:jsunit",
+        "@com_google_javascript_closure_library//closure/goog/testing:testsuite",
     ],
 )

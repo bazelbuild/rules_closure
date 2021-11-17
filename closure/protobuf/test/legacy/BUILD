@@ -40,7 +40,7 @@ closure_js_test(
     srcs = ["example_test.js"],
     deps = [
         ":example_lib",
-        "//closure/library/testing:asserts",
-        "//closure/library/testing:jsunit",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "@com_google_javascript_closure_library//closure/goog/testing:jsunit",
     ],
 )

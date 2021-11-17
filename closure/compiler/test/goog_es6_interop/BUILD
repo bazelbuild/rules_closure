@@ -22,7 +22,7 @@ closure_js_library(
         "person.js",
     ],
     deps = [
-        "//closure/library/string",
+        "@com_google_javascript_closure_library//closure/goog/string",
     ],
 )
 
@@ -36,7 +36,7 @@ closure_js_library(
     suppress = ["moduleLoad"],
     deps = [
         ":person",
-        "//closure/library/asserts",
+        "@com_google_javascript_closure_library//closure/goog/asserts",
     ],
 )
 
@@ -50,6 +50,6 @@ closure_js_test(
     ],
     deps = [
         ":person_factory",
-        "//closure/library/testing:testsuite",
+        "@com_google_javascript_closure_library//closure/goog/testing:testsuite",
     ],
 )

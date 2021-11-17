@@ -45,10 +45,10 @@ final class JsCheckerState {
   // Set of namespaces provided by direct dependencies of this closure_js_library.
   //
   // The initial capacity of 9000 was chosen because nearly all closure_js_library rules will
-  // directly depend on //closure/library which has 4788 provides. This sets a very large lower
-  // bound for the size of this hash table. Since HashMap has a default load factor of 0.75, it
-  // would need to have a capacity of 6385 (4788/0.75+1) to store those namespaces without
-  // redimensioning.
+  // directly depend on @com_google_javascript_closure_library//closure/goog which has 4788
+  // provides. This sets a very large lower bound for the size of this hash table. Since HashMap
+  // has a default load factor of 0.75, it would need to have a capacity of 6385 (4788/0.75+1) to
+  // store those namespaces without redimensioning.
   final Set<String> provided = new HashSet<>(9000);
 
   // These are used to avoid flooding the user with certain types of error messages.

@@ -20,6 +20,7 @@ import static com.google.javascript.jscomp.JsCheckerHelper.convertPathToModuleNa
 import static com.google.javascript.jscomp.JsCheckerHelper.isInSyntheticCode;
 
 import com.google.common.collect.Multimap;
+import com.google.javascript.jscomp.base.Tri;
 import java.util.List;
 import java.util.Set;
 
@@ -49,10 +50,8 @@ final class JsCompilerWarnings extends WarningsGuard {
   }
 
   @Override
-  protected boolean enables(DiagnosticGroup group) {
-    // Oh yes, we want all the wonderful checks the Closure Compiler performs. That is with the
-    // exception of the things JsChecker alone is responsible for checking.
-    return !Diagnostics.JSCHECKER_ONLY_GROUPS.contains(group);
+  public Tri mustRunChecks(DiagnosticGroup group) {
+    return Diagnostics.JSCHECKER_ONLY_GROUPS.contains(group) ? Tri.UNKNOWN : Tri.TRUE;
   }
 
   @Override
