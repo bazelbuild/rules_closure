@@ -77,6 +77,7 @@ def rules_closure_dependencies(
         omit_rules_cc = False,
         omit_rules_java = False,
         omit_rules_proto = False,
+        omit_rules_jvm_external = False,
         omit_rules_python = False,
         omit_zlib = False):
     """Imports dependencies for Closure Rules."""
@@ -186,6 +187,8 @@ def rules_closure_dependencies(
         rules_proto()
     if not omit_rules_python:
         rules_python()
+    if not omit_rules_jvm_external:
+        rules_jvm_external()
     if not omit_zlib:
         zlib()
 
@@ -727,10 +730,10 @@ def com_google_jsinterop_annotations():
 def com_google_protobuf():
     http_archive(
         name = "com_google_protobuf",
-        strip_prefix = "protobuf-3.15.3",
-        sha256 = "b10bf4e2d1a7586f54e64a5d9e7837e5188fc75ae69e36f215eb01def4f9721b",
+        strip_prefix = "protobuf-3.19.1",
+        sha256 = "87407cd28e7a9c95d9f61a098a53cf031109d451a7763e7dd1253abf8b4df422",
         urls = [
-            "https://github.com/protocolbuffers/protobuf/archive/v3.15.3.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.19.1.tar.gz",
         ],
     )
 
@@ -738,11 +741,10 @@ def com_google_protobuf_js():
     http_archive(
         name = "com_google_protobuf_js",
         build_file = "@io_bazel_rules_closure//closure/protobuf:protobuf_js.BUILD",
-        sha256 = "9111bf0b542b631165fadbd80aa60e7fb25b25311c532139ed2089d76ddf6dd7",
-        strip_prefix = "protobuf-3.18.1/js",
+        sha256 = "87407cd28e7a9c95d9f61a098a53cf031109d451a7763e7dd1253abf8b4df422",
+        strip_prefix = "protobuf-3.19.1/js",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.18.1.tar.gz",
-            "https://github.com/protocolbuffers/protobuf/archive/v3.18.1.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.19.1.tar.gz",
         ],
     )
 
@@ -1050,6 +1052,13 @@ def rules_proto():
             "https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz",
             "https://github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz",
         ],
+    )
+def rules_jvm_external():
+    http_archive(
+        name = "rules_jvm_external",
+        sha256 = "f36441aa876c4f6427bfb2d1f2d723b48e9d930b62662bf723ddfb8fc80f0140",
+        strip_prefix = "rules_jvm_external-4.1",
+        urls = ["https://github.com/bazelbuild/rules_jvm_external/archive/4.1.zip"],
     )
 
 def rules_python():
