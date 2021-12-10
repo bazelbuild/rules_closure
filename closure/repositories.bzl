@@ -209,10 +209,10 @@ def aopalliance():
 def args4j():
     java_import_external(
         name = "args4j",
-        jar_sha256 = "989bda2321ea073a03686e9d4437ea4928c72c99f993f9ca6fab24615f0771a4",
+        jar_sha256 = "91ddeaba0b24adce72291c618c00bbdce1c884755f6c4dba9c5c46e871c69ed6",
         jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/args4j/args4j/2.0.26/args4j-2.0.26.jar",
-            "https://repo1.maven.org/maven2/args4j/args4j/2.0.26/args4j-2.0.26.jar",
+            "https://mirror.bazel.build/repo1.maven.org/maven2/args4j/args4j/2.33/args4j-2.33.jar",
+            "https://repo1.maven.org/maven2/args4j/args4j/2.33/args4j-2.33.jar",
         ],
         licenses = ["notice"],  # MIT License
     )
@@ -671,14 +671,14 @@ def com_google_java_format():
 
 def com_google_javascript_closure_compiler():
     version = "v20211107"
-    jar = "closure-compiler-unshaded-%s.jar" % version
+    jar = "closure-compiler-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
         licenses = ["reciprocal"],  # MPL v1.1 (Rhino AST), Apache 2.0 (JSCompiler)
         jar_urls = [
-            "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
+            "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler/%s/%s" % (version, jar),
         ],
-        jar_sha256 = "465031d0d7eb73c4f07dd8e2230abf1266e4d89688299e38c20efa2d7bfadc5e",
+        jar_sha256 = "733f00f0a1651c9d5409d9162e6f94f0a3e61463628925d3d6ef66be60ec14a6",
         deps = [
             "@com_google_code_gson",
             "@com_google_guava",
