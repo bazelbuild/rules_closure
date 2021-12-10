@@ -741,11 +741,10 @@ def com_google_protobuf_js():
     http_archive(
         name = "com_google_protobuf_js",
         build_file = "@io_bazel_rules_closure//closure/protobuf:protobuf_js.BUILD",
-        sha256 = "9111bf0b542b631165fadbd80aa60e7fb25b25311c532139ed2089d76ddf6dd7",
-        strip_prefix = "protobuf-3.18.1/js",
+        sha256 = "87407cd28e7a9c95d9f61a098a53cf031109d451a7763e7dd1253abf8b4df422",
+        strip_prefix = "protobuf-3.19.1/js",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.18.1.tar.gz",
-            "https://github.com/protocolbuffers/protobuf/archive/v3.18.1.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.19.1.tar.gz",
         ],
     )
 
