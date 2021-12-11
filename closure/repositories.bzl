@@ -76,8 +76,8 @@ def rules_closure_dependencies(
         omit_phantomjs = False,
         omit_rules_cc = False,
         omit_rules_java = False,
-        omit_rules_proto = False,
         omit_rules_jvm_external = False,
+        omit_rules_proto = False,
         omit_rules_python = False,
         omit_zlib = False):
     """Imports dependencies for Closure Rules."""
@@ -183,12 +183,12 @@ def rules_closure_dependencies(
         rules_cc()
     if not omit_rules_java:
         rules_java()
+    if not omit_rules_jvm_external:
+        rules_jvm_external()
     if not omit_rules_proto:
         rules_proto()
     if not omit_rules_python:
         rules_python()
-    if not omit_rules_jvm_external:
-        rules_jvm_external()
     if not omit_zlib:
         zlib()
 
@@ -1043,6 +1043,14 @@ def rules_java():
         ],
     )
 
+def rules_jvm_external():
+    http_archive(
+        name = "rules_jvm_external",
+        sha256 = "f36441aa876c4f6427bfb2d1f2d723b48e9d930b62662bf723ddfb8fc80f0140",
+        strip_prefix = "rules_jvm_external-4.1",
+        urls = ["https://github.com/bazelbuild/rules_jvm_external/archive/4.1.zip"],
+    )
+
 def rules_proto():
     http_archive(
         name = "rules_proto",
@@ -1052,13 +1060,6 @@ def rules_proto():
             "https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz",
             "https://github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz",
         ],
-    )
-def rules_jvm_external():
-    http_archive(
-        name = "rules_jvm_external",
-        sha256 = "f36441aa876c4f6427bfb2d1f2d723b48e9d930b62662bf723ddfb8fc80f0140",
-        strip_prefix = "rules_jvm_external-4.1",
-        urls = ["https://github.com/bazelbuild/rules_jvm_external/archive/4.1.zip"],
     )
 
 def rules_python():
