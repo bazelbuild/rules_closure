@@ -41,6 +41,9 @@ final class Diagnostics {
         CheckStrictDeps.DUPLICATE_PROVIDES,
         CheckStrictDeps.REDECLARED_PROVIDES,
         CheckStrictDeps.NOT_PROVIDED);
+    DiagnosticGroups.registerGroup("generatedTypescript",
+        ClosureCheckModule.GOOG_MODULE_MISPLACED,
+        ClosureCheckModule.EXPORT_NOT_AT_MODULE_SCOPE);
   }
 
   static final DiagnosticGroups GROUPS = new DiagnosticGroups();
@@ -87,6 +90,7 @@ final class Diagnostics {
           "externsValidation",
           "extraProvide",
           "extraRequire",
+          "generatedTypescript",
           "globalThis",
           "invalidCasts",
           "lateProvide",
