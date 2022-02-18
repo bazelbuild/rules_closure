@@ -17,7 +17,7 @@ package(default_visibility = ["//visibility:public"])
 licenses(["notice"])  # Apache 2.0
 
 load("@rules_java//java:defs.bzl", "java_library")
-load("//closure:defs.bzl", "closure_js_library", "closure_js_proto_library")
+load("//closure:defs.bzl", "closure_js_library", "closure_js_proto_library", "closure_proto_library")
 
 java_library(
     name = "templates",
@@ -29,12 +29,18 @@ closure_js_proto_library(
     srcs = ["@com_google_common_html_types_html_proto//file"],
 )
 
+closure_proto_library(
+    name = "soy_ve_metadata_proto",
+    deps = ["@com_google_closure_templates//src/main/protobuf:ve_metadata_proto"],
+)
+
 closure_js_library(
     name = "soy_jssrc",
     srcs = ["@com_google_template_soy_jssrc"],
     lenient = True,
     deps = [
         ":soy_html_proto",
+        "//closure/protobuf:jspb",
         "@com_google_javascript_closure_library//closure/goog/array",
         "@com_google_javascript_closure_library//closure/goog/asserts",
         "@com_google_javascript_closure_library//closure/goog/debug",
@@ -56,6 +62,39 @@ closure_js_library(
         "@com_google_javascript_closure_library//closure/goog/string",
         "@com_google_javascript_closure_library//closure/goog/string:const",
         "@com_google_javascript_closure_library//closure/goog/uri",
+    ],
+)
+
+closure_js_library(
+    name = "soy_idom",
+    srcs = ["@com_google_template_soy_jssrc//:idom"],
+    lenient = True,
+    deps = [
+        ":soy_tslib",
+        ":soy_jssrc",
+        ":soy_html_proto",
+        ":soy_ve_metadata_proto",
+        "//closure/protobuf:jspb",
+        "@com_google_javascript_closure_library//closure/goog/asserts",
+        "@com_google_javascript_closure_library//closure/goog/soy",
+        "@com_google_javascript_closure_library//closure/goog/soy:data",
+        "@com_google_javascript_closure_library//closure/goog/string",
+        "@incremental_dom//closure",
+    ],
+    suppress = [
+        "nonStandardJsDocs",
+    ],
+)
+
+closure_js_library(
+    name = "soy_tslib",
+    srcs = [
+        "soy_tslib.js",
+        "@com_google_angular_tsickle_tslib//:tslib",
+    ],
+    lenient = True,
+    deps = [
+        # None.
     ],
 )
 

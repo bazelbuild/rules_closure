@@ -29,6 +29,7 @@ def rules_closure_dependencies(
         omit_args4j = False,
         omit_bazel_skylib = False,
         omit_clang = False,
+        omit_com_google_angular_tsickle_tslib = False,
         omit_com_google_auto_common = False,
         omit_com_google_auto_factory = False,
         omit_com_google_auto_value = False,
@@ -54,12 +55,14 @@ def rules_closure_dependencies(
         omit_com_google_jsinterop_annotations = False,
         omit_com_google_protobuf = False,
         omit_com_google_protobuf_js = False,
+        omit_com_google_closure_templates = False,
         omit_com_google_template_soy = False,
         omit_com_google_template_soy_jssrc = False,
         omit_com_ibm_icu_icu4j = False,
         omit_com_squareup_javapoet = False,
         omit_fonts_noto_hinted_deb = False,
         omit_fonts_noto_mono_deb = False,
+        omit_incremental_dom = False,
         omit_javax_annotation_jsr250_api = False,
         omit_javax_inject = False,
         omit_libexpat_amd64_deb = False,
@@ -89,6 +92,8 @@ def rules_closure_dependencies(
         bazel_skylib()
     if not omit_clang:
         clang()
+    if not omit_com_google_angular_tsickle_tslib:
+        com_google_angular_tsickle_tslib()
     if not omit_com_google_auto_common:
         com_google_auto_common()
     if not omit_com_google_auto_factory:
@@ -139,6 +144,8 @@ def rules_closure_dependencies(
         com_google_protobuf()
     if not omit_com_google_protobuf_js:
         com_google_protobuf_js()
+    if not omit_com_google_closure_templates:
+        com_google_closure_templates()
     if not omit_com_google_template_soy:
         com_google_template_soy()
     if not omit_com_google_template_soy_jssrc:
@@ -151,6 +158,8 @@ def rules_closure_dependencies(
         fonts_noto_hinted_deb()
     if not omit_fonts_noto_mono_deb:
         fonts_noto_mono_deb()
+    if not omit_incremental_dom:
+        incremental_dom()
     if not omit_javax_annotation_jsr250_api:
         javax_annotation_jsr250_api()
     if not omit_javax_inject:
@@ -238,6 +247,17 @@ def clang():
             "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang+llvm-10.0.0-x86_64-apple-darwin.tar.xz",
         ],
         macos_sha256 = "633a833396bf2276094c126b072d52b59aca6249e7ce8eae14c728016edb5e61",
+    )
+
+def com_google_angular_tsickle_tslib():
+    http_archive(
+        name = "com_google_angular_tsickle_tslib",
+        sha256 = "41f9692b4d9af0bab343457aaa4b7619a84618570cd24039e093223a2971cc89",
+        strip_prefix = "tsickle-e482bc9fd3be72191bafdd23afaab2c8e83787a0/third_party/tslib",
+        build_file = "@io_bazel_rules_closure//closure/templates:soy_tslib.BUILD",
+        urls = [
+            "https://github.com/angular/tsickle/archive/e482bc9fd3be72191bafdd23afaab2c8e83787a0.tar.gz",
+        ],
     )
 
 def com_google_auto_common():
@@ -748,6 +768,16 @@ def com_google_protobuf_js():
         ],
     )
 
+def com_google_closure_templates():
+    http_archive(
+        name = "com_google_closure_templates",
+        sha256 = "b8863e45841cb89e9c1e29d46eaabfb4599724d85ef081dbb6f9dfc6ffc58c99",
+        strip_prefix = "closure-templates-a1c02e60ae88ed1b7db92722ea25ac7d396514fc",
+        urls = [
+            "https://github.com/google/closure-templates/archive/a1c02e60ae88ed1b7db92722ea25ac7d396514fc.tar.gz",
+        ],
+    )
+
 def com_google_template_soy():
     java_import_external(
         name = "com_google_template_soy",
@@ -786,6 +816,12 @@ def com_google_template_soy():
                 "SoyToJbcSrcCompiler",
                 "SoyToJsSrcCompiler",
                 "SoyToPySrcCompiler",
+                "SoyToIncrementalDomSrcCompiler",
+                "SoyMsgExtractor",
+                "SoyHeaderCompiler",
+                "SoyConformanceChecker",
+                "SoyPluginValidator",
+                "SoyVeMetadataGenerator",
             )
         ]),
     )
@@ -840,6 +876,16 @@ def fonts_noto_mono_deb():
             "http://http.us.debian.org/debian/pool/main/f/fonts-noto/fonts-noto-mono_20161116-1_all.deb",
         ],
         sha256 = "71ff715cf50a74a8cc11b02e7c906b69a242d3d677e739e0b2d18cd23b7de375",
+    )
+
+def incremental_dom():
+    http_archive(
+        name = "incremental_dom",
+        sha256 = "33b060bb04c38b4c5c9c203de702dcbc482128be0cead6c5e9e9658dfae8b715",
+        strip_prefix = "incremental-dom-a6c91ebc569110993c7c4130f0456504f624459a",
+        urls = [
+            "https://github.com/tabspring/incremental-dom/archive/a6c91ebc569110993c7c4130f0456504f624459a.tar.gz",
+        ],
     )
 
 def javax_annotation_jsr250_api():

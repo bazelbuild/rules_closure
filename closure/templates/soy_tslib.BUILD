@@ -17,29 +17,15 @@ package(default_visibility = ["//visibility:public"])
 licenses(["notice"])  # Apache 2.0
 
 filegroup(
-    name = "com_google_template_soy_jssrc",
+    name = "externs",
     srcs = [
-        "checks.js",
-        "jspbconversions.js",
-        "soydata_converters.js",
-        "soyutils_directives.js",
-        "soyutils_map.js",
-        "soyutils_newmaps.js",
-        "soyutils_templates.js",
-        "soyutils_usegoog.js",
+        "externs.js",
     ],
 )
 
 filegroup(
-    name = "idom",
+    name = "tslib",
     srcs = [
-        "api_idom.js",
-        "element_lib_idom.js",
-        "global.js",
-        "shim.js",
-        "skiphandler.js",
-        "soyutils_idom.js",
-        "soyutils_velog.js",
-        "types.js",
+        "tslib.js",
     ],
 )
