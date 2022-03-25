@@ -670,7 +670,7 @@ def com_google_java_format():
     )
 
 def com_google_javascript_closure_compiler():
-    version = "v20211107"
+    version = "v20220301"
     jar = "closure-compiler-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
@@ -678,7 +678,7 @@ def com_google_javascript_closure_compiler():
         jar_urls = [
             "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler/%s/%s" % (version, jar),
         ],
-        jar_sha256 = "733f00f0a1651c9d5409d9162e6f94f0a3e61463628925d3d6ef66be60ec14a6",
+        jar_sha256 = "06f8f55a9b18a35dc3128d7ad2b98b548fc120e553d8b453f425ccdca792ca07",
         deps = [
             "@com_google_code_gson",
             "@com_google_guava",
@@ -710,9 +710,9 @@ def com_google_javascript_closure_compiler():
 def com_google_javascript_closure_library():
     http_archive(
        name = "com_google_javascript_closure_library",
-       sha256 = "355e3cb51a498ea083f2bd200cd6b025df7692d0d339a7353ff99faa8d6710b4",
-       strip_prefix = "closure-library-57beea47d30d7123dc2268972f20b544e501432b",
-       urls = ["https://github.com/google/closure-library/archive/57beea47d30d7123dc2268972f20b544e501432b.tar.gz"],
+       sha256 = "4da36963d2ef97b6e3d72fbe74c5db4bff2878150f9785299db5c94b4c42f2e6",
+       strip_prefix = "closure-library-20220301",
+       urls = ["https://github.com/google/closure-library/archive/v20220301.tar.gz"],
     )
 
 def com_google_jsinterop_annotations():
