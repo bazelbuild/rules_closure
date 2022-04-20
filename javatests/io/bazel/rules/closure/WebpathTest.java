@@ -14,8 +14,6 @@
 
 package io.bazel.rules.closure;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -26,6 +24,7 @@ import com.google.common.jimfs.Jimfs;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.truth.BooleanSubject;
+import com.google.common.truth.IntegerSubject;
 import com.google.common.truth.IterableSubject;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
@@ -62,6 +61,10 @@ public class WebpathTest {
 
   // Workaround fact that Path interface matches multiple assertThat() method overloads.
   private static Subject assertThat(Object subject) {
+    return Truth.assertThat(subject);
+  }
+
+  private static IntegerSubject assertThat(Integer subject) {
     return Truth.assertThat(subject);
   }
 
@@ -558,14 +561,13 @@ public class WebpathTest {
   }
 
   @Test
-  @SuppressWarnings("ComplexBooleanConstant") // suppression needed for assume statements
   public void testCompareTo_comparesComponentsIndividually() {
-    assumeTrue('.' < '/');
+    assertThat((int) '.').isLessThan((int) '/');
     assertThat("hi./there".compareTo("hi/there")).isEqualTo(-1); // demonstration
     assertThat("hi.".compareTo("hi")).isEqualTo(1); // demonstration
     assertThat(wp("hi./there").compareTo(wp("hi/there"))).isEqualTo(1);
     assertThat(wp("hi./there").compareTo(wp("hi/there"))).isEqualTo(1);
-    assumeTrue('0' > '/');
+    assertThat((int) '0').isGreaterThan((int) '/');
     assertThat("hi0/there".compareTo("hi/there")).isEqualTo(1); // demonstration
     assertThat("hi0".compareTo("hi")).isEqualTo(1); // demonstration
     assertThat(wp("hi0/there").compareTo(wp("hi/there"))).isEqualTo(1);
