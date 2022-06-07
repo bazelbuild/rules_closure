@@ -128,7 +128,7 @@ def _web_library(ctx):
     # define development web server that only applies to this transitive closure
     params = struct(
         label = str(ctx.label),
-        bind = "[::]:6006",
+        bind = "0.0.0.0:6006",
         manifest = [long_path(ctx, man) for man in manifests.to_list()],
         external_asset = [
             struct(webpath = k, path = v)
