@@ -24,6 +24,7 @@ web_library(
     srcs = ["index.html"],
     path = "/",
     deps = [":stuff"],
+    port = "8080"
 )
 
 web_library(
