@@ -72,7 +72,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                     compiler,
                     compiler.getOptions().getProcessCommonJSModules(),
                     compiler.getOptions().getModuleResolutionMode()))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 
@@ -99,7 +98,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                         new ClosureCheckModule(compiler, compiler.getModuleMetadataMap()),
                         new CheckSetTestOnly(state, compiler),
                         new CheckStrictDeps.FirstPass(state, compiler))))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 
@@ -112,7 +110,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                     compiler,
                     /*preprocessorSymbolTable=*/null,
                     compiler.getOptions().getAliasTransformationHandler()))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 
@@ -120,7 +117,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
     return PassFactory.builder()
         .setName("closureRewriteClass")
         .setInternalFactory((compiler) -> new ClosureRewriteClass(compiler))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 
@@ -135,7 +131,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                       new CheckInterfaces(compiler),
                       new CheckPrototypeProperties(compiler),
                       new CheckStrictDeps.SecondPass(state, compiler))))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 
@@ -143,7 +138,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
     return PassFactory.builder()
         .setName("ijsGeneration")
         .setInternalFactory((compiler) -> new ConvertToTypedInterface(compiler))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 }
