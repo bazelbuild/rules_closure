@@ -18,7 +18,6 @@ package com.google.javascript.jscomp;
 
 import com.google.common.collect.ImmutableList;
 import com.google.javascript.jscomp.NodeTraversal.Callback;
-import com.google.javascript.jscomp.PassFactory;
 import com.google.javascript.jscomp.ijs.ConvertToTypedInterface;
 import com.google.javascript.jscomp.lint.CheckDuplicateCase;
 import com.google.javascript.jscomp.lint.CheckEmptyStatements;
@@ -32,35 +31,33 @@ import com.google.javascript.jscomp.lint.CheckProvidesSorted;
 import com.google.javascript.jscomp.lint.CheckRequiresSorted;
 import com.google.javascript.jscomp.lint.CheckUnusedLabels;
 import com.google.javascript.jscomp.lint.CheckUselessBlocks;
-import com.google.javascript.jscomp.parsing.parser.FeatureSet;
-import java.util.List;
 
 final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
 
   private final JsCheckerState state;
-  private final ImmutableList<PassFactory> checks;
+  private final PassListBuilder checks;
 
   JsCheckerPassConfig(JsCheckerState state, CompilerOptions options) {
     super(new DefaultPassConfig(options));
     this.state = state;
-    this.checks =
-        ImmutableList.of(
-            gatherModuleMetadataPass(),
-            earlyLintChecks(),
-            scopedAliases(),
-            closureRewriteClass(),
-            lateLintChecks(),
-            ijsGeneration());
+    this.checks = new PassListBuilder(options);
+
+    this.checks.maybeAdd(gatherModuleMetadataPass());
+    this.checks.maybeAdd(earlyLintChecks());
+    this.checks.maybeAdd(scopedAliases());
+    this.checks.maybeAdd(closureRewriteClass());
+    this.checks.maybeAdd(lateLintChecks());
+    this.checks.maybeAdd(ijsGeneration());
   }
 
   @Override
-  protected List<PassFactory> getChecks() {
+  protected PassListBuilder getChecks() {
     return checks;
   }
 
   @Override
-  protected List<PassFactory> getOptimizations() {
-    return ImmutableList.of();
+  protected PassListBuilder getOptimizations() {
+    return new PassListBuilder(options);
   }
 
   private PassFactory gatherModuleMetadataPass() {
@@ -72,7 +69,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                     compiler,
                     compiler.getOptions().getProcessCommonJSModules(),
                     compiler.getOptions().getModuleResolutionMode()))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 
@@ -99,7 +95,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                         new ClosureCheckModule(compiler, compiler.getModuleMetadataMap()),
                         new CheckSetTestOnly(state, compiler),
                         new CheckStrictDeps.FirstPass(state, compiler))))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 
@@ -110,9 +105,8 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
             (compiler) ->
                 new ScopedAliases(
                     compiler,
-                    /*preprocessorSymbolTable=*/null,
+                    /*preprocessorSymbolTable=*/ null,
                     compiler.getOptions().getAliasTransformationHandler()))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 
@@ -120,7 +114,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
     return PassFactory.builder()
         .setName("closureRewriteClass")
         .setInternalFactory((compiler) -> new ClosureRewriteClass(compiler))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 
@@ -130,12 +123,11 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
         .setInternalFactory(
             (compiler) ->
                 new CombinedCompilerPass(
-                  compiler,
-                  ImmutableList.<Callback>of(
-                      new CheckInterfaces(compiler),
-                      new CheckPrototypeProperties(compiler),
-                      new CheckStrictDeps.SecondPass(state, compiler))))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
+                    compiler,
+                    ImmutableList.<Callback>of(
+                        new CheckInterfaces(compiler),
+                        new CheckPrototypeProperties(compiler),
+                        new CheckStrictDeps.SecondPass(state, compiler))))
         .build();
   }
 
@@ -143,7 +135,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
     return PassFactory.builder()
         .setName("ijsGeneration")
         .setInternalFactory((compiler) -> new ConvertToTypedInterface(compiler))
-        .setFeatureSet(FeatureSet.latest().withoutTypes())
         .build();
   }
 }
