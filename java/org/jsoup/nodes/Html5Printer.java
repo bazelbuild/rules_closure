@@ -75,7 +75,7 @@ public final class Html5Printer {
   /** Turns {@code document} into HTML text. */
   public static String stringify(Document document) throws IOException {
     StringBuilder result = new StringBuilder(2048);
-    Html5Printer printer = new Html5Printer(result, document.getOutputSettings());
+    Html5Printer printer = new Html5Printer(result, document.outputSettings());
     printer.append(document);
     return result.toString();
   }
