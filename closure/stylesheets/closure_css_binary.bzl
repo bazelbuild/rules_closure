@@ -112,7 +112,7 @@ closure_css_binary = rule(
                 "@com_google_closure_stylesheets//:ClosureCommandLineCompiler",
             ),
             executable = True,
-            cfg = "host",
+            cfg = "exec",
         ),
     },
     outputs = {

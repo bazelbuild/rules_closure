@@ -46,7 +46,7 @@ CLOSURE_LIBRARY_BASE_ATTR = attr.label_list(
 CLOSURE_WORKER_ATTR = attr.label(
     default = Label("//java/io/bazel/rules/closure:ClosureWorker"),
     executable = True,
-    cfg = "host",
+    cfg = "exec",
 )
 
 # Necessary for checking ijs files

@@ -92,7 +92,7 @@ phantomjs_test = rule(
         "_phantomjs": attr.label(
             default = Label("//third_party/phantomjs"),
             executable = True,
-            cfg = "host",
+            cfg = "exec",
         ),
     },
 )
