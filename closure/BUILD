@@ -14,6 +14,7 @@
 
 licenses(["notice"])  # Apache 2.0
 
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("//closure/private:lines_sorted_test.bzl", "lines_sorted_test")
 
 lines_sorted_test(
@@ -42,4 +43,12 @@ lines_sorted_test(
     cmd = "grep -e '^load' $< >$@",
     error_message = "The load list in defs.bzl must be sorted",
     file = "defs.bzl",
+)
+
+bzl_library(
+    name = "web_library_bzl",
+    srcs = ["webfiles/web_library.bzl"],
+    visibility = [
+        "//closure/testing:__pkg__",
+    ],
 )
