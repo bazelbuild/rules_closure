@@ -2,7 +2,7 @@ package(default_visibility = ["//visibility:public"])
 
 load("//closure/private:deb_extract.bzl", "deb_extract")
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 deb_extract(
     name = "hinted",

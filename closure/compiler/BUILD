@@ -14,7 +14,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-licenses(["notice"])  # Apache 2.0
+licenses(["notice"])
 
 load("@rules_java//java:defs.bzl", "java_library")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")

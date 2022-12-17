@@ -14,7 +14,7 @@
 
 package(default_testonly = True)
 
-licenses(["notice"])  # Apache 2.0
+licenses(["notice"])
 
 load("//closure:defs.bzl", "closure_java_template_library", "closure_js_library", "closure_js_proto_library", "closure_js_template_library", "closure_js_test", "closure_templates_plugin")
 load("//closure/private:file_test.bzl", "file_test")

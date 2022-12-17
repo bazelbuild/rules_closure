@@ -2,7 +2,7 @@ package(default_visibility = ["//visibility:public"])
 
 load("//closure/private:deb_extract.bzl", "deb_extract")
 
-licenses(["notice"])  # BSD-like
+licenses(["notice"])
 
 deb_extract(
     name = "libfontconfig_k8",

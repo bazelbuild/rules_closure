@@ -14,7 +14,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-licenses(["notice"])  # Apache 2.0
+licenses(["notice"])
 
 filegroup(
     name = "com_google_template_soy_jssrc",

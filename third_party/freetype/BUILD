@@ -2,7 +2,7 @@ package(default_visibility = ["//visibility:public"])
 
 load("//closure/private:deb_extract.bzl", "deb_extract")
 
-licenses(["notice"])  # FTL or GPL2. We choo-choo-choose the "BSD-style" FTL.
+licenses(["notice"])
 
 deb_extract(
     name = "libfreetype_k8",

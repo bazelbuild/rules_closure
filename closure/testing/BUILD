@@ -17,7 +17,7 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-licenses(["notice"])  # Apache 2.0
+licenses(["notice"])
 
 load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")

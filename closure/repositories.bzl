@@ -217,7 +217,7 @@ def args4j():
             "https://mirror.bazel.build/repo1.maven.org/maven2/args4j/args4j/2.33/args4j-2.33.jar",
             "https://repo1.maven.org/maven2/args4j/args4j/2.33/args4j-2.33.jar",
         ],
-        licenses = ["notice"],  # MIT License
+        licenses = ["notice"],
     )
 
 def bazel_skylib():
@@ -252,7 +252,7 @@ def com_google_auto_common():
             "https://repo1.maven.org/maven2/com/google/auto/auto-common/0.7/auto-common-0.7.jar",
             "http://maven.ibiblio.org/maven2/com/google/auto/auto-common/0.7/auto-common-0.7.jar",
         ],
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         deps = ["@com_google_guava"],
         default_visibility = ["@com_google_auto_factory//:__pkg__"],
     )
@@ -260,7 +260,7 @@ def com_google_auto_common():
 def com_google_auto_factory():
     java_import_external(
         name = "com_google_auto_factory",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_sha256 = "e6bed6aaa879f568449d735561a6a26a5a06f7662ed96ca88d27d2200a8dc6cf",
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/auto/factory/auto-factory/1.0-beta5/auto-factory-1.0-beta5.jar",
@@ -318,7 +318,7 @@ def com_google_auto_value():
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/auto/value/auto-value/1.6/auto-value-1.6.jar",
             "https://repo1.maven.org/maven2/com/google/auto/value/auto-value/1.6/auto-value-1.6.jar",
         ],
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         generated_rule_name = "processor",
         exports = ["@com_google_auto_value_annotations"],
         extra_build_file_content = "\n".join([
@@ -367,7 +367,7 @@ def com_google_auto_value_annotations():
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/auto/value/auto-value-annotations/1.6/auto-value-annotations-1.6.jar",
             "https://repo1.maven.org/maven2/com/google/auto/value/auto-value-annotations/1.6/auto-value-annotations-1.6.jar",
         ],
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         neverlink = True,
         default_visibility = ["@com_google_auto_value//:__pkg__"],
     )
@@ -375,7 +375,7 @@ def com_google_auto_value_annotations():
 def com_google_closure_stylesheets():
     java_import_external(
         name = "com_google_closure_stylesheets",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/closure-stylesheets/closure-stylesheets/1.5.0/closure-stylesheets-1.5.0.jar",
             "https://repo1.maven.org/maven2/com/google/closure-stylesheets/closure-stylesheets/1.5.0/closure-stylesheets-1.5.0.jar",
@@ -401,7 +401,7 @@ def com_google_closure_stylesheets():
 def com_google_code_findbugs_jsr305():
     java_import_external(
         name = "com_google_code_findbugs_jsr305",
-        licenses = ["notice"],  # BSD 3-clause
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/2.0.3/jsr305-2.0.3.jar",
             "https://repo1.maven.org/maven2/com/google/code/findbugs/jsr305/2.0.3/jsr305-2.0.3.jar",
@@ -413,7 +413,7 @@ def com_google_code_findbugs_jsr305():
 def com_google_code_gson():
     java_import_external(
         name = "com_google_code_gson",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/code/gson/gson/2.7/gson-2.7.jar",
             "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.7/gson-2.7.jar",
@@ -426,7 +426,7 @@ def com_google_code_gson():
 def com_google_common_html_types():
     java_import_external(
         name = "com_google_common_html_types",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/common/html/types/types/1.0.7/types-1.0.7.jar",
             "https://repo1.maven.org/maven2/com/google/common/html/types/types/1.0.7/types-1.0.7.jar",
@@ -460,7 +460,7 @@ def com_google_dagger():
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger/2.14.1/dagger-2.14.1.jar",
             "https://repo1.maven.org/maven2/com/google/dagger/dagger/2.14.1/dagger-2.14.1.jar",
         ],
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         deps = ["@javax_inject"],
         generated_rule_name = "runtime",
         extra_build_file_content = "\n".join([
@@ -483,7 +483,7 @@ def com_google_dagger_compiler():
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger-compiler/2.14.1/dagger-compiler-2.14.1.jar",
             "https://repo1.maven.org/maven2/com/google/dagger/dagger-compiler/2.14.1/dagger-compiler-2.14.1.jar",
         ],
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         deps = [
             "@com_google_code_findbugs_jsr305",
             "@com_google_dagger//:runtime",
@@ -516,7 +516,7 @@ def com_google_dagger_producers():
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger-producers/2.14.1/dagger-producers-2.14.1.jar",
             "https://repo1.maven.org/maven2/com/google/dagger/dagger-producers/2.14.1/dagger-producers-2.14.1.jar",
         ],
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         deps = [
             "@com_google_dagger//:runtime",
             "@com_google_guava",
@@ -543,13 +543,13 @@ def com_google_dagger_spi():
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/dagger/dagger-spi/2.14.1/dagger-spi-2.14.1.jar",
             "https://repo1.maven.org/maven2/com/google/dagger/dagger-spi/2.14.1/dagger-spi-2.14.1.jar",
         ],
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
     )
 
 def com_google_errorprone_error_prone_annotations():
     java_import_external(
         name = "com_google_errorprone_error_prone_annotations",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_sha256 = "03d0329547c13da9e17c634d1049ea2ead093925e290567e1a364fd6b1fc7ff8",
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.1.3/error_prone_annotations-2.1.3.jar",
@@ -578,7 +578,7 @@ def com_google_guava():
 
     java_import_external(
         name = "com_google_guava",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/guava/guava/%s-jre/guava-%s-jre.jar" % (version, version),
             "https://repo1.maven.org/maven2/com/google/guava/guava/%s-jre/guava-%s-jre.jar" % (version, version),
@@ -596,7 +596,7 @@ def com_google_guava():
     # This is part of guava but is split out from core to allow android to pull this part independenty.
     java_import_external(
         name = "com_google_guava_failure_access",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
             "https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
@@ -607,7 +607,7 @@ def com_google_guava():
 def com_google_inject_extensions_guice_assistedinject():
     java_import_external(
         name = "com_google_inject_extensions_guice_assistedinject",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0.jar",
             "https://repo1.maven.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0.jar",
@@ -624,7 +624,7 @@ def com_google_inject_extensions_guice_assistedinject():
 def com_google_inject_extensions_guice_multibindings():
     java_import_external(
         name = "com_google_inject_extensions_guice_multibindings",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0.jar",
             "https://repo1.maven.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0.jar",
@@ -641,7 +641,7 @@ def com_google_inject_extensions_guice_multibindings():
 def com_google_inject_guice():
     java_import_external(
         name = "com_google_inject_guice",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/inject/guice/4.1.0/guice-4.1.0.jar",
             "https://repo1.maven.org/maven2/com/google/inject/guice/4.1.0/guice-4.1.0.jar",
@@ -660,7 +660,7 @@ def com_google_inject_guice():
 def com_google_java_format():
     java_import_external(
         name = "com_google_java_format",
-        licenses = ["notice"],  # The Apache Software License, Version 2.0
+        licenses = ["notice"],
         jar_sha256 = "aa19ad7850fb85178aa22f2fddb163b84d6ce4d0035872f30d4408195ca1144e",
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/googlejavaformat/google-java-format/1.5/google-java-format-1.5.jar",
@@ -677,7 +677,7 @@ def com_google_javascript_closure_compiler():
     jar = "closure-compiler-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
-        licenses = ["reciprocal"],  # MPL v1.1 (Rhino AST), Apache 2.0 (JSCompiler)
+        licenses = ["reciprocal"],
         jar_urls = [
             "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler/%s/%s" % (version, jar),
         ],
@@ -721,7 +721,7 @@ def com_google_javascript_closure_library():
 def com_google_jsinterop_annotations():
     java_import_external(
         name = "com_google_jsinterop_annotations",
-        licenses = ["notice"],  # GWT Terms
+        licenses = ["notice"],
         jar_sha256 = "b2cc45519d62a1144f8cd932fa0c2c30a944c3ae9f060934587a337d81b391c8",
         jar_urls = [
             "https://mirror.bazel.build/maven.ibiblio.org/maven2/com/google/jsinterop/jsinterop-annotations/1.0.1/jsinterop-annotations-1.0.1.jar",
@@ -754,7 +754,7 @@ def com_google_protobuf_js():
 def com_google_template_soy():
     java_import_external(
         name = "com_google_template_soy",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://repo1.maven.org/maven2/com/google/template/soy/2021-02-01/soy-2021-02-01.jar",
         ],
@@ -805,7 +805,7 @@ def com_google_template_soy_jssrc():
 def com_ibm_icu_icu4j():
     java_import_external(
         name = "com_ibm_icu_icu4j",
-        licenses = ["notice"],  # ICU License (old X License)
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/ibm/icu/icu4j/57.1/icu4j-57.1.jar",
             "https://repo1.maven.org/maven2/com/ibm/icu/icu4j/57.1/icu4j-57.1.jar",
@@ -822,7 +822,7 @@ def com_squareup_javapoet():
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/squareup/javapoet/1.9.0/javapoet-1.9.0.jar",
             "https://repo1.maven.org/maven2/com/squareup/javapoet/1.9.0/javapoet-1.9.0.jar",
         ],
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
     )
 
 def fonts_noto_hinted_deb():
@@ -848,7 +848,7 @@ def fonts_noto_mono_deb():
 def javax_annotation_jsr250_api():
     java_import_external(
         name = "javax_annotation_jsr250_api",
-        licenses = ["reciprocal"],  # CDDL 1.0
+        licenses = ["reciprocal"],
         jar_sha256 = "a1a922d0d9b6d183ed3800dfac01d1e1eb159f0e8c6f94736931c1def54a941f",
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar",
@@ -860,7 +860,7 @@ def javax_annotation_jsr250_api():
 def javax_inject():
     java_import_external(
         name = "javax_inject",
-        licenses = ["notice"],  # Apache 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar",
             "https://repo1.maven.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar",
@@ -912,7 +912,7 @@ def libpng_amd64_deb():
 def org_apache_tomcat_annotations_api():
     java_import_external(
         name = "org_apache_tomcat_annotations_api",
-        licenses = ["notice"],  # Apache License, Version 2.0
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
             "http://maven.ibiblio.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
@@ -924,7 +924,7 @@ def org_apache_tomcat_annotations_api():
 def org_json():
     java_import_external(
         name = "org_json",
-        licenses = ["notice"],  # MIT-style license
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/org/json/json/20160212/json-20160212.jar",
             "https://repo1.maven.org/maven2/org/json/json/20160212/json-20160212.jar",
@@ -936,7 +936,7 @@ def org_json():
 def org_jsoup():
     java_import_external(
         name = "org_jsoup",
-        licenses = ["notice"],  # The MIT License
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar",
             "https://repo1.maven.org/maven2/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar",
@@ -952,7 +952,7 @@ def org_ow2_asm():
             "https://repo1.maven.org/maven2/org/ow2/asm/asm/6.0/asm-6.0.jar",
         ],
         jar_sha256 = "dd8971c74a4e697899a8e95caae4ea8760ea6c486dc6b97b1795e75760420461",
-        licenses = ["notice"],  # BSD 3-clause
+        licenses = ["notice"],
     )
 
 def org_ow2_asm_analysis():
@@ -963,7 +963,7 @@ def org_ow2_asm_analysis():
             "https://repo1.maven.org/maven2/org/ow2/asm/asm-analysis/6.0/asm-analysis-6.0.jar",
         ],
         jar_sha256 = "2f1a6387219c3a6cc4856481f221b03bd9f2408a326d416af09af5d6f608c1f4",
-        licenses = ["notice"],  # BSD 3-clause
+        licenses = ["notice"],
         exports = [
             "@org_ow2_asm",
             "@org_ow2_asm_tree",
@@ -973,7 +973,7 @@ def org_ow2_asm_analysis():
 def org_ow2_asm_commons():
     java_import_external(
         name = "org_ow2_asm_commons",
-        licenses = ["notice"],  # BSD 3-clause
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/org/ow2/asm/asm-commons/6.0/asm-commons-6.0.jar",
             "https://repo1.maven.org/maven2/org/ow2/asm/asm-commons/6.0/asm-commons-6.0.jar",
@@ -985,7 +985,7 @@ def org_ow2_asm_commons():
 def org_ow2_asm_tree():
     java_import_external(
         name = "org_ow2_asm_tree",
-        licenses = ["notice"],  # BSD 3-clause
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/org/ow2/asm/asm-tree/6.0/asm-tree-6.0.jar",
             "https://repo1.maven.org/maven2/org/ow2/asm/asm-tree/6.0/asm-tree-6.0.jar",
@@ -997,7 +997,7 @@ def org_ow2_asm_tree():
 def org_ow2_asm_util():
     java_import_external(
         name = "org_ow2_asm_util",
-        licenses = ["notice"],  # BSD 3-clause
+        licenses = ["notice"],
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/org/ow2/asm/asm-util/6.0/asm-util-6.0.jar",
             "https://repo1.maven.org/maven2/org/ow2/asm/asm-util/6.0/asm-util-6.0.jar",

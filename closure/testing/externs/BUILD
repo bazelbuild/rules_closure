@@ -14,7 +14,7 @@
 
 package(default_visibility = ["//closure:__subpackages__"])
 
-licenses(["notice"])  # Apache 2.0
+licenses(["notice"])
 
 load("//closure:defs.bzl", "closure_js_library")
 

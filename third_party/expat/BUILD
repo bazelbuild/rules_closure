@@ -2,7 +2,7 @@ package(default_visibility = ["//visibility:public"])
 
 load("//closure/private:deb_extract.bzl", "deb_extract")
 
-licenses(["notice"])  # MIT-style
+licenses(["notice"])
 
 deb_extract(
     name = "libexpat_k8",

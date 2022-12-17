@@ -14,7 +14,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-licenses(["restricted"])  # LGPL v2.1, BSD, MIT, OpenSSL/SSLeay
+licenses(["restricted"])
 
 sh_binary(
     name = "phantomjs",

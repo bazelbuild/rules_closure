@@ -14,7 +14,7 @@
 
 package(default_testonly = True)
 
-licenses(["notice"])  # Apache 2.0
+licenses(["notice"])
 
 load("//closure:defs.bzl", "web_library")
 

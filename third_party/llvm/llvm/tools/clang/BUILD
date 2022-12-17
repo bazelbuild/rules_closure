@@ -1,6 +1,6 @@
 package(default_visibility = ["//visibility:public"])
 
-licenses(["notice"])  # BSD
+licenses(["notice"])
 
 genrule(
     name = "clang_format_extract",

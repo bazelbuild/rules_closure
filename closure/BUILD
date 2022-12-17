@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-licenses(["notice"])  # Apache 2.0
+licenses(["notice"])
 
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("//closure/private:lines_sorted_test.bzl", "lines_sorted_test")
