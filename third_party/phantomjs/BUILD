@@ -42,18 +42,12 @@ genrule(
         "TMP=$$(mktemp -d $${TMPDIR:-/tmp}/genrule.XXXXXXXXXX)",
         "cd $$TMP",
     ]) + select({
-        ":darwin": " && unzip -q $$IN && ",
+        "@platforms//os:macos": " && unzip -q $$IN && ",
         "//conditions:default": " && tar -xjf $$IN && ",
     }) + " && ".join([
         "mv */bin/phantomjs $$OUT",
         "rm -rf $$TMP",
     ]),
     executable = True,
-    visibility = ["//visibility:private"],
-)
-
-config_setting(
-    name = "darwin",
-    values = {"cpu": "darwin"},
     visibility = ["//visibility:private"],
 )
