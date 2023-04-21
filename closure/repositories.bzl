@@ -673,7 +673,7 @@ def com_google_java_format():
     )
 
 def com_google_javascript_closure_compiler():
-    version = "v20220719"
+    version = "v20230411"
     jar = "closure-compiler-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
@@ -681,7 +681,7 @@ def com_google_javascript_closure_compiler():
         jar_urls = [
             "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler/%s/%s" % (version, jar),
         ],
-        jar_sha256 = "78458d84c523a7e88107dbb3541e37d2401f9288ed2b1d834d41b0a7131cf94b",
+        jar_sha256 = "8d9dbc6a6e3030de56a78262a91e1496a32253c2119c9d29220c7de1172ed35a",
         deps = [
             "@com_google_code_gson",
             "@com_google_guava",
