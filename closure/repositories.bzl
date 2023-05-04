@@ -573,7 +573,7 @@ def com_google_errorprone_javac_shaded():
     )
 
 def com_google_guava():
-    version = "30.1.1"
+    version = "31.1"
     sha256 = "44ce229ce26d880bf3afc362bbfcec34d7e6903d195bbb1db9f3b6e0d9834f06"
 
     java_import_external(
@@ -583,7 +583,7 @@ def com_google_guava():
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/guava/guava/%s-jre/guava-%s-jre.jar" % (version, version),
             "https://repo1.maven.org/maven2/com/google/guava/guava/%s-jre/guava-%s-jre.jar" % (version, version),
         ],
-        jar_sha256 = sha256,
+        #jar_sha256 = sha256,
         deps = [
             "@com_google_guava_failure_access",
         ],
