@@ -21,7 +21,9 @@ def webdriver_test(
         name,
         browsers,
         test_file_js,
+        data = [],
         tags = [],
+        testonly = None,
         visibility = None,
         **kwargs):
     """ Macro for running Closure JavaScript binary on browsers.
@@ -48,15 +50,19 @@ def webdriver_test(
     # set up a development web server that links to the test for debugging purposes.
     web_library(
         name = "%s_debug" % name,
-        srcs = [html, test_file_js],
+        srcs = [html, test_file_js] + data,
         path = path,
+        data = data,
+        testonly = testonly,
     )
 
     web_library(
         name = "%s_test_runner" % name,
-        srcs = [html, test_file_js],
+        srcs = [html, test_file_js] + data,
         path = path,
-        server = Label("//java/io/bazel/rules/closure/testing:webdriver_test_bin"),
+        server = Label("//third_party/bazel_rules/rules_closure/java/io/bazel/rules/closure/testing:webdriver_test_bin"),
+        data = data,
+        testonly = testonly,
     )
 
     web_test_suite(

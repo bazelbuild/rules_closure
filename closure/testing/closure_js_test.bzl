@@ -99,6 +99,8 @@ def closure_js_test(
                 browsers = browsers,
                 visibility = visibility,
                 tags = tags,
+                data = data,
+                **kwargs
             )
 
     if len(srcs) > 1:
