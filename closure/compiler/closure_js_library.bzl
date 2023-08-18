@@ -46,7 +46,8 @@ def create_closure_js_library(
         exports = [],
         suppress = [],
         lenient = False,
-        convention = "CLOSURE"):
+        convention = "CLOSURE",
+        artifact_suffix = ""):
     """ Returns closure_js_library metadata with provided attributes.
 
     Note that the returned struct is not a proper provider since existing contract
@@ -142,17 +143,17 @@ def _closure_js_library_impl(
     info_file = _maybe_declare_file(
         actions,
         deprecated_info_file,
-        "%s.pbtxt" % label.name,
+        "%s%s.pbtxt" % (label.name, artifact_suffix),
     )
     stderr_file = _maybe_declare_file(
         actions,
         deprecated_stderr_file,
-        "%s-stderr.txt" % label.name,
+        "%s%s-stderr.txt" %  (label.name, artifact_suffix),
     )
     ijs_file = _maybe_declare_file(
         actions,
         deprecated_ijs_file,
-        "%s.i.js" % label.name,
+        "%s%s.i.js" %  (label.name, artifact_suffix),
     )
 
     if not no_closure_library:
@@ -286,7 +287,7 @@ def _closure_js_library_impl(
         output = _maybe_declare_file(
             actions,
             deprecated_typecheck_file,
-            "%s_typecheck" % label.name,
+            "%s%s_typecheck" %  (label.name, artifact_suffix),
         ),
         suppress = suppress,
         internal_expect_failure = internal_expect_failure,
