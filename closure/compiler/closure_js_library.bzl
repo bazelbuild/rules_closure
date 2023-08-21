@@ -85,6 +85,7 @@ def create_closure_js_library(
         lenient = lenient,
         convention = convention,
         testonly = testonly,
+        artifact_suffix = artifact_suffix,
     )
 
 def _closure_js_library_impl(
@@ -100,6 +101,7 @@ def _closure_js_library_impl(
         internal_descriptors = depset(),
         no_closure_library = False,
         internal_expect_failure = False,
+        artifact_suffix = "",
 
         # These file definitions for our outputs are deprecated,
         # and will be replaced with |actions.declare_file()| soon.
