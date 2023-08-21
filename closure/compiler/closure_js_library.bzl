@@ -398,7 +398,7 @@ def _closure_js_library(ctx):
         ctx.files.internal_descriptors,
         ctx.attr.no_closure_library,
         ctx.attr.internal_expect_failure,
-        artifact_suffix = "",
+        "", # artifact_suffix
 
         # Deprecated output files.
         ctx.outputs.info,
