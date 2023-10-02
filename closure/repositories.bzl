@@ -1097,9 +1097,10 @@ def rules_webtesting():
 
     http_archive(
         name = "io_bazel_rules_webtesting",
-        sha256 = "05117d80aab0d077ede6ee4fd158db6916ccce627a71eb83d60048b33d87a1e6",
-        strip_prefix = "rules_webtesting-adf39f1234c51c955bfef0ef48836c86c2282043",
-        urls = ["https://github.com/bazelbuild/rules_webtesting/archive/adf39f1234c51c955bfef0ef48836c86c2282043.tar.gz"],
+        sha256 = "41d500a97ad9621dcf92fcb0cd77916e517388b196e5c3f0e63c7753e983b2bb",
+        strip_prefix = "rules_webtesting-4d7ec75d1cbb289f977b41638fc8b630bdf22bee",
+        urls = ["https://github.com/bazelbuild/rules_webtesting/archive/4d7ec75d1cbb289f977b41638fc8b630bdf22bee.tar.gz"],
+
     )
 
 def zlib():
