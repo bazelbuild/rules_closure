@@ -56,6 +56,7 @@ public class TestDriver {
           );
     } catch (TimeoutException e) {
       logger.log(Level.SEVERE, String.format("Test timeout after %s seconds", TEST_TIMEOUT));
+      return false;
     }
 
     String testReport =
