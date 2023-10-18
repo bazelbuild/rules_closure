@@ -185,15 +185,9 @@ def find_js_module_roots(srcs, workspace_name, label, includes):
         srcs_it = srcs.to_list()
     roots = [f.root.path for f in srcs_it if f.root.path]
 
-    # Bazel started prefixing external repo paths with ../
-    new_bazel_version = Label("@foo//bar").workspace_root.startswith("../")
     if workspace_name != "__main__":
-        if new_bazel_version:
-            roots += ["%s" % root for root in roots.to_list()]
-            roots += ["../%s" % workspace_name]
-        else:
-            roots += ["%s/external/%s" % (root, workspace_name) for root in roots]
-            roots += ["external/%s" % workspace_name]
+        roots += ["%s/external/%s" % (root, workspace_name) for root in roots]
+        roots += ["external/%s" % workspace_name]
     if includes:
         for f in srcs:
             if f.owner.package != label.package:
