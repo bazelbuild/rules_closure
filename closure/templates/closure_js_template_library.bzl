@@ -53,7 +53,7 @@ def _impl(ctx):
             inputs.append(f)
 
     plugin_transitive_deps = depset(
-        transitive = [m[SoyPluginInfo].generator.runtime.transitive_runtime_deps for m in ctx.attr.plugins],
+        transitive = [m[SoyPluginInfo].generator.runtime.transitive_runtime_jars for m in ctx.attr.plugins],
     ).to_list()
     inputs.extend(plugin_transitive_deps)
     plugin_classpath = [dep.path for dep in plugin_transitive_deps]

@@ -48,10 +48,12 @@
   <h1>Bazel Closure Rules</h1>
   <h3>{$label}</h3>
   <p>
-    {for $path in $paths}
-      <a href="{$path}">{$path}</a><br>
-    {ifempty}
+    {if $paths.length() != 0}
+      {for $path in $paths}
+        <a href="{$path}">{$path}</a><br>
+      {/for}
+    {else}
       No srcs found in transitive closure with path component prefix matching
       request path.
-    {/for}
+    {/if}
 {/template}

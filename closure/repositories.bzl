@@ -573,8 +573,8 @@ def com_google_errorprone_javac_shaded():
     )
 
 def com_google_guava():
-    version = "30.1.1"
-    sha256 = "44ce229ce26d880bf3afc362bbfcec34d7e6903d195bbb1db9f3b6e0d9834f06"
+    version = "32.1.1"
+    sha256 = "91fbba37f1c8b251cf9ea9e7d3a369eb79eb1e6a5df1d4bbf483dd0380740281"
 
     java_import_external(
         name = "com_google_guava",
@@ -673,7 +673,7 @@ def com_google_java_format():
     )
 
 def com_google_javascript_closure_compiler():
-    version = "v20220719"
+    version = "v20230802"
     jar = "closure-compiler-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
@@ -681,7 +681,7 @@ def com_google_javascript_closure_compiler():
         jar_urls = [
             "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler/%s/%s" % (version, jar),
         ],
-        jar_sha256 = "78458d84c523a7e88107dbb3541e37d2401f9288ed2b1d834d41b0a7131cf94b",
+        jar_sha256 = "230a9e05a8a7d9daa083b1f6e86edba6eb1ec6402a6a258432fe4245cdc4a95f",
         deps = [
             "@com_google_code_gson",
             "@com_google_guava",
@@ -1080,27 +1080,27 @@ def rules_webtesting():
     # TODO: Please remove the two following dependencies when rules_webtesting is pinned to an official release (>0.3.5).
     http_archive(
         name = "io_bazel_rules_go",
-        sha256 = "099a9fb96a376ccbbb7d291ed4ecbdfd42f6bc822ab77ae6f1b5cb9e914e94fa",
+        sha256 = "278b7ff5a826f3dc10f04feaf0b70d48b68748ccd512d7f98bf442077f043fe3",
         urls = [
-            "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.35.0/rules_go-v0.35.0.zip",
-            "https://github.com/bazelbuild/rules_go/releases/download/v0.35.0/rules_go-v0.35.0.zip",
+            "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.41.0/rules_go-v0.41.0.zip",
+            "https://github.com/bazelbuild/rules_go/releases/download/v0.41.0/rules_go-v0.41.0.zip",
         ],
     )
 
     http_archive(
         name = "bazel_gazelle",
-        sha256 = "62ca106be173579c0a167deb23358fdfe71ffa1e4cfdddf5582af26520f1c66f",
+        sha256 = "d3fa66a39028e97d76f9e2db8f1b0c11c099e8e01bf363a923074784e451f809",
         urls = [
-            "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.23.0/bazel-gazelle-v0.23.0.tar.gz",
-            "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.23.0/bazel-gazelle-v0.23.0.tar.gz",
+            "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.33.0/bazel-gazelle-v0.33.0.tar.gz",
         ],
     )
 
     http_archive(
         name = "io_bazel_rules_webtesting",
-        sha256 = "72355642d053b5df75f33d6e950d089c313677cebb97b373ad125ed2e4f32119",
-        strip_prefix = "rules_webtesting-d8c4843cdb44cadae1fb43a1f64e17492697de7f",
-        urls = ["https://github.com/bazelbuild/rules_webtesting/archive/d8c4843cdb44cadae1fb43a1f64e17492697de7f.tar.gz"],
+        sha256 = "41d500a97ad9621dcf92fcb0cd77916e517388b196e5c3f0e63c7753e983b2bb",
+        strip_prefix = "rules_webtesting-4d7ec75d1cbb289f977b41638fc8b630bdf22bee",
+        urls = ["https://github.com/bazelbuild/rules_webtesting/archive/4d7ec75d1cbb289f977b41638fc8b630bdf22bee.tar.gz"],
+
     )
 
 def zlib():

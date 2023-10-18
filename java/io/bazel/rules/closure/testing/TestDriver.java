@@ -36,7 +36,6 @@ public class TestDriver {
 
   private WebDriver driver;
   private String htmlURL;
-  private boolean testFinishedSuccessfully;
 
   public TestDriver(String htmlURL) {
     this.driver = new WebTest().newWebDriverSession();
@@ -53,20 +52,10 @@ public class TestDriver {
           .pollingEvery(Duration.ofMillis(POLL_INTERVAL))
           .withTimeout(Duration.ofSeconds(TEST_TIMEOUT))
           .until(
-              executor -> {
-                testFinishedSuccessfully =
-                    (boolean) executor.executeScript("return window.top.G_testRunner.isFinished()");
-                if (!testFinishedSuccessfully) {
-                  logger.log(Level.SEVERE, "G_testRunner has not finished successfully");
-                }
-                return true;
-              });
+              executor -> (boolean) executor.executeScript("return window.top.G_testRunner.isFinished()")
+          );
     } catch (TimeoutException e) {
-      testFinishedSuccessfully = false;
       logger.log(Level.SEVERE, String.format("Test timeout after %s seconds", TEST_TIMEOUT));
-    }
-
-    if (!testFinishedSuccessfully) {
       return false;
     }
 

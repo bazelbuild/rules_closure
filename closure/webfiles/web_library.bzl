@@ -23,11 +23,9 @@ load(
 )
 
 def _web_library(ctx):
-    if not ctx.attr.srcs:
-        if ctx.attr.deps:
-            fail("deps can not be set when srcs is not")
+    if not ctx.attr.srcs and not ctx.attr.deps:
         if not ctx.attr.exports:
-            fail("exports must be set if srcs is not")
+            fail("exports must be set if srcs or deps is not")
     if ctx.attr.path:
         if not ctx.attr.path.startswith("/"):
             fail("webpath must start with /")
@@ -53,8 +51,9 @@ def _web_library(ctx):
     manifest_srcs = []
     path = ctx.attr.path
     strip = _get_strip(ctx)
+    use_full_path = ctx.attr.use_full_path
     for src in ctx.files.srcs:
-        suffix = _get_path_relative_to_package(src)
+        suffix = _get_path_relative_to_package(src, use_full_path)
         if strip:
             if not suffix.startswith(strip):
                 fail("Relative src path not start with '%s': %s" % (strip, suffix))
@@ -178,13 +177,13 @@ def _fail(ctx, message):
     else:
         fail(message)
 
-def _get_path_relative_to_package(artifact):
+def _get_path_relative_to_package(artifact, use_full_path):
     """Returns file path relative to the package that declared it."""
     path = artifact.path
     for prefix in (
         artifact.root.path,
-        artifact.owner.workspace_root if artifact.owner else "",
-        artifact.owner.package if artifact.owner else "",
+        artifact.owner.workspace_root if artifact.owner and not use_full_path else "",
+        artifact.owner.package if artifact.owner and not use_full_path else "",
     ):
         if prefix:
             prefix = prefix + "/"
@@ -214,6 +213,7 @@ web_library = rule(
         "port": attr.string(default = "6006"),
         "srcs": attr.label_list(allow_files = True),
         "deps": attr.label_list(providers = ["webfiles"]),
+        "use_full_path": attr.bool(default = False),
         "exports": attr.label_list(),
         "data": attr.label_list(allow_files = True),
         "suppress": attr.string_list(),

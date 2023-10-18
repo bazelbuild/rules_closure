@@ -193,13 +193,7 @@ closure_js_test(
 #     name = "noto_fonts_render_as_expected",
 #     actual = "fontdemo-generated.png",
 #     golden = select({
-#         ":darwin": "fontdemo-darwin.png",
+#         "@platforms//os:macos": "fontdemo-darwin.png",
 #         "//conditions:default": "fontdemo.png",
 #     }),
 # )
-#
-# config_setting(
-#     name = "darwin",
-#     values = {"cpu": "darwin"},
-# )
-

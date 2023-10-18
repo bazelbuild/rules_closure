@@ -9,7 +9,7 @@ load(
 )
 load("@io_bazel_rules_webtesting//web:java_repositories.bzl", "java_repositories")
 load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
-load("@io_bazel_rules_webtesting//web/versioned:browsers-0.3.3.bzl", "browser_repositories")
+load("@io_bazel_rules_webtesting//web/versioned:browsers-0.3.4.bzl", "browser_repositories")
 
 def setup_web_test_repositories(**kwargs):
     """
@@ -22,7 +22,7 @@ def setup_web_test_repositories(**kwargs):
     # TODO: Remove these 3 dependencies when rules_webtesting is pinned to an official
     # release (>0.3.5).
     go_rules_dependencies()
-    go_register_toolchains(version = "1.16.5")
+    go_register_toolchains(version = "1.20.5")
     gazelle_dependencies()
 
     web_test_repositories()
