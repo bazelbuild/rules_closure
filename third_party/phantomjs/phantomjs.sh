@@ -19,9 +19,17 @@
 #         export FC_DEBUG="1024"
 
 if [[ -d "$0.runfiles" ]]; then
-  RUNFILES="$0.runfiles/"
+  if [[ -f "$0.runfiles/../_repo_mapping" ]]; then
+    RUNFILES="$0.runfiles/"
+  else
+    RUNFILES="$0.runfiles/io_bazel_rules_closure"
+  fi
 else
-  RUNFILES="${PWD}/"
+  if [[ -f "${PWD}/../_repo_mapping" ]]; then
+    RUNFILES="${PWD}/"
+  else
+    RUNFILES="${PWD}/../io_bazel_rules_closure"
+  fi
 fi
 
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/fontconfig/k8:${LD_LIBRARY_PATH}"
