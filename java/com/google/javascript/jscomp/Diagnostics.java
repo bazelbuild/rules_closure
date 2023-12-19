@@ -41,6 +41,9 @@ final class Diagnostics {
         CheckStrictDeps.DUPLICATE_PROVIDES,
         CheckStrictDeps.REDECLARED_PROVIDES,
         CheckStrictDeps.NOT_PROVIDED);
+    DiagnosticGroups.registerGroup("generatedTypescript",
+        ClosureCheckModule.GOOG_MODULE_MISPLACED,
+        ClosureCheckModule.EXPORT_NOT_AT_MODULE_SCOPE);
   }
 
   static final DiagnosticGroups GROUPS = new DiagnosticGroups();
@@ -87,6 +90,7 @@ final class Diagnostics {
           "externsValidation",
           "extraProvide",
           "extraRequire",
+          "generatedTypescript",
           "globalThis",
           "invalidCasts",
           "lateProvide",
@@ -169,6 +173,7 @@ final class Diagnostics {
           // TODO(jart): Remove these when regression is fixed relating to jscomp being able to
           //             identify externs files that were passed via srcs.
           CheckJSDoc.INVALID_MODIFIES_ANNOTATION,
+          ReplaceIdGenerators.NON_GLOBAL_ID_GENERATOR_CALL,
           CheckJSDoc.INVALID_NO_SIDE_EFFECT_ANNOTATION);
 
   static final ImmutableMap<String, DiagnosticType> DIAGNOSTIC_TYPES = initDiagnosticTypes();

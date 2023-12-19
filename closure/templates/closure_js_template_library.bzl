@@ -21,6 +21,12 @@ load("//closure/private:defs.bzl", "SOY_FILE_TYPE", "unfurl")
 load("//closure/templates:closure_templates_plugin.bzl", "SoyPluginInfo")
 
 _SOYTOJSSRCCOMPILER = "@com_google_template_soy//:SoyToJsSrcCompiler"
+_SOYIDOMCOMPILER = "@com_google_template_soy//:SoyToIncrementalDomSrcCompiler"
+
+_IDOM_DEPS = [
+    str(Label("//closure/templates:soy_idom")),
+    str(Label("//closure/templates:soy_tslib")),
+]
 
 def _impl(ctx):
     args = ["--outputPathFormat=%s/{INPUT_DIRECTORY}/{INPUT_FILE_NAME}.js" %
@@ -29,7 +35,7 @@ def _impl(ctx):
         args += ["--googMsgsAreExternal"]
     if ctx.attr.should_generate_soy_msg_defs:
         args += ["--shouldGenerateGoogMsgDefs"]
-    if ctx.attr.bidi_global_dir:
+    if (not ctx.attr.idom) and ctx.attr.bidi_global_dir:
         args += ["--bidiGlobalDir=%s" % ctx.attr.bidi_global_dir]
     if ctx.attr.plugins:
         args += ["--pluginModules=%s" % ",".join([
@@ -89,6 +95,7 @@ _closure_js_template_library = rule(
         "should_generate_soy_msg_defs": attr.bool(),
         "bidi_global_dir": attr.int(default = 1, values = [1, -1]),
         "soy_msgs_are_external": attr.bool(),
+        "idom": attr.bool(),
         "compiler": attr.label(cfg = "host", executable = True, mandatory = True),
         "defs": attr.string_list(),
     },
@@ -106,8 +113,12 @@ def closure_js_template_library(
         bidi_global_dir = None,
         soy_msgs_are_external = None,
         defs = [],
+        jsdeps = [],
+        idom = False,
+        compiler = None,
         **kwargs):
-    compiler = str(Label(_SOYTOJSSRCCOMPILER))
+    default_compiler = (idom and str(Label(_SOYIDOMCOMPILER))) or str(Label(_SOYTOJSSRCCOMPILER))
+    resolved_compiler = compiler or default_compiler
     js_srcs = [src + ".js" for src in srcs]
     _closure_js_template_library(
         name = name + "_soy_js",
@@ -121,8 +132,9 @@ def closure_js_template_library(
         should_generate_soy_msg_defs = should_generate_soy_msg_defs,
         bidi_global_dir = bidi_global_dir,
         soy_msgs_are_external = soy_msgs_are_external,
-        compiler = compiler,
+        compiler = resolved_compiler,
         defs = defs,
+        idom = idom,
     )
 
     deps = deps + [
@@ -147,20 +159,27 @@ def closure_js_template_library(
         "@com_google_javascript_closure_library//closure/goog/string",
         "@com_google_javascript_closure_library//closure/goog/string:const",
         "@com_google_javascript_closure_library//closure/goog/uri",
+        "@io_bazel_rules_closure//closure/templates:soy_ve_metadata_proto",
         str(Label("//closure/templates:soy_jssrc")),
     ]
 
     closure_js_library(
         name = name,
         srcs = js_srcs,
-        deps = deps,
+        deps = deps + jsdeps + (
+            idom and _IDOM_DEPS or []
+        ),
         testonly = testonly,
+        lenient = True,
         suppress = suppress + [
             "analyzerChecks",
             "deprecated",
             "reportUnknownTypes",
             "strictCheckTypes",
             "unusedLocalVariables",
-        ],
+        ] + (idom and [
+            "strictModuleChecks",
+            "checkTypes",
+        ] or []),
         **kwargs
     )
