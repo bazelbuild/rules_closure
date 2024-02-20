@@ -16,19 +16,15 @@ goog.setTestOnly();
 
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
-goog.require('goog.html.SafeHtml');
 goog.require('goog.testing.asserts');
 goog.require('goog.testing.jsunit');
 
 
 function setUp() {
-  goog.dom.appendChild(
-      goog.global.document.body,
-      goog.dom.safeHtmlToNode(
-          goog.html.SafeHtml.create(
-              goog.dom.TagName.DIV,
-              {'id': 'hello'},
-              'Hello World!')));
+  const div = goog.dom.createElement(goog.dom.TagName.DIV);
+  div.id = 'hello';
+  div.textContent = 'Hello World!';
+  goog.dom.appendChild(goog.global.document.body, div);
 }
 
 
