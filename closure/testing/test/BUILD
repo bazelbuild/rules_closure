@@ -159,7 +159,6 @@ closure_js_test(
     deps = [
         "@com_google_javascript_closure_library//closure/goog/dom",
         "@com_google_javascript_closure_library//closure/goog/dom:tagname",
-        "@com_google_javascript_closure_library//closure/goog/html:safehtml",
         "@com_google_javascript_closure_library//closure/goog/testing:asserts",
         "@com_google_javascript_closure_library//closure/goog/testing:jsunit",
     ],
