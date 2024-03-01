@@ -17,6 +17,8 @@
 
 load(
     "//closure/private:defs.bzl",
+    "ClosureCssBinaryInfo",
+    "ClosureCssLibraryInfo",
     "collect_css",
     "collect_runfiles",
     "unfurl",
@@ -25,7 +27,7 @@ load(
 def _closure_css_binary(ctx):
     if not ctx.attr.deps:
         fail("closure_css_binary rules can not have an empty 'deps' list")
-    deps = unfurl(ctx.attr.deps, provider = "closure_css_library")
+    deps = unfurl(ctx.attr.deps, provider = ClosureCssLibraryInfo).exports
     css = collect_css(deps)
     if not css.srcs:
         fail("There are no CSS source files in the transitive closure")
@@ -77,32 +79,34 @@ def _closure_css_binary(ctx):
             ctx.outputs.bin.short_path,
         ),
     )
-    return struct(
-        files = depset(files),
-        closure_css_binary = struct(
+    return [
+        ClosureCssBinaryInfo(
             bin = ctx.outputs.bin,
             map = ctx.outputs.map,
             renaming_map = ctx.outputs.js,
             labels = css.labels,
         ),
-        closure_css_library = struct(
+        ClosureCssLibraryInfo(
             srcs = depset([ctx.outputs.bin]),
             orientation = (css.orientation if ctx.attr.orientation == "NOCHANGE" else ctx.attr.orientation),
         ),
-        runfiles = ctx.runfiles(
-            files = files + ctx.files.data,
-            transitive_files = depset(
-                transitive = [collect_runfiles(deps), collect_runfiles(ctx.attr.data)],
+        DefaultInfo(
+            files = depset(files),
+            runfiles = ctx.runfiles(
+                files = files + ctx.files.data,
+                transitive_files = depset(
+                    transitive = [collect_runfiles(deps), collect_runfiles(ctx.attr.data)],
+                ),
             ),
         ),
-    )
+    ]
 
 closure_css_binary = rule(
     implementation = _closure_css_binary,
     attrs = {
         "debug": attr.bool(),
         "defs": attr.string_list(),
-        "deps": attr.label_list(providers = ["closure_css_library"]),
+        "deps": attr.label_list(providers = [ClosureCssLibraryInfo]),
         "orientation": attr.string(default = "NOCHANGE"),
         "renaming": attr.bool(default = True),
         "vendor": attr.string(),

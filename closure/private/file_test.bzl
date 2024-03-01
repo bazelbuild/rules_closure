@@ -51,7 +51,7 @@ def _impl(ctx):
             content = "diff -u %s %s" % (expected.short_path, actual.short_path),
             is_executable = True,
         )
-        return struct(runfiles = ctx.runfiles([exe, expected, actual]))
+        return DefaultInfo(runfiles = ctx.runfiles([exe, expected, actual]))
     if matches != -1:
         script = "[ %s == $(grep -c %s %s) ]" % (
             matches,
@@ -67,7 +67,7 @@ def _impl(ctx):
         content = script,
         is_executable = True,
     )
-    return struct(runfiles = ctx.runfiles([exe, file_]))
+    return DefaultInfo(runfiles = ctx.runfiles([exe, file_]))
 
 _file_test = rule(
     attrs = {

@@ -17,7 +17,7 @@
 
 load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 load("//closure/compiler:closure_js_library.bzl", "create_closure_js_library")
-load("//closure/private:defs.bzl", "CLOSURE_JS_TOOLCHAIN_ATTRS", "unfurl")
+load("//closure/private:defs.bzl", "CLOSURE_JS_TOOLCHAIN_ATTRS", "ClosureJsLibraryInfo", "unfurl")
 
 def _generate_closure_js_progress_message(name):
     # TODO(yannic): Add a better message?
@@ -61,7 +61,7 @@ def _closure_proto_aspect_impl(target, ctx):
     js = _generate_closure_js(target, ctx)
 
     srcs = depset([js])
-    deps = unfurl(ctx.rule.attr.deps, provider = "closure_js_library")
+    deps = unfurl(ctx.rule.attr.deps, provider = ClosureJsLibraryInfo).exports
     deps += [ctx.attr._closure_library, ctx.attr._closure_protobuf_jspb]
 
     suppress = [
@@ -70,12 +70,7 @@ def _closure_proto_aspect_impl(target, ctx):
     ]
 
     library = create_closure_js_library(ctx, srcs, deps, [], suppress, True)
-    return struct(
-        exports = library.exports,
-        closure_js_library = library.closure_js_library,
-        # The usual suspects are exported as runfiles, in addition to raw source.
-        runfiles = ctx.runfiles(files = [js]),
-    )
+    return library
 
 closure_proto_aspect = aspect(
     attr_aspects = ["deps"],
@@ -108,11 +103,7 @@ def _closure_proto_library_impl(ctx):
         fail(_error_multiple_deps, "deps")
 
     dep = ctx.attr.deps[0]
-    return struct(
-        files = depset(),
-        exports = dep.exports,
-        closure_js_library = dep.closure_js_library,
-    )
+    return [dep[ClosureJsLibraryInfo], DefaultInfo(files = depset())]
 
 closure_proto_library = rule(
     attrs = {

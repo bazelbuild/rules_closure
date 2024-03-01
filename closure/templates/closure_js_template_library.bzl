@@ -17,7 +17,7 @@
 
 load("//closure/compiler:closure_js_aspect.bzl", "closure_js_aspect")
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
-load("//closure/private:defs.bzl", "SOY_FILE_TYPE", "unfurl")
+load("//closure/private:defs.bzl", "ClosureJsLibraryInfo", "SOY_FILE_TYPE", "unfurl")
 load("//closure/templates:closure_templates_plugin.bzl", "SoyPluginInfo")
 
 _SOYTOJSSRCCOMPILER = "@com_google_template_soy//:SoyToJsSrcCompiler"
@@ -47,8 +47,8 @@ def _impl(ctx):
     if ctx.file.globals:
         args += ["--compileTimeGlobalsFile", ctx.file.globals.path]
         inputs.append(ctx.file.globals)
-    for dep in unfurl(ctx.attr.deps, provider = "closure_js_library"):
-        for f in dep.closure_js_library.descriptors.to_list():
+    for dep in unfurl(ctx.attr.deps, provider = ClosureJsLibraryInfo).exports:
+        for f in dep[ClosureJsLibraryInfo].descriptors.to_list():
             args += ["--protoFileDescriptors=%s" % f.path]
             inputs.append(f)
 
@@ -79,7 +79,7 @@ _closure_js_template_library = rule(
         "srcs": attr.label_list(allow_files = SOY_FILE_TYPE),
         "deps": attr.label_list(
             aspects = [closure_js_aspect],
-            providers = ["closure_js_library"],
+            providers = [ClosureJsLibraryInfo],
         ),
         "outputs": attr.output_list(),
         "globals": attr.label(allow_single_file = True),

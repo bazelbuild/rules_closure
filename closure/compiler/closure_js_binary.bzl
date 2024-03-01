@@ -17,6 +17,9 @@
 load(
     "//closure/private:defs.bzl",
     "CLOSURE_JS_TOOLCHAIN_ATTRS",
+    "ClosureCssBinaryInfo",
+    "ClosureJsBinaryInfo",
+    "ClosureJsLibraryInfo",
     "JS_LANGUAGES",
     "JS_LANGUAGE_IN",
     "JS_LANGUAGE_OUT_DEFAULT",
@@ -78,7 +81,7 @@ def _impl(ctx):
             ", ".join(JS_LANGUAGES.to_list()),
         ))
 
-    deps = unfurl(ctx.attr.deps, provider = "closure_js_library")
+    deps = unfurl(ctx.attr.deps, provider = ClosureJsLibraryInfo).exports
     js = collect_js(deps, ctx.attr._closure_library_base, css = ctx.attr.css)
     if not js.srcs:
         fail("There are no JS source files in the transitive closure")
@@ -281,27 +284,26 @@ def _impl(ctx):
     # promise to compile. Its fulfillment is the prerogative of ancestors which
     # are free to ignore the binary in favor of the raw sauces propagated by the
     # closure_js_library provider, in which case, no compilation is performed.
-    return struct(
-        files = depset(files),
-        closure_js_library = js,
-        closure_js_binary = struct(
+    return [
+        ClosureJsBinaryInfo(
             bin = ctx.outputs.bin,
             map = ctx.outputs.map,
             language = ctx.attr.language,
         ),
-        runfiles = ctx.runfiles(
+        js,
+        DefaultInfo(files = depset(files), runfiles = ctx.runfiles(
             files = files + ctx.files.data,
             transitive_files = depset(transitive = [
                 collect_runfiles(deps),
                 collect_runfiles([ctx.attr.css]),
                 collect_runfiles(ctx.attr.data),
             ]),
-        ),
-    )
+        )),
+    ]
 
 def _validate_css_graph(ctx, js):
     if ctx.attr.css:
-        missing = difference(js.stylesheets, ctx.attr.css.closure_css_binary.labels)
+        missing = difference(js.stylesheets, ctx.attr.css[ClosureCssBinaryInfo].labels)
         if missing:
             fail("Dependent JS libraries depend on CSS libraries that weren't " +
                  "compiled into the referenced CSS binary: " +
@@ -315,7 +317,7 @@ closure_js_binary = rule(
     implementation = _impl,
     attrs = dict({
         "compilation_level": attr.string(default = "ADVANCED"),
-        "css": attr.label(providers = ["closure_css_binary"]),
+        "css": attr.label(providers = [ClosureCssBinaryInfo]),
         "debug": attr.bool(default = False),
         "defs": attr.string_list(),
         # TODO(tjgq): Remove the deprecated STRICT/LOOSE in favor of PRUNE/PRUNE_LEGACY.
@@ -332,7 +334,7 @@ closure_js_binary = rule(
         ),
         "deps": attr.label_list(
             aspects = [closure_js_aspect],
-            providers = ["closure_js_library"],
+            providers = [ClosureJsLibraryInfo],
         ),
         "entry_points": attr.string_list(),
         "formatting": attr.string(),
