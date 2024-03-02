@@ -36,12 +36,12 @@ load(
     "closure_js_aspect",
 )
 
-_dependency_mode_warning = '\n'.join([
-  "{target}: dependency_mode={old_mode} is deprecated and will be " +
-      "removed soon; prefer to use its equivalent {new_mode}.",
-  "",
-  "  ** You can use the following buildozer command:",
-  "buildozer 'set dependency_mode \"{new_mode}\"' {target}",
+_dependency_mode_warning = "\n".join([
+    "{target}: dependency_mode={old_mode} is deprecated and will be " +
+    "removed soon; prefer to use its equivalent {new_mode}.",
+    "",
+    "  ** You can use the following buildozer command:",
+    "buildozer 'set dependency_mode \"{new_mode}\"' {target}",
 ])
 
 def _get_dependency_mode_flag(target, attr):
@@ -81,7 +81,7 @@ def _impl(ctx):
             ", ".join(JS_LANGUAGES.to_list()),
         ))
 
-    deps = unfurl(ctx.attr.deps, provider = ClosureJsLibraryInfo).exports
+    deps = unfurl(ctx.attr.deps, provider = ClosureJsLibraryInfo)
     js = collect_js(deps, ctx.attr._closure_library_base, css = ctx.attr.css)
     if not js.srcs:
         fail("There are no JS source files in the transitive closure")

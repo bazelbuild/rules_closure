@@ -61,7 +61,7 @@ def _closure_proto_aspect_impl(target, ctx):
     js = _generate_closure_js(target, ctx)
 
     srcs = depset([js])
-    deps = unfurl(ctx.rule.attr.deps, provider = ClosureJsLibraryInfo).exports
+    deps = unfurl(ctx.rule.attr.deps, provider = ClosureJsLibraryInfo)
     deps += [ctx.attr._closure_library, ctx.attr._closure_protobuf_jspb]
 
     suppress = [

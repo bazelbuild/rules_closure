@@ -25,15 +25,15 @@ load(
 )
 
 def _closure_css_library(ctx):
-    deps = unfurl(ctx.attr.deps, provider = ClosureCssLibraryInfo).exports
+    deps = unfurl(ctx.attr.deps, provider = ClosureCssLibraryInfo)
     css = collect_css(deps, ctx.attr.orientation)
     return [
         ClosureCssLibraryInfo(
             srcs = depset(ctx.files.srcs, transitive = [css.srcs]),
             labels = depset([ctx.label], transitive = [css.labels]),
             orientation = ctx.attr.orientation,
+            exports = unfurl(ctx.attr.exports),
         ),
-        unfurl(ctx.attr.exports),
         ClosureJsLibraryInfo(),
         DefaultInfo(
             files = depset(),

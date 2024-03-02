@@ -40,7 +40,7 @@ def _web_library(ctx):
         fail("when \"*\" is suppressed no other items should be present")
 
     # process what came before
-    deps = unfurl(ctx.attr.deps, provider = WebFilesInfo).exports
+    deps = unfurl(ctx.attr.deps, provider = WebFilesInfo)
     webpaths = []
     manifests = []
     for dep in deps:
@@ -165,12 +165,12 @@ def _web_library(ctx):
                 transitive_files = transitive_runfiles,
             ),
         ),
-        unfurl(ctx.attr.exports),
         WebFilesInfo(
             manifest = manifest,
             manifests = manifests,
             webpaths = depset(transitive = webpaths),
             dummy = ctx.outputs.dummy,
+            exports = unfurl(ctx.attr.exports),
         ),
     ]
 

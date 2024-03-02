@@ -33,7 +33,7 @@ def _impl(ctx):
     files = [ctx.outputs.executable]
     srcs = []
     direct_srcs = []
-    deps = unfurl(ctx.attr.deps, provider = ClosureJsLibraryInfo).exports
+    deps = unfurl(ctx.attr.deps, provider = ClosureJsLibraryInfo)
     for dep in deps:
         if ClosureJsBinaryInfo in dep:
             direct_srcs += [dep[ClosureJsBinaryInfo].bin]
