@@ -105,23 +105,7 @@ completeness of goog.getCssName() substitutions.""",
 Boolean indicating indicating if Closure Library's base.js is part
 of the srcs subprovider. This field exists for optimization.""",
     "language": "",
-    "exports": """
-    Iterable<Target> of deps that should only become deps in parent rules.
-    Exports are not deps of the Target to which they belong. The exports
-    provider does not contain the exports its deps export. Targets in this
-    provider are not necessarily guaranteed to have a closure_js_library
-    provider. Rules allowing closure_js_library deps MUST also treat
-    exports of those deps as direct dependencies of the Target. If those
-    rules are library rules, then they SHOULD also provide an exports
-    attribute of their own which is propagated to parent targets via the
-    exports provider, along with any exports those exports export. The
-    exports attribute MUST NOT contain files and SHOULD NOT impose
-    restrictions on what providers a Target must have. Rules exporting this
-    provider MUST NOT allow deps to be set if srcs is empty. Aspects
-    exporting this provider MAY turn deps into exports if srcs is empty and
-    the exports attribute does not exist. The exports feature can be abused
-    by users to circumvent strict deps checking and therefore should be
-    used with caution.""",
+    "exports": "",
 })
 
 ClosureJsBinaryInfo = provider("ClosureJsBinaryInfo", fields = ["bin", "map", "language"])
