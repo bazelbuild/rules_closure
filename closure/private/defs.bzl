@@ -155,14 +155,8 @@ def unfurl(deps, provider = ""):
     for dep in deps:
         if not provider or provider in dep:
             res.append(dep)
-
-        #        print("the type is&&&&&" + str(type(provider)))
         if type(provider) == "Provider" and provider in dep and hasattr(dep[provider], "exports"):
-            #            print("the dep is****" + str(dep[provider]))
             for edep in dep[provider].exports:
-                #                print("the dep is****" + str(dep))
-                #                print("#############")
-                #                print("the export is....." + str(dep[provider]))
                 if not provider or provider in edep:
                     res.append(edep)
     return res
