@@ -29,6 +29,7 @@ load(
     "library_level_checks",
     "make_jschecker_progress_message",
     "sort_roots",
+    "extract_providers",
     "unfurl",
 )
 load(
@@ -100,6 +101,8 @@ def _closure_js_library_impl(
         convention,
         includes = (),
         exports = depset(),
+        deps_stylesheets = [],
+        exports_stylesheets = [],
         internal_descriptors = depset(),
         no_closure_library = False,
         internal_expect_failure = False,
@@ -121,7 +124,7 @@ def _closure_js_library_impl(
     ):
         fail("Closure toolchain undefined; rule should include CLOSURE_JS_TOOLCHAIN_ATTRS")
 
-    closure_library_base = ctx.attr._closure_library_base
+    closure_library_base = extract_providers(ctx.attr._closure_library_base, ClosureJsLibraryInfo)
     closure_worker = ctx.executable._ClosureWorker
     unusable_type_definition = ctx.files._unusable_type_definition
     actions = ctx.actions
@@ -165,7 +168,7 @@ def _closure_js_library_impl(
 
     # Create a list of direct children of this rule. If any direct dependencies
     # have the exports attribute, those labels become direct dependencies here.
-    deps = unfurl(deps, provider = ClosureJsLibraryInfo)
+    deps = unfurl(deps)
 
     # Collect all the transitive stuff the child rules have propagated. Bazel has
     # a special nested set data structure that makes this efficient.
@@ -178,9 +181,8 @@ def _closure_js_library_impl(
     # JS binary is compiled, we'll make sure it's linked against a CSS binary
     # which is a superset of the CSS libraries in its transitive closure.
     stylesheets = []
-    for dep in deps:
-        if ClosureCssLibraryInfo in dep:
-            stylesheets.append(dep.label)
+    for dep in deps_stylesheets:
+         stylesheets.append(dep.label)
 
     # JsChecker is a program that's run via the ClosureWorker persistent Bazel
     # worker. This program is a modded version of the Closure Compiler. It does
@@ -265,7 +267,7 @@ def _closure_js_library_impl(
     info_files = []
     for dep in deps:
         # Polymorphic rules, e.g. closure_css_library, might not provide this.
-        info = getattr(dep[ClosureJsLibraryInfo], "info", None)
+        info = getattr(dep, "info", None)
         if info:
             args.add("--dep", info)
             info_files.append(info)
@@ -386,13 +388,15 @@ def _closure_js_library(ctx):
     library = _closure_js_library_impl(
         ctx,
         srcs,
-        ctx.attr.deps,
+        extract_providers(ctx.attr.deps, ClosureJsLibraryInfo),
         ctx.attr.testonly,
         ctx.attr.suppress,
         ctx.attr.lenient,
         ctx.attr.convention,
         getattr(ctx.attr, "includes", []),
-        ctx.attr.exports,
+        extract_providers(ctx.attr.exports, ClosureJsLibraryInfo),
+        extract_providers(ctx.attr.deps, ClosureCssLibraryInfo),
+        extract_providers(ctx.attr.exports, ClosureCssLibraryInfo),
         ctx.files.internal_descriptors,
         ctx.attr.no_closure_library,
         ctx.attr.internal_expect_failure,
@@ -409,7 +413,7 @@ def _closure_js_library(ctx):
         DefaultInfo(
             files = depset(),
             # The usual suspects are exported as runfiles, in addition to raw source.
-           runfiles = collect_runfiles(
+            runfiles = collect_runfiles(
                 ctx,
                 files = ctx.files.srcs,
                 extra_runfiles_attrs = ["exports"],

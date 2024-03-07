@@ -17,7 +17,7 @@
 
 load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 load("//closure/compiler:closure_js_library.bzl", "create_closure_js_library")
-load("//closure/private:defs.bzl", "CLOSURE_JS_TOOLCHAIN_ATTRS", "ClosureJsLibraryInfo", "unfurl")
+load("//closure/private:defs.bzl", "CLOSURE_JS_TOOLCHAIN_ATTRS", "ClosureJsLibraryInfo", "extract_providers")
 
 def _generate_closure_js_progress_message(name):
     # TODO(yannic): Add a better message?
@@ -61,8 +61,8 @@ def _closure_proto_aspect_impl(target, ctx):
     js = _generate_closure_js(target, ctx)
 
     srcs = depset([js])
-    deps = unfurl(ctx.rule.attr.deps, provider = ClosureJsLibraryInfo)
-    deps += [ctx.attr._closure_library, ctx.attr._closure_protobuf_jspb]
+    deps = ctx.rule.attr.deps + [ctx.attr._closure_library, ctx.attr._closure_protobuf_jspb]
+    deps = extract_providers(deps, ClosureJsLibraryInfo)
 
     suppress = [
         "missingProperties",

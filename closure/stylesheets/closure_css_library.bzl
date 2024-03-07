@@ -29,6 +29,7 @@ def _closure_css_library(ctx):
     css = collect_css(deps, ctx.attr.orientation)
     return [
         ClosureCssLibraryInfo(
+            label = ctx.label,
             srcs = depset(ctx.files.srcs, transitive = [css.srcs]),
             labels = depset([ctx.label], transitive = [css.labels]),
             orientation = ctx.attr.orientation,
