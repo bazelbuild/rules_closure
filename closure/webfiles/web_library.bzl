@@ -81,10 +81,10 @@ def _web_library(ctx):
     manifest = ctx.actions.declare_file("%s.pbtxt" % ctx.label.name)
     ctx.actions.write(
         output = manifest,
-        content = struct(
+        content = proto.encode_text(struct(
             label = str(ctx.label),
             src = manifest_srcs,
-        ).to_proto(),
+        )),
     )
     manifests = depset([manifest], transitive = manifests, order = "postorder")
 
@@ -137,7 +137,7 @@ def _web_library(ctx):
         ],
     )
     params_file = ctx.actions.declare_file("%s_server_params.pbtxt" % ctx.label.name)
-    ctx.actions.write(output = params_file, content = params.to_proto())
+    ctx.actions.write(output = params_file, content = proto.encode_text(params))
     ctx.actions.write(
         is_executable = True,
         output = ctx.outputs.executable,
