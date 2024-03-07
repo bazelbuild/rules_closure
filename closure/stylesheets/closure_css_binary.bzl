@@ -92,12 +92,7 @@ def _closure_css_binary(ctx):
         ),
         DefaultInfo(
             files = depset(files),
-            runfiles = ctx.runfiles(
-                files = files + ctx.files.data,
-                transitive_files = depset(
-                    transitive = [collect_runfiles(deps), collect_runfiles(ctx.attr.data)],
-                ),
-            ),
+            runfiles = collect_runfiles(ctx, files),
         ),
     ]
 

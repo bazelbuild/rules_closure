@@ -37,12 +37,7 @@ def _closure_css_library(ctx):
         ClosureJsLibraryInfo(),
         DefaultInfo(
             files = depset(),
-            runfiles = ctx.runfiles(
-                files = ctx.files.srcs + ctx.files.data,
-                transitive_files = depset(
-                    transitive = [collect_runfiles(deps), collect_runfiles(ctx.attr.data)],
-                ),
-            ),
+            runfiles = collect_runfiles(ctx, ctx.files.srcs),
         ),
     ]
 

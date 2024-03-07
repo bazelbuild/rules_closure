@@ -210,18 +210,27 @@ def collect_css(deps, orientation = None):
         orientation = orientation,
     )
 
-def collect_runfiles(targets):
+def collect_runfiles(ctx, files, extra_runfiles_attrs = None):
     """Aggregates data runfiles from targets."""
-    data = []
-    for target in targets:
-        if hasattr(target, "runfiles"):
-            data.append(target.runfiles.files)
-            continue
-        if hasattr(target, "data_runfiles"):
-            data.append(target.data_runfiles.files)
-        if hasattr(target, "default_runfiles"):
-            data.append(target.default_runfiles.files)
-    return depset(transitive = data)
+    all_transitive_files = []
+    if extra_runfiles_attrs:
+        for extra_attr in extra_runfiles_attrs:
+            deps = getattr(ctx.attr, extra_attr, None) or []
+            if type(deps) != "list":
+                deps = [deps]
+            for dep in deps:
+                info = dep[DefaultInfo]
+                all_transitive_files.append(info.default_runfiles.files)
+                all_transitive_files.append(info.data_runfiles.files)
+
+    return ctx.runfiles(
+        collect_default = True,
+        collect_data = True,
+        files = files,
+        transitive_files = depset(
+            transitive = all_transitive_files,
+        ),
+    )
 
 def find_js_module_roots(srcs, workspace_name, label, includes):
     """Finds roots of JavaScript sources.

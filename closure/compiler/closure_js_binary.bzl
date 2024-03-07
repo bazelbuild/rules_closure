@@ -291,14 +291,10 @@ def _impl(ctx):
             language = ctx.attr.language,
         ),
         js,
-        DefaultInfo(files = depset(files), runfiles = ctx.runfiles(
-            files = files + ctx.files.data,
-            transitive_files = depset(transitive = [
-                collect_runfiles(deps),
-                collect_runfiles([ctx.attr.css]),
-                collect_runfiles(ctx.attr.data),
-            ]),
-        )),
+        DefaultInfo(
+            files = depset(files),
+            runfiles = collect_runfiles(ctx, files, extra_runfiles_attrs = ["css"]),
+        ),
     ]
 
 def _validate_css_graph(ctx, js):

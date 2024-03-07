@@ -58,17 +58,10 @@ def _impl(ctx):
     )
     return DefaultInfo(
         files = depset(files),
-        runfiles = ctx.runfiles(
-            files = files + ctx.attr.data + [ctx.file.html],
-            transitive_files = depset(transitive = [
-                collect_runfiles(deps),
-                collect_runfiles(ctx.attr.data),
-                collect_runfiles([
-                    ctx.attr._phantomjs,
-                    ctx.attr.runner,
-                    ctx.attr.harness,
-                ]),
-            ]),
+        runfiles = collect_runfiles(
+            ctx,
+            files = files + [ctx.file.html],
+            extra_runfiles_attrs = ["_phantomjs", "runner", "harness"],
         ),
     )
 

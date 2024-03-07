@@ -409,15 +409,10 @@ def _closure_js_library(ctx):
         DefaultInfo(
             files = depset(),
             # The usual suspects are exported as runfiles, in addition to raw source.
-            runfiles = ctx.runfiles(
-                files = srcs + ctx.files.data,
-                transitive_files = depset(
-                    transitive = [
-                        collect_runfiles(unfurl(ctx.attr.deps, provider = ClosureJsLibraryInfo)),
-                        collect_runfiles(ctx.attr.data),
-                        collect_runfiles(unfurl(ctx.attr.exports)),
-                    ],
-                ),
+           runfiles = collect_runfiles(
+                ctx,
+                files = ctx.files.srcs,
+                extra_runfiles_attrs = ["exports"],
             ),
         ),
     ]
