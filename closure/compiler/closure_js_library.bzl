@@ -24,12 +24,12 @@ load(
     "collect_js",
     "collect_runfiles",
     "convert_path_to_es6_module_name",
+    "extract_providers",
     "find_js_module_roots",
     "get_jsfile_path",
     "library_level_checks",
     "make_jschecker_progress_message",
     "sort_roots",
-    "extract_providers",
     "unfurl",
 )
 load(
@@ -182,7 +182,7 @@ def _closure_js_library_impl(
     # which is a superset of the CSS libraries in its transitive closure.
     stylesheets = []
     for dep in deps_stylesheets:
-         stylesheets.append(dep.label)
+        stylesheets.append(dep.label)
 
     # JsChecker is a program that's run via the ClosureWorker persistent Bazel
     # worker. This program is a modded version of the Closure Compiler. It does

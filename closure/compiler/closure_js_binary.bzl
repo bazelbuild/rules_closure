@@ -26,11 +26,11 @@ load(
     "collect_js",
     "collect_runfiles",
     "difference",
+    "extract_providers",
     "find_js_module_roots",
     "get_jsfile_path",
     "sort_roots",
     "unfurl",
-    "extract_providers",
 )
 load(
     "//closure/compiler:closure_js_aspect.bzl",
