@@ -19,6 +19,7 @@ load(
     "WebFilesInfo",
     "create_argfile",
     "difference",
+    "extract_providers",
     "long_path",
     "unfurl",
 )
