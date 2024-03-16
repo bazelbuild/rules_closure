@@ -45,7 +45,7 @@ def _web_library(ctx):
     manifests = []
     for dep in deps:
         webpaths.append(dep[WebFilesInfo].webpaths)
-        manifests += [dep[WebFilesInfo].manifests]
+        manifests.append(dep[WebFilesInfo].manifests)
 
     # process what comes now
     new_webpaths = []
@@ -106,7 +106,7 @@ def _web_library(ctx):
         inputs.append(dep[WebFilesInfo].dummy)
         for f in dep.files.to_list():
             inputs.append(f)
-        direct_manifests += [dep[WebFilesInfo].manifest]
+        direct_manifests.append(dep[WebFilesInfo].manifest)
         inputs.append(dep[WebFilesInfo].manifest)
         args.append("--direct_dep")
         args.append(dep[WebFilesInfo].manifest.path)
@@ -170,7 +170,7 @@ def _web_library(ctx):
             manifests = manifests,
             webpaths = depset(transitive = webpaths),
             dummy = ctx.outputs.dummy,
-            exports = unfurl(ctx.attr.exports),
+            exports = unfurl(extract_providers(ctx.attr.exports, WebFilesInfo)),
         ),
     ]
 
