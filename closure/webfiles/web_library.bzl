@@ -19,6 +19,7 @@ load(
     "WebFilesInfo",
     "create_argfile",
     "difference",
+    "extract_providers",
     "long_path",
     "unfurl",
 )
@@ -40,12 +41,12 @@ def _web_library(ctx):
         fail("when \"*\" is suppressed no other items should be present")
 
     # process what came before
-    deps = unfurl(ctx.attr.deps, provider = WebFilesInfo)
+    deps = unfurl(extract_providers(ctx.attr.deps, provider = WebFilesInfo))
     webpaths = []
     manifests = []
     for dep in deps:
-        webpaths.append(dep[WebFilesInfo].webpaths)
-        manifests += [dep[WebFilesInfo].manifests]
+        webpaths.append(dep.webpaths)
+        manifests += [dep.manifests]
 
     # process what comes now
     new_webpaths = []
@@ -103,13 +104,11 @@ def _web_library(ctx):
         args.append(category)
     inputs.extend(ctx.files.srcs)
     for dep in deps:
-        inputs.append(dep[WebFilesInfo].dummy)
-        for f in dep.files.to_list():
-            inputs.append(f)
-        direct_manifests += [dep[WebFilesInfo].manifest]
-        inputs.append(dep[WebFilesInfo].manifest)
+        inputs.append(dep.dummy)
+        direct_manifests += [dep.manifest]
+        inputs.append(dep.manifest)
         args.append("--direct_dep")
-        args.append(dep[WebFilesInfo].manifest.path)
+        args.append(dep.manifest.path)
     for man in difference(manifests, depset(direct_manifests)):
         inputs.append(man)
         args.append("--transitive_dep")
@@ -148,8 +147,7 @@ def _web_library(ctx):
     )
 
     transitive_runfiles = depset(
-        transitive = [ctx.attr.server.data_runfiles.files] +
-                     [dep.data_runfiles.files for dep in deps],
+        transitive = [ctx.attr.server.data_runfiles.files],
     )
 
     return [

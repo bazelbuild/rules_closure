@@ -135,7 +135,7 @@ def get_jsfile_path(f):
 def extract_providers(deps, provider):
     return [dep[provider] for dep in deps if provider in dep]
 
-def unfurl(deps, provider = ""):
+def unfurl(deps):
     """Returns deps as well as deps exported by parent rules."""
     res = []
     for dep in deps:
@@ -198,14 +198,12 @@ def collect_css(deps, orientation = None):
     srcs = []
     labels = []
     for dep in deps:
-        if hasattr(dep[ClosureCssLibraryInfo], "srcs"):
-            srcs.append(getattr(dep[ClosureCssLibraryInfo], "srcs"))
-        if hasattr(dep[ClosureCssLibraryInfo], "labels"):
-            labels.append(getattr(dep[ClosureCssLibraryInfo], "labels"))
+        srcs.append(getattr(dep, "srcs", []))
+        labels.append(getattr(dep, "labels", []))
         if orientation:
-            if dep[ClosureCssLibraryInfo].orientation != orientation:
+            if dep.orientation != orientation:
                 fail("%s does not have the same orientation" % dep.label)
-        orientation = dep[ClosureCssLibraryInfo].orientation
+        orientation = dep.orientation
     return struct(
         srcs = depset(transitive = srcs),
         labels = depset(transitive = labels),

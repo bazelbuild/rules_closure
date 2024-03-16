@@ -23,6 +23,7 @@ load(
     "ClosureJsLibraryInfo",
     "HTML_FILE_TYPE",
     "collect_runfiles",
+    "extract_providers",
     "long_path",
     "unfurl",
 )
@@ -33,7 +34,7 @@ def _impl(ctx):
     files = [ctx.outputs.executable]
     srcs = []
     direct_srcs = []
-    deps = unfurl(ctx.attr.deps, provider = ClosureJsLibraryInfo)
+    deps = list(ctx.attr.deps)
     for dep in deps:
         if ClosureJsBinaryInfo in dep:
             direct_srcs += [dep[ClosureJsBinaryInfo].bin]
