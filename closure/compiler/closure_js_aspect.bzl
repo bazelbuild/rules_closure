@@ -16,14 +16,6 @@ load(
     "//closure/private:defs.bzl",
     "CLOSURE_WORKER_ATTR",
     "ClosureJsLibraryInfo",
-    "JS_FILE_TYPE",
-    "collect_js",
-    "collect_runfiles",
-    "convert_path_to_es6_module_name",
-    "find_js_module_roots",
-    "get_jsfile_path",
-    "make_jschecker_progress_message",
-    "unfurl",
 )
 
 def _closure_js_aspect_impl(target, ctx):

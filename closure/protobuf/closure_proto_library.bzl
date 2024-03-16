@@ -41,7 +41,7 @@ def _generate_closure_js(target, ctx):
 
     out_options = ",".join(js_out_options)
     out_path = "/".join(js.path.split("/")[:-1])
-    args += ["--js_out=%s:%s" % (out_options, out_path)]
+    args.append("--js_out=%s:%s" % (out_options, out_path))
 
     # Add paths of protos we generate files for.
     args += [file.path for file in target[ProtoInfo].direct_sources]

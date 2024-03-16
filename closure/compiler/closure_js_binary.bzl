@@ -15,6 +15,10 @@
 """Rule for building JavaScript binaries with Closure Compiler."""
 
 load(
+    "//closure/compiler:closure_js_aspect.bzl",
+    "closure_js_aspect",
+)
+load(
     "//closure/private:defs.bzl",
     "CLOSURE_JS_TOOLCHAIN_ATTRS",
     "ClosureCssBinaryInfo",
@@ -31,10 +35,6 @@ load(
     "get_jsfile_path",
     "sort_roots",
     "unfurl",
-)
-load(
-    "//closure/compiler:closure_js_aspect.bzl",
-    "closure_js_aspect",
 )
 
 _dependency_mode_warning = "\n".join([

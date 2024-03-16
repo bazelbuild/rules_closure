@@ -161,13 +161,13 @@ def collect_js(
     js_module_roots = []
     has_closure_library = False
     for dep in deps:
-        srcs += [getattr(dep, "srcs", depset())]
-        ijs_files += [getattr(dep, "ijs_files", depset())]
-        infos += [getattr(dep, "infos", depset())]
-        modules += [getattr(dep, "modules", depset())]
-        descriptors += [getattr(dep, "descriptors", depset())]
-        stylesheets += [getattr(dep, "stylesheets", depset())]
-        js_module_roots += [getattr(dep, "js_module_roots", depset())]
+        srcs.append(getattr(dep, "srcs", depset()))
+        ijs_files.append(getattr(dep, "ijs_files", depset()))
+        infos.append(getattr(dep, "infos", depset()))
+        modules.append(getattr(dep, "modules", depset()))
+        descriptors.append(getattr(dep, "descriptors", depset()))
+        stylesheets.append(getattr(dep, "stylesheets", depset()))
+        js_module_roots.append(getattr(dep, "js_module_roots", depset()))
         has_closure_library = (
             has_closure_library or
             getattr(dep, "has_closure_library", False)
@@ -180,7 +180,7 @@ def collect_js(
         has_closure_library = True
 
     if css:
-        direct_srcs += [css[ClosureCssBinaryInfo].renaming_map]
+        direct_srcs.append(css[ClosureCssBinaryInfo].renaming_map)
 
     return ClosureJsLibraryInfo(
         srcs = depset(direct_srcs, transitive = srcs),
@@ -256,7 +256,7 @@ def find_js_module_roots(srcs, workspace_name, label, includes):
 
     if workspace_name != "__main__":
         roots += ["%s/external/%s" % (root, workspace_name) for root in roots]
-        roots += ["external/%s" % workspace_name]
+        roots.append("external/%s" % workspace_name)
     if includes:
         for f in srcs:
             if f.owner.package != label.package:

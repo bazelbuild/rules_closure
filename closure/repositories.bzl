@@ -14,8 +14,8 @@
 
 """External dependencies for Closure Rules."""
 
-load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 load("//closure/private:platform_http_file.bzl", "platform_http_file")
 
 def rules_closure_toolchains():

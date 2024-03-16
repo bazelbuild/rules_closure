@@ -45,7 +45,7 @@ def _web_library(ctx):
     manifests = []
     for dep in deps:
         webpaths.append(dep[WebFilesInfo].webpaths)
-        manifests += [dep[WebFilesInfo].manifests]
+        manifests.append(dep[WebFilesInfo].manifests)
 
     # process what comes now
     new_webpaths = []
@@ -77,7 +77,7 @@ def _web_library(ctx):
             webpath = webpath,
         ))
 
-    webpaths += [depset(new_webpaths)]
+    webpaths.append(depset(new_webpaths))
     manifest = ctx.actions.declare_file("%s.pbtxt" % ctx.label.name)
     ctx.actions.write(
         output = manifest,
@@ -106,7 +106,7 @@ def _web_library(ctx):
         inputs.append(dep[WebFilesInfo].dummy)
         for f in dep.files.to_list():
             inputs.append(f)
-        direct_manifests += [dep[WebFilesInfo].manifest]
+        direct_manifests.append(dep[WebFilesInfo].manifest)
         inputs.append(dep[WebFilesInfo].manifest)
         args.append("--direct_dep")
         args.append(dep[WebFilesInfo].manifest.path)
