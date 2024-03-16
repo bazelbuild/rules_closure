@@ -48,7 +48,7 @@
   <h1>Bazel Closure Rules</h1>
   <h3>{$label}</h3>
   <p>
-    {if $paths.length != 0}
+    {if length($paths) != 0}
       {for $path in $paths}
         <a href="{$path}">{$path}</a><br>
       {/for}
