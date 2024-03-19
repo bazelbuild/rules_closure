@@ -26,20 +26,20 @@ def _impl(ctx):
     args = ["--outputPathFormat=%s/{INPUT_DIRECTORY}/{INPUT_FILE_NAME}.js" %
             ctx.configuration.genfiles_dir.path]
     if ctx.attr.soy_msgs_are_external:
-        args += ["--googMsgsAreExternal"]
+        args.append("--googMsgsAreExternal")
     if ctx.attr.should_generate_soy_msg_defs:
-        args += ["--shouldGenerateGoogMsgDefs"]
+        args.append("--shouldGenerateGoogMsgDefs")
     if ctx.attr.bidi_global_dir:
-        args += ["--bidiGlobalDir=%s" % ctx.attr.bidi_global_dir]
+        args.append("--bidiGlobalDir=%s" % ctx.attr.bidi_global_dir)
     if ctx.attr.plugins:
-        args += ["--pluginModules=%s" % ",".join([
+        args.append("--pluginModules=%s" % ",".join([
             m[SoyPluginInfo].generator.module
             for m in ctx.attr.plugins
-        ])]
+        ]))
     for arg in ctx.attr.defs:
         if not arg.startswith("--") or (" " in arg and "=" not in arg):
             fail("Please use --flag=value syntax for defs")
-        args += [arg]
+        args.append(arg)
     inputs = []
     for f in ctx.files.srcs:
         args.append("--srcs=" + f.path)
@@ -49,7 +49,7 @@ def _impl(ctx):
         inputs.append(ctx.file.globals)
     for dep in unfurl(extract_providers(ctx.attr.deps, provider = ClosureJsLibraryInfo)):
         for f in dep.descriptors.to_list():
-            args += ["--protoFileDescriptors=%s" % f.path]
+            args.append("--protoFileDescriptors=%s" % f.path)
             inputs.append(f)
 
     plugin_transitive_deps = depset(

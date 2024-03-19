@@ -37,9 +37,9 @@ def _impl(ctx):
     deps = list(ctx.attr.deps)
     for dep in deps:
         if ClosureJsBinaryInfo in dep:
-            direct_srcs += [dep[ClosureJsBinaryInfo].bin]
+            direct_srcs.append(dep[ClosureJsBinaryInfo].bin)
         else:
-            srcs += [dep[ClosureJsLibraryInfo].srcs]
+            srcs.append(dep[ClosureJsLibraryInfo].srcs)
     srcs = depset(direct_srcs, transitive = srcs)
     deps.append(ctx.attr.runner)
 
@@ -47,9 +47,9 @@ def _impl(ctx):
         "#!/bin/sh\nexec " + ctx.executable._phantomjs.short_path,
     ]
     if ctx.attr.debug:
-        args += ["--debug=true"]
-    args += [ctx.attr.harness[ClosureJsBinaryInfo].bin.short_path]
-    args += [ctx.file.html.short_path]
+        args.append("--debug=true")
+    args.append(ctx.attr.harness[ClosureJsBinaryInfo].bin.short_path)
+    args.append(ctx.file.html.short_path)
     args += [long_path(ctx, src) for src in srcs.to_list()]
     args += [long_path(ctx, src) for src in ctx.attr.runner[ClosureJsLibraryInfo].srcs.to_list()]
     ctx.actions.write(

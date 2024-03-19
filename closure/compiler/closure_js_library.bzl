@@ -15,6 +15,10 @@
 """Build definitions for Closure JavaScript libraries."""
 
 load(
+    "//closure/compiler:closure_js_aspect.bzl",
+    "closure_js_aspect",
+)
+load(
     "//closure/private:defs.bzl",
     "CLOSURE_JS_TOOLCHAIN_ATTRS",
     "ClosureCssLibraryInfo",
@@ -31,10 +35,6 @@ load(
     "make_jschecker_progress_message",
     "sort_roots",
     "unfurl",
-)
-load(
-    "//closure/compiler:closure_js_aspect.bzl",
-    "closure_js_aspect",
 )
 
 def _maybe_declare_file(actions, file, name):

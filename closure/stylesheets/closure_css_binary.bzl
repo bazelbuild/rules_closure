@@ -46,7 +46,7 @@ def _closure_css_binary(ctx):
         ctx.attr.orientation,
     ]
     if ctx.attr.renaming:
-        outputs += [ctx.outputs.js]
+        outputs.append(ctx.outputs.js)
         args += [
             "--output-renaming-map",
             ctx.outputs.js.path,
@@ -63,7 +63,7 @@ def _closure_css_binary(ctx):
             content = "// closure_css_binary target had renaming = false\n",
         )
     if ctx.attr.debug:
-        args += ["--pretty-print"]
+        args.append("--pretty-print")
     if ctx.attr.vendor:
         args += ["--vendor", ctx.attr.vendor]
     args += ctx.attr.defs

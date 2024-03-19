@@ -22,6 +22,7 @@ load(
     "extract_providers",
     "long_path",
     "unfurl",
+    "collect_runfiles",
 )
 
 def _web_library(ctx):
@@ -46,7 +47,7 @@ def _web_library(ctx):
     manifests = []
     for dep in deps:
         webpaths.append(dep.webpaths)
-        manifests += [dep.manifests]
+        manifests.append(dep.manifests)
 
     # process what comes now
     new_webpaths = []
@@ -78,7 +79,7 @@ def _web_library(ctx):
             webpath = webpath,
         ))
 
-    webpaths += [depset(new_webpaths)]
+    webpaths.append(depset(new_webpaths))
     manifest = ctx.actions.declare_file("%s.pbtxt" % ctx.label.name)
     ctx.actions.write(
         output = manifest,
@@ -105,7 +106,7 @@ def _web_library(ctx):
     inputs.extend(ctx.files.srcs)
     for dep in deps:
         inputs.append(dep.dummy)
-        direct_manifests += [dep.manifest]
+        direct_manifests.append(dep.manifest)
         inputs.append(dep.manifest)
         args.append("--direct_dep")
         args.append(dep.manifest.path)
@@ -146,21 +147,18 @@ def _web_library(ctx):
         ),
     )
 
-    transitive_runfiles = depset(
-        transitive = [ctx.attr.server.data_runfiles.files],
-    )
-
     return [
         DefaultInfo(
             files = depset([ctx.outputs.executable, ctx.outputs.dummy]),
-            runfiles = ctx.runfiles(
+            runfiles = collect_runfiles(
+                ctx,
                 files = ctx.files.srcs + ctx.files.data + [
                     manifest,
                     params_file,
                     ctx.outputs.executable,
                     ctx.outputs.dummy,
                 ],
-                transitive_files = transitive_runfiles,
+                extra_runfiles_attrs = ["server", "exports"],
             ),
         ),
         WebFilesInfo(
@@ -168,7 +166,7 @@ def _web_library(ctx):
             manifests = manifests,
             webpaths = depset(transitive = webpaths),
             dummy = ctx.outputs.dummy,
-            exports = unfurl(ctx.attr.exports),
+            exports = unfurl(extract_providers(ctx.attr.exports, WebFilesInfo)),
         ),
     ]
 

@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("//closure:filegroup_external.bzl", _filegroup_external = "filegroup_external")
+load("//closure:webfiles/web_library.bzl", _web_library = "web_library")
+load("//closure:webfiles/web_library_external.bzl", _web_library_external = "web_library_external")
 load("//closure/compiler:closure_js_aspect.bzl", _closure_js_aspect = "closure_js_aspect")
 load("//closure/compiler:closure_js_binary.bzl", _closure_js_binary = "closure_js_binary")
 load("//closure/compiler:closure_js_library.bzl", _closure_js_library = "closure_js_library", _create_closure_js_library = "create_closure_js_library")
@@ -27,9 +30,6 @@ load("//closure/templates:closure_templates_plugin.bzl", _closure_templates_plug
 load("//closure/testing:closure_js_test.bzl", _closure_js_test = "closure_js_test")
 load("//closure/testing:phantomjs_test.bzl", _phantomjs_test = "phantomjs_test")
 load("//closure/testing:web_test_repositories.bzl", _setup_web_test_repositories = "setup_web_test_repositories")
-load("//closure:filegroup_external.bzl", _filegroup_external = "filegroup_external")
-load("//closure:webfiles/web_library.bzl", _web_library = "web_library")
-load("//closure:webfiles/web_library_external.bzl", _web_library_external = "web_library_external")
 
 closure_js_aspect = _closure_js_aspect
 closure_js_binary = _closure_js_binary
