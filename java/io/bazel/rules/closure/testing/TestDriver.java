@@ -29,7 +29,6 @@ import org.openqa.selenium.support.ui.FluentWait;
 
 /** The test driver that triggers test running on the browser and collects test results. */
 public class TestDriver {
-
   private static final Logger logger = Logger.getLogger(TestDriver.class.getName());
   private static final long POLL_INTERVAL = 100;
   private static final long TEST_TIMEOUT = 300;
@@ -51,9 +50,8 @@ public class TestDriver {
       new FluentWait<>((JavascriptExecutor) driver)
           .pollingEvery(Duration.ofMillis(POLL_INTERVAL))
           .withTimeout(Duration.ofSeconds(TEST_TIMEOUT))
-          .until(
-              executor -> (boolean) executor.executeScript("return window.top.G_testRunner.isFinished()")
-          );
+          .until(executor
+              -> (boolean) executor.executeScript("return window.top.G_testRunner.isFinished()"));
     } catch (TimeoutException e) {
       logger.log(Level.SEVERE, String.format("Test timeout after %s seconds", TEST_TIMEOUT));
       return false;
@@ -77,4 +75,3 @@ public class TestDriver {
     driver.quit();
   }
 }
-

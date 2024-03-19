@@ -21,13 +21,14 @@ load(
     "ClosureCssLibraryInfo",
     "collect_css",
     "collect_runfiles",
+    "extract_providers",
     "unfurl",
 )
 
 def _closure_css_binary(ctx):
     if not ctx.attr.deps:
         fail("closure_css_binary rules can not have an empty 'deps' list")
-    deps = unfurl(ctx.attr.deps, provider = ClosureCssLibraryInfo)
+    deps = unfurl(extract_providers(ctx.attr.deps, provider = ClosureCssLibraryInfo))
     css = collect_css(deps)
     if not css.srcs:
         fail("There are no CSS source files in the transitive closure")
