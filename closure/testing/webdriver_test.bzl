@@ -14,8 +14,8 @@
 
 """Macro for running webtest with a test driver."""
 
-load("//closure:webfiles/web_library.bzl", "web_library")
 load("@io_bazel_rules_webtesting//web:web.bzl", "web_test_suite")
+load("//closure:webfiles/web_library.bzl", "web_library")
 
 def webdriver_test(
         name,

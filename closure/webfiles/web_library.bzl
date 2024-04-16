@@ -19,8 +19,10 @@ load(
     "WebFilesInfo",
     "create_argfile",
     "difference",
+    "extract_providers",
     "long_path",
     "unfurl",
+    "collect_runfiles",
 )
 
 def _web_library(ctx):
@@ -40,12 +42,12 @@ def _web_library(ctx):
         fail("when \"*\" is suppressed no other items should be present")
 
     # process what came before
-    deps = unfurl(ctx.attr.deps, provider = WebFilesInfo)
+    deps = unfurl(extract_providers(ctx.attr.deps, provider = WebFilesInfo))
     webpaths = []
     manifests = []
     for dep in deps:
-        webpaths.append(dep[WebFilesInfo].webpaths)
-        manifests += [dep[WebFilesInfo].manifests]
+        webpaths.append(dep.webpaths)
+        manifests.append(dep.manifests)
 
     # process what comes now
     new_webpaths = []
@@ -77,7 +79,7 @@ def _web_library(ctx):
             webpath = webpath,
         ))
 
-    webpaths += [depset(new_webpaths)]
+    webpaths.append(depset(new_webpaths))
     manifest = ctx.actions.declare_file("%s.pbtxt" % ctx.label.name)
     ctx.actions.write(
         output = manifest,
@@ -103,13 +105,11 @@ def _web_library(ctx):
         args.append(category)
     inputs.extend(ctx.files.srcs)
     for dep in deps:
-        inputs.append(dep[WebFilesInfo].dummy)
-        for f in dep.files.to_list():
-            inputs.append(f)
-        direct_manifests += [dep[WebFilesInfo].manifest]
-        inputs.append(dep[WebFilesInfo].manifest)
+        inputs.append(dep.dummy)
+        direct_manifests.append(dep.manifest)
+        inputs.append(dep.manifest)
         args.append("--direct_dep")
-        args.append(dep[WebFilesInfo].manifest.path)
+        args.append(dep.manifest.path)
     for man in difference(manifests, depset(direct_manifests)):
         inputs.append(man)
         args.append("--transitive_dep")
@@ -147,22 +147,18 @@ def _web_library(ctx):
         ),
     )
 
-    transitive_runfiles = depset(
-        transitive = [ctx.attr.server.data_runfiles.files] +
-                     [dep.data_runfiles.files for dep in deps],
-    )
-
     return [
         DefaultInfo(
             files = depset([ctx.outputs.executable, ctx.outputs.dummy]),
-            runfiles = ctx.runfiles(
+            runfiles = collect_runfiles(
+                ctx,
                 files = ctx.files.srcs + ctx.files.data + [
                     manifest,
                     params_file,
                     ctx.outputs.executable,
                     ctx.outputs.dummy,
                 ],
-                transitive_files = transitive_runfiles,
+                extra_runfiles_attrs = ["server", "exports"],
             ),
         ),
         WebFilesInfo(
@@ -170,7 +166,7 @@ def _web_library(ctx):
             manifests = manifests,
             webpaths = depset(transitive = webpaths),
             dummy = ctx.outputs.dummy,
-            exports = unfurl(ctx.attr.exports),
+            exports = unfurl(extract_providers(ctx.attr.exports, WebFilesInfo)),
         ),
     ]
 
