@@ -48,6 +48,7 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
     this.checks.maybeAdd(closureRewriteClass());
     this.checks.maybeAdd(lateLintChecks());
     this.checks.maybeAdd(ijsGeneration());
+    this.checks.maybeAdd(whitespaceWrapGoogModules());
   }
 
   @Override
@@ -135,6 +136,13 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
     return PassFactory.builder()
         .setName("ijsGeneration")
         .setInternalFactory((compiler) -> new ConvertToTypedInterface(compiler))
+        .build();
+  }
+
+  private PassFactory whitespaceWrapGoogModules() {
+    return PassFactory.builder()
+        .setName("whitespaceWrapGoogModules")
+        .setInternalFactory(WhitespaceWrapGoogModules::new)
         .build();
   }
 }

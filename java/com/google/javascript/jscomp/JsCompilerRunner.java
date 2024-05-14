@@ -18,6 +18,7 @@ package com.google.javascript.jscomp;
 
 import com.google.common.collect.Iterables;
 import com.google.javascript.jscomp.deps.ModuleLoader;
+import com.google.javascript.jscomp.ijs.CheckTypeSummaryWarningsGuard;
 import java.io.IOException;
 
 final class JsCompilerRunner extends CommandLineRunner {
@@ -56,6 +57,7 @@ final class JsCompilerRunner extends CommandLineRunner {
   protected CompilerOptions createOptions() {
     CompilerOptions options = super.createOptions();
     options.setExportTestFunctions(exportTestFunctions);
+    options.addWarningsGuard(new CheckTypeSummaryWarningsGuard(CheckLevel.OFF));
     options.addWarningsGuard(warnings);
     options.setModuleResolutionMode(ModuleLoader.ResolutionMode.NODE);
     return options;
