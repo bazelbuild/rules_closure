@@ -21,7 +21,10 @@ load("//closure:defs.bzl", "closure_js_library")
 
 closure_js_library(
     name = "love",
-    srcs = ["love.js"],
+    srcs = [
+        "love.js",
+        "somemodule.js",
+    ],
     internal_expect_failure = True,
 )
 
@@ -29,6 +32,12 @@ file_test(
     name = "methodMissingJsdoc_causesError",
     file = "love-stderr.txt",
     regexp = "JSC_MISSING_JSDOC",
+)
+
+file_test(
+    name = "checksGoogModule",
+    file = "love-stderr.txt",
+    regexp = "somemodule.js",
 )
 
 closure_js_library(
@@ -47,7 +56,10 @@ file_test(
 
 closure_js_library(
     name = "lenient_love",
-    srcs = ["love.js"],
+    srcs = [
+        "love.js",
+        "somemodule.js",
+    ],
     lenient = True,
 )
 
@@ -62,4 +74,17 @@ file_test(
     content = "",
     # This is a dummy file to trigger per library type check
     file = "lenient_love_typecheck",
+)
+
+closure_js_library(
+    name = "depends_lenient",
+    srcs = ["dummy.js"],
+    deps = [":lenient_love"],
+)
+
+file_test(
+    name = "depends_lenient_no_type_check_errors",
+    content = "",
+    # This is a dummy file to trigger per library type check
+    file = "depends_lenient_typecheck",
 )
