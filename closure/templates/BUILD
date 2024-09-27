@@ -33,7 +33,6 @@ closure_js_library(
     name = "soy_jssrc",
     srcs = ["@com_google_template_soy_jssrc"],
     lenient = True,
-    suppress = ["missingSourcesWarnings"],
     deps = [
         ":soy_html_proto",
         "@com_google_javascript_closure_library//closure/goog/array",
