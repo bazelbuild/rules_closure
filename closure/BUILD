@@ -45,5 +45,3 @@ bzl_library(
         "//closure/testing:__pkg__",
     ],
 )
-
-exports_files(["soy_build.patch"])
