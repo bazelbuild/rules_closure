@@ -713,9 +713,10 @@ def com_google_javascript_closure_compiler():
 def com_google_javascript_closure_library():
     http_archive(
         name = "com_google_javascript_closure_library",
-        sha256 = "4da36963d2ef97b6e3d72fbe74c5db4bff2878150f9785299db5c94b4c42f2e6",
-        strip_prefix = "closure-library-20220301",
-        urls = ["https://github.com/google/closure-library/archive/v20220301.tar.gz"],
+        sha256 = "64fc4eac972197af13a827a928fff8a2f4711d9a3411147c115a0fc6c1322f70",
+        strip_prefix = "closure-library-20230802",
+        urls = ["https://github.com/google/closure-library/archive/v20230802.tar.gz"],
+        patches = ["@io_bazel_rules_closure//closure:soy_build.patch"],
     )
 
 def com_google_jsinterop_annotations():
