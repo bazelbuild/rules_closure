@@ -715,6 +715,7 @@ def com_google_javascript_closure_library():
         name = "com_google_javascript_closure_library",
         sha256 = "64fc4eac972197af13a827a928fff8a2f4711d9a3411147c115a0fc6c1322f70",
         strip_prefix = "closure-library-20230802",
+        patch_args = ["-p1"],
         urls = ["https://github.com/google/closure-library/archive/v20230802.tar.gz"],
         patches = ["@io_bazel_rules_closure//closure:soy_build.patch"],
     )
