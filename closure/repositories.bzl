@@ -415,11 +415,10 @@ def com_google_code_gson():
         name = "com_google_code_gson",
         licenses = ["notice"],
         jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/code/gson/gson/2.7/gson-2.7.jar",
-            "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.7/gson-2.7.jar",
-            "http://maven.ibiblio.org/maven2/com/google/code/gson/gson/2.7/gson-2.7.jar",
+            "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar",
+            "http://maven.ibiblio.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar",
         ],
-        jar_sha256 = "2d43eb5ea9e133d2ee2405cc14f5ee08951b8361302fdd93494a3a997b508d32",
+        jar_sha256 = "d3999291855de495c94c743761b8ab5176cfeabe281a5ab0d8e8d45326fd703e",
         deps = ["@com_google_code_findbugs_jsr305"],
     )
 
