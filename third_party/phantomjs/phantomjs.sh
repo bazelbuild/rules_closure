@@ -18,21 +18,24 @@
 #         export LD_DEBUG="files"
 #         export FC_DEBUG="1024"
 
-if [[ -d "$0.runfiles" ]]; then
-  if [[ -f "$0.runfiles/../_repo_mapping" ]]; then
-    RUNFILES="$0.runfiles/"
-  else
-    RUNFILES="$0.runfiles/io_bazel_rules_closure"
-  fi
-else
-  if [[ -f "${PWD}/../_repo_mapping" ]]; then
-    RUNFILES="${PWD}/"
-  else
-    RUNFILES="${PWD}/../io_bazel_rules_closure"
-  fi
-fi
+echo $LD_LIBRARY_PATH
 
-export LD_LIBRARY_PATH="${RUNFILES}/third_party/fontconfig/k8:${LD_LIBRARY_PATH}"
+# --- begin runfiles.bash initialization v3 ---
+# Copy-pasted from the Bazel Bash runfiles library v3.
+set -uo pipefail; set +e; f=bazel_tools/tools/bash/runfiles/runfiles.bash
+# shellcheck disable=SC1090
+source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
+  source "$(grep -sm1 "^$f " "${RUNFILES_MANIFEST_FILE:-/dev/null}" | cut -f2- -d' ')" 2>/dev/null || \
+  source "$0.runfiles/$f" 2>/dev/null || \
+  source "$(grep -sm1 "^$f " "$0.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
+  source "$(grep -sm1 "^$f " "$0.exe.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
+  { echo>&2 "ERROR: cannot find $f"; exit 1; }; f=; set -e
+# --- end runfiles.bash initialization v3 ---
+
+
+RUNFILES="$(rlocation io_bazel_rules_closure/.)"
+
+export LD_LIBRARY_PATH="${RUNFILES}/third_party/fontconfig/k8:${LD_LIBRARY_PATH:-}"
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/freetype/k8:${LD_LIBRARY_PATH}"
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/expat/k8:${LD_LIBRARY_PATH}"
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/png/k8:${LD_LIBRARY_PATH}"

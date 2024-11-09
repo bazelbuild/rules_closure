@@ -20,6 +20,7 @@ sh_binary(
     name = "phantomjs",
     testonly = True,
     srcs = ["phantomjs.sh"],
+    deps = ["@bazel_tools//tools/bash/runfiles"],
     data = [
         "bin/phantomjs",
         "//third_party/expat:libexpat_k8",
