@@ -18,8 +18,6 @@
 #         export LD_DEBUG="files"
 #         export FC_DEBUG="1024"
 
-echo $LD_LIBRARY_PATH
-
 # --- begin runfiles.bash initialization v3 ---
 # Copy-pasted from the Bazel Bash runfiles library v3.
 set -uo pipefail; set +e; f=bazel_tools/tools/bash/runfiles/runfiles.bash
