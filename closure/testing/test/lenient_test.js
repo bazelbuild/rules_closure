@@ -1,6 +1,7 @@
 goog.module('rules_closure.LenientTest');
 goog.setTestOnly('rules_closure.LenientTest');
 
+goog.require('goog.testing.asserts');
 const testSuite = goog.require('goog.testing.testSuite');
 const Lenient = goog.require('rules_closure.Lenient');
 

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 load("//closure/testing:closure_js_test.bzl", "closure_js_test")
 
@@ -49,6 +48,7 @@ closure_js_test(
     ],
     deps = [
         ":person_factory",
-        "@com_google_javascript_closure_library//closure/goog/testing:testsuite",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "//closure/testing/library:testsuite",
     ],
 )

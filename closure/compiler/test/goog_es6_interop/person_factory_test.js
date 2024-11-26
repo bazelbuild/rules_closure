@@ -18,7 +18,7 @@ goog.module('rulesClosure.googEs6Interop.PersonFactoryTest');
 
 const testSuite = goog.require('goog.testing.testSuite');
 const {createPerson} = goog.require('rulesClosure.googEs6Interop.personFactory');
-
+goog.require('goog.testing.asserts');
 
 
 class PersonFactoryTest {
