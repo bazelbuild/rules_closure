@@ -122,7 +122,6 @@ closure_js_test(
     deps = [
         ":lenient_lib",
         "@com_google_javascript_closure_library//closure/goog/testing:asserts",
-        "//closure/testing/library:jsunit",
         "//closure/testing/library:testsuite",
     ],
 )
