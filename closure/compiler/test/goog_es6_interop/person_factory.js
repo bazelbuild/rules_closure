@@ -32,6 +32,5 @@ export const createPerson = (name) => {
   if (pieces.length != 2) {
     throw new Error('Assertion failed');
   }
-  assert(2 === pieces.length);
   return new Person(pieces[0], pieces[1]);
 };
