@@ -129,14 +129,12 @@ closure_js_test(
     name = "simple_webtest_test",
     timeout = "short",
     srcs = ["simple_test.js"],
-    tags = [
-        "local",
-        "manual",
-    ],
     deps = [
         "@com_google_javascript_closure_library//closure/goog/testing:asserts",
         "//closure/testing/library:jsunit",
     ],
+    browsers = ["@io_bazel_rules_webtesting//browsers:chromium-local"],
+    tags = ["local", "manual"],
 )
 
 closure_js_test(
@@ -144,16 +142,14 @@ closure_js_test(
     timeout = "short",
     srcs = ["arithmetic_module_test.js"],
     entry_points = ["goog:arithmetic_module_test"],
-    tags = [
-        "local",
-        "manual",
-    ],
     deps = [
         ":arithmetic_module_lib",
         "@com_google_javascript_closure_library//closure/goog/testing:asserts",
         "//closure/testing/library:jsunit",
         "//closure/testing/library:testsuite",
     ],
+    browsers = ["@io_bazel_rules_webtesting//browsers:chromium-local"],
+    tags = ["local", "manual"],
 )
 
 closure_js_test(
