@@ -53,20 +53,6 @@ closure_js_test(
 )
 
 closure_js_test(
-    name = "dom_webtest_test",
-    timeout = "short",
-    srcs = ["dom_test.js"],
-    deps = [
-        "@com_google_javascript_closure_library//closure/goog/dom",
-        "@com_google_javascript_closure_library//closure/goog/dom:tagname",
-        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
-        "//closure/testing/library:jsunit",
-    ],
-    browsers = ["@io_bazel_rules_webtesting//browsers:chromium-local"],
-    tags = ["local", "manual"],
-)
-
-closure_js_test(
     name = "arithmetic_scope_test",
     timeout = "short",
     srcs = ["arithmetic_scope_test.js"],
@@ -170,6 +156,20 @@ closure_js_test(
         "//closure/testing/library:jsunit",
         "//closure/testing/library:testsuite",
     ],
+)
+
+closure_js_test(
+    name = "dom_webtest_test",
+    timeout = "short",
+    srcs = ["dom_test.js"],
+    deps = [
+        "@com_google_javascript_closure_library//closure/goog/dom",
+        "@com_google_javascript_closure_library//closure/goog/dom:tagname",
+        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "//closure/testing/library:jsunit",
+    ],
+    browsers = ["@io_bazel_rules_webtesting//browsers:chromium-local"],
+    tags = ["local", "manual"],
 )
 
 # This test shows how to write tests to verify rendered output from phantomjs.
