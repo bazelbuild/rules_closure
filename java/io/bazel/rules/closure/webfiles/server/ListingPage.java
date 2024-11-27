@@ -14,17 +14,8 @@
 
 package io.bazel.rules.closure.webfiles.server;
 
-import static com.google.common.io.Resources.getResource;
-
-import com.google.common.base.Functions;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.net.MediaType;
-import com.google.template.soy.SoyFileSet;
-import com.google.template.soy.data.SoyListData;
-import com.google.template.soy.data.SoyMapData;
-import com.google.template.soy.tofu.SoyTofu;
 import io.bazel.rules.closure.Webpath;
 import io.bazel.rules.closure.http.HttpResponse;
 import java.io.IOException;
@@ -38,12 +29,6 @@ import javax.inject.Inject;
  */
 class ListingPage {
 
-  private static final SoyTofu TOFU =
-      SoyFileSet.builder()
-          .add(getResource(ListingSoyInfo.class, ListingSoyInfo.getInstance().getFileName()))
-          .build()
-          .compileToTofu();
-
   private final HttpResponse response;
   private final Metadata.Config config;
   private final ImmutableSet<Webpath> webpaths;
@@ -56,25 +41,40 @@ class ListingPage {
   }
 
   void serve(final Webpath webpath) throws IOException {
+    StringBuilder builder = new StringBuilder();
+    builder.append("<!doctype html>");
+    builder.append("<link href='//fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>");
+    builder.append("<style>");
+    builder.append("body {");
+    builder.append("  font-family: 'Roboto', sans-serif;");
+    builder.append("  margin: 0 auto;");
+    builder.append("  padding: 0 1em;");
+    builder.append("  width: 960px;");
+    builder.append("  color: #333;");
+    builder.append("}");
+    builder.append("a {");
+    builder.append("  text-decoration: none;");
+    builder.append("}");
+    builder.append("h1 {");
+    builder.append("  margin-bottom: 0;");
+    builder.append("}");
+    builder.append("h3 {");
+    builder.append("  margin-top: 0;");
+    builder.append("  color: #999;");
+    builder.append("}");
+    builder.append("</style>");
+    builder.append("<h1>Bazel Closure Rules</h1>");
+    builder.append("<h3>").append(config.get().getLabel()).append("</h3>");
+    builder.append("<p>");
+    if (webpaths.isEmpty()) {
+      builder.append("No srcs found in transitive closure with path component prefix matching");
+      builder.append("request path.");
+    } else {
+      webpaths.stream()
+          .filter(path -> path.startsWith(webpath))
+          .forEach(path -> builder.append("<a href=\"" + path + "\">" + path + "</a><br>"));
+    }
     response.setContentType(MediaType.HTML_UTF_8);
-    response.setPayload(
-        TOFU.newRenderer(ListingSoyInfo.LISTING)
-            .setData(
-                new SoyMapData(
-                    ListingSoyInfo.ListingSoyTemplateInfo.LABEL,
-                    config.get().getLabel(),
-                    ListingSoyInfo.ListingSoyTemplateInfo.PATHS,
-                    new SoyListData(
-                        FluentIterable.from(webpaths)
-                            .filter(
-                                new Predicate<Webpath>() {
-                                  @Override
-                                  public boolean apply(Webpath path) {
-                                    return path.startsWith(webpath);
-                                  }
-                                })
-                            .transform(Functions.toStringFunction()))))
-            .render()
-            .getBytes(StandardCharsets.UTF_8));
+    response.setPayload(builder.toString().getBytes(StandardCharsets.UTF_8));
   }
 }
