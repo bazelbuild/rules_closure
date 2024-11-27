@@ -48,7 +48,7 @@ closure_js_test(
     ],
     deps = [
         ":person_factory",
-        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
+        "//closure/testing/library:asserts",
         "//closure/testing/library:testsuite",
     ],
 )

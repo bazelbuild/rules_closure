@@ -21,13 +21,71 @@ package(
 licenses(["notice"])
 
 closure_js_library(
+    name = "stacktrace",
+    srcs = ["stacktrace.js"],
+    suppress = [
+        "useOfGoogProvide",
+        "lintChecks",
+        "reportUnknownTypes",
+    ],
+)
+
+closure_js_library(
+    name = "jsunitexception",
+    srcs = ["jsunitexception.js"],
+    suppress = [
+        "useOfGoogProvide",
+        "lintChecks",
+    ],
+    deps = [
+        ":stacktrace",
+    ],
+)
+
+closure_js_library(
+    name = "pending",
+    srcs = ["pending.js"],
+    suppress = [
+        "useOfGoogProvide",
+        "checkTypes",
+    ],
+)
+
+closure_js_library(
+    name = "asserts",
+    srcs = ["asserts.js"],
+    suppress = [
+        "useOfGoogProvide",
+        "reportUnknownTypes",
+        "lintChecks",
+    ],
+    deps = [
+        ":jsunitexception",
+    ],
+)
+
+closure_js_library(
+    name = "testcase",
+    srcs = ["testcase.js"],
+    suppress = [
+        "useOfGoogProvide",
+        "lintChecks",
+        "reportUnknownTypes",
+    ],
+    deps = [
+        ":jsunitexception",
+        ":pending",
+    ],
+)
+
+closure_js_library(
     name = "testsuite",
     srcs = ["testsuite.js"],
     suppress = [
         "useOfGoogProvide",
     ],
     deps = [
-        "@com_google_javascript_closure_library//closure/goog/testing:testcase",
+        ":testcase",
         ":jsunit",
     ],
 )
@@ -40,8 +98,8 @@ closure_js_library(
         "reportUnknownTypes",
     ],
     deps = [
-        "@com_google_javascript_closure_library//closure/goog/testing:asserts",
-        "@com_google_javascript_closure_library//closure/goog/testing:testcase",
+        ":asserts",
+        ":testcase",
         ":testrunner",
     ],
 )
@@ -55,6 +113,6 @@ closure_js_library(
         "visibility",
     ],
     deps = [
-        "@com_google_javascript_closure_library//closure/goog/testing:testcase",
+        ":testcase",
     ],
 )
