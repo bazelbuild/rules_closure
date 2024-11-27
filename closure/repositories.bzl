@@ -25,7 +25,6 @@ def rules_closure_toolchains():
     pass
 
 def rules_closure_dependencies(
-        omit_aopalliance = False,
         omit_args4j = False,
         omit_bazel_skylib = False,
         omit_clang = False,
@@ -36,8 +35,6 @@ def rules_closure_dependencies(
         omit_com_google_closure_stylesheets = False,
         omit_com_google_code_findbugs_jsr305 = False,
         omit_com_google_code_gson = False,
-        omit_com_google_common_html_types = False,
-        omit_com_google_common_html_types_html_proto = False,
         omit_com_google_dagger = False,
         omit_com_google_dagger_compiler = False,
         omit_com_google_dagger_producers = False,
@@ -45,18 +42,12 @@ def rules_closure_dependencies(
         omit_com_google_errorprone_error_prone_annotations = False,
         omit_com_google_errorprone_javac_shaded = False,
         omit_com_google_guava = False,
-        omit_com_google_inject_extensions_guice_assistedinject = False,
-        omit_com_google_inject_extensions_guice_multibindings = False,
-        omit_com_google_inject_guice = False,
         omit_com_google_java_format = False,
         omit_com_google_javascript_closure_compiler = False,
         omit_com_google_javascript_closure_library = False,
         omit_com_google_jsinterop_annotations = False,
         omit_com_google_protobuf = False,
         omit_com_google_protobuf_js = False,
-        omit_com_google_template_soy = False,
-        omit_com_google_template_soy_jssrc = False,
-        omit_com_ibm_icu_icu4j = False,
         omit_com_squareup_javapoet = False,
         omit_fonts_noto_hinted_deb = False,
         omit_fonts_noto_mono_deb = False,
@@ -66,13 +57,7 @@ def rules_closure_dependencies(
         omit_libfontconfig_amd64_deb = False,
         omit_libfreetype_amd64_deb = False,
         omit_libpng_amd64_deb = False,
-        omit_org_json = False,
         omit_org_jsoup = False,
-        omit_org_ow2_asm = False,
-        omit_org_ow2_asm_analysis = False,
-        omit_org_ow2_asm_commons = False,
-        omit_org_ow2_asm_tree = False,
-        omit_org_ow2_asm_util = False,
         omit_phantomjs = False,
         omit_rules_cc = False,
         omit_rules_java = False,
@@ -82,8 +67,6 @@ def rules_closure_dependencies(
         omit_rules_webtesting = False,
         omit_zlib = False):
     """Imports dependencies for Closure Rules."""
-    if not omit_aopalliance:
-        aopalliance()
     if not omit_args4j:
         args4j()
     if not omit_bazel_skylib:
@@ -104,10 +87,6 @@ def rules_closure_dependencies(
         com_google_code_findbugs_jsr305()
     if not omit_com_google_code_gson:
         com_google_code_gson()
-    if not omit_com_google_common_html_types:
-        com_google_common_html_types()
-    if not omit_com_google_common_html_types_html_proto:
-        com_google_common_html_types_html_proto()
     if not omit_com_google_dagger:
         com_google_dagger()
     if not omit_com_google_dagger_compiler:
@@ -122,12 +101,6 @@ def rules_closure_dependencies(
         com_google_errorprone_javac_shaded()
     if not omit_com_google_guava:
         com_google_guava()
-    if not omit_com_google_inject_extensions_guice_assistedinject:
-        com_google_inject_extensions_guice_assistedinject()
-    if not omit_com_google_inject_extensions_guice_multibindings:
-        com_google_inject_extensions_guice_multibindings()
-    if not omit_com_google_inject_guice:
-        com_google_inject_guice()
     if not omit_com_google_java_format:
         com_google_java_format()
     if not omit_com_google_javascript_closure_compiler:
@@ -140,12 +113,6 @@ def rules_closure_dependencies(
         com_google_protobuf()
     if not omit_com_google_protobuf_js:
         com_google_protobuf_js()
-    if not omit_com_google_template_soy:
-        com_google_template_soy()
-    if not omit_com_google_template_soy_jssrc:
-        com_google_template_soy_jssrc()
-    if not omit_com_ibm_icu_icu4j:
-        com_ibm_icu_icu4j()
     if not omit_com_squareup_javapoet:
         com_squareup_javapoet()
     if not omit_fonts_noto_hinted_deb:
@@ -164,20 +131,8 @@ def rules_closure_dependencies(
         libfreetype_amd64_deb()
     if not omit_libpng_amd64_deb:
         libpng_amd64_deb()
-    if not omit_org_json:
-        org_json()
     if not omit_org_jsoup:
         org_jsoup()
-    if not omit_org_ow2_asm:
-        org_ow2_asm()
-    if not omit_org_ow2_asm_analysis:
-        org_ow2_asm_analysis()
-    if not omit_org_ow2_asm_commons:
-        org_ow2_asm_commons()
-    if not omit_org_ow2_asm_tree:
-        org_ow2_asm_tree()
-    if not omit_org_ow2_asm_util:
-        org_ow2_asm_util()
     if not omit_phantomjs:
         phantomjs()
     if not omit_rules_cc:
@@ -196,18 +151,6 @@ def rules_closure_dependencies(
         zlib()
 
 # BEGIN_DECLARATIONS
-
-def aopalliance():
-    java_import_external(
-        name = "aopalliance",
-        jar_sha256 = "0addec670fedcd3f113c5c8091d783280d23f75e3acb841b61a9cdb079376a08",
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar",
-            "https://repo1.maven.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar",
-            "http://maven.ibiblio.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar",
-        ],
-        licenses = ["unencumbered"],  # public domain
-    )
 
 def args4j():
     java_import_external(
@@ -422,35 +365,6 @@ def com_google_code_gson():
         deps = ["@com_google_code_findbugs_jsr305"],
     )
 
-def com_google_common_html_types():
-    java_import_external(
-        name = "com_google_common_html_types",
-        licenses = ["notice"],
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/common/html/types/types/1.0.7/types-1.0.7.jar",
-            "https://repo1.maven.org/maven2/com/google/common/html/types/types/1.0.7/types-1.0.7.jar",
-        ],
-        jar_sha256 = "78b6baa2ecc56435dc0ae88c57f442bd2d07127cb50424d400441ddccc45ea24",
-        deps = [
-            "@com_google_code_findbugs_jsr305",
-            "@com_google_errorprone_error_prone_annotations",
-            "@com_google_guava",
-            "@com_google_jsinterop_annotations",
-            "@com_google_protobuf//:protobuf_java",
-            "@javax_annotation_jsr250_api",
-        ],
-    )
-
-def com_google_common_html_types_html_proto():
-    http_file(
-        name = "com_google_common_html_types_html_proto",
-        sha256 = "6ece202f11574e37d0c31d9cf2e9e11a0dbc9218766d50d211059ebd495b49c3",
-        urls = [
-            "https://mirror.bazel.build/raw.githubusercontent.com/google/safe-html-types/release-1.0.5/proto/src/main/protobuf/webutil/html/types/proto/html.proto",
-            "https://raw.githubusercontent.com/google/safe-html-types/release-1.0.5/proto/src/main/protobuf/webutil/html/types/proto/html.proto",
-        ],
-    )
-
 def com_google_dagger():
     java_import_external(
         name = "com_google_dagger",
@@ -603,59 +517,6 @@ def com_google_guava():
         jar_sha256 = "a171ee4c734dd2da837e4b16be9df4661afab72a41adaf31eb84dfdaf936ca26",
     )
 
-def com_google_inject_extensions_guice_assistedinject():
-    java_import_external(
-        name = "com_google_inject_extensions_guice_assistedinject",
-        licenses = ["notice"],
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0.jar",
-            "https://repo1.maven.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0.jar",
-            "http://maven.ibiblio.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0.jar",
-        ],
-        jar_sha256 = "663728123fb9a6b79ea39ae289e5d56b4113e1b8e9413eb792f91e53a6dd5868",
-        deps = [
-            "@com_google_guava",
-            "@com_google_inject_guice",
-            "@javax_inject",
-        ],
-    )
-
-def com_google_inject_extensions_guice_multibindings():
-    java_import_external(
-        name = "com_google_inject_extensions_guice_multibindings",
-        licenses = ["notice"],
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0.jar",
-            "https://repo1.maven.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0.jar",
-            "http://maven.ibiblio.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0.jar",
-        ],
-        jar_sha256 = "592773a4c745cc87ba37fa0647fed8126c7e474349c603c9f229aa25d3ef5448",
-        deps = [
-            "@com_google_guava",
-            "@com_google_inject_guice",
-            "@javax_inject",
-        ],
-    )
-
-def com_google_inject_guice():
-    java_import_external(
-        name = "com_google_inject_guice",
-        licenses = ["notice"],
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/inject/guice/4.1.0/guice-4.1.0.jar",
-            "https://repo1.maven.org/maven2/com/google/inject/guice/4.1.0/guice-4.1.0.jar",
-            "http://maven.ibiblio.org/maven2/com/google/inject/guice/4.1.0/guice-4.1.0.jar",
-        ],
-        jar_sha256 = "9b9df27a5b8c7864112b4137fd92b36c3f1395bfe57be42fedf2f520ead1a93e",
-        deps = [
-            "@aopalliance",
-            "@org_ow2_asm",
-            "@com_google_guava",
-            "@com_google_code_findbugs_jsr305",
-            "@javax_inject",
-        ],
-    )
-
 def com_google_java_format():
     java_import_external(
         name = "com_google_java_format",
@@ -716,7 +577,6 @@ def com_google_javascript_closure_library():
         strip_prefix = "closure-library-20230802",
         patch_args = ["-p1"],
         urls = ["https://github.com/google/closure-library/archive/v20230802.tar.gz"],
-        patches = ["@io_bazel_rules_closure//closure:soy_build.patch"],
     )
 
 def com_google_jsinterop_annotations():
@@ -752,48 +612,6 @@ def com_google_protobuf_js():
         ],
     )
 
-def com_google_template_soy():
-    java_import_external(
-        name = "com_google_template_soy",
-        licenses = ["notice"],
-        jar_urls = [
-            "https://repo1.maven.org/maven2/com/google/template/soy/2021-02-01/soy-2021-02-01.jar",
-        ],
-        jar_sha256 = "1b96cc533e8fdfb8c5287df3fb614cb46833b48cd0bc59337751fe3220ddf0b6",
-        deps = [
-            "@args4j",
-            "@com_google_code_findbugs_jsr305",
-            "@com_google_code_gson",
-            "@com_google_common_html_types",
-            "@com_google_guava",
-            "@com_google_inject_extensions_guice_assistedinject",
-            "@com_google_inject_extensions_guice_multibindings",
-            "@com_google_inject_guice",
-            "@com_google_protobuf//:protobuf_java",
-            "@com_ibm_icu_icu4j",
-            "@javax_inject",
-            "@org_json",
-            "@org_ow2_asm",
-            "@org_ow2_asm_analysis",
-            "@org_ow2_asm_commons",
-            "@org_ow2_asm_util",
-        ],
-        extra_build_file_content = "\n".join([
-            ("java_binary(\n" +
-             "    name = \"%s\",\n" +
-             "    main_class = \"com.google.template.soy.%s\",\n" +
-             "    output_licenses = [\"unencumbered\"],\n" +
-             "    runtime_deps = [\":com_google_template_soy\"],\n" +
-             ")\n") % (name, name)
-            for name in (
-                "SoyParseInfoGenerator",
-                "SoyToJbcSrcCompiler",
-                "SoyToJsSrcCompiler",
-                "SoyToPySrcCompiler",
-            )
-        ]),
-    )
-
 def com_google_template_soy_jssrc():
     http_archive(
         name = "com_google_template_soy_jssrc",
@@ -803,18 +621,6 @@ def com_google_template_soy_jssrc():
         patch_args = ["-p1"],
         patches = ["@io_bazel_rules_closure//closure:template.patch"],
         build_file = str(Label("//closure/templates:soy_jssrc.BUILD")),
-    )
-
-def com_ibm_icu_icu4j():
-    java_import_external(
-        name = "com_ibm_icu_icu4j",
-        licenses = ["notice"],
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/com/ibm/icu/icu4j/57.1/icu4j-57.1.jar",
-            "https://repo1.maven.org/maven2/com/ibm/icu/icu4j/57.1/icu4j-57.1.jar",
-            "http://maven.ibiblio.org/maven2/com/ibm/icu/icu4j/57.1/icu4j-57.1.jar",
-        ],
-        jar_sha256 = "759d89ed2f8c6a6b627ab954be5913fbdc464f62254a513294e52260f28591ee",
     )
 
 def com_squareup_javapoet():
@@ -924,18 +730,6 @@ def org_apache_tomcat_annotations_api():
         jar_sha256 = "748677bebb1651a313317dfd93e984ed8f8c9e345538fa8b0ab0cbb804631953",
     )
 
-def org_json():
-    java_import_external(
-        name = "org_json",
-        licenses = ["notice"],
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/org/json/json/20160212/json-20160212.jar",
-            "https://repo1.maven.org/maven2/org/json/json/20160212/json-20160212.jar",
-            "http://maven.ibiblio.org/maven2/org/json/json/20160212/json-20160212.jar",
-        ],
-        jar_sha256 = "0aaf0e7e286ece88fb60b9ba14dd45c05a48e55618876efb7d1b6f19c25e7a29",
-    )
-
 def org_jsoup():
     java_import_external(
         name = "org_jsoup",
@@ -945,71 +739,6 @@ def org_jsoup():
             "https://repo1.maven.org/maven2/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar",
         ],
         jar_sha256 = "df2c71a4240ecbdae7cdcd1667bcf0d747e4e3dcefe8161e787adcff7e5f2fa0",
-    )
-
-def org_ow2_asm():
-    java_import_external(
-        name = "org_ow2_asm",
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/org/ow2/asm/asm/6.0/asm-6.0.jar",
-            "https://repo1.maven.org/maven2/org/ow2/asm/asm/6.0/asm-6.0.jar",
-        ],
-        jar_sha256 = "dd8971c74a4e697899a8e95caae4ea8760ea6c486dc6b97b1795e75760420461",
-        licenses = ["notice"],
-    )
-
-def org_ow2_asm_analysis():
-    java_import_external(
-        name = "org_ow2_asm_analysis",
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/org/ow2/asm/asm-analysis/6.0/asm-analysis-6.0.jar",
-            "https://repo1.maven.org/maven2/org/ow2/asm/asm-analysis/6.0/asm-analysis-6.0.jar",
-        ],
-        jar_sha256 = "2f1a6387219c3a6cc4856481f221b03bd9f2408a326d416af09af5d6f608c1f4",
-        licenses = ["notice"],
-        exports = [
-            "@org_ow2_asm",
-            "@org_ow2_asm_tree",
-        ],
-    )
-
-def org_ow2_asm_commons():
-    java_import_external(
-        name = "org_ow2_asm_commons",
-        licenses = ["notice"],
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/org/ow2/asm/asm-commons/6.0/asm-commons-6.0.jar",
-            "https://repo1.maven.org/maven2/org/ow2/asm/asm-commons/6.0/asm-commons-6.0.jar",
-        ],
-        jar_sha256 = "f1bce5c648a96a017bdcd01fe5d59af9845297fd7b79b81c015a6fbbd9719abf",
-        exports = ["@org_ow2_asm_tree"],
-    )
-
-def org_ow2_asm_tree():
-    java_import_external(
-        name = "org_ow2_asm_tree",
-        licenses = ["notice"],
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/org/ow2/asm/asm-tree/6.0/asm-tree-6.0.jar",
-            "https://repo1.maven.org/maven2/org/ow2/asm/asm-tree/6.0/asm-tree-6.0.jar",
-        ],
-        jar_sha256 = "887998fb69727c8759e4d253f856822801e33f9fd4caa566b3ac58ee92106215",
-        exports = ["@org_ow2_asm"],
-    )
-
-def org_ow2_asm_util():
-    java_import_external(
-        name = "org_ow2_asm_util",
-        licenses = ["notice"],
-        jar_urls = [
-            "https://mirror.bazel.build/repo1.maven.org/maven2/org/ow2/asm/asm-util/6.0/asm-util-6.0.jar",
-            "https://repo1.maven.org/maven2/org/ow2/asm/asm-util/6.0/asm-util-6.0.jar",
-        ],
-        jar_sha256 = "356afebdb0f870175262e5188f8709a3b17aa2a5a6a4b0340b04d4b449bca5f6",
-        exports = [
-            "@org_ow2_asm_analysis",
-            "@org_ow2_asm_tree",
-        ],
     )
 
 def phantomjs():
