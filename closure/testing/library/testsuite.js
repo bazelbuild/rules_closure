@@ -9,7 +9,7 @@ goog.setTestOnly('goog.testing.testSuite');
 
 const TestCase = goog.require('goog.testing.TestCase');
 // Require jsunit here so that users do not need to explicitly requires jsunit.
-/** @suppress {extraRequire} Declares globals */
+/** @suppress {extraRequire} Exports globals */
 goog.require('goog.testing.jsunit');
 
 /** @record */
