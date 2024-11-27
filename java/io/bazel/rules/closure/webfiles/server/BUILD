@@ -16,7 +16,6 @@ licenses(["notice"])
 
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@rules_java//java:defs.bzl", "java_binary", "java_library", "java_proto_library")
-load("//closure:defs.bzl", "closure_java_template_library")
 
 java_library(
     name = "server",
@@ -24,7 +23,6 @@ java_library(
     visibility = ["//:__subpackages__"],
     deps = [
         ":build_info_java_proto",
-        ":listing",
         "//java/io/bazel/rules/closure:webpath",
         "//java/io/bazel/rules/closure/http",
         "//java/io/bazel/rules/closure/http/filter",
@@ -33,7 +31,6 @@ java_library(
         "@com_google_dagger",
         "@com_google_guava",
         "@com_google_protobuf//:protobuf_java",
-        "@com_google_template_soy",
     ],
 )
 
@@ -53,9 +50,4 @@ java_proto_library(
     name = "build_info_java_proto",
     visibility = ["//visibility:public"],
     deps = [":build_info_proto"],
-)
-
-closure_java_template_library(
-    name = "listing",
-    srcs = ["listing.soy"],
 )
