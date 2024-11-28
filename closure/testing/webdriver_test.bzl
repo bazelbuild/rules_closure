@@ -14,7 +14,7 @@
 
 """Macro for running webtest with a test driver."""
 
-load("@io_bazel_rules_webtesting//web:web.bzl", "web_test_suite")
+load("@io_bazel_rules_webtesting//web:web.bzl", "web_test", "web_test_suite")
 load("//closure:webfiles/web_library.bzl", "web_library")
 
 def webdriver_test(
@@ -73,16 +73,28 @@ def webdriver_test(
         use_full_path = True,
     )
 
-    web_test_suite(
-        name = name,
-        data = [test_file_js, html],
-        test = ":%s_test_runner" % name,
-        args = [html_webpath],
-        browsers = browsers,
-        tags = tags + ["no-sandbox", "native"],
-        visibility = visibility,
-        **kwargs
-    )
+    if len(browsers) == 1:
+        web_test(
+            name = name,
+            data = [test_file_js, html],
+            browser = str(browsers[0]),
+            test = ":%s_test_runner" % name,
+            args = [html_webpath],
+            tags = tags + ["no-sandbox", "native"],
+            visibility = visibility,
+            **kwargs
+        )
+    else:
+        web_test_suite(
+            name = name,
+            data = [test_file_js, html],
+            browsers = browsers,
+            test = ":%s_test_runner" % name,
+            args = [html_webpath],
+            tags = tags + ["no-sandbox", "native"],
+            visibility = visibility,
+            **kwargs
+        )
 
 def _gen_test_html_impl(ctx):
     """Implementation of the gen_test_html rule."""
