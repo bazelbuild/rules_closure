@@ -16,7 +16,7 @@
  * @fileoverview A person, implementes as ES6 module.
  */
 
-import {capitalize} from 'goog:goog.string';
+import {capitalize} from 'goog:person.string';
 
 /**
  * Represents a person.
