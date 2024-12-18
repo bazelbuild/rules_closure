@@ -612,17 +612,6 @@ def com_google_protobuf_js():
         ],
     )
 
-def com_google_template_soy_jssrc():
-    http_archive(
-        name = "com_google_template_soy_jssrc",
-        sha256 = "b8863e45841cb89e9c1e29d46eaabfb4599724d85ef081dbb6f9dfc6ffc58c99",
-        strip_prefix = "closure-templates-a1c02e60ae88ed1b7db92722ea25ac7d396514fc/javascript",
-        urls = ["https://github.com/google/closure-templates/archive/a1c02e60ae88ed1b7db92722ea25ac7d396514fc.tar.gz"],
-        patch_args = ["-p1"],
-        patches = ["@io_bazel_rules_closure//closure:template.patch"],
-        build_file = str(Label("//closure/templates:soy_jssrc.BUILD")),
-    )
-
 def com_squareup_javapoet():
     java_import_external(
         name = "com_squareup_javapoet",

@@ -50,7 +50,6 @@ def closure_js_proto_library(
 
     cmd += ["-I%s" % i for i in _collect_includes(srcs)]
     cmd.append("--js_out=%s:$(@D)" % ",".join(js_out_options))
-    cmd.append("--descriptor_set_out=$(@D)/%s.descriptor" % name)
     cmd += ["$(locations " + src + ")" for src in srcs]
 
     native.genrule(
@@ -59,7 +58,7 @@ def closure_js_proto_library(
         testonly = testonly,
         visibility = ["//visibility:private"],
         message = "Generating JavaScript Protocol Buffer file",
-        outs = [name + ".js", name + ".descriptor"],
+        outs = [name + ".js"],
         tools = [protocbin],
         cmd = " ".join(cmd),
     )
@@ -72,7 +71,6 @@ def closure_js_proto_library(
             str(Label("@com_google_javascript_closure_library//closure/goog/array")),
             str(Label("//closure/protobuf:jspb")),
         ],
-        internal_descriptors = [name + ".descriptor"],
         suppress = suppress + [
             "missingProperties",
             "unusedLocalVariables",
