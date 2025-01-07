@@ -4,7 +4,7 @@ JavaScript | Stylesheets | Miscellaneous
 --- | --- | ---
 [closure_js_library] | [closure_css_library] | [closure_js_proto_library]
 [closure_js_binary] | [closure_css_binary] | [phantomjs_test]
-[closure_js_test] | [closure_proto_library] \(Experimental\)
+[closure_js_test] | | [closure_proto_library] \(Experimental\)
 
 ## Overview
 
