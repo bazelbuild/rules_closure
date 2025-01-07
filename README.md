@@ -1,11 +1,10 @@
 # Closure Rules for Bazel (αlpha) [![Bazel CI build status](https://badge.buildkite.com/7569410e2a2661076591897283051b6d137f35102167253fed.svg)](https://buildkite.com/bazel/closure-compiler-rules-closure-postsubmit)
 
-JavaScript | Templating | Stylesheets | Miscellaneous
---- | --- | --- | ---
+JavaScript | Stylesheets | Miscellaneous
+--- | --- | ---
 [closure_js_library] | [closure_css_library] | [closure_js_proto_library]
 [closure_js_binary] | [closure_css_binary] | [phantomjs_test]
 [closure_js_test] | [closure_proto_library] \(Experimental\)
-| | | | [closure_grpc_web_library] \(Experimental\)
 
 ## Overview
 
