@@ -47,7 +47,6 @@ def rules_closure_dependencies(
         omit_com_google_javascript_closure_library = False,
         omit_com_google_jsinterop_annotations = False,
         omit_com_google_protobuf = False,
-        omit_com_google_protobuf_js = False,
         omit_com_squareup_javapoet = False,
         omit_fonts_noto_hinted_deb = False,
         omit_fonts_noto_mono_deb = False,
@@ -111,8 +110,6 @@ def rules_closure_dependencies(
         com_google_jsinterop_annotations()
     if not omit_com_google_protobuf:
         com_google_protobuf()
-    if not omit_com_google_protobuf_js:
-        com_google_protobuf_js()
     if not omit_com_squareup_javapoet:
         com_squareup_javapoet()
     if not omit_fonts_noto_hinted_deb:
@@ -596,17 +593,6 @@ def com_google_protobuf():
         name = "com_google_protobuf",
         strip_prefix = "protobuf-3.19.1",
         sha256 = "87407cd28e7a9c95d9f61a098a53cf031109d451a7763e7dd1253abf8b4df422",
-        urls = [
-            "https://github.com/protocolbuffers/protobuf/archive/v3.19.1.tar.gz",
-        ],
-    )
-
-def com_google_protobuf_js():
-    http_archive(
-        name = "com_google_protobuf_js",
-        build_file = "@io_bazel_rules_closure//closure/protobuf:protobuf_js.BUILD",
-        sha256 = "87407cd28e7a9c95d9f61a098a53cf031109d451a7763e7dd1253abf8b4df422",
-        strip_prefix = "protobuf-3.19.1/js",
         urls = [
             "https://github.com/protocolbuffers/protobuf/archive/v3.19.1.tar.gz",
         ],

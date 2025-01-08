@@ -2,9 +2,9 @@
 
 JavaScript | Stylesheets | Miscellaneous
 --- | --- | ---
-[closure_js_library] | [closure_css_library] | [closure_js_proto_library]
-[closure_js_binary] | [closure_css_binary] | [phantomjs_test]
-[closure_js_test] | | [closure_proto_library] \(Experimental\)
+[closure_js_library] | [closure_css_library] | [phantomjs_test]
+[closure_js_binary] | [closure_css_binary] | |
+[closure_js_test] | |
 
 ## Overview
 
@@ -45,9 +45,6 @@ Closure Rules bundles the following tools and makes them "just work."
   variables, functions, conditionals, mixins, and bidirectional layout.
 - [PhantomJS]: Headless web browser used for automating JavaScript unit tests in
   a command line environment.
-- [Protocol Buffers]: Google's language-neutral, platform-neutral, extensible
-  mechanism for serializing structured data. This is used instead of untyped
-  JSON.
 
 ### Mailing Lists
 
@@ -133,7 +130,6 @@ Please see the test directories within this project for concrete examples of usa
 - [//closure/testing/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/testing/test)
 - [//closure/compiler/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/compiler/test)
 - [//closure/stylesheets/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/stylesheets/test)
-- [//closure/protobuf/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/protobuf/test)
 
 
 # Reference
@@ -185,7 +181,7 @@ This rule can be referenced as though it were the following:
   list that image here, so it ends up in the webserver runfiles.
 
 - **deps:** (List of [labels]; optional) Direct [dependency] list. These can
-  point to [closure_js_library], [closure_css_library] and [closure_js_proto_library] rules.
+  point to [closure_js_library], [closure_css_library] rules.
 
 - **exports:** (List of [labels]; optional) Listing dependencies here will cause
   them to become *direct* dependencies in parent rules. This functions similarly
@@ -661,84 +657,6 @@ This rule can be referenced as though it were the following:
   `bazel run @com_google_closure_stylesheets//:ClosureCommandLineCompiler -- --help`
 
 
-## closure\_js\_proto\_library
-
-```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_proto_library")
-closure_js_proto_library(name, srcs, add_require_for_enums, binary,
-                         import_style)
-```
-
-Defines a set of Protocol Buffer files.
-
-#### Documentation
-
-- [Protocol Buffers] GitHub project
-- [Protobuf JavaScript][protobuf-js]
-- [Generator Options][protobuf-generator]
-
-#### Implicit Output Targets
-
-- *name*.js: A generated protocol buffer JavaScript library.
-
-#### Rule Polymorphism
-
-This rule can be referenced as though it were the following:
-
-- [filegroup]: `srcs` will be empty and `data` will contain all transitive JS
-  sources and data.
-
-- [closure_js_library]: `srcs` will be the generated JS output files, `data`
-  will contain the transitive data, and `deps` will contain necessary libraries.
-
-### Arguments
-
-- **name:** ([Name]; required) A unique name for this rule. Convention states
-  that such rules be named `foo_proto`.
-
-- **srcs:** (List of [labels]; required) A list of `.proto` source files that
-  represent this library.
-
-- **add_require_for_enums:** (Boolean; optional; default is `False`) Add a
-  `goog.require()` call for each enum type used. If false, a forward
-  declaration with `goog.forwardDeclare` is produced instead.
-
-- **binary:** (Boolean; optional; default is `True`) Enable binary-format
-  support.
-
-- **import_style:** (String; optional; default is `IMPORT_CLOSURE`) Specifies
-  the type of imports that should be used. Valid values are:
-
-  - `IMPORT_CLOSURE`    // goog.require()
-  - `IMPORT_COMMONJS`   // require()
-  - `IMPORT_BROWSER`    // no import statements
-  - `IMPORT_ES6`        // import { member } from ''
-
-
-## closure\_proto\_library
-
-```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_proto_library")
-closure_proto_library(name, deps)
-```
-
-`closure_proto_library` generates JS code from `.proto` files.
-
-`deps` must point to [proto_library] rules.
-
-#### Rule Polymorphism
-
-This rule can be referenced as though it were the following:
-
-- [closure_js_library]: `srcs` will be the generated JS files,
-  and `deps` will contain necessary libraries.
-
-- **name:** ([Name]; required) A unique name for this rule. Convention states
-  that such rules be named `*_closure_proto`.
-
-- **deps:** (List of [labels]; required) The list of [proto_library] rules
-  to generate JS code for.
-
 [Bazel]: http://bazel.build/
 [Closure Compiler]: https://developers.google.com/closure/compiler/
 [Closure Library]: https://developers.google.com/closure/library/
@@ -752,7 +670,6 @@ This rule can be referenced as though it were the following:
 [Name]: https://docs.bazel.build/versions/master/build-ref.html#name
 [PhantomJS]: http://phantomjs.org/
 [ProcessEs6Modules]: https://github.com/google/closure-compiler/blob/1281ed9ded137eaf578bb65a588850bf13f38aa4/src/com/google/javascript/jscomp/ProcessEs6Modules.java
-[Protocol Buffers]: https://github.com/google/protobuf
 [acyclic]: https://en.wikipedia.org/wiki/Directed_acyclic_graph
 [asserts]: https://github.com/google/closure-library/blob/master/closure/goog/testing/asserts.js#L1308
 [base.js]: https://github.com/google/closure-library/blob/master/closure/goog/base.js
@@ -763,9 +680,7 @@ This rule can be referenced as though it were the following:
 [closure_grpc_web_library]: https://github.com/grpc/grpc-web/blob/9b7b2d5411c486aa646ba2491cfd894d5352775b/bazel/closure_grpc_web_library.bzl#L149
 [closure_js_binary]: #closure_js_binary
 [closure_js_library]: #closure_js_library
-[closure_js_proto_library]: #closure_js_proto_library
 [closure_js_test]: #closure_js_test
-[closure_proto_library]: #closure_proto_library
 [coffeescript]: http://coffeescript.org/
 [compiler-issue]: https://github.com/google/closure-compiler/issues/new
 [css-sourcemap]: https://developer.chrome.com/devtools/docs/css-preprocessors
@@ -780,8 +695,5 @@ This rule can be referenced as though it were the following:
 [output-wrapper-faq]: https://github.com/google/closure-compiler/wiki/FAQ#when-using-advanced-optimizations-closure-compiler-adds-new-variables-to-the-global-scope-how-do-i-make-sure-my-variables-dont-collide-with-other-scripts-on-the-page
 [phantomjs-bug]: https://github.com/ariya/phantomjs/issues/14028
 [phantomjs_test]: #phantomjs_test
-[proto_library]: https://docs.bazel.build/versions/master/be/protocol-buffer.html#proto_library
-[protobuf-generator]: https://github.com/google/protobuf/blob/master/src/google/protobuf/compiler/js/js_generator.h
-[protobuf-js]: https://github.com/google/protobuf/tree/master/js
 [repositories.bzl]: https://github.com/bazelbuild/rules_closure/tree/master/closure/repositories.bzl
 [verbose]: https://github.com/google/closure-library/blob/master/closure/goog/html/safehtml.js
