@@ -44,7 +44,6 @@ def rules_closure_dependencies(
         omit_com_google_guava = False,
         omit_com_google_java_format = False,
         omit_com_google_javascript_closure_compiler = False,
-        omit_com_google_javascript_closure_library = False,
         omit_com_google_jsinterop_annotations = False,
         omit_com_google_protobuf = False,
         omit_com_squareup_javapoet = False,
@@ -104,8 +103,6 @@ def rules_closure_dependencies(
         com_google_java_format()
     if not omit_com_google_javascript_closure_compiler:
         com_google_javascript_closure_compiler()
-    if not omit_com_google_javascript_closure_library:
-        com_google_javascript_closure_library()
     if not omit_com_google_jsinterop_annotations:
         com_google_jsinterop_annotations()
     if not omit_com_google_protobuf:
@@ -565,15 +562,6 @@ def com_google_javascript_closure_compiler():
             ")",
             "",
         ]),
-    )
-
-def com_google_javascript_closure_library():
-    http_archive(
-        name = "com_google_javascript_closure_library",
-        sha256 = "64fc4eac972197af13a827a928fff8a2f4711d9a3411147c115a0fc6c1322f70",
-        strip_prefix = "closure-library-20230802",
-        patch_args = ["-p1"],
-        urls = ["https://github.com/google/closure-library/archive/v20230802.tar.gz"],
     )
 
 def com_google_jsinterop_annotations():
