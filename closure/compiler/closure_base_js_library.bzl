@@ -21,7 +21,7 @@ def _closure_base_js_library(ctx):
     if not ctx.files.srcs:
         fail("Must provide sources")
 
-    return create_closure_js_library(ctx, ctx.files.srcs)
+    return create_closure_js_library(ctx, ctx.files.srcs, lenient=True)
 
 # Only usable to create a closure js library for base.js
 closure_base_js_library = rule(
