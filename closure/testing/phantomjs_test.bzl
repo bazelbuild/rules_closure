@@ -25,7 +25,6 @@ load(
     "collect_runfiles",
     "extract_providers",
     "long_path",
-    "unfurl",
 )
 
 def _impl(ctx):
