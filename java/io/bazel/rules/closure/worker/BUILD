@@ -29,10 +29,8 @@ java_library(
     deps = [
         ":worker_protocol_java_proto",
         "@com_google_auto_value",
-        "@com_google_code_findbugs_jsr305",
         "@com_google_dagger",
         "@com_google_guava",
-        "@com_google_protobuf//:protobuf_java",
     ],
 )
 
