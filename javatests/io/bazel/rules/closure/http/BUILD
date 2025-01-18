@@ -21,6 +21,7 @@ java_test(
     size = "small",
     srcs = glob(["*.java"]),
     javacopts = ["-Xep:FutureReturnValueIgnored:OFF"],
+    test_class = "io.bazel.rules.closure.http.HttpTestSuite",
     deps = [
         "//java/io/bazel/rules/closure/http",
         "//java/io/bazel/rules/closure/http/filter",

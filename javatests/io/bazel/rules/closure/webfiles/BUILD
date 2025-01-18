@@ -20,6 +20,7 @@ java_test(
     name = "WebfilesTestSuite",
     size = "small",
     srcs = glob(["*.java"]),
+    test_class = "io.bazel.rules.closure.webfiles.WebfilesTestSuite",
     deps = [
         "//java/io/bazel/rules/closure:webpath",
         "//java/io/bazel/rules/closure/webfiles",

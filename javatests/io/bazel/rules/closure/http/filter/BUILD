@@ -20,6 +20,7 @@ java_test(
     name = "FilterTestSuite",
     size = "small",
     srcs = glob(["*.java"]),
+    test_class = "io.bazel.rules.closure.http.filter.FilterTestSuite",
     deps = [
         "//java/io/bazel/rules/closure/http",
         "//java/io/bazel/rules/closure/http/filter",

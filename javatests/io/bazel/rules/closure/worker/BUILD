@@ -20,6 +20,7 @@ java_test(
     name = "WorkerTestSuite",
     size = "small",
     srcs = glob(["*.java"]),
+    test_class = "io.bazel.rules.closure.worker.WorkerTestSuite",
     deps = [
         "//java/io/bazel/rules/closure/worker",
         "//java/io/bazel/rules/closure/worker:worker_protocol_java_proto",
