@@ -1537,14 +1537,9 @@ goog.testing.TestCase.prototype.addTestObj_ = function(obj, name, objChain) {
       var fullTestName = name + (testName && name ? '_' : '') + testName;
       if (typeof testProperty === 'function') {
         this.addNewTest(fullTestName, testProperty, obj, objChain);
-      } else if (goog.isObject(testProperty) && !Array.isArray(testProperty)) {
+      } else if (testProperty != null && typeof testProperty === 'object' && !Array.isArray(testProperty)) {
         // To prevent infinite loops.
         if (Array.prototype.indexOf.call(objChain, testProperty) < 0) {
-          if (!goog.isObject(testProperty)) {
-            throw new Error(
-                'Expected object but got %s: %s.',
-                [goog.typeOf(testProperty), testProperty]);
-          }
           var newObjChain = objChain.slice();
           newObjChain.push(testProperty);
           this.addTestObj_(testProperty, fullTestName, newObjChain);
