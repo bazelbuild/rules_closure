@@ -21,7 +21,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
-import java.util.Arrays;
 import java.util.Set;
 
 /** Result of program invocation. */
@@ -36,6 +35,10 @@ public abstract class ProgramResult {
 
   /** Returns {@code true} if program invocation failed. */
   public abstract boolean failed();
+
+  static ProgramResult create(Set<String> errors, Set<String> warnings, boolean failed) {
+    return new AutoValue_ProgramResult(errors, warnings, failed);
+  }
 
   /** Begins a Truth assertion about a program invocation result. */
   public static ResultChain assertThat(ProgramResult result) {

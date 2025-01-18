@@ -37,6 +37,6 @@ public final class ProgramRunner<T extends Program> {
   /** Runs program and returns result of invocation. */
   public ProgramResult run() throws Exception {
     delegate.run();
-    return new AutoValue_ProgramResult(reporter.getErrors(), reporter.getWarnings(), failed.get());
+    return ProgramResult.create(reporter.getErrors(), reporter.getWarnings(), failed.get());
   }
 }
