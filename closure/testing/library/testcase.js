@@ -16,10 +16,6 @@
 
 goog.setTestOnly('goog.testing.TestCase');
 goog.provide('goog.testing.TestCase');
-goog.provide('goog.testing.TestCase.Error');
-goog.provide('goog.testing.TestCase.Order');
-goog.provide('goog.testing.TestCase.Result');
-goog.provide('goog.testing.TestCase.Test');
 goog.require('goog.testing.JsUnitException');
 goog.require('goog.testing.pending');
 
