@@ -437,7 +437,7 @@ goog.module.declareLegacyNamespace = function() {
 
 /**
  * Associates an ES6 module with a Closure module ID so that is available via
- * goog.require. The associated ID  acts like a goog.module ID - it does not
+ * goog.require. The associated ID acts like a goog.module ID - it does not
  * create any global names, it is merely available via goog.require /
  * goog.module.get / goog.forwardDeclare / goog.requireType. goog.require and
  * goog.module.get will return the entire module as if it was import *'d. This
