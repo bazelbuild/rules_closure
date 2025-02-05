@@ -21,11 +21,6 @@ licenses(["notice"])
 
 exports_files(["unusable_type.js"])
 
-sh_binary(
-    name = "gensrcjar",
-    srcs = ["gensrcjar.sh"],
-)
-
 closure_base_js_library(
     name = "base_lib",
     # TODO(goktug): replace with base.js from compiler when included in the artifact.

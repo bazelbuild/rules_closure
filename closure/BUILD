@@ -15,7 +15,6 @@
 licenses(["notice"])
 
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("//closure/private:lines_sorted_test.bzl", "lines_sorted_test")
 
 bzl_library(
     name = "web_library_bzl",
