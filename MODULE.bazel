@@ -48,7 +48,7 @@ bazel_dep(
 
 git_override(
     module_name = "rules_webtesting",
-    commit = "46b744fa916b5cefce6f0f84252f4ec89128a01b",
+    commit = "7a1c88f61e35ee5ce0892ae24e2aa2a3106cbfed",
     remote = "https://github.com/bazelbuild/rules_webtesting",
 )
 
