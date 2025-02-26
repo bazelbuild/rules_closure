@@ -31,12 +31,9 @@ bazel_dep(
     version = "20240722.0",
 )
 
-bazel_dep(name = "google_bazel_common")
-
-git_override(
-    module_name = "google_bazel_common",
-    commit = "34102e4cf748e2922697f28f629ecea687345254",
-    remote = "https://github.com/google/bazel-common",
+bazel_dep(
+    name = "google_bazel_common",
+    version = "0.0.1",
 )
 
 # TODO: Switch to a release version once it's available in BCR.
