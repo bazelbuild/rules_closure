@@ -87,7 +87,7 @@ maven.install(
 maven.artifact(
     artifact = "closure-compiler",
     group = "com.google.javascript",
-    version = "v20240317",
+    version = "v20250402",
 )
 
 # javacc:javacc was not updated since 2008 and relocated to net.java.dev.javacc

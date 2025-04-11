@@ -140,7 +140,6 @@ def _closure_js_library_impl(
             "strictCheckTypes",
             "strictModuleChecks",
             "superfluousSuppress",
-            "unnecessaryEscape",
             "underscore",
         ]
 

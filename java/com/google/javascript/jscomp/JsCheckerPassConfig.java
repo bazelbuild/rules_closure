@@ -45,7 +45,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
     this.checks.maybeAdd(gatherModuleMetadataPass());
     this.checks.maybeAdd(earlyLintChecks());
     this.checks.maybeAdd(scopedAliases());
-    this.checks.maybeAdd(closureRewriteClass());
     this.checks.maybeAdd(lateLintChecks());
     this.checks.maybeAdd(ijsGeneration());
     this.checks.maybeAdd(whitespaceWrapGoogModules());
@@ -57,7 +56,7 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
   }
 
   @Override
-  protected PassListBuilder getOptimizations() {
+  protected PassListBuilder getOptimizations(PassConfig.OptimizationPasses optimizationPasses) {
     return new PassListBuilder(options);
   }
 
@@ -108,13 +107,6 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
                     compiler,
                     /*preprocessorSymbolTable=*/ null,
                     compiler.getOptions().getAliasTransformationHandler()))
-        .build();
-  }
-
-  private PassFactory closureRewriteClass() {
-    return PassFactory.builder()
-        .setName("closureRewriteClass")
-        .setInternalFactory((compiler) -> new ClosureRewriteClass(compiler))
         .build();
   }
 
