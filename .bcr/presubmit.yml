@@ -1,0 +1,10 @@
+bcr_test_module:
+  matrix:
+    platform: [ "macos", "ubuntu1804"]
+    tasks:
+      run_tests:
+        name: "Run test module"
+        build_targets:
+        - "..."
+        test_targets:
+        - "..."
