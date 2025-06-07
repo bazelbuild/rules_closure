@@ -30,24 +30,23 @@ bazel_dep(
     version = "0.0.1",
 )
 
-# TODO: Switch to a release version once it's available in BCR.
-# Otherwise, the root module has to declare the same override.
 bazel_dep(
     name = "rules_webtesting",
+    version = "0.4.0",
     repo_name = "io_bazel_rules_webtesting",
 )
 
-git_override(
-    module_name = "rules_webtesting",
-    commit = "7a1c88f61e35ee5ce0892ae24e2aa2a3106cbfed",
-    remote = "https://github.com/bazelbuild/rules_webtesting",
+bazel_dep(
+    name = "rules_web_testing_java",
+    version = "0.4.0",
+    repo_name = "io_rules_web_testing_java",
 )
 
-# TODO(mollyibot): Needed by rules_webtesting.
-git_override(
-    module_name = "rules_scala",
-    commit = "219e63983e8e483e66ebf70372969ba227382001",
-    remote = "https://github.com/mbland/rules_scala",
+# This is needed for rules_web_testing_java local_path_override
+archive_override(
+    module_name = "rules_webtesting",
+    strip_prefix = "rules_webtesting-master",
+    urls = ["https://github.com/bazelbuild/rules_webtesting/archive/master.zip"],
 )
 
 ##### Java dependencies #####
