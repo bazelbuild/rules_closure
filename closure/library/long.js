@@ -225,6 +225,9 @@ class Long {
    * @return {boolean} Whether this Long equals the other.
    */
   equals(other) {
+    if (other == null) {
+      return false;
+    }
     // Compare low parts first as there is higher chance they are different.
     return (this.low_ == other.low_) && (this.high_ == other.high_);
   }
