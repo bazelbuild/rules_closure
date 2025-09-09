@@ -20,13 +20,10 @@ load("//closure/compiler:closure_js_binary.bzl", _closure_js_binary = "closure_j
 load("//closure/compiler:closure_js_library.bzl", _closure_js_library = "closure_js_library", _create_closure_js_library = "create_closure_js_library")
 load("//closure/private:defs.bzl", _CLOSURE_JS_TOOLCHAIN_ATTRS = "CLOSURE_JS_TOOLCHAIN_ATTRS", _ClosureJsLibraryInfo = "ClosureJsLibraryInfo")
 load("//closure/private:files_equal_test.bzl", _files_equal_test = "files_equal_test")
-load("//closure/protobuf:closure_js_proto_library.bzl", _closure_js_proto_library = "closure_js_proto_library")
-load("//closure/protobuf:closure_proto_library.bzl", _closure_proto_library = "closure_proto_library")
 load("//closure/stylesheets:closure_css_binary.bzl", _closure_css_binary = "closure_css_binary")
 load("//closure/stylesheets:closure_css_library.bzl", _closure_css_library = "closure_css_library")
 load("//closure/testing:closure_js_test.bzl", _closure_js_test = "closure_js_test")
 load("//closure/testing:phantomjs_test.bzl", _phantomjs_test = "phantomjs_test")
-load("//closure/testing:web_test_repositories.bzl", _setup_web_test_repositories = "setup_web_test_repositories")
 
 closure_js_aspect = _closure_js_aspect
 closure_js_binary = _closure_js_binary
@@ -35,13 +32,10 @@ create_closure_js_library = _create_closure_js_library
 ClosureJsLibraryInfo = _ClosureJsLibraryInfo
 CLOSURE_JS_TOOLCHAIN_ATTRS = _CLOSURE_JS_TOOLCHAIN_ATTRS
 files_equal_test = _files_equal_test
-closure_js_proto_library = _closure_js_proto_library
-closure_proto_library = _closure_proto_library
 closure_css_binary = _closure_css_binary
 closure_css_library = _closure_css_library
 closure_js_test = _closure_js_test
 phantomjs_test = _phantomjs_test
-setup_web_test_repositories = _setup_web_test_repositories
 filegroup_external = _filegroup_external
 web_library = _web_library
 web_library_external = _web_library_external

@@ -22,15 +22,15 @@ licenses(["notice"])
 
 java_binary(
     name = "webdriver_test_bin",
+    testonly = 1,
     srcs = glob(["*.java"]),
     main_class = "io.bazel.rules.closure.testing.TestRunner",
     deps = [
-        "@org_seleniumhq_selenium_selenium_api",
-        "@org_seleniumhq_selenium_selenium_support",
-        "@org_seleniumhq_selenium_selenium_remote_driver",
-        "@io_bazel_rules_webtesting//java/com/google/testing/web:web",
         "//java/io/bazel/rules/closure/webfiles/server",
-        "@com_google_guava",
+        "@google_bazel_common//third_party/java/guava",
+        "@maven//:org_seleniumhq_selenium_selenium_api",
+        "@maven//:org_seleniumhq_selenium_selenium_remote_driver",
+        "@maven//:org_seleniumhq_selenium_selenium_support",
+        "@io_rules_web_testing_java//java/com/google/testing/web",
     ],
-    testonly = 1,
 )

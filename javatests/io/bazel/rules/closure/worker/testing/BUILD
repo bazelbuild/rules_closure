@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-licenses(["notice"])
-
 load("@rules_java//java:defs.bzl", "java_library")
+
+licenses(["notice"])
 
 java_library(
     name = "testing",
@@ -23,9 +23,10 @@ java_library(
     visibility = ["//:__subpackages__"],
     deps = [
         "//java/io/bazel/rules/closure/worker",
-        "@com_google_auto_value",
-        "@com_google_dagger",
-        "@com_google_guava",
-        "@com_google_truth",
+        "@google_bazel_common//third_party/java/auto:value",
+        "@google_bazel_common//third_party/java/dagger",
+        "@google_bazel_common//third_party/java/guava",
+        "@google_bazel_common//third_party/java/jsr330_inject",
+        "@google_bazel_common//third_party/java/truth",
     ],
 )

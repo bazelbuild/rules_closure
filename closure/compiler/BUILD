@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@rules_java//java:defs.bzl", "java_library")
+
 package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
-load("@rules_java//java:defs.bzl", "java_library")
-load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-
 java_library(
     name = "compiler",
-    exports = ["@com_google_javascript_closure_compiler"],
+    exports = ["@maven//:com_google_javascript_closure_compiler"],
 )
 
 bzl_library(

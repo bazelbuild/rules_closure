@@ -16,10 +16,6 @@
 
 goog.setTestOnly('goog.testing.TestCase');
 goog.provide('goog.testing.TestCase');
-goog.provide('goog.testing.TestCase.Error');
-goog.provide('goog.testing.TestCase.Order');
-goog.provide('goog.testing.TestCase.Result');
-goog.provide('goog.testing.TestCase.Test');
 goog.require('goog.testing.JsUnitException');
 goog.require('goog.testing.pending');
 
@@ -899,7 +895,7 @@ goog.testing.TestCase.prototype.runNextTest_ = function() {
   if (!this.curTest_ || !this.running) {
     this.finalize();
     return new goog.testing.TestCase.Continuation_(
-        goog.bind(this.runNextTestCallback_, this, this.result_));
+        this.runNextTestCallback_.bind(this, this.result_));
   }
 
   var shouldRunTest = true;
@@ -908,12 +904,12 @@ goog.testing.TestCase.prototype.runNextTest_ = function() {
   } catch (error) {
     this.curTest_.name = 'shouldRunTests for ' + this.curTest_.name;
     return new goog.testing.TestCase.Continuation_(
-        goog.bind(this.finishTestInvocation_, this, error));
+        this.finishTestInvocation_.bind(this, error));
   }
 
   if (!shouldRunTest) {
     return new goog.testing.TestCase.Continuation_(
-        goog.bind(this.finishTestInvocation_, this));
+        this.finishTestInvocation_.bind(this));
   }
 
   this.curTest_.started();
@@ -921,7 +917,7 @@ goog.testing.TestCase.prototype.runNextTest_ = function() {
   this.log('Running test: ' + this.curTest_.name);
   if (this.maybeFailTestEarly(this.curTest_)) {
     return new goog.testing.TestCase.Continuation_(
-        goog.bind(this.finishTestInvocation_, this));
+        this.finishTestInvocation_.bind(this));
   }
   goog.testing.TestCase.currentTestName = this.curTest_.name;
   return this.safeSetUp_();
@@ -1007,8 +1003,7 @@ goog.testing.TestCase.prototype.safeSetUpHelper_ = function(setUps) {
   if (!setUps.length) {
     return this.safeRunTest_;
   }
-  return goog.bind(
-      this.invokeFunction_, this, setUps.shift(), this.safeSetUpHelper_(setUps),
+  return this.invokeFunction_.bind(this, setUps.shift(), this.safeSetUpHelper_(setUps),
       this.safeTearDown_, 'setUp');
 };
 
@@ -1020,7 +1015,7 @@ goog.testing.TestCase.prototype.safeSetUpHelper_ = function(setUps) {
 goog.testing.TestCase.prototype.safeRunTest_ = function() {
   'use strict';
   return this.invokeFunction_(
-      goog.bind(this.curTest_.ref, this.curTest_.scope), this.safeTearDown_,
+      this.curTest_.ref.bind(this.curTest_.scope), this.safeTearDown_,
       this.safeTearDown_, this.curTest_.name);
 };
 
@@ -1054,8 +1049,7 @@ goog.testing.TestCase.prototype.safeTearDownHelper_ = function(tearDowns) {
   if (!tearDowns.length) {
     return this.finishTestInvocation_;
   }
-  return goog.bind(
-      this.invokeFunction_, this, tearDowns.shift(),
+  return this.invokeFunction_.bind(this, tearDowns.shift(),
       this.safeTearDownHelper_(tearDowns), this.finishTestInvocation_,
       'tearDown');
 };
@@ -1127,17 +1121,16 @@ goog.testing.TestCase.prototype.invokeFunction_ = function(
     } else {
       if (this.thrownAssertionExceptions_.length == 0) {
         return new goog.testing.TestCase.Continuation_(
-            goog.bind(onSuccess, this));
+            onSuccess.bind(this));
       } else {
-        return new goog.testing.TestCase.Continuation_(goog.bind(
-            onFailure, this,
-            this.reportUnpropagatedAssertionExceptions_(fnName)));
+        return new goog.testing.TestCase.Continuation_(
+            onFailure.bind(this, this.reportUnpropagatedAssertionExceptions_(fnName)));
       }
     }
   } catch (e) {
     this.reportUnpropagatedAssertionExceptions_(fnName, e);
     return new goog.testing.TestCase.Continuation_(
-        goog.bind(onFailure, this, e));
+        onFailure.bind(this, e));
   }
 };
 
@@ -1234,11 +1227,11 @@ goog.testing.TestCase.prototype.finishTestInvocation_ = function(opt_error) {
   // yield to avoid blocking the browser. Otherwise, proceed to the next test.
   if (this.now() - this.batchTime_ > goog.testing.TestCase.maxRunTime) {
     this.saveMessage('Breaking async');
-    this.timeout(goog.bind(this.startNextBatch_, this), 0);
+    this.timeout(this.startNextBatch_.bind(this), 0);
     return null;
   } else {
     return new goog.testing.TestCase.Continuation_(
-        goog.bind(this.runNextTest_, this));
+        this.runNextTest_.bind(this));
   }
 };
 
@@ -1454,22 +1447,22 @@ goog.testing.TestCase.prototype.autoDiscoverLifecycle = function() {
 goog.testing.TestCase.prototype.setLifecycleObj = function(obj) {
   'use strict';
   if (obj['setUp']) {
-    this.setUp = goog.bind(obj['setUp'], obj);
+    this.setUp = obj['setUp'].bind(obj);
   }
   if (obj['tearDown']) {
-    this.tearDown = goog.bind(obj['tearDown'], obj);
+    this.tearDown = obj['tearDown'].bind(obj);
   }
   if (obj['setUpPage']) {
-    this.setUpPage = goog.bind(obj['setUpPage'], obj);
+    this.setUpPage = obj['setUpPage'].bind(obj);
   }
   if (obj['tearDownPage']) {
-    this.tearDownPage = goog.bind(obj['tearDownPage'], obj);
+    this.tearDownPage = obj['tearDownPage'].bind(obj);
   }
   if (obj['runTests']) {
-    this.runTests = goog.bind(obj['runTests'], obj);
+    this.runTests = obj['runTests'].bind(obj);
   }
   if (obj['shouldRunTests']) {
-    this.shouldRunTests = goog.bind(obj['shouldRunTests'], obj);
+    this.shouldRunTests = obj['shouldRunTests'].bind(obj);
   }
 };
 
@@ -1540,14 +1533,9 @@ goog.testing.TestCase.prototype.addTestObj_ = function(obj, name, objChain) {
       var fullTestName = name + (testName && name ? '_' : '') + testName;
       if (typeof testProperty === 'function') {
         this.addNewTest(fullTestName, testProperty, obj, objChain);
-      } else if (goog.isObject(testProperty) && !Array.isArray(testProperty)) {
+      } else if (testProperty != null && typeof testProperty === 'object' && !Array.isArray(testProperty)) {
         // To prevent infinite loops.
         if (Array.prototype.indexOf.call(objChain, testProperty) < 0) {
-          if (!goog.isObject(testProperty)) {
-            throw new Error(
-                'Expected object but got %s: %s.',
-                [goog.typeOf(testProperty), testProperty]);
-          }
           var newObjChain = objChain.slice();
           newObjChain.push(testProperty);
           this.addTestObj_(testProperty, fullTestName, newObjChain);
@@ -2014,10 +2002,10 @@ goog.testing.TestCase.Test = function(name, ref, scope, objChain) {
   if (objChain) {
     for (var i = 0; i < objChain.length; i++) {
       if (typeof objChain[i].setUp === 'function') {
-        this.setUps.push(goog.bind(objChain[i].setUp, objChain[i]));
+        this.setUps.push(objChain[i].setUp.bind(objChain[i]));
       }
       if (typeof objChain[i].tearDown === 'function') {
-        this.tearDowns.push(goog.bind(objChain[i].tearDown, objChain[i]));
+        this.tearDowns.push(objChain[i].tearDown.bind(objChain[i]));
       }
     }
     this.tearDowns.reverse();

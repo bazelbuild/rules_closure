@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-licenses(["notice"])
-
 load("@rules_java//java:defs.bzl", "java_test")
+
+licenses(["notice"])
 
 java_test(
     name = "Html5PrinterTest",
@@ -22,9 +22,9 @@ java_test(
     srcs = ["Html5PrinterTest.java"],
     deps = [
         "//java/org/jsoup/nodes",
-        "@com_google_guava",
-        "@com_google_truth",
-        "@junit",
-        "@org_jsoup",
+        "@google_bazel_common//third_party/java/guava",
+        "@google_bazel_common//third_party/java/junit",
+        "@google_bazel_common//third_party/java/truth",
+        "@maven//:org_jsoup_jsoup",
     ],
 )

@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-licenses(["notice"])
-
 load("@rules_java//java:defs.bzl", "java_library")
+
+licenses(["notice"])
 
 java_library(
     name = "jscomp",
@@ -43,9 +43,10 @@ java_library(
         "//java/io/bazel/rules/closure:build_info_java_proto",
         "//java/io/bazel/rules/closure:webpath",
         "//java/io/bazel/rules/closure/worker",
-        "@args4j",
-        "@com_google_dagger",
-        "@com_google_guava",
         "@com_google_protobuf//:protobuf_java",
+        "@google_bazel_common//third_party/java/dagger",
+        "@google_bazel_common//third_party/java/guava",
+        "@google_bazel_common//third_party/java/jsr330_inject",
+        "@maven//:args4j_args4j",
     ],
 )

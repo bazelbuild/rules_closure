@@ -1,4 +1,4 @@
-# Copyright 2017 The Closure Rules Authors. All rights reserved.
+# Copyright 2025 The Closure Rules Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,18 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@rules_java//java:defs.bzl", "java_library")
+load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
+
+package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
 
-java_library(
-    name = "compiler",
-    srcs = glob(["*.java"]),
-    visibility = ["//:__subpackages__"],
-    deps = [
-        "@google_bazel_common//third_party/java/dagger",
-        "@google_bazel_common//third_party/java/guava",
-        "@maven//:com_google_closure_stylesheets_closure_stylesheets",
-        "@maven//:javax_inject_javax_inject",
-    ],
+closure_js_library(
+    name = "reflect",
+    # TODO(goktug): replace with reflect.js from compiler when included in the artifact.
+    srcs = ["reflect.js"],
+    lenient = True,
+)
+
+closure_js_library(
+    name = "long",
+    srcs = ["long.js"],
 )

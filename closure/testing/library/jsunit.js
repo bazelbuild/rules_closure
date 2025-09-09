@@ -83,7 +83,7 @@ goog.exportSymbol('G_testRunner.getTestResultsAsJson', tr.getTestResultsAsJson);
 // Export debug as a global function for JSUnit compatibility.  This just
 // calls log on the current test case.
 if (!goog.global['debug']) {
-  goog.exportSymbol('debug', goog.bind(tr.log, tr));
+  goog.exportSymbol('debug', tr.log.bind(tr));
 }
 
 // If the application has defined a global error filter, set it now.  This

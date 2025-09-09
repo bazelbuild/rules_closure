@@ -387,7 +387,7 @@ var assertThrows = goog.testing.asserts.assertThrows;
  */
 goog.testing.asserts.removeOperaStacktrace_ = function(e) {
   'use strict';
-  if (!goog.isObject(e)) return;
+  if (!e || typeof e != 'object') return;
   const stack = e['stacktrace'];
   const errorMsg = e['message'];
   if (typeof stack !== 'string' || typeof errorMsg !== 'string') {
@@ -513,7 +513,7 @@ goog.testing.asserts.assertRejects = function(a, opt_b) {
   var thenable = /** @type {!IThenable<*>} */ (nonCommentArg(1, 1, arguments));
   var comment = commentArg(1, arguments);
   _assert(
-      comment, goog.isObject(thenable) && typeof thenable.then === 'function',
+      comment, thenable && typeof thenable === 'object' && typeof thenable.then === 'function',
       () => 'Argument passed to assertRejects is not an IThenable');
 
   return thenable.then(
@@ -1484,7 +1484,17 @@ var assertSameElements = goog.testing.asserts.assertSameElements;
  */
 goog.testing.asserts.isArrayLikeOrIterable_ = function(obj) {
   'use strict';
-  return goog.isArrayLike(obj) || goog.testing.asserts.isIterable_(obj);
+  return goog.testing.asserts.isArrayLike_(obj) || goog.testing.asserts.isIterable_(obj);
+};
+
+/**
+ * @param {*} obj Object to test.
+ * @return {boolean} Whether given object is array-like.
+ * @private
+ */
+goog.testing.asserts.isArrayLike_ = function(obj) {
+  'use strict';
+  return Array.isArray(obj) || obj != null && typeof obj == 'object' && typeof obj.length == 'number'
 };
 
 /**

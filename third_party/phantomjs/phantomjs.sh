@@ -31,7 +31,7 @@ source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
 # --- end runfiles.bash initialization v3 ---
 
 
-RUNFILES="$(rlocation io_bazel_rules_closure/.)"
+RUNFILES="$(rlocation rules_closure/.)"
 
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/fontconfig/k8:${LD_LIBRARY_PATH:-}"
 export LD_LIBRARY_PATH="${RUNFILES}/third_party/freetype/k8:${LD_LIBRARY_PATH}"

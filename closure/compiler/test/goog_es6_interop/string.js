@@ -1,4 +1,4 @@
-// Copyright 2018 The Closure Rules Authors. All rights reserved.
+// Copyright 2024 The Closure Rules Authors. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,10 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-syntax = "proto3";
+/**
+ * @fileoverview A goog.provide file for testing interoperability.
+ */
+goog.provide('person.string');
 
-package io.bazel.rules.closure.protobuf;
-
-message Foo {
-  string foo = 1;
-}
+/**
+ * @param {string} str String value to capitalize.
+ * @return {string} String value with first letter in uppercase.
+ */
+person.string.capitalize = function(str) {
+  return String(str.charAt(0)).toUpperCase() +
+      String(str.slice(1)).toLowerCase();
+};

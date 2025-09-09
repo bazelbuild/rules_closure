@@ -20,6 +20,7 @@ import java.io.InputStream;
 import javax.annotation.WillCloseWhenClosed;
 
 /** Input stream wrapper that computes a webfile digest token. */
+@SuppressWarnings("BetaApi")
 final class HasherInputStream extends InputStream {
 
   private final InputStream delegate;

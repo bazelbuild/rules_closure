@@ -1,0 +1,25 @@
+{
+  "homepage": "https://github.com/bazelbuild/rules_closure",
+  "maintainers": [
+    {
+      "name": "Goktug Gokdogan",
+      "email": "goktug@google.com",
+      "github": "gkdn"
+    },
+    {
+      "name": "Julien Dramaix",
+      "email": "dramaix@google.com",
+      "github": "jDramaix"
+    },
+    {
+      "name": "Yuan Tian",
+      "email": "mollyibot@google.com",
+      "github": "mollyibot"
+    }
+  ],
+  "repository": [
+    "github:bazelbuild/rules_closure"
+  ],
+  "versions": [],
+  "yanked_versions": {}
+}

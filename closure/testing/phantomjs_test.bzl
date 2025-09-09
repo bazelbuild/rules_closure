@@ -23,9 +23,7 @@ load(
     "ClosureJsLibraryInfo",
     "HTML_FILE_TYPE",
     "collect_runfiles",
-    "extract_providers",
     "long_path",
-    "unfurl",
 )
 
 def _impl(ctx):

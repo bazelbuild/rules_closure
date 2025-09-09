@@ -1,11 +1,10 @@
 # Closure Rules for Bazel (αlpha) [![Bazel CI build status](https://badge.buildkite.com/7569410e2a2661076591897283051b6d137f35102167253fed.svg)](https://buildkite.com/bazel/closure-compiler-rules-closure-postsubmit)
 
-JavaScript | Templating | Stylesheets | Miscellaneous
---- | --- | --- | ---
-[closure_js_library] | [closure_js_template_library] | [closure_css_library] | [closure_js_proto_library]
-[closure_js_binary] | [closure_java_template_library] | [closure_css_binary] | [phantomjs_test]
-[closure_js_test] | [closure_py_template_library] | | [closure_proto_library] \(Experimental\)
-| | | | [closure_grpc_web_library] \(Experimental\)
+JavaScript | Stylesheets | Miscellaneous
+--- | --- | ---
+[closure_js_library] | [closure_css_library] | [phantomjs_test]
+[closure_js_binary] | [closure_css_binary] | |
+[closure_js_test] | |
 
 ## Overview
 
@@ -27,9 +26,7 @@ play games. It enforces a type system that can be stricter than Java. From a
 stylistic perspective, Closure is [verbose] like Java; there's no cryptic
 symbols or implicit behavior; the code says exactly what it's doing.  This sets
 Closure apart from traditional JavaScript development, where terseness was
-favored over readability, because minifiers weren't very good. Furthermore, the
-Closure Library and Templates help you follow security best practices which will
-keep your users safe.
+favored over readability, because minifiers weren't very good.
 
 ### What's Included
 
@@ -41,7 +38,6 @@ Closure Rules bundles the following tools and makes them "just work."
   transpiles [ECMASCRIPT6] to minified ES3 JavaScript that can run in any
   browser.
 - [Closure Library]: Google's core JavaScript libraries.
-- [Closure Templates]: Type-safe HTML templating system that compiles to both
   JavaScript and Java. This is one of the most secure templating systems
   available. It's where Google has put the most thought into preventing things
   like XSS attacks. It also supports i18n and l10n.
@@ -49,9 +45,6 @@ Closure Rules bundles the following tools and makes them "just work."
   variables, functions, conditionals, mixins, and bidirectional layout.
 - [PhantomJS]: Headless web browser used for automating JavaScript unit tests in
   a command line environment.
-- [Protocol Buffers]: Google's language-neutral, platform-neutral, extensible
-  mechanism for serializing structured data. This is used instead of untyped
-  JSON.
 
 ### Mailing Lists
 
@@ -66,69 +59,19 @@ notes.
 
 ## Setup
 
-First you must [install Bazel]. Then you add the following to your `WORKSPACE`
-file:
+First you must [install Bazel]. 
 
-```starlark
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+Then you add the following to your MODULE.bazel file:
 
-http_archive(
-    name = "io_bazel_rules_closure",
-    sha256 = "9498e57368efb82b985db1ed426a767cbf1ba0398fd7aed632fc3908654e1b1e",
-    strip_prefix = "rules_closure-0.12.0",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_closure/archive/0.12.0.tar.gz",
-        "https://github.com/bazelbuild/rules_closure/archive/0.12.0.tar.gz",
-    ],
-)
-
-load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
-rules_closure_dependencies()
-rules_closure_toolchains()
-
-# Only needed if you want to run your tests on headless Chrome
-load("@io_bazel_rules_closure//closure:defs.bzl", "setup_web_test_repositories")
-setup_web_test_repositories(
-    chromium = True,
-)
+```bzl
+bazel_dep(name = "rules_closure", version = "0.15.0")
 ```
+The root module has to declare the same override for rules_webtesting,
+rules_scala, and google_bazel_common temporarily until they are registered
+in BCR.
 
 You are not required to install the Closure Tools, PhantomJS, or anything else
 for that matter; they will be fetched automatically by Bazel.
-
-### Overriding Dependency Versions
-
-When you call `rules_closure_dependencies()` in your `WORKSPACE` file, it causes a
-few dozen external dependencies to be added to your project, e.g. Guava, Guice,
-JSR305, etc. You might need to customize this behavior.
-
-To override the version of any dependency, modify your `WORKSPACE` file to pass
-`omit_<dependency_name>=True` to `rules_closure_dependencies()`. Next define your
-custom dependency version. A full list of dependencies is available from
-[repositories.bzl]. For example, to override the version of Guava:
-
-```starlark
-load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
-rules_closure_dependencies(
-    omit_com_google_guava=True,
-)
-rules_closure_toolchains()
-
-load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
-java_import_external(
-    name = "com_google_guava",
-    licenses = ["notice"],  # Apache 2.0
-    jar_urls = [
-        "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/guava/guava/24.1-jre/guava-24.1-jre.jar",
-        "https://repo1.maven.org/maven2/com/google/guava/guava/24.1-jre/guava-24.1-jre.jar",
-    ],
-    jar_sha256 = "31bfe27bdf9cba00cb4f3691136d3bc7847dfc87bfe772ca7a9eb68ff31d79f5",
-    exports = [
-        "@com_google_code_findbugs_jsr305",
-        "@com_google_errorprone_error_prone_annotations",
-    ],
-)
-```
 
 ## Examples
 
@@ -136,9 +79,7 @@ Please see the test directories within this project for concrete examples of usa
 
 - [//closure/testing/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/testing/test)
 - [//closure/compiler/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/compiler/test)
-- [//closure/templates/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/templates/test)
 - [//closure/stylesheets/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/stylesheets/test)
-- [//closure/protobuf/test](https://github.com/bazelbuild/rules_closure/tree/master/closure/protobuf/test)
 
 
 # Reference
@@ -147,7 +88,7 @@ Please see the test directories within this project for concrete examples of usa
 ## closure\_js\_library
 
 ```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
+load("@rules_closure//closure:defs.bzl", "closure_js_library")
 closure_js_library(name, srcs, data, deps, exports, suppress, convention,
                    no_closure_library)
 ```
@@ -190,8 +131,7 @@ This rule can be referenced as though it were the following:
   list that image here, so it ends up in the webserver runfiles.
 
 - **deps:** (List of [labels]; optional) Direct [dependency] list. These can
-  point to [closure_js_library], [closure_js_template_library],
-  [closure_css_library] and [closure_js_proto_library] rules.
+  point to [closure_js_library], [closure_css_library] rules.
 
 - **exports:** (List of [labels]; optional) Listing dependencies here will cause
   them to become *direct* dependencies in parent rules. This functions similarly
@@ -248,7 +188,7 @@ This rule can be referenced as though it were the following:
 ## closure\_js\_binary
 
 ```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_binary")
+load("@rules_closure//closure:defs.bzl", "closure_js_binary")
 closure_js_binary(name, deps, css, debug, language, entry_points,
                   dependency_mode, compilation_level, formatting,
                   output_wrapper, property_renaming_report, defs)
@@ -284,14 +224,14 @@ This rule can be referenced as though it were the following:
 
 - **deps:** (List of [labels]; required) Direct dependency list. This attribute
   has the same meaning as it does in [closure_js_library].  These can point to
-  [closure_js_library] and [closure_js_template_library] rules.
+  [closure_js_library] rules.
 
 - **css:** (Label; optional) CSS class renaming target, which must point to a
   [closure_css_binary] rule. This causes the CSS name mapping file generated by
   the CSS compiler to be included in the compiled JavaScript.  This tells
   Closure Compiler how to minify CSS class names.
 
-  This attribute is required if any of JavaScript or template sources depend on
+  This attribute is required if any of JavaScript sources depend on
   a [closure_css_library]. This rule will check that all the referenced CSS
   libraries are present in the CSS binary.
 
@@ -361,7 +301,7 @@ This rule can be referenced as though it were the following:
 - **defs:** (List of strings; optional) Specifies additional flags to be passed
   to the Closure Compiler, e.g. `"--hide_warnings_for=some/path/"`. To see what
   flags are available, run:
-  `bazel run @io_bazel_rules_closure//third_party/java/jscomp:main -- --help`
+  `bazel run @rules_closure//third_party/java/jscomp:main -- --help`
 
 ### Support for AngularJS
 
@@ -382,7 +322,7 @@ closure_js_binary(
 ## closure\_js\_test
 
 ```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_test")
+load("@rules_closure//closure:defs.bzl", "closure_js_test")
 closure_js_test(name, srcs, data, deps, css, html, language, suppress,
                 compilation_level, entry_points, defs)
 ```
@@ -454,7 +394,7 @@ This rule can be referenced as though it were the following:
 ## phantomjs\_test
 
 ```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "phantomjs_test")
+load("@rules_closure//closure:defs.bzl", "phantomjs_test")
 phantomjs_test(name, data, deps, html, harness, runner)
 ```
 
@@ -483,178 +423,26 @@ This rule can be referenced as though it were the following:
   `<script>` tag based on a depth-first preordering.
 
 - **html:** (Label; optional; default is
-  `"@io_bazel_rules_closure//closure/testing:empty.html"`) HTML file containing
+  `"@rules_closure//closure/testing:empty.html"`) HTML file containing
   DOM structure of virtual web page *before* `<script>` tags are automatically
   inserted. Do not include a doctype in this file.
 
 - **harness:** (Label; required; default is
-  `"@io_bazel_rules_closure//closure/testing:phantomjs_harness"`) JS binary or
+  `"@rules_closure//closure/testing:phantomjs_harness"`) JS binary or
   library exporting a single source file, to be used as the PhantomJS outer
   script.
 
 - **runner:** (Label; optional; default is
-  `"@io_bazel_rules_closure//closure/testing:phantomjs_jsunit_runner"`) Same as
+  `"@rules_closure//closure/testing:phantomjs_jsunit_runner"`) Same as
   `deps` but guaranteed to be loaded inside the virtual web page last. This
   should run whatever tests got loaded by `deps` and then invoke `callPhantom`
   to report the result to the `harness`.
 
 
-## closure\_js\_template\_library
-
-```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_template_library")
-closure_js_template_library(name, srcs, data, deps, globals, plugin_modules,
-                            should_generate_js_doc,
-                            should_generate_soy_msg_defs,
-                            bidi_global_dir,
-                            soy_msgs_are_external,
-                            defs)
-```
-
-Compiles Closure templates to JavaScript source files.
-
-This rule is necessary in order to render Closure templates from within
-JavaScript code.
-
-This rule pulls in a transitive dependency on the Closure Library.
-
-The documentation on using Closure Templates can be found
-[here][Closure Templates].
-
-For additional help on using some of these attributes, please see the output of
-the following:
-
-    bazel run @com_google_template_soy//:SoyToJsSrcCompiler -- --help
-
-#### Implicit Output Targets
-
-- *src*.js: A separate JavaScript source file is generated for each file listed
-  under `srcs`. The filename will be the same as the template with a `.js`
-  suffix. For example `foo.soy` would become `foo.soy.js`.
-
-#### Rule Polymorphism
-
-This rule can be referenced as though it were the following:
-
-- [filegroup]: `srcs` will be the generated JS output files and `data` will
-  contain all transitive JS sources and data.
-
-- [closure_js_library]: `srcs` will be the generated JS output files, `data`
-  will contain the transitive data, `deps` will contain necessary libraries, and
-  `no_closure_library` will be `False`.
-
-### Arguments
-
-- **name:** ([Name]; required) A unique name for this rule.
-
-- **srcs:** (List of [labels]; required) A list of `.soy` source files that
-  represent this library.
-
-- **data:** (List of [labels]; optional) Runfiles directly referenced by Soy
-  sources in this rule. For example, if the template has an `<img src=foo.png>`
-  tag, then the data attribute of its rule should be set to `["foo.png"]` so the
-  image is available in the web server runfiles.
-
-- **deps:** (List of [labels]; optional) List of [closure_js_library],
-  [closure_js_template_library] and [closure_js_proto_library] targets which
-  define symbols referenced by the template.
-
-- **globals:** (List of [labels]; optional) List of text files containing symbol
-  definitions that are only considered at compile-time. For example, this file
-  might look as follows:
-
-      com.foo.bar.Debug.PRODUCTION = 0
-      com.foo.bar.Debug.DEBUG = 1
-      com.foo.bar.Debug.RAW = 2
-
-- **plugin_modules:** (List of [labels]; optional; default is `[]`) Passed along
-  verbatim to the SoyToJsSrcCompiler above.
-
-- **should_generate_js_doc:** (Boolean; optional; default is `True`) Passed
-  along verbatim to the SoyToJsSrcCompiler above.
-
-- **should_generate_soy_msg_defs:** (Boolean; optional; default is `False`)
-  Passed along verbatim to the SoyToJsSrcCompiler above.
-
-- **bidi_global_dir:** (Integer; optional; default is `1`)
-  Passed along verbatim to the SoyToJsSrcCompiler above.
-  Valid values are 1 (LTR) or -1 (RTL).
-
-- **soy_msgs_are_external:** (Boolean; optional; default is `False`) Passed
-  along verbatim to the SoyToJsSrcCompiler above.
-
-- **defs:** (List of strings; optional) Passed along verbatim to the
-  SoyToJsSrcCompiler above.
-
-## closure\_java\_template\_library
-
-```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_java_template_library")
-closure_java_template_library(name, srcs, data, deps, java_package)
-```
-
-Compiles Closure templates to Java source files.
-
-This rule is necessary in order to serve Closure templates from a Java backend.
-
-Unlike [closure_js_template_library], globals are not specified by this rule.
-They get added at runtime by your Java code when serving templates.
-
-This rule pulls in a transitive dependency on Guava, Guice, and ICU4J.
-
-The documentation on using Closure Templates can be found
-[here][Closure Templates].
-
-For additional help on using some of these attributes, please see the output of
-the following:
-
-    bazel run @com_google_template_soy//:SoyParseInfoGenerator -- --help
-
-#### Implicit Output Targets
-
-- SrcSoyInfo.java: A separate Java source file is generated for each file
-  listed under `srcs`. The filename will be the same as the template, converted
-  to upper camel case, with a `SoyInfo.java` suffix. For example `foo_bar.soy`
-  would become `FooBarSoyInfo.java`.
-
-#### Rule Polymorphism
-
-This rule can be referenced as though it were the following:
-
-- [filegroup]: `srcs` will be the compiled jar file and `data` will contain all
-  transitive data.
-
-- [java_library]: `srcs` will be the generated Java source files, and `data`
-  will contain the transitive data.
-
-### Arguments
-
-- **name:** ([Name]; required) A unique name for this rule.
-
-- **srcs:** (List of [labels]; required) A list of `.soy` source files that
-  represent this library.
-
-- **data:** (List of [labels]; optional) Runfiles directly referenced by Soy
-  sources in this rule. For example, if the template has an `<img src=foo.png>`
-  tag, then the data attribute of its rule should be set to `["foo.png"]` so the
-  image is available in the web server runfiles.
-
-- **deps:** (List of [labels]; optional) Soy files to parse but not to generate
-  outputs for.
-
-- **java_package:** (List of [labels]; required) The package for the Java files
-  that are generated, e.g. `"com.foo.soy"`.
-
-
-## closure\_py\_template\_library
-
-TODO
-
-
 ## closure\_css\_library
 
 ```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_css_library")
+load("@rules_closure//closure:defs.bzl", "closure_css_library")
 closure_css_library(name, srcs, data, deps)
 ```
 
@@ -665,8 +453,7 @@ This rule does not compile your stylesheets; it is used in conjunction with
 
 This rule should be referenced by any [closure_js_library] rule whose sources
 contain a `goog.getCssName('foo')` call if `foo` is a CSS class name defined by
-this rule. The same concept applies to [closure_js_template_library] rules that
-contain `{css('foo')}` expressions.
+this rule.
 
 #### Rule Polymorphism
 
@@ -718,7 +505,7 @@ This rule can be referenced as though it were the following:
 ## closure\_css\_binary
 
 ```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_css_binary")
+load("@rules_closure//closure:defs.bzl", "closure_css_binary")
 closure_css_binary(name, deps, renaming, debug, defs)
 ```
 
@@ -783,10 +570,6 @@ This rule can be referenced as though it were the following:
   target, so the build system can verify (at compile time) that your CSS and
   JS binaries are both being compiled in a harmonious way.
 
-  You'll also need update your templates to say `{css('foo-bar')}` in place of
-  class names. The [closure_js_template_library] must also depend on the
-  appropriate CSS library.
-
 - **debug:** (Boolean; optional; default is `False`) Enables debug mode, which
   causes the compiled stylesheet to be pretty printed. If `renaming = True` then
   class names will be renamed, but still readable to humans.
@@ -821,95 +604,13 @@ This rule can be referenced as though it were the following:
 
 - **defs:** (List of strings; optional) Specifies additional flags to be passed
   to the Closure Stylesheets compiler. To see what flags are available, run:
-  `bazel run @com_google_closure_stylesheets//:ClosureCommandLineCompiler -- --help`
+  `bazel run //closure/stylesheets:ClosureCommandLineCompiler -- --help`
 
-
-## closure\_js\_proto\_library
-
-```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_proto_library")
-closure_js_proto_library(name, srcs, add_require_for_enums, binary,
-                         import_style)
-```
-
-Defines a set of Protocol Buffer files.
-
-#### Documentation
-
-- [Protocol Buffers] GitHub project
-- [Protobuf JavaScript][protobuf-js]
-- [Generator Options][protobuf-generator]
-
-#### Implicit Output Targets
-
-- *name*.js: A generated protocol buffer JavaScript library.
-
-- *name*.descriptor: A protoc FileDescriptorsSet representation of the .proto
-  files.
-
-#### Rule Polymorphism
-
-This rule can be referenced as though it were the following:
-
-- [filegroup]: `srcs` will be empty and `data` will contain all transitive JS
-  sources and data.
-
-- [closure_js_library]: `srcs` will be the generated JS output files, `data`
-  will contain the transitive data, and `deps` will contain necessary libraries.
-
-### Arguments
-
-- **name:** ([Name]; required) A unique name for this rule. Convention states
-  that such rules be named `foo_proto`.
-
-- **srcs:** (List of [labels]; required) A list of `.proto` source files that
-  represent this library.
-
-- **add_require_for_enums:** (Boolean; optional; default is `False`) Add a
-  `goog.require()` call for each enum type used. If false, a forward
-  declaration with `goog.forwardDeclare` is produced instead.
-
-- **binary:** (Boolean; optional; default is `True`) Enable binary-format
-  support.
-
-- **import_style:** (String; optional; default is `IMPORT_CLOSURE`) Specifies
-  the type of imports that should be used. Valid values are:
-
-  - `IMPORT_CLOSURE`    // goog.require()
-  - `IMPORT_COMMONJS`   // require()
-  - `IMPORT_BROWSER`    // no import statements
-  - `IMPORT_ES6`        // import { member } from ''
-
-
-## closure\_proto\_library
-
-```starlark
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_proto_library")
-closure_proto_library(name, deps)
-```
-
-`closure_proto_library` generates JS code from `.proto` files.
-
-`deps` must point to [proto_library] rules.
-
-#### Rule Polymorphism
-
-This rule can be referenced as though it were the following:
-
-- [closure_js_library]: `srcs` will be the generated JS files,
-  and `deps` will contain necessary libraries.
-
-- **name:** ([Name]; required) A unique name for this rule. Convention states
-  that such rules be named `*_closure_proto`.
-
-- **deps:** (List of [labels]; required) The list of [proto_library] rules
-  to generate JS code for.
 
 [Bazel]: http://bazel.build/
 [Closure Compiler]: https://developers.google.com/closure/compiler/
 [Closure Library]: https://developers.google.com/closure/library/
 [Closure Stylesheets]: https://github.com/google/closure-stylesheets
-[Closure Templates]: https://developers.google.com/closure/templates/
 [Closure Tools]: https://developers.google.com/closure/
 [Closure coding conventions]: https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/ClosureCodingConvention.java
 [ECMASCRIPT6]: http://es6-features.org/
@@ -919,7 +620,6 @@ This rule can be referenced as though it were the following:
 [Name]: https://docs.bazel.build/versions/master/build-ref.html#name
 [PhantomJS]: http://phantomjs.org/
 [ProcessEs6Modules]: https://github.com/google/closure-compiler/blob/1281ed9ded137eaf578bb65a588850bf13f38aa4/src/com/google/javascript/jscomp/ProcessEs6Modules.java
-[Protocol Buffers]: https://github.com/google/protobuf
 [acyclic]: https://en.wikipedia.org/wiki/Directed_acyclic_graph
 [asserts]: https://github.com/google/closure-library/blob/master/closure/goog/testing/asserts.js#L1308
 [base.js]: https://github.com/google/closure-library/blob/master/closure/goog/base.js
@@ -928,14 +628,9 @@ This rule can be referenced as though it were the following:
 [closure_css_binary]: #closure_css_binary
 [closure_css_library]: #closure_css_library
 [closure_grpc_web_library]: https://github.com/grpc/grpc-web/blob/9b7b2d5411c486aa646ba2491cfd894d5352775b/bazel/closure_grpc_web_library.bzl#L149
-[closure_java_template_library]: #closure_java_template_library
 [closure_js_binary]: #closure_js_binary
 [closure_js_library]: #closure_js_library
-[closure_js_proto_library]: #closure_js_proto_library
-[closure_js_template_library]: #closure_js_template_library
 [closure_js_test]: #closure_js_test
-[closure_proto_library]: #closure_proto_library
-[closure_py_template_library]: #closure_py_template_library
 [coffeescript]: http://coffeescript.org/
 [compiler-issue]: https://github.com/google/closure-compiler/issues/new
 [css-sourcemap]: https://developer.chrome.com/devtools/docs/css-preprocessors
@@ -950,8 +645,3 @@ This rule can be referenced as though it were the following:
 [output-wrapper-faq]: https://github.com/google/closure-compiler/wiki/FAQ#when-using-advanced-optimizations-closure-compiler-adds-new-variables-to-the-global-scope-how-do-i-make-sure-my-variables-dont-collide-with-other-scripts-on-the-page
 [phantomjs-bug]: https://github.com/ariya/phantomjs/issues/14028
 [phantomjs_test]: #phantomjs_test
-[proto_library]: https://docs.bazel.build/versions/master/be/protocol-buffer.html#proto_library
-[protobuf-generator]: https://github.com/google/protobuf/blob/master/src/google/protobuf/compiler/js/js_generator.h
-[protobuf-js]: https://github.com/google/protobuf/tree/master/js
-[repositories.bzl]: https://github.com/bazelbuild/rules_closure/tree/master/closure/repositories.bzl
-[verbose]: https://github.com/google/closure-library/blob/master/closure/goog/html/safehtml.js

@@ -324,7 +324,7 @@ goog.testing.TestRunner.prototype.execute = function() {
         'setStrict() method, or G_testRunner.setStrict()');
   }
 
-  this.testCase.addCompletedCallback(goog.bind(this.onComplete_, this));
+  this.testCase.addCompletedCallback(this.onComplete_.bind(this));
   if (goog.testing.TestRunner.shouldUsePromises_(this.testCase)) {
     this.testCase.runTestsReturningPromise();
   } else {
@@ -379,11 +379,11 @@ goog.testing.TestRunner.prototype.onComplete_ = function() {
   runAgainLink.style.fontSize = 'small';
   runAgainLink.style.marginBottom = '16px';
   runAgainLink.href = '';
-  runAgainLink.onclick = goog.bind(function() {
+  runAgainLink.onclick = (function() {
     'use strict';
     this.execute();
     return false;
-  }, this);
+  }).bind(this);
   runAgainLink.textContent = 'Run again without reloading';
   this.logEl_.appendChild(runAgainLink);
 };

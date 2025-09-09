@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-licenses(["notice"])
-
-load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@rules_java//java:defs.bzl", "java_binary", "java_library", "java_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+licenses(["notice"])
 
 java_library(
     name = "server",
@@ -27,10 +27,11 @@ java_library(
         "//java/io/bazel/rules/closure/http",
         "//java/io/bazel/rules/closure/http/filter",
         "//java/io/bazel/rules/closure/webfiles:build_info_java_proto",
-        "@com_google_code_findbugs_jsr305",
-        "@com_google_dagger",
-        "@com_google_guava",
         "@com_google_protobuf//:protobuf_java",
+        "@google_bazel_common//third_party/java/dagger",
+        "@google_bazel_common//third_party/java/guava",
+        "@google_bazel_common//third_party/java/jsr305_annotations",
+        "@google_bazel_common//third_party/java/jsr330_inject",
     ],
 )
 

@@ -64,6 +64,7 @@ import javax.annotation.WillNotClose;
  * that can harm the ability of Bazel to cache build artifacts. All timestamps within the zip are
  * set to a hard coded value.
  */
+@SuppressWarnings("BetaApi")
 public final class WebfilesWriter implements Closeable {
 
   private static final FileTime EPOCH = FileTime.fromMillis(472176000000L);

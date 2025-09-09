@@ -16,12 +16,20 @@ load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
 load("//closure/testing:closure_js_test.bzl", "closure_js_test")
 
 closure_js_library(
+    name = "string",
+    srcs = [
+        "string.js",
+    ],
+    suppress = ["useOfGoogProvide"],
+)
+
+closure_js_library(
     name = "person",
     srcs = [
         "person.js",
     ],
     deps = [
-        "@com_google_javascript_closure_library//closure/goog/string",
+        ":string",
     ],
 )
 

@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("//closure/compiler:closure_base_js_library.bzl", "closure_base_js_library")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("//closure/compiler:closure_base_js_library.bzl", "closure_base_js_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -21,16 +21,10 @@ licenses(["notice"])
 
 exports_files(["unusable_type.js"])
 
-sh_binary(
-    name = "gensrcjar",
-    srcs = ["gensrcjar.sh"],
-)
-
 closure_base_js_library(
     name = "base_lib",
-    srcs = [
-        "@com_google_javascript_closure_library//closure/goog:base.js",
-    ],
+    # TODO(goktug): replace with base.js from compiler when included in the artifact.
+    srcs = ["base.js"],
 )
 
 bzl_library(

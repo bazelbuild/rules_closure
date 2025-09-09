@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-licenses(["notice"])
-
 load("@rules_java//java:defs.bzl", "java_test")
+
+licenses(["notice"])
 
 java_test(
     name = "DiagnosticsTest",
@@ -22,8 +22,8 @@ java_test(
     srcs = ["DiagnosticsTest.java"],
     deps = [
         "//java/com/google/javascript/jscomp",
-        "@com_google_truth",
-        "@junit",
+        "@google_bazel_common//third_party/java/junit",
+        "@google_bazel_common//third_party/java/truth",
     ],
 )
 
@@ -33,8 +33,8 @@ java_test(
     srcs = ["JsCheckerTest.java"],
     deps = [
         "//java/com/google/javascript/jscomp",
-        "@com_google_guava_testlib",
-        "@junit",
+        "@google_bazel_common//third_party/java/guava:testlib",
+        "@google_bazel_common//third_party/java/junit",
     ],
 )
 
@@ -44,7 +44,7 @@ java_test(
     srcs = ["JsCompilerTest.java"],
     deps = [
         "//java/com/google/javascript/jscomp",
-        "@com_google_guava_testlib",
-        "@junit",
+        "@google_bazel_common//third_party/java/guava:testlib",
+        "@google_bazel_common//third_party/java/junit",
     ],
 )

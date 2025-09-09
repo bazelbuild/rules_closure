@@ -12,22 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-licenses(["notice"])
-
 load("@rules_java//java:defs.bzl", "java_test")
+
+licenses(["notice"])
 
 java_test(
     name = "HttpTestSuite",
     size = "small",
     srcs = glob(["*.java"]),
     javacopts = ["-Xep:FutureReturnValueIgnored:OFF"],
+    test_class = "io.bazel.rules.closure.http.HttpTestSuite",
     deps = [
         "//java/io/bazel/rules/closure/http",
         "//java/io/bazel/rules/closure/http/filter",
-        "@com_google_dagger_producers",
-        "@com_google_guava",
-        "@com_google_guava_testlib",
-        "@com_google_truth",
-        "@junit",
+        "@google_bazel_common//third_party/java/dagger",
+        "@google_bazel_common//third_party/java/guava",
+        "@google_bazel_common//third_party/java/guava:testlib",
+        "@google_bazel_common//third_party/java/junit",
+        "@google_bazel_common//third_party/java/truth",
+        "@maven//:com_google_dagger_dagger_producers",
     ],
 )

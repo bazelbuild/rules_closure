@@ -12,24 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-licenses(["notice"])
-
 load("@rules_java//java:defs.bzl", "java_test")
+
+licenses(["notice"])
 
 java_test(
     name = "WorkerTestSuite",
     size = "small",
     srcs = glob(["*.java"]),
+    test_class = "io.bazel.rules.closure.worker.WorkerTestSuite",
     deps = [
         "//java/io/bazel/rules/closure/worker",
         "//java/io/bazel/rules/closure/worker:worker_protocol_java_proto",
-        "@com_google_code_findbugs_jsr305",
-        "@com_google_dagger",
-        "@com_google_guava",
-        "@com_google_jimfs",
         "@com_google_protobuf//:protobuf_java",
-        "@com_google_truth",
-        "@junit",
-        "@org_mockito_core",
+        "@google_bazel_common//third_party/java/dagger",
+        "@google_bazel_common//third_party/java/guava",
+        "@google_bazel_common//third_party/java/jsr305_annotations",
+        "@google_bazel_common//third_party/java/junit",
+        "@google_bazel_common//third_party/java/mockito",
+        "@google_bazel_common//third_party/java/truth",
+        "@maven//:com_google_jimfs_jimfs",
     ],
 )
