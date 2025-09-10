@@ -32,5 +32,6 @@ java_test(
         "@google_bazel_common//third_party/java/mockito",
         "@google_bazel_common//third_party/java/truth",
         "@maven//:com_google_jimfs_jimfs",
+        "@maven//:javax_inject_javax_inject",
     ],
 )

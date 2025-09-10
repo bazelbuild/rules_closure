@@ -31,5 +31,6 @@ java_test(
         "@google_bazel_common//third_party/java/junit",
         "@google_bazel_common//third_party/java/truth",
         "@maven//:com_google_dagger_dagger_producers",
+        "@maven//:javax_inject_javax_inject",
     ],
 )
