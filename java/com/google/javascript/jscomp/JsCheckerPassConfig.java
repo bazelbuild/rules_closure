@@ -102,11 +102,7 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
     return PassFactory.builder()
         .setName("scopedAliases")
         .setInternalFactory(
-            (compiler) ->
-                new ScopedAliases(
-                    compiler,
-                    /*preprocessorSymbolTable=*/ null,
-                    compiler.getOptions().getAliasTransformationHandler()))
+            (compiler) -> ScopedAliases.builder(compiler).build())
         .build();
   }
 
