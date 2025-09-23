@@ -28,10 +28,10 @@ java_test(
         "@google_bazel_common//third_party/java/dagger",
         "@google_bazel_common//third_party/java/guava",
         "@google_bazel_common//third_party/java/jsr305_annotations",
+        "@google_bazel_common//third_party/java/jsr330_inject",
         "@google_bazel_common//third_party/java/junit",
         "@google_bazel_common//third_party/java/mockito",
         "@google_bazel_common//third_party/java/truth",
         "@maven//:com_google_jimfs_jimfs",
-        "@maven//:javax_inject_javax_inject",
     ],
 )

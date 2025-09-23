@@ -31,7 +31,7 @@ java_library(
         "@google_bazel_common//third_party/java/auto:value",
         "@google_bazel_common//third_party/java/dagger",
         "@google_bazel_common//third_party/java/guava",
-        "@maven//:javax_inject_javax_inject",
+        "@google_bazel_common//third_party/java/jsr330_inject",
     ],
 )
 

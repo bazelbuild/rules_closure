@@ -23,7 +23,7 @@ java_library(
     deps = [
         "@google_bazel_common//third_party/java/dagger",
         "@google_bazel_common//third_party/java/guava",
+        "@google_bazel_common//third_party/java/jsr330_inject",
         "@maven//:com_google_closure_stylesheets_closure_stylesheets",
-        "@maven//:javax_inject_javax_inject",
     ],
 )
