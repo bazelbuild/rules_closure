@@ -31,6 +31,6 @@ java_binary(
         "@maven//:org_seleniumhq_selenium_selenium_api",
         "@maven//:org_seleniumhq_selenium_selenium_remote_driver",
         "@maven//:org_seleniumhq_selenium_selenium_support",
-        "@io_rules_web_testing_java//java/com/google/testing/web",
+        "@rules_web_testing_java//java/com/google/testing/web",
     ],
 )
