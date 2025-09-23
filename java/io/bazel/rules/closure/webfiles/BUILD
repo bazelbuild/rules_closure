@@ -19,9 +19,7 @@ licenses(["notice"])
 
 java_library(
     name = "webfiles",
-    srcs = glob(
-        ["*.java"],
-    ),
+    srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         ":build_info_java_proto",
