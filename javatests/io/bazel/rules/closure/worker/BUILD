@@ -24,7 +24,7 @@ java_test(
     deps = [
         "//java/io/bazel/rules/closure/worker",
         "//java/io/bazel/rules/closure/worker:worker_protocol_java_proto",
-        "@com_google_protobuf//:protobuf_java",
+        "@protobuf//:protobuf_java",
         "@google_bazel_common//third_party/java/dagger",
         "@google_bazel_common//third_party/java/guava",
         "@google_bazel_common//third_party/java/jsr305_annotations",

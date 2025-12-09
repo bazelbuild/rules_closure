@@ -27,7 +27,7 @@ java_library(
         "//java/io/bazel/rules/closure/http",
         "//java/io/bazel/rules/closure/http/filter",
         "//java/io/bazel/rules/closure/webfiles:build_info_java_proto",
-        "@com_google_protobuf//:protobuf_java",
+        "@protobuf//:protobuf_java",
         "@google_bazel_common//third_party/java/dagger",
         "@google_bazel_common//third_party/java/guava",
         "@google_bazel_common//third_party/java/jsr305_annotations",

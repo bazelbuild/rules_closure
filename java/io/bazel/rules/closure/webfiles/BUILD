@@ -27,7 +27,7 @@ java_library(
         "//java/io/bazel/rules/closure:webpath",
         "//java/io/bazel/rules/closure/webfiles/compiler",
         "//java/io/bazel/rules/closure/worker",
-        "@com_google_protobuf//:protobuf_java",
+        "@protobuf//:protobuf_java",
         "@google_bazel_common//third_party/java/auto:value",
         "@google_bazel_common//third_party/java/dagger",
         "@google_bazel_common//third_party/java/error_prone:annotations",

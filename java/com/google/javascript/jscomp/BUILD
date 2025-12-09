@@ -43,7 +43,7 @@ java_library(
         "//java/io/bazel/rules/closure:build_info_java_proto",
         "//java/io/bazel/rules/closure:webpath",
         "//java/io/bazel/rules/closure/worker",
-        "@com_google_protobuf//:protobuf_java",
+        "@protobuf//:protobuf_java",
         "@google_bazel_common//third_party/java/dagger",
         "@google_bazel_common//third_party/java/guava",
         "@google_bazel_common//third_party/java/jsr330_inject",
