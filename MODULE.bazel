@@ -7,7 +7,6 @@ bazel_dep(
     name = "bazel_skylib",
     version = "1.7.1",
 )
-
 bazel_dep(
     name = "platforms",
     version = "0.0.5",
@@ -18,22 +17,18 @@ bazel_dep(
     name = "rules_proto",
     version = "7.0.2",
 )
-
 bazel_dep(
     name = "protobuf",
     version = "31.0",
 )
-
 bazel_dep(
     name = "google_bazel_common",
     version = "0.0.1",
 )
-
 bazel_dep(
     name = "rules_webtesting",
     version = "0.4.1",
 )
-
 bazel_dep(
     name = "rules_web_testing_java",
     version = "0.4.1",
@@ -44,15 +39,14 @@ bazel_dep(
     name = "rules_java",
     version = "8.6.1",
 )
-
 bazel_dep(
     name = "rules_jvm_external",
     version = "6.6",
 )
 
 maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
-
 maven.install(
+    name = "rules_closure_deps",
     artifacts = [
         "args4j:args4j:2.33",
         "com.google.closure-stylesheets:closure-stylesheets:1.5.0",
@@ -64,10 +58,12 @@ maven.install(
         "org.seleniumhq.selenium:selenium-api:4.27.0",
         "org.seleniumhq.selenium:selenium-support:4.27.0",
     ],
+    lock_file = "//:maven_install.json",
 )
 
 # Using maven.artifact here because the version number vxxxxx cannot parsed correctly.
 maven.artifact(
+    name = "rules_closure_deps",
     artifact = "closure-compiler",
     group = "com.google.javascript",
     version = "v20250402",
@@ -75,11 +71,11 @@ maven.artifact(
 
 # javacc:javacc was not updated since 2008 and relocated to net.java.dev.javacc
 maven.override(
+    name = "rules_closure_deps",
     coordinates = "javacc:javacc",
-    target = "@maven//:net_java_dev_javacc_javacc",
+    target = "@rules_closure_deps//:net_java_dev_javacc_javacc",
 )
-
-use_repo(maven, "maven")
+use_repo(maven, "rules_closure_deps")
 
 ##### Python dependencies #####
 bazel_dep(
