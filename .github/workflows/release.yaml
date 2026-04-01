@@ -86,13 +86,12 @@ jobs:
       # Permissions for publishing to bcr.
       id-token: write
       attestations: write
-    uses: bazel-contrib/.github/.github/workflows/release_ruleset.yaml@v7.2.3
+    uses: bazel-contrib/.github/.github/workflows/release_ruleset.yaml@v7.4.0
     with:
       prerelease: false
       release_files: rules_closure-*.tar.gz
       tag_name: ${{ inputs.version }}
-      # TODO(dramaix): contribute upstream to allow skipping test.
-      bazel_test_command: "bazel build"
+      bazel_test_command: "bazel test ..."
 
   publish_to_bcr:
     needs: release
