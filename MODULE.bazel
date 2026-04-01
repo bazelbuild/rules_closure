@@ -39,6 +39,14 @@ bazel_dep(
     version = "0.4.1",
 )
 
+# dep of rules_webtesting. rules_webtesting has been archived and we cannot update it directly anymore.
+single_version_override(
+    module_name = "rules_go",
+    version = "0.60.0",
+)
+
+bazel_dep(name = "rules_shell", version = "0.3.0")
+
 ##### Java dependencies #####
 bazel_dep(
     name = "rules_java",
@@ -70,7 +78,7 @@ maven.install(
 maven.artifact(
     artifact = "closure-compiler",
     group = "com.google.javascript",
-    version = "v20250402",
+    version = "v20260330",
 )
 
 # javacc:javacc was not updated since 2008 and relocated to net.java.dev.javacc
@@ -159,3 +167,4 @@ platform_http_file(
         "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip",
     ],
 )
+

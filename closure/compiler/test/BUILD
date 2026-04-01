@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
+load("//closure/private:file_test.bzl", "file_test")
 
 package(default_testonly = True)
 
 licenses(["notice"])
-
-load("//closure/private:file_test.bzl", "file_test")
-load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
 
 closure_js_library(
     name = "hello_lib",

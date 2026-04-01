@@ -56,7 +56,7 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
   }
 
   @Override
-  protected PassListBuilder getOptimizations(PassConfig.OptimizationPasses optimizationPasses) {
+  protected PassListBuilder getOptimizations() {
     return new PassListBuilder(options);
   }
 
@@ -101,8 +101,7 @@ final class JsCheckerPassConfig extends PassConfig.PassConfigDelegate {
   private PassFactory scopedAliases() {
     return PassFactory.builder()
         .setName("scopedAliases")
-        .setInternalFactory(
-            (compiler) -> ScopedAliases.builder(compiler).build())
+        .setInternalFactory((compiler) -> ScopedAliases.builder(compiler).build())
         .build();
   }
 
