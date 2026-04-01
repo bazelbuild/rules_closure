@@ -16,8 +16,6 @@
 
 package io.bazel.rules.closure.testing;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-
 import com.google.testing.web.WebTest;
 import java.time.Duration;
 import java.util.logging.Level;
@@ -42,7 +40,7 @@ public class TestDriver {
   }
 
   public boolean run() {
-    driver.manage().timeouts().setScriptTimeout(TEST_TIMEOUT, SECONDS);
+    driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(TEST_TIMEOUT));
     logger.info("WebDriver is running on: " + this.htmlURL);
     driver.get(this.htmlURL);
 
