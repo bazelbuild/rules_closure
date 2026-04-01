@@ -39,8 +39,6 @@ bazel_dep(
     version = "0.4.1",
 )
 
-bazel_dep(name = "rules_shell", version = "0.3.0")
-
 ##### Java dependencies #####
 bazel_dep(
     name = "rules_java",
