@@ -70,7 +70,7 @@ maven.install(
 maven.artifact(
     artifact = "closure-compiler",
     group = "com.google.javascript",
-    version = "v20250402",
+    version = "v20260330",
 )
 
 # javacc:javacc was not updated since 2008 and relocated to net.java.dev.javacc
@@ -159,3 +159,4 @@ platform_http_file(
         "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip",
     ],
 )
+
