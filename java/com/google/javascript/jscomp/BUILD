@@ -43,10 +43,10 @@ java_library(
         "//java/io/bazel/rules/closure:build_info_java_proto",
         "//java/io/bazel/rules/closure:webpath",
         "//java/io/bazel/rules/closure/worker",
-        "@protobuf//:protobuf_java",
         "@google_bazel_common//third_party/java/dagger",
         "@google_bazel_common//third_party/java/guava",
         "@google_bazel_common//third_party/java/jsr330_inject",
-        "@maven//:args4j_args4j",
+        "@protobuf//:protobuf_java",
+        "@rules_closure_deps//:args4j_args4j",
     ],
 )

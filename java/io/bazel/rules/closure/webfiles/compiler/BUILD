@@ -24,6 +24,6 @@ java_library(
         "@google_bazel_common//third_party/java/dagger",
         "@google_bazel_common//third_party/java/guava",
         "@google_bazel_common//third_party/java/jsr330_inject",
-        "@maven//:com_google_closure_stylesheets_closure_stylesheets",
+        "@rules_closure_deps//:com_google_closure_stylesheets_closure_stylesheets",
     ],
 )
