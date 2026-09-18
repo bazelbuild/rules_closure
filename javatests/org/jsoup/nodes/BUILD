@@ -25,6 +25,6 @@ java_test(
         "@google_bazel_common//third_party/java/guava",
         "@google_bazel_common//third_party/java/junit",
         "@google_bazel_common//third_party/java/truth",
-        "@maven//:org_jsoup_jsoup",
+        "@rules_closure_deps//:org_jsoup_jsoup",
     ],
 )

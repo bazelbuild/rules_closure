@@ -24,7 +24,6 @@ java_test(
     deps = [
         "//java/io/bazel/rules/closure/worker",
         "//java/io/bazel/rules/closure/worker:worker_protocol_java_proto",
-        "@protobuf//:protobuf_java",
         "@google_bazel_common//third_party/java/dagger",
         "@google_bazel_common//third_party/java/guava",
         "@google_bazel_common//third_party/java/jsr305_annotations",
@@ -32,6 +31,7 @@ java_test(
         "@google_bazel_common//third_party/java/junit",
         "@google_bazel_common//third_party/java/mockito",
         "@google_bazel_common//third_party/java/truth",
-        "@maven//:com_google_jimfs_jimfs",
+        "@protobuf//:protobuf_java",
+        "@rules_closure_deps//:com_google_jimfs_jimfs",
     ],
 )
