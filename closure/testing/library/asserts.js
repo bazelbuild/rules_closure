@@ -1739,7 +1739,7 @@ goog.testing.asserts.isIterable_ = function(obj) {
 
 /**
  * @param {!Iterable} iterable
- * @return {!Iterator} An iterator for obj.
+ * @return {!IteratorLike} An iterator for obj.
  * @throws {!goog.testing.JsUnitException} If the given object is not iterable.
  * @private
  */
