@@ -28,9 +28,11 @@ java_binary(
     deps = [
         "//java/io/bazel/rules/closure/webfiles/server",
         "@google_bazel_common//third_party/java/guava",
+        "@maven//:args4j_args4j",
         "@maven//:org_seleniumhq_selenium_selenium_api",
+        "@maven//:org_seleniumhq_selenium_selenium_chrome_driver",
+        "@maven//:org_seleniumhq_selenium_selenium_chromium_driver",
         "@maven//:org_seleniumhq_selenium_selenium_remote_driver",
         "@maven//:org_seleniumhq_selenium_selenium_support",
-        "@rules_web_testing_java//java/com/google/testing/web",
     ],
 )

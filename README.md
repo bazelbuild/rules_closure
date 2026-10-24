@@ -66,9 +66,6 @@ Then you add the following to your MODULE.bazel file:
 ```bzl
 bazel_dep(name = "rules_closure", version = "0.15.0")
 ```
-The root module has to declare the same override for rules_webtesting,
-rules_scala, and google_bazel_common temporarily until they are registered
-in BCR.
 
 You are not required to install the Closure Tools, PhantomJS, or anything else
 for that matter; they will be fetched automatically by Bazel.
@@ -323,7 +320,7 @@ closure_js_binary(
 
 ```starlark
 load("@rules_closure//closure:defs.bzl", "closure_js_test")
-closure_js_test(name, srcs, data, deps, css, html, language, suppress,
+closure_js_test(name, srcs, data, deps, browsers, css, html, language, suppress,
                 compilation_level, entry_points, defs)
 ```
 
@@ -371,6 +368,13 @@ This rule can be referenced as though it were the following:
 
 - **deps:** (List of [labels]; optional) Direct dependency list passed along to
   [closure_js_library].
+
+- **browsers:** (List of [labels]; optional) List of browsers on which to run the
+  tests (e.g., `["@rules_browsers//browsers/chromium:chromium"]` or a
+  `custom_browser` target). Supported browser definitions are provided by
+  [rules_browsers]; see its [usage documentation][rules_browsers-usage] for how
+  to select and pin specific browser versions in `MODULE.bazel`. If omitted,
+  defaults to running in [phantomjs_test].
 
 - **data:** (List of [labels]; optional) Passed to [closure_js_library].
 
@@ -645,3 +649,5 @@ This rule can be referenced as though it were the following:
 [output-wrapper-faq]: https://github.com/google/closure-compiler/wiki/FAQ#when-using-advanced-optimizations-closure-compiler-adds-new-variables-to-the-global-scope-how-do-i-make-sure-my-variables-dont-collide-with-other-scripts-on-the-page
 [phantomjs-bug]: https://github.com/ariya/phantomjs/issues/14028
 [phantomjs_test]: #phantomjs_test
+[rules_browsers]: https://github.com/devversion/rules_browsers
+[rules_browsers-usage]: https://github.com/devversion/rules_browsers#usage

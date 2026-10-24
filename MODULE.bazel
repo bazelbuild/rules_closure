@@ -30,13 +30,8 @@ bazel_dep(
 )
 
 bazel_dep(
-    name = "rules_webtesting",
-    version = "0.4.1",
-)
-
-bazel_dep(
-    name = "rules_web_testing_java",
-    version = "0.4.1",
+    name = "rules_browsers",
+    version = "0.4.0",
 )
 
 ##### Java dependencies #####
@@ -60,8 +55,10 @@ maven.install(
         "com.google.jimfs:jimfs:1.1",
         "net.java.dev.javacc:javacc:7.0.13",
         "org.jsoup:jsoup:1.16.1",
-        "org.seleniumhq.selenium:selenium-remote-driver:4.27.0",
         "org.seleniumhq.selenium:selenium-api:4.27.0",
+        "org.seleniumhq.selenium:selenium-chrome-driver:4.27.0",
+        "org.seleniumhq.selenium:selenium-chromium-driver:4.27.0",
+        "org.seleniumhq.selenium:selenium-remote-driver:4.27.0",
         "org.seleniumhq.selenium:selenium-support:4.27.0",
     ],
 )

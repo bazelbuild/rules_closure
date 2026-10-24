@@ -16,13 +16,18 @@
 
 package io.bazel.rules.closure.testing;
 
-import com.google.testing.web.WebTest;
+import com.google.common.collect.ImmutableList;
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.FluentWait;
 
 /** The test driver that triggers test running on the browser and collects test results. */
@@ -31,12 +36,42 @@ public class TestDriver {
   private static final long POLL_INTERVAL = 100;
   private static final long TEST_TIMEOUT = 300;
 
-  private WebDriver driver;
-  private String htmlURL;
+  private final WebDriver driver;
+  private final String htmlURL;
 
-  public TestDriver(String htmlURL) {
-    this.driver = new WebTest().newWebDriverSession();
+  public TestDriver(
+      String htmlURL,
+      String browserType,
+      String browserBinary,
+      String webdriverBinary,
+      ImmutableList<String> extraBrowserArgs)
+      throws IOException {
+    this.driver = createWebDriver(browserType, browserBinary, webdriverBinary, extraBrowserArgs);
     this.htmlURL = htmlURL;
+  }
+
+  private static WebDriver createWebDriver(
+      String browserType,
+      String browserBinary,
+      String webdriverBinary,
+      ImmutableList<String> extraBrowserArgs)
+      throws IOException {
+    switch (browserType) {
+      case "chrome":
+        ChromeDriverService service =
+            new ChromeDriverService.Builder()
+                .usingDriverExecutable(new File(webdriverBinary).getCanonicalFile())
+                .usingAnyFreePort()
+                .build();
+        ChromeOptions options = new ChromeOptions();
+        options.setBinary(new File(browserBinary).getCanonicalFile());
+        options.addArguments(
+            "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
+        options.addArguments(extraBrowserArgs);
+        return new ChromeDriver(service, options);
+      default:
+        throw new IllegalArgumentException("Unsupported browser type: " + browserType);
+    }
   }
 
   public boolean run() {
