@@ -32,6 +32,7 @@ java_binary(
         "@maven//:org_seleniumhq_selenium_selenium_api",
         "@maven//:org_seleniumhq_selenium_selenium_chrome_driver",
         "@maven//:org_seleniumhq_selenium_selenium_chromium_driver",
+        "@maven//:org_seleniumhq_selenium_selenium_json",
         "@maven//:org_seleniumhq_selenium_selenium_remote_driver",
         "@maven//:org_seleniumhq_selenium_selenium_support",
     ],

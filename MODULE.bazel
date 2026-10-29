@@ -58,6 +58,7 @@ maven.install(
         "org.seleniumhq.selenium:selenium-api:4.27.0",
         "org.seleniumhq.selenium:selenium-chrome-driver:4.27.0",
         "org.seleniumhq.selenium:selenium-chromium-driver:4.27.0",
+        "org.seleniumhq.selenium:selenium-json:4.27.0",
         "org.seleniumhq.selenium:selenium-remote-driver:4.27.0",
         "org.seleniumhq.selenium:selenium-support:4.27.0",
     ],

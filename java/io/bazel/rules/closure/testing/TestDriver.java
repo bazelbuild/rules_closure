@@ -16,18 +16,23 @@
 
 package io.bazel.rules.closure.testing;
 
-import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.json.Json;
 import org.openqa.selenium.support.ui.FluentWait;
 
 /** The test driver that triggers test running on the browser and collects test results. */
@@ -44,9 +49,9 @@ public class TestDriver {
       String browserType,
       String browserBinary,
       String webdriverBinary,
-      ImmutableList<String> extraBrowserArgs)
+      String metadataPath)
       throws IOException {
-    this.driver = createWebDriver(browserType, browserBinary, webdriverBinary, extraBrowserArgs);
+    this.driver = createWebDriver(browserType, browserBinary, webdriverBinary, metadataPath);
     this.htmlURL = htmlURL;
   }
 
@@ -54,7 +59,7 @@ public class TestDriver {
       String browserType,
       String browserBinary,
       String webdriverBinary,
-      ImmutableList<String> extraBrowserArgs)
+      String metadataPath)
       throws IOException {
     switch (browserType) {
       case "chrome":
@@ -67,11 +72,31 @@ public class TestDriver {
         options.setBinary(new File(browserBinary).getCanonicalFile());
         options.addArguments(
             "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
-        options.addArguments(extraBrowserArgs);
+        if (metadataPath != null) {
+          options = options.merge(readCapabilities(metadataPath));
+        }
         return new ChromeDriver(service, options);
       default:
         throw new IllegalArgumentException("Unsupported browser type: " + browserType);
     }
+  }
+
+  /**
+   * Reads WebDriver capabilities from a metadata JSON file.
+   *
+   * <p>The metadata JSON format is compatible with {@code rules_webtesting}:
+   * https://github.com/bazelbuild/rules_webtesting/blob/master/go/metadata/metadata.go
+   */
+  private static Capabilities readCapabilities(String metadataPath) throws IOException {
+    Map<String, Object> metadata =
+        new Json().toType(Files.readString(Path.of(metadataPath)), Json.MAP_TYPE);
+    Object capabilities = metadata.get("capabilities");
+    if (capabilities instanceof Map<?, ?>) {
+      @SuppressWarnings("unchecked")
+      Map<String, Object> result = (Map<String, Object>) capabilities;
+      return new MutableCapabilities(result);
+    }
+    return new MutableCapabilities();
   }
 
   public boolean run() {

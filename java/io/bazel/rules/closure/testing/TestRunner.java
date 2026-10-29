@@ -19,8 +19,6 @@ package io.bazel.rules.closure.testing;
 import com.google.common.collect.ImmutableList;
 import com.google.common.net.HostAndPort;
 import io.bazel.rules.closure.webfiles.server.WebfilesServer;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.kohsuke.args4j.Argument;
@@ -55,8 +53,8 @@ class TestRunner {
   @Option(name = "--webdriver_binary", required = true, usage = "Path to the WebDriver binary.")
   private String webdriverBinary;
 
-  @Option(name = "--browser_arg", usage = "Extra CLI flag to pass to the browser.")
-  private List<String> browserArgs = new ArrayList<>();
+  @Option(name = "--metadata", usage = "Path to browser metadata JSON file.")
+  private String metadataPath;
 
   public static void main(String[] args) throws Exception {
     TestRunner runner = new TestRunner();
@@ -90,7 +88,7 @@ class TestRunner {
               browserType,
               browserBinary,
               webdriverBinary,
-              ImmutableList.copyOf(browserArgs));
+              metadataPath);
       allTestsPassed = driver.run();
     } catch (Exception e) {
       logger.log(Level.SEVERE, "Exception during test execution", e);

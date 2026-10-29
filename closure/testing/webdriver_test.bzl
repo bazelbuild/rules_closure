@@ -20,30 +20,41 @@ load("//closure:webfiles/web_library.bzl", "web_library")
 load("//closure/private:defs.bzl", "collect_runfiles")
 
 ClosureBrowserInfo = provider(
-    doc = "Provider for a custom browser with extra CLI arguments.",
+    doc = "Provider for a custom browser with a metadata configuration file.",
     fields = {
         "named_files": "The underlying NamedFilesInfo provider.",
-        "args": "List of extra CLI flags to pass to the browser.",
+        "metadata": "Optional metadata JSON File configuring browser capabilities.",
     },
 )
 
 def _custom_browser_impl(ctx):
+    runfiles = ctx.attr.browser[DefaultInfo].default_runfiles
+    if ctx.file.metadata:
+        runfiles = runfiles.merge(ctx.runfiles(files = [ctx.file.metadata]))
     return [
-        DefaultInfo(runfiles = ctx.attr.browser[DefaultInfo].default_runfiles),
+        DefaultInfo(runfiles = runfiles),
         ClosureBrowserInfo(
             named_files = ctx.attr.browser[NamedFilesInfo],
-            args = ctx.attr.args,
+            metadata = ctx.file.metadata,
         ),
     ]
 
 custom_browser = rule(
     implementation = _custom_browser_impl,
+    doc = "Wraps a rules_browsers browser target with optional WebDriver metadata.",
     attrs = {
         "browser": attr.label(
             mandatory = True,
             providers = [NamedFilesInfo],
         ),
-        "args": attr.string_list(),
+        "metadata": attr.label(
+            allow_single_file = [".json"],
+            doc = (
+                "Optional JSON file configuring browser capabilities. The format is compatible with " +
+                "https://github.com/bazelbuild/rules_webtesting/blob/master/go/metadata/metadata.go " +
+                "(only the 'capabilities' field is read)."
+            ),
+        ),
     },
 )
 
@@ -51,10 +62,10 @@ def _webdriver_test_impl(ctx):
     if ClosureBrowserInfo in ctx.attr.browser:
         info = ctx.attr.browser[ClosureBrowserInfo]
         named = info.named_files.value
-        browser_args = info.args
+        metadata = info.metadata
     else:
         named = ctx.attr.browser[NamedFilesInfo].value
-        browser_args = []
+        metadata = None
 
     if "CHROME-HEADLESS-SHELL" in named and "CHROMEDRIVER" in named:
         browser_type = "chrome"
@@ -76,8 +87,8 @@ def _webdriver_test_impl(ctx):
         "--webdriver_binary",
         shell.quote(webdriver_binary.short_path),
     ]
-    for a in browser_args:
-        cmd_args.extend(["--browser_arg", shell.quote(a)])
+    if metadata:
+        cmd_args.extend(["--metadata", shell.quote(metadata.short_path)])
 
     ctx.actions.write(
         output = ctx.outputs.executable,
