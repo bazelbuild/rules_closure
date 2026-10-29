@@ -285,7 +285,7 @@ function main() {
   var port = Math.floor(Math.random() * (60000 - 32768)) + 32768;
   server = webserver.create();
   server.listen('127.0.0.1:' + port, onRequest);
-  url = 'http://localhost:' + port + VIRTUAL_PAGE;
+  url = 'http://127.0.0.1:' + port + VIRTUAL_PAGE;
   system.stderr.writeLine('Listening ' + url);
 
   // run the web page
