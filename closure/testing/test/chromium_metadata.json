@@ -2,7 +2,8 @@
   "capabilities": {
     "goog:chromeOptions": {
       "args": [
-        "--disable-features=CADisplayLinkInBrowser,CADisplayLinkinGpu"
+        "--disable-features=CADisplayLinkInBrowser,CADisplayLinkinGpu",
+        "--disable-field-trial-config"
       ]
     }
   }
