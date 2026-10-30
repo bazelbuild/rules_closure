@@ -67,6 +67,8 @@ public class TestDriver {
             new ChromeDriverService.Builder()
                 .usingDriverExecutable(new File(webdriverBinary).getCanonicalFile())
                 .usingAnyFreePort()
+                .withLogOutput(System.err)
+                .withVerbose(true)
                 .build();
         ChromeOptions options = new ChromeOptions();
         options.setBinary(new File(browserBinary).getCanonicalFile());

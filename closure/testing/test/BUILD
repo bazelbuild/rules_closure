@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("//closure:defs.bzl", "closure_js_library", "closure_js_test")
+load("//closure:defs.bzl", "closure_js_library", "closure_js_test", "custom_browser")
 
 package(default_testonly = True)
 
@@ -114,15 +114,17 @@ closure_js_test(
 )
 
 # Webtest examples
+custom_browser(
+    name = "chromium",
+    browser = "@rules_browsers//browsers/chromium:chromium",
+    metadata = "chromium_metadata.json",
+)
+
 closure_js_test(
     name = "simple_webtest_test",
     timeout = "short",
     srcs = ["simple_test.js"],
-    browsers = ["@rules_browsers//browsers/chromium:chromium"],
-    tags = [
-        "local",
-        "manual",
-    ],
+    browsers = [":chromium"],
     deps = [
         "//closure/testing/library:asserts",
         "//closure/testing/library:jsunit",
@@ -133,12 +135,8 @@ closure_js_test(
     name = "arithmetic_module_webtest_test",
     timeout = "short",
     srcs = ["arithmetic_module_test.js"],
-    browsers = ["@rules_browsers//browsers/chromium:chromium"],
+    browsers = [":chromium"],
     entry_points = ["goog:arithmetic_module_test"],
-    tags = [
-        "local",
-        "manual",
-    ],
     deps = [
         ":arithmetic_module_lib",
         "//closure/testing/library:asserts",

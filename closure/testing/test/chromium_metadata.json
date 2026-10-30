@@ -1,0 +1,9 @@
+{
+  "capabilities": {
+    "goog:chromeOptions": {
+      "args": [
+        "--disable-features=CADisplayLinkInBrowser"
+      ]
+    }
+  }
+}
