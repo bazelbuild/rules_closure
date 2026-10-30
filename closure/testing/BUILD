@@ -61,7 +61,8 @@ bzl_library(
     srcs = ["webdriver_test.bzl"],
     deps = [
         "//closure:web_library_bzl",
-        "@rules_webtesting//web:web",
+        "//closure/private:defs_bzl",
+        "@bazel_skylib//lib:shell",
     ],
 )
 
