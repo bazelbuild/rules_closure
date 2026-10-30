@@ -23,7 +23,7 @@ load("//closure/private:files_equal_test.bzl", _files_equal_test = "files_equal_
 load("//closure/stylesheets:closure_css_binary.bzl", _closure_css_binary = "closure_css_binary")
 load("//closure/stylesheets:closure_css_library.bzl", _closure_css_library = "closure_css_library")
 load("//closure/testing:closure_js_test.bzl", _closure_js_test = "closure_js_test")
-load("//closure/testing:phantomjs_test.bzl", _phantomjs_test = "phantomjs_test")
+load("//closure/testing:nodejs_test.bzl", _nodejs_test = "nodejs_test")
 load("//closure/testing:webdriver_test.bzl", _custom_browser = "custom_browser")
 
 closure_js_aspect = _closure_js_aspect
@@ -37,7 +37,7 @@ closure_css_binary = _closure_css_binary
 closure_css_library = _closure_css_library
 closure_js_test = _closure_js_test
 custom_browser = _custom_browser
-phantomjs_test = _phantomjs_test
+nodejs_test = _nodejs_test
 filegroup_external = _filegroup_external
 web_library = _web_library
 web_library_external = _web_library_external

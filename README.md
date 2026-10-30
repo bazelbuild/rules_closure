@@ -2,7 +2,7 @@
 
 JavaScript | Stylesheets | Miscellaneous
 --- | --- | ---
-[closure_js_library] | [closure_css_library] | [phantomjs_test]
+[closure_js_library] | [closure_css_library] | [nodejs_test]
 [closure_js_binary] | [closure_css_binary] | |
 [closure_js_test] | |
 
@@ -43,8 +43,8 @@ Closure Rules bundles the following tools and makes them "just work."
   like XSS attacks. It also supports i18n and l10n.
 - [Closure Stylesheets]: CSS compiler supporting class name minification,
   variables, functions, conditionals, mixins, and bidirectional layout.
-- [PhantomJS]: Headless web browser used for automating JavaScript unit tests in
-  a command line environment.
+- [Node.js]: JavaScript runtime used for automating unit tests in a command
+  line environment when no browser is specified.
 
 ### Mailing Lists
 
@@ -67,7 +67,7 @@ Then you add the following to your MODULE.bazel file:
 bazel_dep(name = "rules_closure", version = "0.15.0")
 ```
 
-You are not required to install the Closure Tools, PhantomJS, or anything else
+You are not required to install the Closure Tools, Node.js, or anything else
 for that matter; they will be fetched automatically by Bazel.
 
 ## Examples
@@ -324,10 +324,10 @@ closure_js_test(name, srcs, data, deps, browsers, css, html, language, suppress,
                 compilation_level, entry_points, defs)
 ```
 
-Runs JavaScript unit tests inside a headless web browser.
+Runs JavaScript unit tests inside a headless web browser or Node.js.
 
 This is a build macro that composes [closure_js_library], [closure_js_binary],
-and [phantomjs_test].
+and either [nodejs_test] or `webdriver_test`.
 
 A test is defined as any function in the global namespace that begins with
 `test`, `setUp`, or `tearDown`. You are not required to `@export` these
@@ -374,13 +374,11 @@ This rule can be referenced as though it were the following:
   `custom_browser` target). Supported browser definitions are provided by
   [rules_browsers]; see its [usage documentation][rules_browsers-usage] for how
   to select and pin specific browser versions in `MODULE.bazel`. If omitted,
-  defaults to running in [phantomjs_test].
+  defaults to running in [nodejs_test].
 
 - **data:** (List of [labels]; optional) Passed to [closure_js_library].
 
 - **css:** Passed to [closure_js_binary].
-
-- **html:** Passed to [phantomjs_test].
 
 - **language:** Passed to [closure_js_binary].
 
@@ -395,14 +393,14 @@ This rule can be referenced as though it were the following:
 - **defs:** Passed to [closure_js_binary].
 
 
-## phantomjs\_test
+## nodejs\_test
 
 ```starlark
-load("@rules_closure//closure:defs.bzl", "phantomjs_test")
-phantomjs_test(name, data, deps, html, harness, runner)
+load("@rules_closure//closure:defs.bzl", "nodejs_test")
+nodejs_test(name, data, deps)
 ```
 
-Runs PhantomJS (QtWebKit) for unit testing purposes.
+Runs Node.js for unit testing purposes.
 
 This is a low level rule. Please use the [closure_js_test] macro if possible.
 
@@ -417,30 +415,10 @@ This rule can be referenced as though it were the following:
 
 - **name:** ([Name]; required) Unique name for this rule.
 
-- **data:** (List of [labels]; optional) Additional runfiles for the local HTTP
-  server to serve, under the `/filez/` + repository path. This attribute should
-  not be necessary, because the transitive runfile data is already collected
-  from dependencies.
+- **data:** (List of [labels]; optional) Additional runfiles for the test.
 
-- **deps:** (List of [labels]; required) Labels of Skylark rules exporting
-  `transitive_js_srcs`. Each source will be inserted into the webpage in its own
-  `<script>` tag based on a depth-first preordering.
-
-- **html:** (Label; optional; default is
-  `"@rules_closure//closure/testing:empty.html"`) HTML file containing
-  DOM structure of virtual web page *before* `<script>` tags are automatically
-  inserted. Do not include a doctype in this file.
-
-- **harness:** (Label; required; default is
-  `"@rules_closure//closure/testing:phantomjs_harness"`) JS binary or
-  library exporting a single source file, to be used as the PhantomJS outer
-  script.
-
-- **runner:** (Label; optional; default is
-  `"@rules_closure//closure/testing:phantomjs_jsunit_runner"`) Same as
-  `deps` but guaranteed to be loaded inside the virtual web page last. This
-  should run whatever tests got loaded by `deps` and then invoke `callPhantom`
-  to report the result to the `harness`.
+- **deps:** (List of [labels]; required) Labels of rules exporting
+  `ClosureJsLibraryInfo` or `ClosureJsBinaryInfo`.
 
 
 ## closure\_css\_library
@@ -622,7 +600,7 @@ This rule can be referenced as though it were the following:
 [Google JavaScript Style Guide]: https://google.github.io/styleguide/jsguide.html
 [Google coding conventions]: https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/GoogleCodingConvention.java
 [Name]: https://docs.bazel.build/versions/master/build-ref.html#name
-[PhantomJS]: http://phantomjs.org/
+[Node.js]: https://nodejs.org/
 [ProcessEs6Modules]: https://github.com/google/closure-compiler/blob/1281ed9ded137eaf578bb65a588850bf13f38aa4/src/com/google/javascript/jscomp/ProcessEs6Modules.java
 [acyclic]: https://en.wikipedia.org/wiki/Directed_acyclic_graph
 [asserts]: https://github.com/google/closure-library/blob/master/closure/goog/testing/asserts.js#L1308
@@ -646,8 +624,7 @@ This rule can be referenced as though it were the following:
 [jquery]: http://jquery.com/
 [labels]: https://docs.bazel.build/versions/master/build-ref.html#labels
 [managing dependencies]: https://github.com/google/closure-compiler/wiki/Managing-Dependencies
+[nodejs_test]: #nodejs_test
 [output-wrapper-faq]: https://github.com/google/closure-compiler/wiki/FAQ#when-using-advanced-optimizations-closure-compiler-adds-new-variables-to-the-global-scope-how-do-i-make-sure-my-variables-dont-collide-with-other-scripts-on-the-page
-[phantomjs-bug]: https://github.com/ariya/phantomjs/issues/14028
-[phantomjs_test]: #phantomjs_test
 [rules_browsers]: https://github.com/devversion/rules_browsers
 [rules_browsers-usage]: https://github.com/devversion/rules_browsers#usage

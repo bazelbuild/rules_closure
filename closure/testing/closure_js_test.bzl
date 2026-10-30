@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Build macro for running JavaScript unit tests in PhantomJS."""
+"""Build macro for running JavaScript unit tests."""
 
 load("//closure/compiler:closure_js_binary.bzl", "closure_js_binary")
 load("//closure/compiler:closure_js_library.bzl", "closure_js_library")
-load("//closure/testing:phantomjs_test.bzl", "phantomjs_test")
+load("//closure/testing:nodejs_test.bzl", "nodejs_test")
 load("//closure/testing:webdriver_test.bzl", "webdriver_test")
 
 def closure_js_test(
@@ -81,12 +81,10 @@ def closure_js_test(
         )
 
         if not browsers:
-            phantomjs_test(
+            nodejs_test(
                 name = shard,
-                runner = Label("//closure/testing:phantomjs_jsunit_runner"),
                 deps = [":%s_bin" % shard],
-                debug = debug,
-                html = html,
+                data = data,
                 visibility = visibility,
                 tags = tags,
                 **kwargs

@@ -22,37 +22,21 @@ licenses(["notice"])
 load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
-# TODO: Consider sharing this with phantomjs.
 # html template used by webdriver_test.
 exports_files(["gen_webtest_html.template"])
 
-# html place holder used by phantomjs_test.
-exports_files(["empty.html"])
-
-closure_js_library(
-    name = "phantomjs_jsunit_runner",
-    srcs = ["phantomjs_jsunit_runner.js"],
-    no_closure_library = True,
-)
-
-closure_js_library(
-    name = "phantomjs_harness",
-    srcs = ["phantomjs_harness.js"],
-    no_closure_library = True,
-    deps = ["//closure/testing/externs:phantomjs"],
-)
-
-closure_js_binary(
-    name = "phantomjs_harness_bin",
-    defs = ["--env=CUSTOM"],
-    deps = [":phantomjs_harness"],
+filegroup(
+    name = "nodejs_harness",
+    srcs = ["nodejs_harness.js"],
+    visibility = ["//visibility:private"],
 )
 
 bzl_library(
-    name = "phantomjs_test_bzl",
-    srcs = ["phantomjs_test.bzl"],
+    name = "nodejs_test_bzl",
+    srcs = ["nodejs_test.bzl"],
     deps = [
-        "//closure/compiler:compiler_bzl",
+        "//closure/private:defs_bzl",
+        "@bazel_skylib//lib:shell",
     ],
 )
 
@@ -70,7 +54,7 @@ bzl_library(
     name = "closure_js_test_bzl",
     srcs = ["closure_js_test.bzl"],
     deps = [
-        ":phantomjs_test_bzl",
+        ":nodejs_test_bzl",
         ":webdriver_test_bzl",
         "//closure/compiler:compiler_bzl",
     ],
