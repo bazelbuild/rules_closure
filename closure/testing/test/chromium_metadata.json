@@ -2,7 +2,7 @@
   "capabilities": {
     "goog:chromeOptions": {
       "args": [
-        "--disable-features=CADisplayLinkInBrowser"
+        "--disable-features=CADisplayLinkInBrowser,CADisplayLinkinGpu"
       ]
     }
   }
