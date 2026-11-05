@@ -1,10 +1,10 @@
 # Closure Rules for Bazel (αlpha) [![Bazel CI build status](https://badge.buildkite.com/7569410e2a2661076591897283051b6d137f35102167253fed.svg)](https://buildkite.com/bazel/closure-compiler-rules-closure-postsubmit)
 
-JavaScript | Stylesheets | Miscellaneous
---- | --- | ---
-[closure_js_library] | [closure_css_library] | [nodejs_test]
-[closure_js_binary] | [closure_css_binary] | |
-[closure_js_test] | |
+JavaScript | Stylesheets
+--- | ---
+[closure_js_library] | [closure_css_library]
+[closure_js_binary] | [closure_css_binary]
+[closure_js_test] |
 
 ## Overview
 
@@ -326,8 +326,8 @@ closure_js_test(name, srcs, data, deps, browsers, css, html, language, suppress,
 
 Runs JavaScript unit tests inside a headless web browser or Node.js.
 
-This is a build macro that composes [closure_js_library], [closure_js_binary],
-and either [nodejs_test] or `webdriver_test`.
+This is a build macro that composes [closure_js_library] and
+[closure_js_binary].
 
 A test is defined as any function in the global namespace that begins with
 `test`, `setUp`, or `tearDown`. You are not required to `@export` these
@@ -374,7 +374,7 @@ This rule can be referenced as though it were the following:
   `custom_browser` target). Supported browser definitions are provided by
   [rules_browsers]; see its [usage documentation][rules_browsers-usage] for how
   to select and pin specific browser versions in `MODULE.bazel`. If omitted,
-  defaults to running in [nodejs_test].
+  defaults to running in [Node.js].
 
 - **data:** (List of [labels]; optional) Passed to [closure_js_library].
 
@@ -391,34 +391,6 @@ This rule can be referenced as though it were the following:
 - **entry_points:** If a dict, the source file is looked up for the value to pass to [closure_js_binary].  Otherwise, passed directly to [closure_js_binary].
 
 - **defs:** Passed to [closure_js_binary].
-
-
-## nodejs\_test
-
-```starlark
-load("@rules_closure//closure:defs.bzl", "nodejs_test")
-nodejs_test(name, data, deps)
-```
-
-Runs Node.js for unit testing purposes.
-
-This is a low level rule. Please use the [closure_js_test] macro if possible.
-
-#### Rule Polymorphism
-
-This rule can be referenced as though it were the following:
-
-- [filegroup]: `srcs` will be the outputted executable, `data` will contain
-  all transitive sources, data, and other runfiles.
-
-### Arguments
-
-- **name:** ([Name]; required) Unique name for this rule.
-
-- **data:** (List of [labels]; optional) Additional runfiles for the test.
-
-- **deps:** (List of [labels]; required) Labels of rules exporting
-  `ClosureJsLibraryInfo` or `ClosureJsBinaryInfo`.
 
 
 ## closure\_css\_library
@@ -624,7 +596,6 @@ This rule can be referenced as though it were the following:
 [jquery]: http://jquery.com/
 [labels]: https://docs.bazel.build/versions/master/build-ref.html#labels
 [managing dependencies]: https://github.com/google/closure-compiler/wiki/Managing-Dependencies
-[nodejs_test]: #nodejs_test
 [output-wrapper-faq]: https://github.com/google/closure-compiler/wiki/FAQ#when-using-advanced-optimizations-closure-compiler-adds-new-variables-to-the-global-scope-how-do-i-make-sure-my-variables-dont-collide-with-other-scripts-on-the-page
 [rules_browsers]: https://github.com/devversion/rules_browsers
 [rules_browsers-usage]: https://github.com/devversion/rules_browsers#usage
