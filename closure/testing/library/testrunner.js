@@ -544,7 +544,7 @@ goog.testing.TestRunner.prototype.getTestResultsAsJson = function() {
       var globalErrors = [];
       for (var i = 0; i < this.errors.length; i++) {
         globalErrors.push(
-            {'source': '', 'message': this.errors[i], 'stacktrace': ''});
+            {source: '', message: this.errors[i], stacktrace: ''});
       }
       // We are writing on our testCase results, but the test is over.
       testCaseResults['globalErrors'] = globalErrors;

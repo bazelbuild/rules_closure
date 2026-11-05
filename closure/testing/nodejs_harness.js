@@ -43,83 +43,6 @@ nodeModule.register(
     'data:text/javascript,' + encodeURIComponent(loaderCode),
     url.pathToFileURL(__filename));
 
-function escapeXml(str) {
-  return String(str)
-      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
-}
-
-function writeXmlOutput(testRunner) {
-  const xmlOutputFile = process.env.XML_OUTPUT_FILE;
-  if (!xmlOutputFile) {
-    return;
-  }
-
-  const suiteName = process.env.TEST_TARGET || 'Closure Unit Test';
-  const resultsJson = testRunner.getTestResultsAsJson();
-  const results = resultsJson ?
-      JSON.parse(resultsJson) :
-      (testRunner.isSuccess() ?
-           {} :
-           {globalErrors: [{message: testRunner.getReport(), stacktrace: ''}]});
-
-  let testCount = 0;
-  let failureCount = 0;
-  let errorCount = 0;
-  const testcaseLines = [];
-
-  for (const [name, failures] of Object.entries(results)) {
-    if (name === 'globalErrors') {
-      for (const err of failures) {
-        testCount++;
-        errorCount++;
-        const msg = err.message || 'Global error';
-        const body = err.stacktrace ? `${msg}\n${err.stacktrace}` : msg;
-        testcaseLines.push(
-            `    <testcase name="globalError" classname="${escapeXml(suiteName)}">\n` +
-            `      <error message="${escapeXml(msg)}">${escapeXml(body)}</error>\n` +
-            `    </testcase>`);
-      }
-      continue;
-    }
-
-    testCount++;
-    if (failures.length > 0) {
-      failureCount++;
-      const failureEls = failures.map((f) => {
-        const msg = f.message || 'Test failed';
-        const body = f.stacktrace ? `${msg}\n${f.stacktrace}` : msg;
-        return `      <failure message="${escapeXml(msg)}">${escapeXml(body)}</failure>`;
-      });
-      testcaseLines.push(
-          `    <testcase name="${escapeXml(name)}" classname="${escapeXml(suiteName)}">\n` +
-          `${failureEls.join('\n')}\n` +
-          `    </testcase>`);
-    } else {
-      testcaseLines.push(
-          `    <testcase name="${escapeXml(name)}" classname="${escapeXml(suiteName)}"/>`);
-    }
-  }
-
-  const totalTime = ((testRunner.getRunTime() || 0) / 1000).toFixed(3);
-  const attrs = `tests="${testCount}" failures="${failureCount}" errors="${
-      errorCount}" time="${totalTime}"`;
-  const xml =
-      '<?xml version="1.0" encoding="UTF-8"?>\n' +
-      `<testsuites ${attrs}>\n` +
-      `  <testsuite name="${escapeXml(suiteName)}" ${attrs}>\n` +
-      (testcaseLines.length > 0 ? testcaseLines.join('\n') + '\n' : '') +
-      '  </testsuite>\n' +
-      '</testsuites>\n';
-
-  fs.mkdirSync(path.dirname(xmlOutputFile), {recursive: true});
-  fs.writeFileSync(xmlOutputFile, xml, 'utf8');
-}
-
 (async () => {
   const happyDomEntry = path.resolve(process.argv[2]);
   const {Window} = await import(url.pathToFileURL(happyDomEntry).href);
@@ -167,7 +90,6 @@ function writeXmlOutput(testRunner) {
     }
     if (testRunner.isFinished()) {
       clearInterval(pollInterval);
-      writeXmlOutput(testRunner);
       if (testRunner.isSuccess()) {
         process.exit(0);
       } else {
