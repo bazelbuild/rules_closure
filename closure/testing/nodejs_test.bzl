@@ -25,14 +25,14 @@ load(
 def _nodejs_test_impl(ctx):
     if not ctx.attr.deps:
         fail("nodejs_test needs at least one dep")
-    srcs = []
+    transitive_srcs = []
     direct_srcs = []
     for dep in ctx.attr.deps:
         if ClosureJsBinaryInfo in dep:
             direct_srcs.append(dep[ClosureJsBinaryInfo].bin)
-        else:
-            srcs.append(dep[ClosureJsLibraryInfo].srcs)
-    srcs = depset(direct_srcs, transitive = srcs).to_list()
+        elif ClosureJsLibraryInfo in dep:
+            transitive_srcs.append(dep[ClosureJsLibraryInfo].srcs)
+    srcs = depset(direct_srcs, transitive = transitive_srcs).to_list()
 
     node_bin = ctx.toolchains["@rules_nodejs//nodejs:toolchain_type"].nodeinfo.node
     harness = ctx.file._harness
@@ -69,7 +69,7 @@ nodejs_test = rule(
     implementation = _nodejs_test_impl,
     test = True,
     attrs = {
-        "deps": attr.label_list(providers = [ClosureJsLibraryInfo]),
+        "deps": attr.label_list(providers = [[ClosureJsLibraryInfo], [ClosureJsBinaryInfo]]),
         "data": attr.label_list(allow_files = True),
         "_harness": attr.label(
             default = Label("//closure/testing:nodejs_harness"),
