@@ -43,21 +43,20 @@ nodeModule.register(
     'data:text/javascript,' + encodeURIComponent(loaderCode),
     url.pathToFileURL(__filename));
 
-(async () => {
-  const happyDomEntry = path.resolve(process.argv[2]);
-  const {Window} = await import(url.pathToFileURL(happyDomEntry).href);
 
-  const window = new Window({
-    url: 'http://localhost/test.html',
-    console,
-    settings: {
-      disableErrorCapturing: true,
-    },
-  });
-  window.document.title = 'Closure Unit Test';
-  window.CLOSURE_NO_DEPS = true;
-  window.CLOSURE_UNCOMPILED_DEFINES = {};
+function loadScripts(window, scripts) {
+  for (const scriptPath of scripts) {
+    const scriptContent = fs.readFileSync(scriptPath, 'utf8');
+    vm.runInContext(scriptContent, window, {filename: scriptPath});
+  }
 
+  // Trigger the window onload handler, if any is present.
+  if (typeof window.onload === 'function') {
+    window.onload();
+  }
+}
+
+function installUncaughtExceptionHandlers(window) {
   function handleUncaughtError(err) {
     const message = err && err.message ? err.message : String(err);
     if (typeof window.onerror === 'function') {
@@ -70,16 +69,17 @@ nodeModule.register(
 
   process.on('uncaughtException', handleUncaughtError);
   process.on('unhandledRejection', handleUncaughtError);
+}
 
-  for (const scriptPath of process.argv.slice(3)) {
-    const scriptContent = fs.readFileSync(scriptPath, 'utf8');
-    vm.runInContext(scriptContent, window, {filename: scriptPath});
-  }
+  // Should be kept in sync with gen_webtest_html.
+function configureClosure(window) {
+  // goog.require does not need to fetch sources from the local
+  // server because everything is compiled and loaded explicitly below.
+  window.CLOSURE_NO_DEPS = true;
+  window.CLOSURE_UNCOMPILED_DEFINES = {};
+}
 
-  if (typeof window.onload === 'function') {
-    window.onload();
-  }
-
+function pollForResults(window) {
   const pollInterval = setInterval(() => {
     const testRunner = window.G_testRunner;
     if (!testRunner) {
@@ -98,6 +98,24 @@ nodeModule.register(
       }
     }
   }, 10);
+}
+
+(async () => {
+  const happyDomEntry = path.resolve(process.argv[2]);
+  const {Window} = await import(url.pathToFileURL(happyDomEntry).href);
+
+  const window = new Window({
+    url: 'http://localhost/test.html',
+    console,
+    settings: {
+      disableErrorCapturing: true,
+    },
+  });
+
+  installUncaughtExceptionHandlers(window);
+  configureClosure(window);
+  loadScripts(window, process.argv.slice(3));
+  pollForResults(window);
 })().catch((err) => {
   console.error(err);
   process.exit(1);
