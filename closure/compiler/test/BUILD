@@ -16,6 +16,7 @@ package(default_testonly = True)
 
 licenses(["notice"])
 
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
 load("//closure/private:file_test.bzl", "file_test")
 load("//closure:defs.bzl", "closure_js_binary", "closure_js_library")
 
